@@ -26,18 +26,18 @@ SELECT count_emp_salary_range(90000, 160000);
  * 
  * Syntax:
  * 
- * CREATE [OR REPLACE] SEQUENCE <sequence_name> 
+ * CREATE SEQUENCE <sequence_name> 
  * 	START WITH <value> INCREMENT | DECREMENT BY <amount>
  */
-CREATE OR REPLACE SEQUENCE examples.emp_id_seq START WITH 2000 INCREMENT BY 2;
+CREATE SEQUENCE IF NOT EXISTS examples.emp_id_seq START WITH 2000 INCREMENT BY 1;
 
 CREATE OR REPLACE FUNCTION examples.emp_id_func()
 	RETURNS TRIGGER AS
 $$ BEGIN
 	IF NEW.emp_id IS NULL THEN
 		NEW.emp_id:=NEXTVAL('examples.emp_id_seq');
-		RETURN NEW;
 	END IF;
+	RETURN NEW;
 END;
 $$ LANGUAGE PLPGSQL;
 
@@ -55,11 +55,10 @@ DROP TRIGGER IF EXISTS emp_id_trig ON examples.employees;
 
 -- This insert statement triggers the emp_id_trig, 
 -- which in turn calls the emp_id_func()
-INSERT INTO examples.employees VALUES (NULL, 'Rob', 'Developer', 97000);
-
+INSERT INTO examples.employees (emp_name, emp_title, emp_salary) VALUES ('Rob', 'Developer', 97000);
 
 -- USING SEQUENCES WITH DDL:
-CREATE OR REPLACE SEQUENCE login_id_seq START WITH 10000 INCREMENT BY 1;
+CREATE SEQUENCE IF NOT EXISTS login_id_seq START WITH 10000 INCREMENT BY 1;
 
 /* You may reference a created sequence by name using the 'DEFAULT'
  * keyword within a DDL table creation statement
