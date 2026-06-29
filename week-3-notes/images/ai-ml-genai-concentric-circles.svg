@@ -1,0 +1,35 @@
+<svg viewBox="0 0 720 740" xmlns="http://www.w3.org/2000/svg" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif">
+  <defs>
+    <style>
+      .ring-label { font-weight: 700; text-anchor: middle; }
+      .sub-label  { font-weight: 400; text-anchor: middle; fill-opacity: 0.85; }
+    </style>
+  </defs>
+
+  <!-- Background -->
+  <rect width="720" height="740" fill="#ffffff"/>
+
+  <!-- Outermost circle: Artificial Intelligence -->
+  <circle cx="360" cy="390" r="315" fill="#e3edf7" stroke="#9cbbdb" stroke-width="2"/>
+
+  <!-- Middle circle: Machine Learning -->
+  <circle cx="360" cy="390" r="215" fill="#bcd4ec" stroke="#6d9bcb" stroke-width="2"/>
+
+  <!-- Innermost circle: Generative AI -->
+  <circle cx="360" cy="390" r="92" fill="#3f6ea5" stroke="#2b5183" stroke-width="2"/>
+
+  <!-- Labels: placed in the top band of each ring so the nesting stays visible -->
+
+  <!-- Artificial Intelligence (outer band, near top) -->
+  <text x="360" y="118" class="ring-label" font-size="31" fill="#214e7c">Artificial Intelligence</text>
+  <text x="360" y="146" class="sub-label" font-size="15" fill="#214e7c">the broad goal: any machine doing what we'd call "intelligent"</text>
+
+  <!-- Machine Learning (middle band) -->
+  <text x="360" y="230" class="ring-label" font-size="27" fill="#1d4670">Machine Learning</text>
+  <text x="360" y="255" class="sub-label" font-size="14" fill="#1d4670">systems that learn patterns from data, not hand-written rules</text>
+
+  <!-- Generative AI (inner circle, centered & snug) -->
+  <text x="360" y="380" class="ring-label" font-size="22" fill="#ffffff">Generative</text>
+  <text x="360" y="406" class="ring-label" font-size="22" fill="#ffffff">AI</text>
+  <text x="360" y="430" class="sub-label" font-size="11.5" fill="#dbe7f4">produces new content</text>
+</svg>

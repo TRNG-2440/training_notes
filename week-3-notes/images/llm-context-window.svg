@@ -1,0 +1,65 @@
+<svg viewBox="0 0 820 480" xmlns="http://www.w3.org/2000/svg" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif">
+  <defs>
+    <linearGradient id="fade" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#eef4fa" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#eef4fa" stop-opacity="0.7"/>
+    </linearGradient>
+    <style>
+      .user { fill: #3f6ea5; stroke: #2b5183; stroke-width: 1.5; }
+      .asst { fill: #eef4fa; stroke: #9cbbdb; stroke-width: 1.5; }
+      .utxt { fill: #ffffff; font-size: 13.5px; }
+      .atxt { fill: #1d4670; font-size: 13.5px; }
+      .role { font-size: 10px; font-weight: 700; letter-spacing: 0.5px; }
+    </style>
+  </defs>
+  <rect width="820" height="480" fill="#ffffff"/>
+
+  <text x="340" y="34" text-anchor="middle" font-size="21" font-weight="700" fill="#214e7c">The context window</text>
+
+  <!-- faded, out-of-window message -->
+  <rect x="70" y="50" width="300" height="40" rx="9" fill="url(#fade)" stroke="#cdd9e6" stroke-width="1.2" stroke-dasharray="4 4"/>
+  <text x="86" y="75" font-size="13" fill="#9aa9b8" font-family="Consolas, monospace">"Use Postgres for the warehouse"</text>
+  <text x="386" y="74" font-size="12" font-style="italic" fill="#a7b3c0">scrolled out of the window</text>
+
+  <!-- window cutoff -->
+  <line x1="55" y1="104" x2="600" y2="104" stroke="#c0708a" stroke-width="1.5" stroke-dasharray="6 5"/>
+  <text x="55" y="98" font-size="11.5" font-weight="700" fill="#b06a55">&#8593; older text falls out of view</text>
+
+  <!-- in-window bubbles -->
+  <!-- assistant -->
+  <rect class="asst" x="70" y="120" width="290" height="44" rx="10"/>
+  <text x="84" y="138" class="role" fill="#6d8298">ASSISTANT</text>
+  <text x="84" y="156" class="atxt">Understood — using Postgres.</text>
+
+  <!-- user -->
+  <rect class="user" x="320" y="176" width="280" height="44" rx="10"/>
+  <text x="586" y="194" text-anchor="end" class="role" fill="#cfe0f0">YOU</text>
+  <text x="586" y="212" text-anchor="end" class="utxt">Write the load function.</text>
+
+  <!-- assistant -->
+  <rect class="asst" x="70" y="232" width="320" height="44" rx="10"/>
+  <text x="84" y="250" class="role" fill="#6d8298">ASSISTANT</text>
+  <text x="84" y="268" class="atxt" font-family="Consolas, monospace" font-size="13">def load_to_warehouse(df, table): ...</text>
+
+  <!-- user -->
+  <rect class="user" x="320" y="288" width="280" height="44" rx="10"/>
+  <text x="586" y="306" text-anchor="end" class="role" fill="#cfe0f0">YOU</text>
+  <text x="586" y="324" text-anchor="end" class="utxt">Now handle a null id.</text>
+
+  <!-- newest highlight -->
+  <rect x="316" y="284" width="288" height="52" rx="13" fill="none" stroke="#2b5183" stroke-width="2" stroke-dasharray="3 4"/>
+  <text x="460" y="352" text-anchor="middle" font-size="11" font-weight="700" fill="#2b5183">newest turn</text>
+
+  <!-- bracket spanning in-window messages -->
+  <path d="M 624 120 h 10 v 100" fill="none" stroke="#6d8298" stroke-width="2"/>
+  <path d="M 624 332 h 10 v -100" fill="none" stroke="#6d8298" stroke-width="2"/>
+  <line x1="634" y1="226" x2="648" y2="226" stroke="#6d8298" stroke-width="2"/>
+
+  <text x="656" y="208" font-size="13" font-weight="700" fill="#1d4670">everything inside</text>
+  <text x="656" y="226" font-size="13" font-weight="700" fill="#1d4670">the window is</text>
+  <text x="656" y="244" font-size="13" font-weight="700" fill="#1d4670">re-read every turn</text>
+
+  <!-- caption -->
+  <text x="340" y="392" text-anchor="middle" font-size="14" fill="#4a647f">Each turn, the whole in-window history is fed back in —</text>
+  <text x="340" y="412" text-anchor="middle" font-size="14" fill="#4a647f">which is how the model "remembers" within a session.</text>
+</svg>

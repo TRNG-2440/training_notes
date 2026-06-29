@@ -1,0 +1,97 @@
+<svg viewBox="0 0 1080 400" xmlns="http://www.w3.org/2000/svg" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#5a7da3"/>
+    </marker>
+    <style>
+      .hdr  { font-weight: 700; text-anchor: middle; fill: #1d4670; }
+      .cap  { text-anchor: middle; fill: #4a647f; }
+      .bar  { fill: #c9d6e4; }
+      .pill-txt { font-size: 11px; font-weight: 700; text-anchor: middle; fill: #ffffff; }
+      .rec  { fill: #eef4fa; stroke: #9cbbdb; stroke-width: 1.5; }
+      .arr  { stroke: #5a7da3; stroke-width: 2.5; fill: none; }
+      .ann  { font-size: 12.5px; text-anchor: middle; fill: #6d8298; font-style: italic; }
+    </style>
+  </defs>
+
+  <rect width="1080" height="400" fill="#ffffff"/>
+
+  <!-- Overall title -->
+  <text x="540" y="34" text-anchor="middle" font-size="21" font-weight="700" fill="#214e7c">Training vs. Prediction</text>
+
+  <!-- Divider between panels -->
+  <line x1="540" y1="60" x2="540" y2="372" stroke="#d4dde7" stroke-width="1.5" stroke-dasharray="5 6"/>
+
+  <!-- ===================== PANEL 1: TRAINING ===================== -->
+  <text x="270" y="86" class="hdr" font-size="23">Training</text>
+
+  <!-- Labeled example records -->
+  <!-- record 1 (fraud) -->
+  <rect class="rec" x="55" y="150" width="150" height="30" rx="6"/>
+  <rect x="61" y="157" width="44" height="16" rx="8" fill="#cf7a7a"/>
+  <text x="83" y="168" class="pill-txt">fraud</text>
+  <rect class="bar" x="113" y="158" width="82" height="5" rx="2.5"/>
+  <rect class="bar" x="113" y="168" width="60" height="5" rx="2.5"/>
+
+  <!-- record 2 (legit) -->
+  <rect class="rec" x="55" y="188" width="150" height="30" rx="6"/>
+  <rect x="61" y="195" width="44" height="16" rx="8" fill="#5fa06f"/>
+  <text x="83" y="206" class="pill-txt">legit</text>
+  <rect class="bar" x="113" y="196" width="70" height="5" rx="2.5"/>
+  <rect class="bar" x="113" y="206" width="82" height="5" rx="2.5"/>
+
+  <!-- record 3 (legit) -->
+  <rect class="rec" x="55" y="226" width="150" height="30" rx="6"/>
+  <rect x="61" y="233" width="44" height="16" rx="8" fill="#5fa06f"/>
+  <text x="83" y="244" class="pill-txt">legit</text>
+  <rect class="bar" x="113" y="234" width="60" height="5" rx="2.5"/>
+  <rect class="bar" x="113" y="244" width="78" height="5" rx="2.5"/>
+
+  <!-- record 4 (fraud) -->
+  <rect class="rec" x="55" y="264" width="150" height="30" rx="6"/>
+  <rect x="61" y="271" width="44" height="16" rx="8" fill="#cf7a7a"/>
+  <text x="83" y="282" class="pill-txt">fraud</text>
+  <rect class="bar" x="113" y="272" width="82" height="5" rx="2.5"/>
+  <rect class="bar" x="113" y="282" width="55" height="5" rx="2.5"/>
+
+  <!-- arrow records -> model -->
+  <line class="arr" x1="210" y1="222" x2="312" y2="222" marker-end="url(#arrow)"/>
+  <text x="262" y="212" class="ann">patterns</text>
+
+  <!-- Model box -->
+  <rect x="318" y="174" width="150" height="96" rx="10" fill="#3f6ea5" stroke="#2b5183" stroke-width="2"/>
+  <text x="393" y="218" text-anchor="middle" font-size="22" font-weight="700" fill="#ffffff">Model</text>
+  <text x="393" y="242" text-anchor="middle" font-size="12.5" fill="#dbe7f4">learns the patterns</text>
+
+  <!-- caption -->
+  <text x="270" y="348" class="cap" font-size="14">Many labeled examples flow in, and the model learns their patterns.</text>
+
+  <!-- ===================== PANEL 2: PREDICTION ===================== -->
+  <text x="810" y="86" class="hdr" font-size="23">Prediction</text>
+
+  <!-- single new, unlabeled record -->
+  <rect class="rec" x="565" y="207" width="150" height="30" rx="6"/>
+  <rect x="571" y="214" width="44" height="16" rx="8" fill="#aab6c2"/>
+  <text x="593" y="225" class="pill-txt">?</text>
+  <rect class="bar" x="623" y="215" width="78" height="5" rx="2.5"/>
+  <rect class="bar" x="623" y="225" width="62" height="5" rx="2.5"/>
+  <text x="640" y="258" class="ann">new, unlabeled</text>
+
+  <!-- arrow record -> model -->
+  <line class="arr" x1="720" y1="222" x2="772" y2="222" marker-end="url(#arrow)"/>
+
+  <!-- trained Model box -->
+  <rect x="778" y="174" width="132" height="96" rx="10" fill="#3f6ea5" stroke="#2b5183" stroke-width="2"/>
+  <text x="844" y="218" text-anchor="middle" font-size="22" font-weight="700" fill="#ffffff">Model</text>
+  <text x="844" y="242" text-anchor="middle" font-size="12.5" fill="#dbe7f4">(trained)</text>
+
+  <!-- arrow model -> output -->
+  <line class="arr" x1="912" y1="222" x2="944" y2="222" marker-end="url(#arrow)"/>
+
+  <!-- output label -->
+  <rect x="950" y="206" width="80" height="32" rx="8" fill="#2b5183"/>
+  <text x="990" y="227" text-anchor="middle" font-size="13" font-weight="700" fill="#ffffff">fraud</text>
+
+  <!-- caption -->
+  <text x="810" y="348" class="cap" font-size="14">A single new record flows in, and a predicted label comes out.</text>
+</svg>
