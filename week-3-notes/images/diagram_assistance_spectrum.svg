@@ -1,0 +1,59 @@
+<svg viewBox="0 0 880 400" xmlns="http://www.w3.org/2000/svg" font-family="Helvetica, Arial, sans-serif">
+  <defs>
+    <linearGradient id="track" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%"   stop-color="#4ade80"/>
+      <stop offset="45%"  stop-color="#a3d34a"/>
+      <stop offset="70%"  stop-color="#fbbf24"/>
+      <stop offset="100%" stop-color="#ef4444"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Title -->
+  <text x="440" y="40" text-anchor="middle" font-size="24" font-weight="700" fill="#1f2937">Levels of AI Autonomy</text>
+  <text x="440" y="66" text-anchor="middle" font-size="14" fill="#6b7280">As autonomy increases, both impact and blast radius increase.</text>
+
+  <!-- Level 3 group header + bracket -->
+  <text x="632" y="92"  text-anchor="middle" font-size="12" font-weight="600" fill="#9ca3af">LEVEL 3</text>
+  <text x="632" y="112" text-anchor="middle" font-size="15" font-weight="700" fill="#1f2937">Agentic</text>
+  <path d="M500,132 L500,124 L765,124 L765,132" fill="none" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- Spectrum track -->
+  <line x1="110" y1="205" x2="750" y2="205" stroke="url(#track)" stroke-width="10" stroke-linecap="round"/>
+
+  <!-- ===== Level 1 ===== -->
+  <text x="140" y="140" text-anchor="middle" font-size="12" fill="#9ca3af" font-weight="600">LEVEL 1</text>
+  <text x="140" y="160" text-anchor="middle" font-size="15" font-weight="700" fill="#1f2937">Autocomplete</text>
+  <circle cx="140" cy="205" r="22" fill="#fff" stroke="#4ade80" stroke-width="4"/>
+  <text x="140" y="212" text-anchor="middle" font-size="17" font-weight="700" fill="#16a34a">1</text>
+  <text x="140" y="250" text-anchor="middle" font-size="12.5" fill="#4b5563">Inline suggestions,</text>
+  <text x="140" y="267" text-anchor="middle" font-size="12.5" fill="#4b5563">you accept with Tab</text>
+
+  <!-- ===== Level 2 ===== -->
+  <text x="315" y="140" text-anchor="middle" font-size="12" fill="#9ca3af" font-weight="600">LEVEL 2</text>
+  <text x="315" y="160" text-anchor="middle" font-size="15" font-weight="700" fill="#1f2937">Conversational</text>
+  <circle cx="315" cy="205" r="22" fill="#fff" stroke="#a3d34a" stroke-width="4"/>
+  <text x="315" y="212" text-anchor="middle" font-size="17" font-weight="700" fill="#65a30d">2</text>
+  <text x="315" y="250" text-anchor="middle" font-size="12.5" fill="#4b5563">It returns code,</text>
+  <text x="315" y="267" text-anchor="middle" font-size="12.5" fill="#4b5563">you apply it yourself</text>
+
+  <!-- ===== Level 3: Gated ===== -->
+  <text x="545" y="160" text-anchor="middle" font-size="13" font-weight="500" fill="#6b7280">Gated</text>
+  <circle cx="545" cy="205" r="22" fill="#fff" stroke="#fbbf24" stroke-width="4"/>
+  <text x="545" y="212" text-anchor="middle" font-size="17" font-weight="700" fill="#d97706">3</text>
+  <text x="545" y="250" text-anchor="middle" font-size="12.5" fill="#4b5563">Acts on your project,</text>
+  <text x="545" y="267" text-anchor="middle" font-size="12.5" fill="#4b5563">pauses for approval</text>
+
+  <!-- ===== Level 3: Ungated ===== -->
+  <text x="720" y="160" text-anchor="middle" font-size="13" font-weight="500" fill="#6b7280">Ungated</text>
+  <circle cx="720" cy="205" r="22" fill="#fff" stroke="#ef4444" stroke-width="4"/>
+  <text x="720" y="212" text-anchor="middle" font-size="17" font-weight="700" fill="#dc2626">3</text>
+  <text x="720" y="250" text-anchor="middle" font-size="12.5" fill="#4b5563">Runs unattended,</text>
+  <text x="720" y="267" text-anchor="middle" font-size="12.5" fill="#4b5563">you review outcomes</text>
+
+  <!-- Bottom brackets -->
+  <path d="M115,318 L115,328 L600,328 L600,318" fill="none" stroke="#9ca3af" stroke-width="1.5"/>
+  <text x="357" y="351" text-anchor="middle" font-size="13" font-weight="600" fill="#374151">You approve every change before it touches disk</text>
+
+  <path d="M665,318 L665,328 L755,328 L755,318" fill="none" stroke="#9ca3af" stroke-width="1.5"/>
+  <text x="710" y="351" text-anchor="middle" font-size="13" font-weight="600" fill="#374151">You review outcomes</text>
+</svg>
