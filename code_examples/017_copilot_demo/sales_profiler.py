@@ -13,6 +13,15 @@ def read_csv(filepath):
 
 
 def profile_column(values):
+    """
+    Profile a single column of data. Returns a dictionary with statistics about the column, including:
+    - total: total number of values
+    - non_null: number of non-null values
+    - null_count: number of null values
+    - null_pct: percentage of null values
+    - distinct: number of distinct values
+    - type: "numeric" or "text"
+    """
     non_null = [v for v in values if v.strip() != ""]
     null_count = len(values) - len(non_null)
 
@@ -41,8 +50,49 @@ def profile_column(values):
 
     return result
 
+def aggregate_sales_statistics(rows):
+    """
+    Aggregate sales statistics from a list of rows.
+    Returns a dictionary with total sales, average quantity, and average unit price.
+    """
+    total_sales = 0.0
+    total_quantity = 0.0
+    total_unit_price = 0.0
+    quantity_count = 0
+    unit_price_count = 0
+
+    for row in rows:
+        total_sale = row.get("total_sale", "").strip()
+        quantity = row.get("quantity", "").strip()
+        unit_price = row.get("unit_price", "").strip()
+
+        try:
+            total_sales += float(total_sale.replace(",", "").replace("$", ""))
+        except ValueError:
+            pass
+
+        try:
+            total_quantity += float(quantity)
+            quantity_count += 1
+        except ValueError:
+            pass
+
+        try:
+            total_unit_price += float(unit_price.replace(",", "").replace("$", ""))
+            unit_price_count += 1
+        except ValueError:
+            pass
+
+    return {
+        "total_sales": round(total_sales, 2),
+        "average_quantity": round(total_quantity / quantity_count, 2) if quantity_count else 0,
+        "average_unit_price": round(total_unit_price / unit_price_count, 2) if unit_price_count else 0,
+    }
+
 
 def profile(filepath):
+    """
+    Profile a CSV file and print statistics about each column."""
     rows = read_csv(filepath)
 
     if not rows:
@@ -72,6 +122,11 @@ def profile(filepath):
             print(f"  Max:      {stats['max']}")
             print(f"  Mean:     {stats['mean']}")
 
+    stats = aggregate_sales_statistics(rows)
+    print("\nSales summary:")
+    print(f"  Total sales:       ${stats['total_sales']}")
+    print(f"  Average quantity:  {stats['average_quantity']}")
+    print(f"  Average unit price:${stats['average_unit_price']}")
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
