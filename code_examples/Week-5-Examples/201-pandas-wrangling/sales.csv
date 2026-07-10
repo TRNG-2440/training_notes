@@ -1,0 +1,16 @@
+order_id,order_date,customer,region,category,quantity,unit_price
+1001,2026-01-05,Ada,East,Widgets,4,12.50
+1002,2026-01-06,Linus,West,Gadgets,2,45.00
+1003,2026-01-06,Grace,East,Widgets,10,12.50
+1004,2026-01-07,Guido,West,Gizmos,1,
+1005,2026-01-08,Bjarne,East,Gadgets,3,45.00
+1006,2026-01-08,Margaret,North,Widgets,7,12.50
+1007,2026-01-09,Ada,East,Gizmos,5,30.00
+1008,2026-01-10,Linus,West,Widgets,,12.50
+1009,2026-01-11,Grace,East,Gadgets,2,45.00
+1010,2026-01-12,Guido,West,Gizmos,3,30.00
+1011,2026-01-12,Margaret,North,Widgets,6,12.50
+1012,2026-01-13,Ada,East,Gadgets,1,45.00
+1013,2026-01-14,Bjarne,East,Gizmos,4,30.00
+1014,2026-01-15,Grace,East,Widgets,8,12.50
+1015,2026-01-16,Linus,West,Gadgets,2,45.00

@@ -1,0 +1,11 @@
+# Demo 401 - BigQuery Python client (with DuckDB offline fallback)
+# Loose pins: any recent version works.
+
+# --- Always needed ---
+pandas>=2.0
+duckdb>=1.0            # offline fallback engine (zero cloud setup)
+
+# --- Only needed for the real BigQuery path (--engine bigquery) ---
+google-cloud-bigquery>=3.20
+pyarrow>=14.0          # fast, correct to_dataframe()
+db-dtypes>=1.2         # BigQuery DATE/TIME dtypes in pandas
