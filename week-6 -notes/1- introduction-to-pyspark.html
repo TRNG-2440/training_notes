@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Introduction to PySpark — Classroom Tutorial</title>
+<style>
+:root{--accent:#4f46e5;--accent2:#7c3aed;--bg:#f6f7fb;--card:#fff;--text:#172033;--muted:#667085;--border:#dfe3eb;--good:#15803d;--bad:#b91c1c;--warn:#b45309}
+body.dark{--bg:#0f172a;--card:#162033;--text:#e8edf7;--muted:#aab5c8;--border:#334155}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.65}
+#readbar{position:fixed;top:0;left:0;height:4px;background:linear-gradient(90deg,var(--accent),#ec4899);z-index:9999;width:0}
+.top{position:sticky;top:0;z-index:1000;background:color-mix(in srgb,var(--card) 92%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
+.topin{max-width:1450px;margin:auto;padding:10px 18px;display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.brand{font-weight:900}.brand small{display:block;color:var(--muted);font-weight:500}.actions{display:flex;gap:8px;flex-wrap:wrap}
+button,.btn{border:0;border-radius:10px;padding:9px 13px;background:var(--accent);color:white;font-weight:700;cursor:pointer;text-decoration:none;display:inline-block}
+button.secondary,.btn.secondary{background:var(--card);color:var(--text);border:1px solid var(--border)}button.danger{background:#b91c1c}button.good{background:#15803d}
+.hero{max-width:1450px;margin:24px auto 0;padding:0 18px;display:grid;grid-template-columns:1.7fr 1fr;gap:18px}
+.hero-main{background:linear-gradient(135deg,#312e81,#6d28d9 62%,#be185d);color:white;border-radius:24px;padding:36px;box-shadow:0 18px 50px #312e8135}.hero-main h1{font-size:clamp(34px,5vw,66px);line-height:1.05;margin:0 0 12px}.hero-main p{font-size:18px;max-width:850px}.chips{display:flex;flex-wrap:wrap;gap:8px}.chip{background:#ffffff1f;border:1px solid #ffffff45;padding:6px 10px;border-radius:999px;font-size:13px}
+.hero-side{display:grid;gap:12px}.metric,.card,section{background:var(--card);border:1px solid var(--border);border-radius:18px;box-shadow:0 8px 25px #1720330b}.metric{padding:18px}.metric strong{font-size:22px;color:var(--accent)}
+.layout{max-width:1450px;margin:20px auto;padding:0 18px;display:grid;grid-template-columns:270px minmax(0,1fr) 250px;gap:18px;align-items:start}
+nav,.aside{position:sticky;top:86px;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:15px;max-height:calc(100vh - 105px);overflow:auto}
+nav a{display:block;padding:7px 9px;border-radius:8px;color:var(--text);text-decoration:none;font-size:14px}nav a:hover{background:color-mix(in srgb,var(--accent) 12%,transparent);color:var(--accent)}
+main{min-width:0}section{padding:26px;margin-bottom:18px;transition:.2s}section:hover{box-shadow:0 12px 35px #4f46e51a;transform:translateY(-1px)}
+h2{font-size:29px;margin-top:0;border-bottom:3px solid color-mix(in srgb,var(--accent) 28%,transparent);padding-bottom:8px}h3{color:var(--accent);margin-top:25px}.lead{font-size:18px}.muted{color:var(--muted)}
+.grid2,.grid3,.grid4{display:grid;gap:14px}.grid2{grid-template-columns:repeat(2,1fr)}.grid3{grid-template-columns:repeat(3,1fr)}.grid4{grid-template-columns:repeat(4,1fr)}
+.box{padding:16px;border:1px solid var(--border);border-radius:14px;background:color-mix(in srgb,var(--card) 95%,var(--accent) 5%)}.goodbox{border-left:5px solid var(--good)}.warnbox{border-left:5px solid var(--warn)}.badbox{border-left:5px solid var(--bad)}
+code{font-family:Consolas,monospace;background:color-mix(in srgb,var(--accent) 9%,transparent);padding:2px 5px;border-radius:5px}pre{position:relative;background:#0b1020;color:#e5edf8;border-radius:14px;padding:20px;overflow:auto;font-size:14px;line-height:1.55}.copy{position:absolute;right:10px;top:10px;background:#334155;padding:6px 10px}
+table{border-collapse:collapse;width:100%;display:block;overflow:auto}th,td{border:1px solid var(--border);padding:11px;text-align:left;min-width:130px}th{background:color-mix(in srgb,var(--accent) 13%,var(--card))}
+.diagram{padding:20px;border:1px dashed var(--accent);border-radius:16px;background:color-mix(in srgb,var(--accent) 5%,var(--card));overflow:auto}.flow{display:flex;align-items:center;justify-content:center;gap:9px;flex-wrap:wrap}.node{min-width:120px;text-align:center;background:var(--card);border:2px solid var(--accent);padding:14px;border-radius:13px;font-weight:800}.arrow{font-size:25px;color:var(--accent)}figcaption{text-align:center;color:var(--muted);margin-top:12px}
+.progress-wrap{height:14px;background:var(--border);border-radius:20px;overflow:hidden}.progress{height:100%;width:0;background:linear-gradient(90deg,var(--accent),#ec4899)}
+.checkrow{display:flex;gap:9px;align-items:flex-start;margin:8px 0}.note-highlight{background:#fde68a!important;color:#111!important;border-radius:3px}
+.qcard,.flash{border:1px solid var(--border);padding:16px;border-radius:14px;margin:12px 0}.tag{font-size:12px;border-radius:999px;padding:3px 8px;background:color-mix(in srgb,var(--accent) 14%,transparent);font-weight:800}.answer{display:none;margin-top:10px;padding:12px;background:color-mix(in srgb,var(--accent) 8%,transparent);border-radius:10px}.flash{cursor:pointer}.flash .back{display:none}.flash.open .front{display:none}.flash.open .back{display:block}
+.option{display:block;padding:8px;margin:5px 0;border:1px solid var(--border);border-radius:9px}.result{padding:15px;border-radius:12px;margin-top:14px;font-weight:800}.correct{border-color:#22c55e;background:#dcfce7;color:#14532d}.wrong{border-color:#ef4444;background:#fee2e2;color:#7f1d1d}
+input[type=text],textarea,select{width:100%;padding:10px;border:1px solid var(--border);border-radius:9px;background:var(--card);color:var(--text)}textarea{min-height:130px}
+.sparkle{position:fixed;pointer-events:none;width:7px;height:7px;border-radius:50%;background:#facc15;z-index:9999;animation:fade .7s forwards}@keyframes fade{to{transform:scale(0) translateY(-15px);opacity:0}}
+#backtop{position:fixed;right:20px;bottom:20px;display:none;border-radius:50%;width:44px;height:44px}.hidden{display:none!important}
+.certificate{border:8px double var(--accent);padding:30px;text-align:center;background:var(--card)}.certificate h2{font-family:Georgia,serif;font-size:36px;border:0}
+.small{font-size:13px}.center{text-align:center}.xp{font-size:28px;font-weight:900;color:var(--accent)}
+@media(max-width:1150px){.layout{grid-template-columns:240px minmax(0,1fr)}.aside{display:none}.hero{grid-template-columns:1fr}}
+@media(max-width:780px){.layout{grid-template-columns:1fr}.layout nav{position:static;max-height:none}.grid2,.grid3,.grid4{grid-template-columns:1fr}.hero-main{padding:25px}.top{position:static}}
+@media print{.top,nav,.aside,button,#backtop,#readbar{display:none!important}.layout,.hero{display:block;max-width:none}.hero-main{color:#111;background:#fff;border:2px solid #555;box-shadow:none}section{break-inside:avoid;box-shadow:none}.certificate{display:block!important}}
+</style>
+</head>
+<body>
+<div id="readbar"></div>
+<header class="top"><div class="topin"><div class="brand">⚡ TUT: Introduction to PySpark<small>Classroom notes + hands-on lab + interview preparation</small></div><div class="actions"><button class="secondary" onclick="toggleTheme()">🌗 Theme</button><button class="secondary" onclick="fontSize(1)">A+</button><button class="secondary" onclick="fontSize(-1)">A−</button><button class="secondary" onclick="toggleMute()">🔊 Sound</button><button onclick="window.print()">🖨 Print / PDF</button></div></div></header>
+
+<div class="hero">
+ <div class="hero-main">
+  <h1>Introduction to PySpark</h1>
+  <p>Learn how Python communicates with Apache Spark to process large datasets across multiple CPU cores or machines—starting from plain-language concepts and ending with practical DataFrame programs.</p>
+  <div class="chips"><span class="chip">🐍 Python API</span><span class="chip">⚡ Distributed Processing</span><span class="chip">📊 DataFrames</span><span class="chip">🧠 Interview Q&A</span><span class="chip">✅ Local Progress</span></div>
+ </div>
+ <div class="hero-side">
+  <div class="metric"><strong>60–90 min</strong><br>Suggested classroom duration</div>
+  <div class="metric"><strong>30 MCQs</strong><br>Question bank with quiz + timed exam</div>
+  <div class="metric"><strong>Outcome</strong><br>Create a SparkSession, build DataFrames, transform data, and trigger actions.</div>
+ </div>
+</div>
+
+<div class="layout">
+<nav><b>Course Navigation</b>
+<a href="#s1">1. Title & Outcomes</a><a href="#s2">2. Introduction</a><a href="#s3">3. Easy Explanation</a><a href="#s4">4. Technical Architecture</a><a href="#s5">5. First Program</a><a href="#s6">6. Industry Use Case</a><a href="#s7">7. Code Examples</a><a href="#s8">8. Comparisons</a><a href="#s9">9. Best Practices</a><a href="#s10">10. Edge Cases</a><a href="#s11">11. Troubleshooting</a><a href="#s12">12. Interview Q&A</a><a href="#s13">13. Exercises</a><a href="#s14">14. Practice Quiz</a><a href="#s15">15. Formal Exam</a><a href="#s16">16. Glossary</a><a href="#s17">17. Summary</a><a href="#certificate">Certificate</a>
+</nav>
+
+<main>
+<section id="s1"><h2>1. Learning Outcomes</h2>
+<p class="lead">By the end of this tutorial, you will be able to explain PySpark, identify its main components, understand lazy evaluation, and write basic DataFrame transformations and actions.</p>
+<div class="grid2">
+<div class="box"><h3>Before You Start</h3><ul><li>Basic Python syntax</li><li>Simple knowledge of rows and columns</li><li>Java installed for a local Spark setup</li><li>No prior distributed-computing experience required</li></ul></div>
+<div class="box"><h3>You Will Be Able To</h3><ul><li>Create a <code>SparkSession</code></li><li>Create and inspect DataFrames</li><li>Use <code>select</code>, <code>filter</code>, <code>groupBy</code></li><li>Explain driver, executor, job, stage and task</li></ul></div></div>
+<h3>Preparation Tracker</h3><div class="progress-wrap"><div id="prepbar" class="progress"></div></div><p id="preptext">0% prepared</p><div id="checks"></div><button class="secondary" onclick="resetChecks()">Reset Progress</button>
+</section>
+
+<section id="s2"><h2>2. Introduction</h2>
+<p><strong>PySpark</strong> is the Python interface for Apache Spark. Apache Spark is a distributed data-processing engine designed to work with large amounts of data efficiently. PySpark lets Python developers use Spark without writing Scala or Java for every task.</p>
+<p>When data fits comfortably in memory, a normal Python program or pandas may be enough. When the dataset becomes very large, processing it on only one machine can become slow or impossible. Spark can divide the data into partitions and process those partitions in parallel.</p>
+<p>PySpark is widely used in data engineering, ETL pipelines, log analysis, analytics, machine-learning preparation, streaming applications, and cloud-based lakehouse platforms.</p>
+<div class="grid2"><div class="box badbox"><h3>Without Spark</h3><p>One Python process reads and processes all records. CPU, memory and storage limits belong to one computer.</p></div><div class="box goodbox"><h3>With PySpark</h3><p>The work is split into tasks. Multiple cores or machines process different partitions and Spark combines the results.</p></div></div>
+</section>
+
+<section id="s3"><h2>3. Beginner-Friendly Explanation</h2>
+<h3>Analogy: A Large Examination-Paper Evaluation Centre</h3>
+<p>Imagine that 10,000 answer sheets must be corrected. Giving all papers to one teacher is similar to processing a huge file with a single Python process. Spark behaves like a coordinator who divides the answer sheets into bundles and distributes them to many teachers.</p>
+<table><tr><th>Real-world part</th><th>Spark meaning</th></tr><tr><td>Chief coordinator</td><td>Driver program</td></tr><tr><td>Teachers</td><td>Executors</td></tr><tr><td>Bundle of papers</td><td>Partition</td></tr><tr><td>Instruction to evaluate one bundle</td><td>Task</td></tr><tr><td>Final marks report</td><td>Collected or written result</td></tr></table>
+<ol><li>The coordinator receives the evaluation requirement.</li><li>The papers are divided into bundles.</li><li>Teachers work on bundles in parallel.</li><li>If one teacher cannot finish, another can redo that bundle.</li><li>The coordinator combines the scores.</li></ol>
+<div class="warnbox box"><b>Where the analogy stops:</b> Real Spark scheduling includes jobs, stages, shuffles, serialization, memory management and fault recovery. The analogy explains parallel division of work, but not every internal optimization.</div>
+<h3>Memory Aid: “SPLIT”</h3><p><b>S</b>ession starts Spark, <b>P</b>artitions divide data, <b>L</b>azy transformations build a plan, <b>I</b>n parallel executors work, <b>T</b>rigger actions produce results.</p>
+</section>
+
+<section id="s4"><h2>4. Technical Explanation and Architecture</h2>
+<p>PySpark is the Python API of Apache Spark. Python code typically creates a <code>SparkSession</code>, defines transformations on distributed datasets, and asks Spark to execute the resulting logical plan. The driver coordinates execution, while executors perform tasks on data partitions.</p>
+<figure class="diagram"><div class="flow"><div class="node">Python Program<br><small>PySpark API</small></div><span class="arrow">→</span><div class="node">Driver<br><small>SparkSession</small></div><span class="arrow">→</span><div class="node">Cluster Manager</div><span class="arrow">→</span><div class="node">Executor 1<br><small>Tasks</small></div><div class="node">Executor 2<br><small>Tasks</small></div></div><figcaption>Architecture: the driver plans work and executors process data partitions.</figcaption></figure>
+<h3>How to Read the Diagram</h3><ol><li>Your Python program submits DataFrame or RDD operations.</li><li>The driver creates an execution plan.</li><li>A cluster manager allocates resources.</li><li>Executors run tasks against partitions.</li><li>Results are returned to the driver or written to storage.</li></ol>
+<div class="grid3"><div class="box"><b>SparkSession</b><p>Main entry point for DataFrame and SQL operations.</p></div><div class="box"><b>Transformation</b><p>Creates a new dataset definition, such as <code>filter</code>.</p></div><div class="box"><b>Action</b><p>Triggers execution, such as <code>show</code> or <code>count</code>.</p></div></div>
+<h3>Lazy Evaluation</h3><p>Spark does not immediately process data for every transformation. It records the operations and waits for an action. This allows Spark to optimize the complete plan before execution.</p>
+</section>
+
+<section id="s5"><h2>5. Your First PySpark Program</h2>
+<pre><button class="copy" onclick="copyCode(this)">Copy</button><code>from pyspark.sql import SparkSession
+
+spark = (
+    SparkSession.builder
+    .appName("FirstPySparkApp")
+    .master("local[*]")
+    .getOrCreate()
+)
+
+data = [
+    ("Asha", "Sales", 50000),
+    ("Bala", "IT", 65000),
+    ("Charan", "IT", 72000)
+]
+
+df = spark.createDataFrame(data, ["name", "department", "salary"])
+
+df.show()
+
+spark.stop()</code></pre>
+<h3>Line-by-Line Explanation</h3>
+<ol><li><code>SparkSession</code> is imported from <code>pyspark.sql</code>.</li><li><code>builder</code> starts configuration.</li><li><code>appName</code> gives the application a readable name.</li><li><code>local[*]</code> uses available local CPU cores for practice.</li><li><code>getOrCreate()</code> returns an existing session or creates one.</li><li><code>createDataFrame</code> converts local tuples into a Spark DataFrame.</li><li><code>show()</code> is an action that displays rows.</li><li><code>stop()</code> releases Spark resources.</li></ol>
+<pre><code>Expected output:
++------+----------+------+
+|  name|department|salary|
++------+----------+------+
+|  Asha|     Sales| 50000|
+|  Bala|        IT| 65000|
+|Charan|        IT| 72000|
++------+----------+------+</code></pre>
+</section>
+
+<section id="s6"><h2>6. Real-Time Industry Example</h2>
+<h3>Retail Sales Analytics Pipeline</h3>
+<p>A retail company receives millions of sales records from physical stores and an online portal. The company wants daily revenue by city, detection of invalid records, product-category summaries, and output files for a dashboard.</p>
+<figure class="diagram"><div class="flow"><div class="node">CSV / JSON / Database</div><span class="arrow">→</span><div class="node">Read with PySpark</div><span class="arrow">→</span><div class="node">Clean & Validate</div><span class="arrow">→</span><div class="node">Aggregate</div><span class="arrow">→</span><div class="node">Parquet / Lakehouse</div><span class="arrow">→</span><div class="node">BI Dashboard</div></div><figcaption>Retail ETL flow: ingest, clean, transform, aggregate, store and report.</figcaption></figure>
+<ol><li>Read raw files into a DataFrame.</li><li>Remove rows with missing order IDs.</li><li>Convert amount and date columns to correct types.</li><li>Group by city and business date.</li><li>Write compressed Parquet output.</li><li>A dashboard reads the prepared dataset.</li></ol>
+</section>
+
+<section id="s7"><h2>7. Essential Code Examples</h2>
+<h3>Create a DataFrame</h3><pre><button class="copy" onclick="copyCode(this)">Copy</button><code>employees = [
+    (101, "Anu", "IT", 70000),
+    (102, "Bala", "HR", 48000),
+    (103, "Cathy", "IT", 82000),
+    (104, "Deepak", "Sales", 55000)
+]
+
+df = spark.createDataFrame(
+    employees,
+    ["id", "name", "department", "salary"]
+)
+
+df.printSchema()
+df.show()</code></pre>
+<h3>Select and Filter</h3><pre><button class="copy" onclick="copyCode(this)">Copy</button><code># Transformation: choose columns
+selected = df.select("name", "salary")
+
+# Transformation: keep salaries above 60,000
+high_paid = selected.filter(selected.salary > 60000)
+
+# Action: execute and display
+high_paid.show()</code></pre>
+<h3>Group and Aggregate</h3><pre><button class="copy" onclick="copyCode(this)">Copy</button><code>from pyspark.sql.functions import avg, count
+
+summary = (
+    df.groupBy("department")
+      .agg(
+          count("*").alias("employee_count"),
+          avg("salary").alias("average_salary")
+      )
+)
+
+summary.show()</code></pre>
+<h3>Read and Write Files</h3><pre><button class="copy" onclick="copyCode(this)">Copy</button><code>sales = (
+    spark.read
+         .option("header", True)
+         .option("inferSchema", True)
+         .csv("sales.csv")
+)
+
+sales.write.mode("overwrite").parquet("output/sales_parquet")</code></pre>
+<div class="grid2"><div class="box badbox"><h3>What Not to Do</h3><pre><code>all_rows = df.collect()</code></pre><p>On a large DataFrame, this sends every row to driver memory and can crash the application.</p></div><div class="box goodbox"><h3>Safer Preview</h3><pre><code>df.show(20, truncate=False)
+sample = df.limit(100)</code></pre><p>Inspect only the amount needed for debugging.</p></div></div>
+</section>
+
+<section id="s8"><h2>8. Comparison Table</h2>
+<table><tr><th>Feature</th><th>PySpark DataFrame</th><th>pandas DataFrame</th><th>PySpark RDD</th></tr><tr><td>Processing model</td><td>Distributed</td><td>Single machine</td><td>Distributed</td></tr><tr><td>Schema</td><td>Structured</td><td>Structured</td><td>Object-based</td></tr><tr><td>Optimization</td><td>Catalyst optimizer</td><td>Local library operations</td><td>Limited automatic query optimization</td></tr><tr><td>Typical use</td><td>Large-scale ETL and analytics</td><td>Small/medium local analysis</td><td>Low-level custom distributed processing</td></tr><tr><td>Ease of SQL</td><td>Strong</td><td>Not native Spark SQL</td><td>Not the primary API</td></tr></table>
+<p><b>Choose pandas</b> when data fits comfortably on one machine and interactive analysis matters. <b>Choose PySpark DataFrames</b> for scalable structured ETL and analytics. <b>Choose RDDs</b> only when you need low-level control not conveniently expressed with DataFrames.</p>
+</section>
+
+<section id="s9"><h2>9. Best Practices</h2>
+<div class="grid2"><div class="box goodbox"><h3>Do</h3><ul><li>Define schemas explicitly for production data. <b>Why:</b> avoids incorrect type inference.</li><li>Use built-in Spark functions. <b>Why:</b> they are easier for Spark to optimize.</li><li>Filter early. <b>Why:</b> fewer rows move through later stages.</li><li>Use Parquet for analytics. <b>Why:</b> columnar storage supports pruning and compression.</li><li>Cache only reused datasets. <b>Why:</b> cache consumes memory.</li></ul></div><div class="box badbox"><h3>Avoid</h3><ul><li>Frequent <code>collect()</code>. <b>Why:</b> driver memory is limited.</li><li>Too many small output files. <b>Why:</b> file-system overhead increases.</li><li>Python UDFs for simple logic. <b>Why:</b> built-in expressions are usually faster.</li><li>Blindly using <code>inferSchema</code>. <b>Why:</b> it adds a scan and can infer poorly.</li><li>Ignoring partition sizes. <b>Why:</b> skew and tiny tasks reduce performance.</li></ul></div></div>
+</section>
+
+<section id="s10"><h2>10. Edge Cases and Gotchas</h2>
+<ul><li><b>Null comparisons:</b> use <code>isNull()</code> or <code>isNotNull()</code>; normal equality does not handle SQL null semantics as expected.</li><li><b>Column ambiguity after joins:</b> aliases or explicit column selection may be required.</li><li><b>Data skew:</b> one key may contain most records, causing one task to run much longer.</li><li><b>CSV type problems:</b> malformed numbers can become null or fail under strict modes.</li><li><b>Lazy errors:</b> a transformation may look successful, but its error appears only when an action runs.</li><li><b>Local mode confusion:</b> <code>local[*]</code> uses one computer; it does not automatically create a real multi-machine cluster.</li><li><b>Output path behavior:</b> write mode and storage system determine whether an existing path is overwritten, appended or rejected.</li></ul>
+</section>
+
+<section id="s11"><h2>11. Troubleshooting</h2>
+<table><tr><th>Symptom</th><th>Cause</th><th>Fix</th></tr><tr><td><code>ModuleNotFoundError: pyspark</code></td><td>PySpark is not installed in the active Python environment.</td><td>Run <code>pip install pyspark</code> in that environment.</td></tr><tr><td><code>JAVA_HOME is not set</code></td><td>Java is missing or its location is unknown.</td><td>Install a supported JDK and configure <code>JAVA_HOME</code>.</td></tr><tr><td>Spark UI or job hangs</td><td>Resource, port, network or previous-session issue.</td><td>Stop old sessions, inspect logs, verify memory and retry with a small dataset.</td></tr><tr><td><code>AnalysisException</code> for a column</td><td>Column name is missing, misspelled or ambiguous.</td><td>Run <code>printSchema()</code> and check aliases.</td></tr><tr><td>Driver out-of-memory</td><td>Too much data was collected locally.</td><td>Aggregate in Spark, use <code>limit</code>, and write results instead of collecting all rows.</td></tr><tr><td>Slow join</td><td>Shuffle, skew or poor partitioning.</td><td>Filter first, inspect key distribution and consider a broadcast join for a genuinely small table.</td></tr></table>
+</section>
+
+<section id="s12"><h2>12. Interview Questions and Answers</h2><p>Click a card to flip it.</p><div id="flashcards"></div><button class="secondary" onclick="resetSchedule()">Reset Flashcard Schedule</button></section>
+
+<section id="s13"><h2>13. Active Practice Exercises</h2>
+<h3>A. Fill in the Blank</h3>
+<div class="qcard"><p>Complete: <code>SparkSession.builder.____("Demo").getOrCreate()</code></p><input id="f1" type="text"><button onclick="checkFill('f1','appName','fr1')">Check</button><button class="secondary" onclick="reveal('fr1','Answer: appName')">Reveal</button><div id="fr1"></div></div>
+<div class="qcard"><p>Complete: <code>df.____(df.salary &gt; 50000)</code></p><input id="f2" type="text"><button onclick="checkFill('f2','filter','fr2')">Check</button><button class="secondary" onclick="reveal('fr2','Answer: filter')">Reveal</button><div id="fr2"></div></div>
+<h3>B. Matching</h3><p>Select the matching definition for each term.</p><div id="matching"></div><button onclick="checkMatching()">Check Matching</button><div id="matchresult"></div>
+<h3>C. Ordering</h3><p>Arrange the PySpark workflow. Use the arrow buttons.</p><div id="ordering"></div><button onclick="checkOrder()">Check Order</button><div id="orderresult"></div>
+</section>
+
+<section id="s14"><h2>14. Interactive Practice Quiz</h2><p>15 questions are drawn and shuffled. Mark your confidence before submitting.</p><div id="quiz"></div><button id="quizSubmit" onclick="submitQuiz()">Submit Practice Quiz</button><button class="secondary" onclick="startQuiz()">Retry / Reshuffle</button><div id="quizResult"></div></section>
+
+<section id="s15"><h2>15. Formal Timed Exam</h2><p><b>15 questions • 15 minutes • Pass mark 60% • No negative marking</b></p><button class="good" onclick="startExam()">Start Test</button><div id="timer" class="xp"></div><div id="exam"></div><button id="examSubmit" class="hidden danger" onclick="submitExam()">Submit Exam</button><div id="examResult"></div><div id="weakRetry"></div></section>
+
+<section id="s16"><h2>16. Glossary</h2>
+<div class="grid2"><div class="box"><b>Action</b><p>An operation that triggers execution and returns or writes a result.</p></div><div class="box"><b>DataFrame</b><p>A distributed table-like dataset with named columns and schema.</p></div><div class="box"><b>Driver</b><p>The process that plans and coordinates a Spark application.</p></div><div class="box"><b>Executor</b><p>A worker process that runs tasks and stores data.</p></div><div class="box"><b>Lazy Evaluation</b><p>Delaying execution until an action requires a result.</p></div><div class="box"><b>Partition</b><p>A logical chunk of distributed data processed by a task.</p></div><div class="box"><b>Shuffle</b><p>Redistribution of data across partitions, often caused by joins and grouping.</p></div><div class="box"><b>Transformation</b><p>An operation that defines a new dataset without immediately executing it.</p></div></div>
+</section>
+
+<section id="s17"><h2>17. Summary and Quick Revision</h2>
+<ul><li>PySpark is the Python API for Apache Spark.</li><li><code>SparkSession</code> is the main entry point for DataFrame work.</li><li>Transformations are lazy; actions trigger execution.</li><li>Data is split into partitions, and executors run tasks.</li><li>Prefer DataFrames and built-in functions for structured data.</li><li>Avoid collecting large datasets into driver memory.</li><li>Use schema-aware, columnar formats such as Parquet for analytics pipelines.</li></ul>
+<h3>What to Learn Next</h3><div class="flow"><div class="node">Python Basics</div><span class="arrow">→</span><div class="node">PySpark Introduction</div><span class="arrow">→</span><div class="node">DataFrame Operations</div><span class="arrow">→</span><div class="node">Spark SQL</div><span class="arrow">→</span><div class="node">Optimization & Streaming</div></div>
+</section>
+
+<section><h2>Personal Notes</h2><p>Double-click any word or text fragment on the page to save it as a highlighted note.</p><textarea id="notes" placeholder="Saved notes appear here. You can also type your own notes."></textarea><button onclick="saveManualNotes()">Save Notes</button><button class="secondary" onclick="clearNotes()">Clear Notes</button><button class="secondary" onclick="exportData()">Export Learning Data</button><label class="btn secondary">Import Data<input type="file" id="importFile" hidden onchange="importData(event)"></label><h3>Score History</h3><div id="history"></div></section>
+
+<section id="certificate" class="certificate hidden"><h2>Certificate of Completion</h2><p>This certifies that</p><input id="certname" type="text" placeholder="Enter learner name" style="max-width:420px;text-align:center"><h3>has completed</h3><h1>Introduction to PySpark</h1><p>including concepts, hands-on practice, quiz and formal assessment.</p><p id="certdate"></p><button onclick="window.print()">Print Certificate</button></section>
+</main>
+
+<aside class="aside"><b>Learning Dashboard</b><p>XP</p><div id="xp" class="xp">0</div><p>Best Exam</p><div id="best" class="xp">0%</div><p>Badges</p><div id="badges">Start learning to earn badges.</div><hr><b>Trainer Flow</b><ol><li>Explain distributed processing.</li><li>Draw driver/executor architecture.</li><li>Run the first DataFrame.</li><li>Demonstrate lazy evaluation.</li><li>Compare pandas, DataFrame and RDD.</li><li>Complete quiz and exam.</li></ol></aside>
+</div>
+<button id="backtop" onclick="scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+const KEY='pyspark_tut_v1';let font=100,mute=false,examTimer=null,examQuestions=[],quizQuestions=[],usedQuizIds=[];
+const state=load()||{checks:{},notes:[],manual:'',scores:[],xp:0,best:0,schedule:{}};
+function load(){try{return JSON.parse(localStorage.getItem(KEY))}catch(e){return null}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){} renderDash()}
+function toggleTheme(){document.body.classList.toggle('dark');localStorage.setItem(KEY+'_theme',document.body.classList.contains('dark')?'dark':'light')}
+if(localStorage.getItem(KEY+'_theme')==='dark')document.body.classList.add('dark');
+function fontSize(d){font=Math.max(80,Math.min(130,font+d*5));document.documentElement.style.fontSize=font+'%'}
+function toggleMute(){mute=!mute;event.target.textContent=mute?'🔇 Sound':'🔊 Sound'}
+function beep(good=true){if(mute)return;try{let a=new AudioContext(),o=a.createOscillator(),g=a.createGain();o.connect(g);g.connect(a.destination);o.frequency.value=good?650:220;g.gain.value=.06;o.start();o.stop(a.currentTime+.14)}catch(e){}}
+function copyCode(btn){navigator.clipboard.writeText(btn.parentElement.innerText.replace('Copy','').trim());btn.textContent='Copied';setTimeout(()=>btn.textContent='Copy',1200)}
+window.addEventListener('scroll',()=>{let h=document.documentElement;readbar.style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%';backtop.style.display=h.scrollTop>600?'block':'none'});
+document.addEventListener('mousemove',e=>{if(Math.random()<.08){let s=document.createElement('i');s.className='sparkle';s.style.left=e.clientX+'px';s.style.top=e.clientY+'px';document.body.appendChild(s);setTimeout(()=>s.remove(),700)}});
+
+const topics=['Explain PySpark','Create SparkSession','Understand partitions','Use DataFrames','Apply transformations','Trigger actions','Read/write files','Handle common errors'];
+function renderChecks(){checks.innerHTML=topics.map((t,i)=>`<label class="checkrow"><input type="checkbox" ${state.checks[i]?'checked':''} onchange="setCheck(${i},this.checked)"> ${t}</label>`).join('');let n=Object.values(state.checks).filter(Boolean).length,p=Math.round(n/topics.length*100);prepbar.style.width=p+'%';preptext.textContent=p+'% prepared'}
+function setCheck(i,v){state.checks[i]=v;if(v)state.xp+=5;save();renderChecks()}
+function resetChecks(){state.checks={};save();renderChecks()}
+
+const qa=[
+['Beginner','What is PySpark?','PySpark is the Python API for Apache Spark. It allows Python developers to build distributed data-processing applications using Spark’s execution engine.'],
+['Beginner','What is SparkSession?','SparkSession is the main entry point for DataFrame and Spark SQL operations. It replaces the need to separately create several older contexts for common work.'],
+['Beginner','What is a DataFrame?','A DataFrame is a distributed collection of rows organized into named columns. It also has a schema, allowing Spark to understand and optimize operations.'],
+['Beginner','Transformation vs action?','A transformation defines a new dataset, such as filter or select. An action, such as count or show, triggers Spark to execute the plan.'],
+['Beginner','What is a partition?','A partition is a logical chunk of a distributed dataset. Spark generally runs one task for each partition in a stage.'],
+['Intermediate','What is lazy evaluation?','Spark records transformations instead of immediately executing them. When an action is called, Spark optimizes the complete plan and then runs it.'],
+['Intermediate','What is the driver?','The driver runs the main application logic, creates the execution plan and coordinates executors. Driver memory must be protected from oversized collect operations.'],
+['Intermediate','What is an executor?','An executor is a worker process that runs tasks and stores cached or shuffled data. Executors are allocated for the Spark application.'],
+['Intermediate','Why prefer built-in functions over Python UDFs?','Built-in Spark expressions remain visible to the optimizer and usually execute more efficiently. Python UDFs can add serialization overhead and reduce optimization opportunities.'],
+['Intermediate','What causes a shuffle?','Operations such as groupBy, distinct, repartition and many joins redistribute data across partitions. This network and disk movement is expensive.'],
+['Advanced','What is data skew?','Data skew occurs when some partition keys contain far more records than others. A small number of tasks then become stragglers and delay the entire stage.'],
+['Advanced','When should a broadcast join be used?','Use it when one side of a join is genuinely small enough to copy to executors. It can avoid a large shuffle, but broadcasting a large table can exhaust memory.'],
+['Advanced','Why is collect dangerous?','collect transfers every row to the driver. If the result is large, driver memory can be exhausted even though the cluster has plenty of executor memory.'],
+['Advanced','What is Catalyst?','Catalyst is Spark SQL’s query optimizer. It analyzes logical plans, applies optimization rules and produces an executable physical plan.'],
+['Advanced','What is lineage?','Lineage records how a distributed dataset was derived from its sources. Spark can use lineage to recompute lost partitions after certain failures.']
+];
+function renderFlash(){flashcards.innerHTML=qa.map((x,i)=>`<div class="flash" onclick="this.classList.toggle('open')"><div class="front"><span class="tag">${x[0]}</span><h3>${x[1]}</h3><p class="muted">Click to reveal answer</p></div><div class="back"><b>${x[2]}</b><div style="margin-top:10px"><button onclick="rateCard(event,${i},1)">Again</button> <button onclick="rateCard(event,${i},2)">Hard</button> <button onclick="rateCard(event,${i},3)">Good</button> <button onclick="rateCard(event,${i},4)">Easy</button></div></div></div>`).join('')}
+function rateCard(e,i,r){e.stopPropagation();let days=[0,1,3,7][r-1];state.schedule[i]=Date.now()+days*86400000;state.xp+=r;save()}
+function resetSchedule(){state.schedule={};save()}
+
+function checkFill(id,ans,out){let ok=document.getElementById(id).value.trim().toLowerCase()===ans.toLowerCase();document.getElementById(out).innerHTML=`<div class="result ${ok?'correct':'wrong'}">${ok?'Correct!':'Try again.'} The answer is <code>${ans}</code>.</div>`;if(ok){state.xp+=5;save()}}
+function reveal(id,text){document.getElementById(id).innerHTML='<div class="result correct">'+text+'</div>'}
+const matchItems=[['Driver','Plans and coordinates the application'],['Executor','Runs tasks on data partitions'],['Action','Triggers Spark execution'],['Transformation','Builds a new dataset definition']];
+function renderMatching(){matching.innerHTML=matchItems.map((x,i)=>`<div class="qcard"><b>${x[0]}</b><select id="m${i}"><option value="">Choose...</option>${matchItems.map(y=>`<option>${y[1]}</option>`).join('')}</select></div>`).join('')}
+function checkMatching(){let n=matchItems.filter((x,i)=>document.getElementById('m'+i).value===x[1]).length;matchresult.innerHTML=`<div class="result ${n===4?'correct':'wrong'}">${n}/4 correct.</div>`;state.xp+=n;save()}
+let order=['Create SparkSession','Read or create DataFrame','Define transformations','Call an action','Stop SparkSession'].sort(()=>Math.random()-.5);
+function renderOrder(){ordering.innerHTML=order.map((x,i)=>`<div class="qcard">${i+1}. ${x} <button class="secondary" onclick="move(${i},-1)">↑</button> <button class="secondary" onclick="move(${i},1)">↓</button></div>`).join('')}
+function move(i,d){let j=i+d;if(j<0||j>=order.length)return;[order[i],order[j]]=[order[j],order[i]];renderOrder()}
+function checkOrder(){let right=['Create SparkSession','Read or create DataFrame','Define transformations','Call an action','Stop SparkSession'];let ok=order.every((x,i)=>x===right[i]);orderresult.innerHTML=`<div class="result ${ok?'correct':'wrong'}">${ok?'Correct sequence!':'Not yet. Think: session → data → plan → action → stop.'}</div>`;if(ok){state.xp+=10;save()}}
+
+const bank=[
+['Basics','PySpark is primarily the Python API for which engine?',['Apache Spark','Hadoop HDFS','Kafka','NumPy'],0,'PySpark exposes Apache Spark functionality to Python.'],
+['Basics','Which object is the normal entry point for DataFrame operations?',['SparkSession','SparkTask','DataNode','PythonSession'],0,'SparkSession is the main entry point.'],
+['Basics','Which master setting uses all available local cores?',['local[*]','cluster[all]','python[*]','spark.local'],0,'local[*] uses all available local CPU cores.'],
+['DataFrame','Which method displays DataFrame rows?',['show()','printRows()','displayAll()','collectOnly()'],0,'show() displays a limited table of rows.'],
+['DataFrame','Which method shows column names and data types?',['printSchema()','describeCode()','showTypes()','columnsInfo()'],0,'printSchema prints the schema tree.'],
+['Execution','Which is an action?',['count()','filter()','select()','withColumn()'],0,'count triggers computation and returns a result.'],
+['Execution','Which is a transformation?',['filter()','collect()','count()','show()'],0,'filter defines a new DataFrame lazily.'],
+['Execution','Lazy evaluation means Spark...',['waits for an action before executing','never executes code','stores all data in Python','runs only one task'],0,'Transformations are planned until an action triggers execution.'],
+['Architecture','The driver mainly...',['plans and coordinates work','stores HDFS blocks','replaces Python','acts as a database table'],0,'The driver coordinates the application.'],
+['Architecture','Executors primarily...',['run tasks','write Python syntax','create user accounts','manage source control'],0,'Executors perform tasks on partitions.'],
+['Architecture','A partition is...',['a logical chunk of distributed data','a database password','a Python package','a Spark license'],0,'Partitions are units of distributed data.'],
+['Performance','Why can collect() be dangerous?',['It transfers all rows to driver memory','It deletes partitions','It disables schemas','It always creates a shuffle'],0,'Large results can exhaust driver memory.'],
+['Performance','Which format is commonly preferred for analytical storage?',['Parquet','Plain BMP','EXE','DOCX'],0,'Parquet is columnar and compressed.'],
+['Performance','Which operation often causes a shuffle?',['groupBy','select one column','limit','printSchema'],0,'Grouping redistributes records by key.'],
+['Performance','A broadcast join is useful when...',['one table is small','both tables are always huge','there is no join key','the driver is disabled'],0,'A small table can be copied to executors.'],
+['SQL','Which function is used to create an aggregate average?',['avg','meanOnlyPython','averageRow','sumText'],0,'avg is a built-in Spark SQL aggregate.'],
+['SQL','Which operation chooses particular columns?',['select','collect','cache','stop'],0,'select projects columns.'],
+['Files','Which reader option treats the first CSV row as column names?',['header','columnsFirst','schemaRow','title'],0,'option("header", True) uses the header row.'],
+['Files','Which write mode replaces existing output?',['overwrite','replaceRow','deleteAll','fresh'],0,'overwrite replaces existing data at the destination.'],
+['Files','Why define schemas explicitly?',['To improve correctness and avoid bad inference','To remove all partitions','To convert Spark to pandas','To disable optimization'],0,'Explicit schemas improve reliability.'],
+['Errors','AnalysisException often indicates...',['an invalid or ambiguous query/column','a broken keyboard','missing internet only','a successful action'],0,'It commonly reports unresolved columns or invalid analysis.'],
+['Errors','If PySpark cannot be imported, first check...',['the active Python environment and installation','the CSV delimiter only','Spark UI colors','the number of rows'],0,'PySpark must be installed in the active environment.'],
+['Errors','JAVA_HOME errors usually mean...',['Java path is missing or incorrect','the DataFrame has nulls','a join is too fast','the schema has strings'],0,'Spark requires a valid Java setup.'],
+['Optimization','Catalyst is Spark SQL’s...',['query optimizer','file server','Python installer','cluster password'],0,'Catalyst optimizes logical and physical plans.'],
+['Optimization','Data skew means...',['some keys create much larger partitions','all partitions are equal','there are no records','only CSV is supported'],0,'Uneven key distribution creates straggler tasks.'],
+['RDD','RDD stands for...',['Resilient Distributed Dataset','Rapid Database Driver','Remote Data Definition','Reusable Driver Data'],0,'RDD means Resilient Distributed Dataset.'],
+['RDD','For structured ETL, the preferred API is usually...',['DataFrame','raw socket','text editor','single list'],0,'DataFrames support schemas and optimization.'],
+['Streaming','Structured Streaming treats incoming data conceptually as...',['an unbounded table','a static Python tuple','a Java class only','a single CSV row'],0,'It models streaming data as an unbounded table.'],
+['Memory','cache() is most useful when...',['a dataset is reused','a dataset is never referenced again','the driver must stop','you want to rename a column'],0,'Caching helps repeated computations.'],
+['General','What should be called to release a local Spark session?',['spark.stop()','spark.delete()','driver.end()','python.closeAll()'],0,'spark.stop releases resources.']
+].map((q,i)=>({id:i,topic:q[0],q:q[1],opts:q[2],ans:q[3],exp:q[4]}));
+function shuffle(a){return [...a].sort(()=>Math.random()-.5)}
+function shuffledQuestion(q){let arr=q.opts.map((x,i)=>({x,ok:i===q.ans}));arr=shuffle(arr);return {...q,choices:arr}}
+function renderSet(list,el,prefix,confidence=false){el.innerHTML=list.map((q,i)=>`<div class="qcard" id="${prefix}q${i}"><p><b>${i+1}. ${q.q}</b> <span class="tag">${q.topic}</span></p>${q.choices.map((o,j)=>`<label class="option"><input type="radio" name="${prefix}${i}" value="${j}"> ${o.x}</label>`).join('')}${confidence?`<label>Confidence: <select id="${prefix}c${i}"><option>Sure</option><option>Unsure</option></select></label>`:''}<div id="${prefix}e${i}"></div></div>`).join('')}
+function startQuiz(){quizQuestions=shuffle(bank).slice(0,15).map(shuffledQuestion);usedQuizIds=quizQuestions.map(x=>x.id);renderSet(quizQuestions,quiz,'pq',true);quizResult.innerHTML=''}
+function grade(list,prefix,show=true){let score=0,miss=[];list.forEach((q,i)=>{let s=document.querySelector(`input[name="${prefix}${i}"]:checked`),ok=s&&q.choices[+s.value].ok;if(ok)score++;else miss.push(q);if(show){document.getElementById(prefix+'e'+i).innerHTML=`<div class="result ${ok?'correct':'wrong'}">${ok?'Correct':'Incorrect'} — ${q.exp}</div>`}});return {score,miss}}
+function tier(p){return p===100?'🏆 Perfect':p>=90?'🌟 Excellent':p>=75?'👏 Very Good':p>=60?'✅ Passed':'📘 Keep Practising'}
+function submitQuiz(){let r=grade(quizQuestions,'pq'),p=Math.round(r.score/15*100);quizResult.innerHTML=`<div class="result ${p>=60?'correct':'wrong'}">${tier(p)} — ${r.score}/15 (${p}%)</div>`;state.scores.push({type:'Quiz',score:p,date:new Date().toLocaleString()});state.xp+=r.score*2;save();beep(p>=60);renderHistory()}
+function startExam(){clearInterval(examTimer);examQuestions=shuffle(bank.filter(x=>!usedQuizIds.includes(x.id))).slice(0,15).map(shuffledQuestion);renderSet(examQuestions,exam,'ex');examSubmit.classList.remove('hidden');examResult.innerHTML='';weakRetry.innerHTML='';let left=900;timer.textContent='15:00';examTimer=setInterval(()=>{left--;timer.textContent=Math.floor(left/60)+':'+String(left%60).padStart(2,'0');if(left<=0)submitExam()},1000)}
+function submitExam(){if(!examQuestions.length)return;clearInterval(examTimer);let r=grade(examQuestions,'ex'),p=Math.round(r.score/15*100);examResult.innerHTML=`<div class="result ${p>=60?'correct':'wrong'}">${tier(p)} — ${r.score}/15 (${p}%)</div>`;state.scores.push({type:'Exam',score:p,date:new Date().toLocaleString()});state.xp+=r.score*5;state.best=Math.max(state.best,p);save();beep(p>=60);renderHistory();if(r.miss.length)weakRetry.innerHTML=`<h3>Weak Topic Retry</h3><p>Review: ${[...new Set(r.miss.map(x=>x.topic))].join(', ')}</p><button onclick="startWeak()">Start Mini Quiz</button><div id="weak"></div>`;if(p>=60)certificate.classList.remove('hidden')}
+function startWeak(){let missed=examQuestions.filter((q,i)=>{let s=document.querySelector(`input[name="ex${i}"]:checked`);return !s||!q.choices[+s.value].ok}).slice(0,5).map(shuffledQuestion);renderSet(missed,weak,'wk')}
+
+function renderDash(){xp.textContent=state.xp||0;best.textContent=(state.best||0)+'%';let b=[];if(state.xp>=50)b.push('🎯 Starter');if(state.xp>=150)b.push('⚡ Spark Learner');if(state.best>=60)b.push('✅ Exam Pass');if(state.best>=90)b.push('🏆 PySpark Star');badges.textContent=b.join(' • ')||'Start learning to earn badges.'}
+function renderHistory(){history.innerHTML=(state.scores||[]).slice().reverse().map(x=>`<div class="box">${x.type}: <b>${x.score}%</b> — ${x.date}</div>`).join('')||'<p>No attempts yet.</p>'}
+document.addEventListener('dblclick',e=>{let t=window.getSelection().toString().trim()||e.target.innerText?.trim();if(!t||t.length>300)return;state.notes.push(t);e.target.classList.add('note-highlight');notes.value=(state.notes||[]).join('\n• ');save()})
+function saveManualNotes(){state.manual=notes.value;save()}
+function clearNotes(){state.notes=[];state.manual='';notes.value='';document.querySelectorAll('.note-highlight').forEach(x=>x.classList.remove('note-highlight'));save()}
+function exportData(){let blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='pyspark-learning-data.json';a.click()}
+function importData(e){let r=new FileReader();r.onload=()=>{try{Object.assign(state,JSON.parse(r.result));save();location.reload()}catch(err){alert('Invalid data file')}};r.readAsText(e.target.files[0])}
+
+renderChecks();renderFlash();renderMatching();renderOrder();startQuiz();renderDash();renderHistory();notes.value=state.manual||(state.notes||[]).join('\n• ');certdate.textContent='Date: '+new Date().toLocaleDateString();
+</script>
+</body>
+</html>
