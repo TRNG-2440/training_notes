@@ -1,0 +1,13 @@
+order_id,order_date,customer_id,city,category,quantity,unit_price,discount_pct,status
+1001,2026-07-01,C101,Coimbatore,Electronics,2,25000,5,COMPLETED
+1002,2026-07-01,C102,Chennai,Grocery,10,120,0,COMPLETED
+1003,2026-07-01,C103,Bengaluru,Fashion,3,1800,10,COMPLETED
+1004,2026-07-02,C104,Coimbatore,Grocery,5,250,0,CANCELLED
+1005,2026-07-02,C105,Chennai,Electronics,1,62000,8,COMPLETED
+1006,2026-07-02,C106,Hyderabad,Fashion,4,2200,15,COMPLETED
+1007,2026-07-03,C107,Bengaluru,Grocery,20,95,2,COMPLETED
+1008,2026-07-03,C108,Hyderabad,Electronics,2,18000,5,RETURNED
+1009,2026-07-03,C109,Coimbatore,Fashion,5,1400,0,COMPLETED
+1010,2026-07-04,C110,Chennai,Grocery,12,150,5,COMPLETED
+1011,2026-07-04,C111,Bengaluru,Electronics,1,45000,12,COMPLETED
+1012,2026-07-04,C112,Hyderabad,Grocery,8,210,0,COMPLETED

@@ -1,0 +1,11 @@
+trip_id,driver_id,city,fare,distance_km,status
+101,D001,Phoenix,250.00,8.5,Completed
+102,D002,Scottsdale,400.00,14.2,Completed
+103,D001,Phoenix,300.00,10.1,Completed
+104,D003,Tempe,550.00,18.7,Completed
+105,D004,Scottsdale,150.00,4.4,Cancelled
+106,D002,Scottsdale,475.00,16.3,Completed
+107,D005,Mesa,700.00,22.8,Completed
+108,D003,Tempe,325.00,9.7,Completed
+109,D006,Tucson,210.00,6.5,Completed
+110,D001,Phoenix,275.00,8.9,Completed
