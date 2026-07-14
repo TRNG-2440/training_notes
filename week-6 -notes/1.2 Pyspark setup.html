@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spark Setup with PySpark — Complete Classroom Tutorial</title>
+<style>
+:root{
+  --bg:#f4f7fb;--surface:#ffffff;--surface2:#eef3fb;--text:#172033;--muted:#5d6980;
+  --brand:#e25a2c;--brand2:#243b6b;--good:#16855b;--warn:#ad6500;--bad:#b42318;
+  --border:#d8e0ee;--shadow:0 12px 35px rgba(36,59,107,.12);--code:#111827;--codeText:#e5edf8;
+}
+body.dark{
+  --bg:#0e1420;--surface:#151d2b;--surface2:#1d2738;--text:#eef4ff;--muted:#aebad0;
+  --brand:#ff845b;--brand2:#8eb2ff;--good:#55d49b;--warn:#ffc46b;--bad:#ff8077;
+  --border:#2c3a52;--shadow:0 12px 35px rgba(0,0,0,.28);--code:#080d15;--codeText:#eaf2ff;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,Segoe UI,Arial,sans-serif;line-height:1.65}
+a{color:var(--brand2)}
+button,input,textarea{font:inherit}
+header{
+  position:sticky;top:0;z-index:30;background:color-mix(in srgb,var(--surface) 92%,transparent);
+  backdrop-filter:blur(14px);border-bottom:1px solid var(--border)
+}
+.topbar{max-width:1500px;margin:auto;padding:10px 18px;display:flex;gap:12px;align-items:center}
+.logo{font-size:1.25rem;font-weight:900;color:var(--brand);white-space:nowrap}
+.search{flex:1;max-width:520px;padding:10px 13px;border:1px solid var(--border);border-radius:12px;background:var(--surface);color:var(--text)}
+.icon-btn,.primary,.secondary{
+  border:0;border-radius:11px;padding:9px 13px;cursor:pointer;font-weight:750
+}
+.icon-btn,.secondary{background:var(--surface2);color:var(--text);border:1px solid var(--border)}
+.primary{background:var(--brand);color:white}
+.progress-wrap{height:5px;background:var(--surface2)}
+#topProgress{height:100%;width:0;background:linear-gradient(90deg,var(--brand),var(--good));transition:.25s}
+.layout{max-width:1500px;margin:auto;display:grid;grid-template-columns:285px minmax(0,1fr) 280px;gap:20px;padding:22px 18px 60px}
+aside{position:sticky;top:77px;align-self:start;max-height:calc(100vh - 95px);overflow:auto}
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:17px;padding:15px;box-shadow:var(--shadow)}
+.nav-title{font-size:.78rem;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);font-weight:900;margin:6px 4px 10px}
+nav a{display:flex;gap:8px;align-items:flex-start;padding:8px;border-radius:9px;text-decoration:none;color:var(--text);font-size:.9rem}
+nav a:hover,nav a.active{background:var(--surface2);color:var(--brand)}
+nav input{margin-top:5px;accent-color:var(--good)}
+main{min-width:0}
+.hero{
+  background:linear-gradient(135deg,#213764,#e25a2c);color:white;border-radius:24px;
+  padding:38px;box-shadow:var(--shadow);position:relative;overflow:hidden
+}
+.hero:after{content:"⚡";position:absolute;right:28px;bottom:-28px;font-size:10rem;opacity:.12}
+.eyebrow{text-transform:uppercase;letter-spacing:.15em;font-size:.8rem;font-weight:900;opacity:.85}
+h1{font-size:clamp(2rem,5vw,3.8rem);line-height:1.03;margin:10px 0}
+.hero p{max-width:800px;font-size:1.05rem}
+.badges{display:flex;flex-wrap:wrap;gap:9px;margin-top:18px}
+.badge{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);padding:6px 10px;border-radius:999px;font-weight:700;font-size:.85rem}
+section{
+  scroll-margin-top:90px;background:var(--surface);border:1px solid var(--border);border-radius:20px;
+  padding:28px;margin-top:20px;box-shadow:var(--shadow);transition:.2s
+}
+section:hover{border-color:color-mix(in srgb,var(--brand) 55%,var(--border));transform:translateY(-1px)}
+h2{font-size:1.75rem;margin:0 0 10px;color:var(--brand2)}
+h3{margin-top:24px;color:var(--brand2)}
+.lead{font-size:1.05rem;color:var(--muted)}
+.grid2,.grid3{display:grid;gap:15px}
+.grid2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.grid3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.card{background:var(--surface2);border:1px solid var(--border);border-radius:15px;padding:16px}
+.card strong{color:var(--brand2)}
+.callout{padding:14px 16px;border-left:5px solid var(--brand);background:var(--surface2);border-radius:10px;margin:16px 0}
+.callout.good{border-color:var(--good)}.callout.warn{border-color:var(--warn)}.callout.bad{border-color:var(--bad)}
+code{font-family:Consolas,Monaco,monospace}
+.codebox{position:relative;margin:15px 0}
+pre{background:var(--code);color:var(--codeText);padding:18px;border-radius:14px;overflow:auto;line-height:1.5;margin:0}
+.copy-btn{position:absolute;right:8px;top:8px;border:1px solid #44516a;background:#202c41;color:white;border-radius:8px;padding:6px 9px;cursor:pointer}
+.step{display:grid;grid-template-columns:44px 1fr;gap:13px;margin:17px 0}
+.step-num{width:40px;height:40px;border-radius:50%;background:var(--brand);color:white;display:grid;place-items:center;font-weight:900}
+table{width:100%;border-collapse:collapse;margin:15px 0;display:block;overflow:auto}
+th,td{border:1px solid var(--border);padding:10px;text-align:left;min-width:130px}
+th{background:var(--surface2);color:var(--brand2)}
+.diagram{background:var(--surface2);border:1px dashed var(--border);padding:18px;border-radius:16px;overflow:auto}
+.flow{display:flex;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap}
+.node{padding:13px 15px;border-radius:12px;background:var(--surface);border:2px solid var(--brand2);min-width:125px;text-align:center;font-weight:800}
+.arrow{font-size:1.6rem;color:var(--brand);font-weight:900}
+.memory{font-size:1.1rem;border:2px dashed var(--good);padding:15px;border-radius:13px;background:color-mix(in srgb,var(--good) 8%,var(--surface))}
+.checklist label{display:block;padding:8px 0;border-bottom:1px solid var(--border)}
+.checklist input{accent-color:var(--good)}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:15px 0}
+.tab-btn{border:1px solid var(--border);background:var(--surface2);color:var(--text);padding:8px 12px;border-radius:10px;cursor:pointer;font-weight:800}
+.tab-btn.active{background:var(--brand);color:white}
+.tab-pane{display:none}.tab-pane.active{display:block}
+.qa{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:11px 14px;margin:9px 0}
+.qa summary{cursor:pointer;font-weight:800;color:var(--brand2)}
+.question{background:var(--surface2);border:1px solid var(--border);border-radius:14px;padding:16px;margin:12px 0}
+.question label{display:block;padding:7px 9px;margin:5px 0;border-radius:8px;cursor:pointer}
+.question label:hover{background:var(--surface)}
+.result{display:none;padding:16px;border-radius:13px;margin-top:14px;font-weight:700}
+.notes-area textarea{width:100%;min-height:180px;background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:12px;padding:12px}
+.small{font-size:.86rem;color:var(--muted)}
+.kbd{font-family:Consolas,monospace;border:1px solid var(--border);border-bottom-width:3px;border-radius:5px;padding:1px 5px;background:var(--surface2)}
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);opacity:0;background:#111827;color:white;padding:10px 16px;border-radius:999px;z-index:100;transition:.25s}
+#toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:80;display:none;place-items:center;padding:18px}
+.modal.open{display:grid}
+.modal-card{width:min(560px,100%);background:var(--surface);color:var(--text);border-radius:18px;padding:20px;border:1px solid var(--border)}
+.modal-card textarea{width:100%;min-height:120px;border:1px solid var(--border);border-radius:10px;padding:10px;background:var(--surface2);color:var(--text)}
+.timer{font-size:1.35rem;font-weight:900;color:var(--brand);padding:7px 12px;border-radius:10px;background:var(--surface2);display:inline-block}
+.sparkle{position:fixed;pointer-events:none;z-index:999;font-size:13px;animation:fly .75s ease-out forwards}
+@keyframes fly{to{transform:translateY(-24px) scale(.2) rotate(90deg);opacity:0}}
+footer{max-width:1500px;margin:0 auto 40px;padding:0 18px;color:var(--muted)}
+.right-box{margin-bottom:15px}
+.score-ring{width:100px;height:100px;border-radius:50%;display:grid;place-items:center;margin:auto;background:conic-gradient(var(--good) 0deg,var(--surface2) 0);font-weight:900;font-size:1.25rem}
+.hidden-by-search{display:none!important}
+@media(max-width:1120px){.layout{grid-template-columns:240px minmax(0,1fr)}.right-aside{display:none}}
+@media(max-width:760px){.layout{display:block;padding:12px}.left-aside{position:static;max-height:none;margin-bottom:15px}.grid2,.grid3{grid-template-columns:1fr}.hero{padding:25px}section{padding:20px}.topbar{flex-wrap:wrap}.search{order:3;max-width:none;width:100%}}
+@media print{header,aside,.copy-btn,.no-print{display:none!important}.layout{display:block;max-width:none}section,.hero{box-shadow:none;break-inside:avoid}body{background:white;color:black}}
+</style>
+</head>
+<body>
+<header>
+  <div class="topbar">
+    <div class="logo">⚡ PySpark Setup Lab</div>
+    <input id="searchBox" class="search" placeholder="Search this tutorial…">
+    <button class="icon-btn" id="themeBtn" title="Toggle theme">🌙</button>
+    <button class="icon-btn" onclick="window.print()">🖨 Print</button>
+  </div>
+  <div class="progress-wrap"><div id="topProgress"></div></div>
+</header>
+
+<div class="layout">
+<aside class="left-aside">
+  <div class="panel">
+    <div class="nav-title">13-part learning path</div>
+    <nav id="sideNav">
+      <a href="#s1"><input type="checkbox" data-section="s1">1. Setup Overview</a>
+      <a href="#s2"><input type="checkbox" data-section="s2">2. Architecture</a>
+      <a href="#s3"><input type="checkbox" data-section="s3">3. Prerequisites</a>
+      <a href="#s4"><input type="checkbox" data-section="s4">4. Windows Setup</a>
+      <a href="#s5"><input type="checkbox" data-section="s5">5. Linux & macOS</a>
+      <a href="#s6"><input type="checkbox" data-section="s6">6. Verify Installation</a>
+      <a href="#s7"><input type="checkbox" data-section="s7">7. IDE & Jupyter</a>
+      <a href="#s8"><input type="checkbox" data-section="s8">8. First Application</a>
+      <a href="#s9"><input type="checkbox" data-section="s9">9. Manual Spark Setup</a>
+      <a href="#s10"><input type="checkbox" data-section="s10">10. Retail Lab</a>
+      <a href="#s11"><input type="checkbox" data-section="s11">11. Best Practices</a>
+      <a href="#s12"><input type="checkbox" data-section="s12">12. Troubleshooting & Interview</a>
+      <a href="#s13"><input type="checkbox" data-section="s13">13. Quiz & Exam</a>
+    </nav>
+    <p class="small">Tick each section when completed. Progress is stored in this browser.</p>
+  </div>
+</aside>
+
+<main>
+<div class="hero">
+  <div class="eyebrow">Classroom tutorial • Local development setup</div>
+  <h1>Spark Setup with PySpark</h1>
+  <p>Install, configure, verify, troubleshoot, and run your first end-to-end PySpark application using a clean, reproducible environment.</p>
+  <div class="badges">
+    <span class="badge">PySpark 4.1.2</span>
+    <span class="badge">Python 3.10+</span>
+    <span class="badge">Java 17 or 21</span>
+    <span class="badge">Windows • Linux • macOS</span>
+    <span class="badge">Hands-on lab</span>
+  </div>
+</div>
+
+<section id="s1" data-title="Setup Overview">
+<h2>1. Setup Overview and Learning Outcomes</h2>
+<p class="lead">PySpark is the Python API for Apache Spark. Your Python program defines transformations, while Spark's JVM-based engine plans and executes the work.</p>
+<div class="callout good"><strong>Recommended route:</strong> Install a supported JDK, install Python, create a virtual environment, and install PySpark with pip. This route does not normally require a separate Spark download or SPARK_HOME.</div>
+<div class="grid3">
+  <div class="card"><strong>Install</strong><p>Java, Python, virtual environment, PySpark.</p></div>
+  <div class="card"><strong>Verify</strong><p>Check versions, start SparkSession, execute a DataFrame action.</p></div>
+  <div class="card"><strong>Apply</strong><p>Build a small retail-sales transformation and aggregation.</p></div>
+</div>
+<h3>By the end, you can</h3>
+<ul>
+  <li>Explain why Java is required for standard PySpark.</li>
+  <li>Configure JAVA_HOME correctly.</li>
+  <li>Run PySpark from PowerShell, Terminal, VS Code, and Jupyter.</li>
+  <li>Interpret driver, executor, job, stage, task, and partition at setup level.</li>
+  <li>Diagnose common gateway, PATH, Python-worker, and port errors.</li>
+</ul>
+<div class="memory"><strong>Memory aid — J-P-V-S:</strong> <u>J</u>ava → <u>P</u>ython → <u>V</u>irtual environment → <u>S</u>park verification.</div>
+</section>
+
+<section id="s2" data-title="Architecture">
+<h2>2. What Gets Installed and How It Connects</h2>
+<div class="diagram">
+  <div class="flow">
+    <div class="node">Your Python Code<br><small>Driver program</small></div>
+    <div class="arrow">→</div>
+    <div class="node">PySpark API<br><small>Python package</small></div>
+    <div class="arrow">⇄</div>
+    <div class="node">Py4J Gateway<br><small>Python ↔ JVM</small></div>
+    <div class="arrow">→</div>
+    <div class="node">Spark Engine<br><small>JVM</small></div>
+    <div class="arrow">→</div>
+    <div class="node">Tasks<br><small>Local cores/executors</small></div>
+  </div>
+</div>
+<h3>Execution story</h3>
+<ol>
+  <li>You create a <code>SparkSession</code>.</li>
+  <li>PySpark starts or connects to the JVM-side Spark driver.</li>
+  <li>Transformations build a logical plan.</li>
+  <li>An action triggers a job.</li>
+  <li>Spark divides work into stages and tasks across partitions.</li>
+  <li>The result is returned, displayed, or written.</li>
+</ol>
+<table>
+<thead><tr><th>Component</th><th>Setup meaning</th><th>Example</th></tr></thead>
+<tbody>
+<tr><td>Python interpreter</td><td>Runs your Python driver code</td><td><code>python app.py</code></td></tr>
+<tr><td>PySpark package</td><td>Python-facing Spark APIs and packaged runtime</td><td><code>from pyspark.sql import SparkSession</code></td></tr>
+<tr><td>JDK/JVM</td><td>Runs the Spark engine</td><td><code>java -version</code></td></tr>
+<tr><td>Py4J</td><td>Communication bridge</td><td>Installed as a PySpark dependency</td></tr>
+<tr><td>Local master</td><td>Runs tasks on your machine</td><td><code>local[*]</code></td></tr>
+</tbody>
+</table>
+</section>
+
+<section id="s3" data-title="Prerequisites">
+<h2>3. Prerequisites and Version Plan</h2>
+<p>For the version used here, choose the following conservative combination:</p>
+<table>
+<thead><tr><th>Software</th><th>Recommended</th><th>Verification</th><th>Purpose</th></tr></thead>
+<tbody>
+<tr><td>Operating system</td><td>64-bit Windows 10/11, modern Linux, or macOS</td><td>System settings</td><td>Host environment</td></tr>
+<tr><td>Python</td><td>3.10, 3.11, 3.12, or another version supported by your PySpark release</td><td><code>python --version</code></td><td>Driver language</td></tr>
+<tr><td>Java</td><td>JDK 17 or 21</td><td><code>java -version</code></td><td>Spark JVM engine</td></tr>
+<tr><td>PySpark</td><td>4.1.2 for this tutorial</td><td><code>python -m pip show pyspark</code></td><td>Spark Python API</td></tr>
+<tr><td>RAM</td><td>8 GB minimum for basic labs; 16 GB+ preferred</td><td>Task Manager / system monitor</td><td>Driver, JVM, OS</td></tr>
+<tr><td>Free disk</td><td>Several GB</td><td>File Explorer / <code>df -h</code></td><td>Packages, temp, shuffle</td></tr>
+</tbody>
+</table>
+<div class="callout warn"><strong>Do not mix random versions.</strong> Check the official documentation for the exact PySpark release you install. This tutorial pins versions so that an entire classroom uses the same environment.</div>
+<h3>Pre-install health check</h3>
+<div class="codebox"><button class="copy-btn">Copy</button><pre><code>python --version
+python -m pip --version
+java -version
+
+# Windows: show executable locations
+where.exe python
+where.exe java
+
+# Linux/macOS
+which python3
+which java</code></pre></div>
+<h3>Two installation strategies</h3>
+<div class="grid2">
+ <div class="card"><strong>A. pip-only local setup — recommended</strong><p>Fastest for Python learning, VS Code, notebooks, unit tests, and local DataFrame exercises.</p></div>
+ <div class="card"><strong>B. Manual Spark distribution</strong><p>Useful when teaching Spark folders, shell scripts, spark-submit from SPARK_HOME, standalone services, or cluster-aligned binaries.</p></div>
+</div>
+</section>
+
+<section id="s4" data-title="Windows Setup">
+<h2>4. Windows Setup — Step by Step</h2>
+<div class="tabs">
+  <button class="tab-btn active" data-tab="win-powershell">PowerShell</button>
+  <button class="tab-btn" data-tab="win-cmd">Command Prompt</button>
+  <button class="tab-btn" data-tab="win-policy">Execution Policy Fix</button>
+</div>
+<div id="win-powershell" class="tab-pane active">
+<div class="step"><div class="step-num">1</div><div><h3>Install JDK 17 or 21</h3><p>Install a 64-bit JDK. Note its root folder, for example <code>C:\Program Files\Eclipse Adoptium\jdk-17.x.x</code>.</p></div></div>
+<div class="step"><div class="step-num">2</div><div><h3>Set JAVA_HOME</h3><p>Use Windows Environment Variables for a persistent setting. JAVA_HOME points to the JDK root, not <code>bin</code>.</p>
+<div class="codebox"><button class="copy-btn">Copy</button><pre><code># Temporary settings for the current PowerShell window.
+# Replace the sample path with your installed JDK path.
+$env:JAVA_HOME = "C:\Program Files\Eclipse Adoptium\jdk-17.0.x"
+$env:Path = "$env:JAVA_HOME\bin;$env:Path"
+
+java -version
+$env:JAVA_HOME</code></pre></div></div></div>
+<div class="step"><div class="step-num">3</div><div><h3>Install Python and confirm PATH</h3><div class="codebox"><button class="copy-btn">Copy</button><pre><code>python --version
+python -m pip --version</code></pre></div></div></div>
+<div class="step"><div class="step-num">4</div><div><h3>Create the project and virtual environment</h3>
+<div class="codebox"><button class="copy-btn">Copy</button><pre><code>mkdir C:\pyspark-lab
+cd C:\pyspark-lab
+
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+
+python -m pip install --upgrade pip</code></pre></div>
+<p>The terminal prompt should now begin with <code>(.venv)</code>.</p></div></div>
+<div class="step"><div class="step-num">5</div><div><h3>Install PySpark</h3>
+<div class="codebox"><button class="copy-btn">Copy</button><pre><code>python -m pip install "pyspark==4.1.2"
+
+# Optional notebook support
+python -m pip install jupyterlab
+
+# Record exact packages
+python -m pip freeze &gt; requirements.txt</code></pre></div></div></div>
+</div>
+
+<div id="win-cmd" class="tab-pane">
+<div class="codebox"><button class="copy-btn">Copy</button><pre><code>mkdir C:\pyspark-lab
+cd /d C:\pyspark-lab
+
+python -m venv .venv
+.venv\Scripts\activate.bat
+
+python -m pip install --upgrade pip
+python -m pip install "pyspark==4.1.2"
+python -m pip show pyspark</code></pre></div>
+</div>
+
+<div id="win-policy" class="tab-pane">
+<p>If PowerShell reports that script execution is disabled, use one of these approaches:</p>
+<div class="codebox"><button class="copy-btn">Copy</button><pre><code># Applies only to the current PowerShell process
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+
+.\.venv\Scripts\Activate.ps1</code></pre></div>
+<p>Alternatively, use Command Prompt and run <code>.venv\Scripts\activate.bat</code>. In managed corporate systems, follow your organization's security policy rather than changing machine-wide policy.</p>
+</div>
+
+<div class="callout"><strong>Important Windows note:</strong> A warning about the native Hadoop library may appear in some local environments. A warning is not automatically a failure. Confirm whether the DataFrame action completes before troubleshooting native binaries.</div>
+</section>
+
+<section id="s5" data-title="Linux and macOS">
+<h2>5. Linux and macOS Setup</h2>
+<div class="tabs">
+  <button class="tab-btn active" data-tab="ubuntu">Ubuntu/Debian</button>
+  <button class="tab-btn" data-tab="mac">macOS</button>
+</div>
+<div id="ubuntu" class="tab-pane active">
+<div class="codebox"><button class="copy-btn">Copy</button><pre><code># Install Java, Python venv, and pip.
+sudo apt update
+sudo apt install -y openjdk-17-jdk python3 python3-venv python3-pip
+
+java -version
+python3 --version
+
+mkdir -p ~/pyspark-lab
+cd ~/pyspark-lab
+
+python3 -m venv .venv
+source .venv/bin/activate
+
+python -m pip install --upgrade pip
+python -m pip install "pyspark==4.1.2"
+python -m pip show pyspark</code></pre></div>
+<h3>Set JAVA_HOME when required</h3>
+<div class="codebox"><button class="copy-btn">Copy</button><pre><code>readlink -f "$(which java)"
+
+# Example only; use the JDK path shown on your machine.
+export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+export PATH="$JAVA_HOME/bin:$PATH"</code></pre></div>
+</div>
+<div id="mac" class="tab-pane">
+<div class="codebox"><button class="copy-btn">Copy</button><pre><code># Example using Homebrew
+brew install openjdk@17 python
+
+mkdir -p ~/pyspark-lab
+cd ~/pyspark-lab
+
+python3 -m venv .venv
+source .venv/bin/activate
+
+python -m pip install --upgrade pip
+python -m pip install "pyspark==4.1.2"</code></pre></div>
+<div class="callout warn">Homebrew may display an additional command for linking Java or setting JAVA_HOME. Use the command printed by Homebrew for your CPU architecture and installation path.</div>
+</div>
+<h3>Deactivate later</h3>
+<div class="codebox"><button class="copy-btn">Copy</button><pre><code>deactivate</code></pre></div>
+</section>
+
+<section id="s6" data-title="Verify Installation">
+<h2>6. Verify the Installation</h2>
+<h3>Level 1 — Package and executable checks</h3>
+<div class="codebox"><button class="copy-btn">Copy</button><pre><code>python --version
+java -version
+python -m pip show pyspark
+python -c "import pyspark; print('PySpark:', pyspark.__version__)"</code></pre></div>
+
+<h3>Level 2 — PySpark shell</h3>
+<div class="codebox"><button class="copy-btn">Copy</button><pre><code>pyspark</code></pre></div>
+<p>Inside the shell:</p>
+<div class="codebox"><button class="copy-btn">Copy</button><pre><code>spark.version
+spark.range(1, 6).show()
+spark.stop()
+exit()</code></pre></div>
+
+<h3>Level 3 — Automated smoke test</h3>
+<div class="codebox"><button class="copy-btn">Copy</button><pre><code>from pyspark.sql import SparkSession
+
+spark = (
+    SparkSession.builder
+    .appName("PySparkSetupSmokeTest")
+    .master("local[2]")
+    .getOrCreate()
+)
+
+spark.sparkContext.setLogLevel("WARN")
+
+print("Spark version:", spark.version)
+print("Master:", spark.sparkContext.master)
+print("Application:", spark.sparkContext.appName)
+
+df = spark.createDataFrame(
+    [(1, "Java"), (2, "Python"), (3, "PySpark")],
+    ["id", "technology"]
+)
+
+df.show()
+print("Row count:", df.count())
+
+spark.stop()</code></pre></div>
+<p>Save as <code>setup_check.py</code>, then run:</p>
+<div class="codebox"><button class="copy-btn">Copy</button><pre><code>python setup_check.py
+
+# Also valid
+spark-submit --master "local[2]" setup_check.py</code></pre></div>
+
+<div class="callout good"><strong>Expected success:</strong> You see the Spark version, local master, a three-row table, and <code>Row count: 3</code>.</div>
+
+<h3>Spark UI check</h3>
+<p>While an application is still running, open <code>http://localhost:4040</code>. Add the following line temporarily before <code>spark.stop()</code>:</p>
+<div class="codebox"><button class="copy-btn">Copy</button><pre><code>input("Open http://localhost:4040, inspect the UI, then press Enter...")</code></pre></div>
+</section>
+
+<section id="s7" data-title="IDE and Jupyter">
+<h2>7. VS Code, PyCharm, and Jupyter Setup</h2>
+<h3>VS Code</h3>
+<ol>
+  <li>Open the project folder <code>C:\pyspark-lab</code> or <code>~/pyspark-lab</code>.</li>
+  <li>Install the official Python extension.</li>
+  <li>Open Command Palette → <strong>Python: Select Interpreter</strong>.</li>
+  <li>Select the interpreter inside <code>.venv</code>.</li>
+  <li>Open a new integrated terminal and confirm <code>python -c "import pyspark"</code>.</li>
+</ol>
+<h3>PyCharm</h3>
+<p>Open the project and choose the existing virtual-environment interpreter: Windows <code>.venv\Scripts\python.exe</code>, Linux/macOS <code>.venv/bin/python</code>.</p>
+<h3>JupyterLab</h3>
+<div class="codebox"><button class="copy-btn">Copy</button><pre><code>python -m pip install jupyterlab ipykernel
+python -m ipykernel install --user --name pyspark-lab --display-name "PySpark Lab"
+jupyter lab</code></pre></div>
+<p>In a notebook, select the <strong>PySpark Lab</strong> kernel and run:</p>
+<div class="codebox"><button class="copy-btn">Copy</button><pre><code>from pyspark.sql import SparkSession
+
+spark = (
+    SparkSession.builder
+    .appName("NotebookSetup")
+    .master("local[*]")
+    .getOrCreate()
+)
+
+spark.range(10).show()</code></pre></div>
+<div class="callout warn"><strong>Notebook rule:</strong> Re-running session-creation cells is usually fine with <code>getOrCreate()</code>, but restart the kernel after major Java, environment-variable, or dependency changes.</div>
+</section>
+
+<section id="s8" data-title="First Application">
+<h2>8. Your First Structured PySpark Application</h2>
+<p>Create <code>employee_analysis.py</code>:</p>
+<div class="codebox"><button class="copy-btn">Copy</button><pre><code>from pyspark.sql import SparkSession
+from pyspark.sql.functions import avg, col, desc
+
+def main() -> None:
+    spark = (
+        SparkSession.builder
+        .appName("EmployeeDepartmentAnalysis")
+        .master("local[*]")
+        .config("spark.sql.shuffle.partitions", "4")
+        .getOrCreate()
+    )
+
+    spark.sparkContext.setLogLevel("WARN")
+
+    employees = [
+        (101, "Anu", "Data", 72000),
+        (102, "Bala", "Data", 68000),
+        (103, "Charan", "Cloud", 80000),
+        (104, "Divya", "Cloud", 76000),
+        (105, "Esha", "QA", 61000),
+    ]
+
+    df = spark.createDataFrame(
+        employees,
+        ["employee_id", "name", "department", "salary"]
+    )
+
+    print("=== Source Data ===")
+    df.show()
+
+    print("=== Employees earning at least 70,000 ===")
+    df.filter(col("salary") &gt;= 70000).show()
+
+    print("=== Average salary by department ===")
+    (
+        df.groupBy("department")
+        .agg(avg("salary").alias("average_salary"))
+        .orderBy(desc("average_salary"))
+        .show()
+    )
+
+    spark.stop()
+
+if __name__ == "__main__":
+    main()</code></pre></div>
+<h3>Run it</h3>
+<div class="codebox"><button class="copy-btn">Copy</button><pre><code>python employee_analysis.py
+
+# Or use Spark's launcher
+spark-submit --master "local[*]" employee_analysis.py</code></pre></div>
+<h3>What Spark does internally</h3>
+<div class="diagram">
+<div class="flow">
+  <div class="node">Create DataFrame</div><div class="arrow">→</div>
+  <div class="node">filter / groupBy / agg</div><div class="arrow">→</div>
+  <div class="node">Logical Plan</div><div class="arrow">→</div>
+  <div class="node">show() Action</div><div class="arrow">→</div>
+  <div class="node">Job → Stages → Tasks</div>
+</div>
+</div>
+<div class="memory"><strong>Memory aid — T before A:</strong> Spark collects <u>T</u>ransformations first; an <u>A</u>ction asks Spark to execute them.</div>
+</section>
+
+<section id="s9" data-title="Manual Spark Setup">
+<h2>9. Optional Manual Spark Distribution Setup</h2>
+<p>Use this route when you specifically need Spark's extracted folder, scripts, examples, or a manually controlled SPARK_HOME.</p>
+<h3>Conceptual folder layout</h3>
+<div class="codebox"><button class="copy-btn">Copy</button><pre><code>C:\spark\spark-4.1.2-bin-hadoop3\
+├── bin\
+│   ├── pyspark.cmd
+│   └── spark-submit.cmd
+├── conf\
+├── examples\
+├── jars\
+├── python\
+└── sbin\</code></pre></div>
+<h3>Environment variables</h3>
+<table>
+<thead><tr><th>Variable</th><th>Example</th><th>Rule</th></tr></thead>
+<tbody>
+<tr><td>JAVA_HOME</td><td><code>C:\Program Files\Eclipse Adoptium\jdk-17...</code></td><td>JDK root</td></tr>
+<tr><td>SPARK_HOME</td><td><code>C:\spark\spark-4.1.2-bin-hadoop3</code></td><td>Extracted Spark root</td></tr>
+<tr><td>PATH</td><td><code>%JAVA_HOME%\bin;%SPARK_HOME%\bin</code></td><td>Add executable folders</td></tr>
+<tr><td>PYSPARK_PYTHON</td><td><code>C:\pyspark-lab\.venv\Scripts\python.exe</code></td><td>Optional explicit worker Python</td></tr>
+</tbody>
+</table>
+<div class="codebox"><button class="copy-btn">Copy</button><pre><code># PowerShell session example
+$env:SPARK_HOME = "C:\spark\spark-4.1.2-bin-hadoop3"
+$env:Path = "$env:SPARK_HOME\bin;$env:Path"
+
+pyspark --master "local[2]"
+spark-submit --version</code></pre></div>
+<div class="callout bad"><strong>Avoid duplicate/conflicting installations.</strong> Do not casually mix a pip-installed PySpark version with a different manual SPARK_HOME version. Keep the versions aligned or use separate environments.</div>
+<h3>pip-only versus manual download</h3>
+<table>
+<thead><tr><th>Area</th><th>pip-only</th><th>Manual distribution</th></tr></thead>
+<tbody>
+<tr><td>Speed</td><td>Fastest</td><td>More setup</td></tr>
+<tr><td>SPARK_HOME</td><td>Usually unnecessary</td><td>Required/recommended</td></tr>
+<tr><td>Best for</td><td>Python development and labs</td><td>Teaching Spark folders, scripts, or aligned deployments</td></tr>
+<tr><td>Risk</td><td>Large pip package download</td><td>PATH/version conflicts</td></tr>
+</tbody>
+</table>
+</section>
+
+<section id="s10" data-title="Retail Lab">
+<h2>10. Practical Lab — Retail Sales Setup Validation</h2>
+<h3>Requirement</h3>
+<p>A retail team wants to validate a fresh PySpark workstation. The program must calculate line revenue, filter completed orders, summarize revenue by category, and show the highest-revenue category.</p>
+<h3>Expected result</h3>
+<ul>
+  <li>Only <code>COMPLETE</code> transactions are included.</li>
+  <li><code>line_revenue = quantity × unit_price</code>.</li>
+  <li>Revenue is grouped by category and sorted descending.</li>
+</ul>
+<h3>Implementation</h3>
+<div class="codebox"><button class="copy-btn">Copy</button><pre><code>from pyspark.sql import SparkSession
+from pyspark.sql.functions import col, round, sum as spark_sum
+
+spark = (
+    SparkSession.builder
+    .appName("RetailSalesSetupValidation")
+    .master("local[*]")
+    .config("spark.sql.shuffle.partitions", "4")
+    .getOrCreate()
+)
+
+spark.sparkContext.setLogLevel("WARN")
+
+sales = [
+    ("O1001", "Laptop", "Electronics", 1, 72000.0, "COMPLETE"),
+    ("O1002", "Mouse", "Electronics", 3, 850.0, "COMPLETE"),
+    ("O1003", "Chair", "Furniture", 2, 6500.0, "CANCELLED"),
+    ("O1004", "Desk", "Furniture", 1, 11000.0, "COMPLETE"),
+    ("O1005", "Notebook", "Stationery", 10, 75.0, "COMPLETE"),
+    ("O1006", "Pen Pack", "Stationery", 4, 120.0, "COMPLETE"),
+]
+
+columns = [
+    "order_id", "product", "category",
+    "quantity", "unit_price", "status"
+]
+
+df = spark.createDataFrame(sales, columns)
+
+completed = (
+    df.filter(col("status") == "COMPLETE")
+      .withColumn(
+          "line_revenue",
+          round(col("quantity") * col("unit_price"), 2)
+      )
+)
+
+summary = (
+    completed.groupBy("category")
+    .agg(round(spark_sum("line_revenue"), 2).alias("revenue"))
+    .orderBy(col("revenue").desc())
+)
+
+completed.show(truncate=False)
+summary.show(truncate=False)
+
+top_category = summary.first()
+print(
+    f"Top category: {top_category['category']} "
+    f"with revenue {top_category['revenue']}"
+)
+
+spark.stop()</code></pre></div>
+<h3>Expected summary</h3>
+<table>
+<thead><tr><th>Category</th><th>Revenue</th></tr></thead>
+<tbody>
+<tr><td>Electronics</td><td>74,550.00</td></tr>
+<tr><td>Furniture</td><td>11,000.00</td></tr>
+<tr><td>Stationery</td><td>1,230.00</td></tr>
+</tbody>
+</table>
+<h3>Exercises</h3>
+<ol>
+  <li>Add an order date and calculate monthly revenue.</li>
+  <li>Add a 5% discount for quantities of five or more.</li>
+  <li>Write the summary as CSV with <code>coalesce(1)</code> only for this small lab.</li>
+  <li>Use <code>explain("formatted")</code> to inspect the physical plan.</li>
+  <li>Change <code>local[*]</code> to <code>local[2]</code> and compare the UI.</li>
+</ol>
+<h3>Conclusion</h3>
+<p>If this lab runs successfully, the Java gateway, Python environment, SparkSession, DataFrame API, transformations, actions, and local task execution are all working.</p>
+</section>
+
+<section id="s11" data-title="Best Practices">
+<h2>11. Best Practices, Edge Cases, and Project Structure</h2>
+<div class="grid2">
+<div class="card"><strong>Pin versions</strong><p>Use <code>requirements.txt</code> or a modern project configuration so all learners install the same packages.</p></div>
+<div class="card"><strong>One environment per project</strong><p>Do not install every data tool into the global Python interpreter.</p></div>
+<div class="card"><strong>Keep data outside .venv</strong><p>Virtual environments are disposable. Project code and data belong in normal project folders.</p></div>
+<div class="card"><strong>Stop the session</strong><p>Use <code>try/finally</code> for applications that must always release Spark resources.</p></div>
+</div>
+<h3>Suggested project layout</h3>
+<div class="codebox"><button class="copy-btn">Copy</button><pre><code>pyspark-lab/
+├── .venv/                  # do not commit
+├── data/
+│   ├── input/
+│   └── output/
+├── notebooks/
+├── src/
+│   ├── __init__.py
+│   └── retail_job.py
+├── tests/
+│   └── test_retail_job.py
+├── .gitignore
+├── README.md
+└── requirements.txt</code></pre></div>
+<h3>Recommended .gitignore</h3>
+<div class="codebox"><button class="copy-btn">Copy</button><pre><code>.venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.sparkStaging/
+metastore_db/
+derby.log
+data/output/
+.DS_Store</code></pre></div>
+<h3>Safer session pattern</h3>
+<div class="codebox"><button class="copy-btn">Copy</button><pre><code>from pyspark.sql import SparkSession
+
+spark = None
+
+try:
+    spark = (
+        SparkSession.builder
+        .appName("SafeApplication")
+        .master("local[2]")
+        .getOrCreate()
+    )
+    spark.range(5).show()
+finally:
+    if spark is not None:
+        spark.stop()</code></pre></div>
+<h3>Edge cases</h3>
+<ul>
+  <li><strong>Multiple Python installations:</strong> use <code>python -m pip</code> and inspect <code>sys.executable</code>.</li>
+  <li><strong>Corporate proxy:</strong> package downloads may need approved proxy/certificate configuration.</li>
+  <li><strong>OneDrive/network folders:</strong> move shuffle/temp-heavy projects to a short local path if file locking occurs.</li>
+  <li><strong>Low disk space:</strong> clear old temporary output and unused virtual environments; do not delete active project data blindly.</li>
+  <li><strong>Large local collect:</strong> use <code>show()</code>, <code>take()</code>, or limited aggregations rather than retrieving all rows.</li>
+</ul>
+</section>
+
+<section id="s12" data-title="Troubleshooting and Interview">
+<h2>12. Troubleshooting Guide and Interview Questions</h2>
+<h3>Common setup failures</h3>
+<table>
+<thead><tr><th>Symptom</th><th>Likely cause</th><th>Resolution</th></tr></thead>
+<tbody>
+<tr><td><code>JAVA_GATEWAY_EXITED</code></td><td>Java unavailable, unsupported, or JAVA_HOME wrong</td><td>Run <code>java -version</code>; set JAVA_HOME to JDK root; reopen terminal</td></tr>
+<tr><td><code>'python' is not recognized</code></td><td>Python not on PATH</td><td>Reinstall/repair Python PATH or use the Python launcher</td></tr>
+<tr><td><code>ModuleNotFoundError: pyspark</code></td><td>Wrong interpreter or inactive venv</td><td>Activate .venv; run <code>python -m pip show pyspark</code></td></tr>
+<tr><td>PowerShell activation blocked</td><td>Execution policy</td><td>Use process-scoped bypass or Command Prompt activation</td></tr>
+<tr><td>Python worker version mismatch</td><td>Driver and worker use different Python</td><td>Set <code>PYSPARK_PYTHON</code> consistently or select correct venv</td></tr>
+<tr><td>Port 4040 unavailable</td><td>Another Spark app is running</td><td>Try 4041/4042 or stop the earlier application</td></tr>
+<tr><td>Native Hadoop warning</td><td>Native library not loaded</td><td>Check whether the job actually fails; do not treat all warnings as fatal</td></tr>
+<tr><td>Access denied / file locking</td><td>Protected or synchronized folder</td><td>Use a simple writable local path such as <code>C:\pyspark-lab</code></td></tr>
+<tr><td>OutOfMemoryError</td><td>Large collect/cache or too much parallel work</td><td>Limit data, avoid collect, tune memory/partitions, close other applications</td></tr>
+<tr><td>Version conflict after manual setup</td><td>pip PySpark and SPARK_HOME differ</td><td>Align versions or remove one setup from that environment</td></tr>
+</tbody>
+</table>
+<h3>Diagnostic command pack</h3>
+<div class="codebox"><button class="copy-btn">Copy</button><pre><code>python --version
+python -c "import sys; print(sys.executable)"
+python -m pip --version
+python -m pip show pyspark
+python -c "import pyspark; print(pyspark.__version__)"
+
+java -version
+
+# Windows
+where.exe python
+where.exe java
+echo $env:JAVA_HOME
+
+# Linux/macOS
+which python
+which java
+echo "$JAVA_HOME"</code></pre></div>
+<h3>20 Interview Questions with Answers</h3>
+<details class="qa"><summary>1. What is PySpark?</summary><p>PySpark is Apache Spark's Python API. It lets Python applications use Spark's distributed execution engine for SQL, DataFrames, streaming, machine learning, and RDD workloads.</p></details>
+<details class="qa"><summary>2. Why does PySpark need Java?</summary><p>Spark's core engine runs on the JVM. Standard PySpark uses Py4J so Python driver code can communicate with JVM objects and submit work to Spark.</p></details>
+<details class="qa"><summary>3. What is Py4J?</summary><p>Py4J is the bridge used by standard PySpark to let Python code interact with Java objects inside the JVM.</p></details>
+<details class="qa"><summary>4. What is SparkSession?</summary><p>SparkSession is the primary entry point for DataFrame and SQL operations. It also provides access to the underlying SparkContext.</p></details>
+<details class="qa"><summary>5. SparkContext versus SparkSession?</summary><p>SparkContext represents the connection to Spark's execution environment and is central to RDD functionality. SparkSession is the higher-level entry point used for DataFrames, SQL, and modern applications.</p></details>
+<details class="qa"><summary>6. What does local[*] mean?</summary><p>It runs Spark in local mode and allows Spark to use all available logical CPU cores. For controlled classroom demos, local[2] is sometimes easier to observe.</p></details>
+<details class="qa"><summary>7. Is SPARK_HOME required after pip install pyspark?</summary><p>For the normal pip-only local setup, it is usually not required because the package contains the needed Spark distribution. It is needed when you manually download and manage Spark.</p></details>
+<details class="qa"><summary>8. Why use a virtual environment?</summary><p>It isolates PySpark and other project dependencies, prevents package conflicts, and makes the environment easier to reproduce.</p></details>
+<details class="qa"><summary>9. What is lazy evaluation?</summary><p>Spark records transformations as a logical plan. It executes the plan only after an action such as show, count, collect, or write is called.</p></details>
+<details class="qa"><summary>10. Transformation versus action?</summary><p>A transformation creates a new logical dataset, while an action triggers execution and returns or writes a result.</p></details>
+<details class="qa"><summary>11. What is a partition?</summary><p>A partition is a logical chunk of a distributed dataset. Spark schedules tasks per partition, so partitioning influences parallelism and performance.</p></details>
+<details class="qa"><summary>12. Driver versus executor?</summary><p>The driver builds the execution plan and coordinates the application. Executors run tasks and hold cached or shuffled data. In local mode they run within the local Spark process arrangement.</p></details>
+<details class="qa"><summary>13. What does spark-submit do?</summary><p>It launches a Spark application with Spark-specific configuration, dependencies, master settings, and deployment options.</p></details>
+<details class="qa"><summary>14. What is the Spark UI?</summary><p>It is a diagnostic web interface showing jobs, stages, tasks, SQL plans, storage, environment settings, and executors. A local application commonly starts at port 4040.</p></details>
+<details class="qa"><summary>15. Why avoid collect() on large data?</summary><p>collect() transfers the entire result to driver memory. If the result is large, the driver can run out of memory.</p></details>
+<details class="qa"><summary>16. How do you reduce Spark console logs?</summary><p>Use spark.sparkContext.setLogLevel('WARN') or configure Log4j more formally for project environments.</p></details>
+<details class="qa"><summary>17. What causes JAVA_GATEWAY_EXITED?</summary><p>Typical causes include missing Java, an unsupported Java version, incorrect JAVA_HOME, a damaged PATH, security software interference, or a port/process startup failure.</p></details>
+<details class="qa"><summary>18. How do you confirm the runtime versions?</summary><p>Check python --version, java -version, python -m pip show pyspark, and print spark.version from a running SparkSession.</p></details>
+<details class="qa"><summary>19. Can PySpark run without Hadoop installed?</summary><p>Yes for local files and many local/cloud workloads. Hadoop client libraries are bundled with common Spark distributions, but a Hadoop cluster is needed when you want to use HDFS/YARN services.</p></details>
+<details class="qa"><summary>20. Why stop SparkSession?</summary><p>Stopping releases resources, closes the SparkContext, and prevents background Spark processes from remaining after the application completes.</p></details>
+</section>
+
+<section id="s13" data-title="Quiz and Exam">
+<h2>13. Practice Quiz, Timed Exam, and Completion</h2>
+<h3>Practice quiz</h3>
+<p>Answer all questions, then review the explanation for each item.</p>
+<div id="practiceQuiz"></div>
+<button class="primary" id="submitPractice">Submit Practice Quiz</button>
+<button class="secondary" id="resetPractice">Reset</button>
+<div id="practiceResult" class="result"></div>
+
+<hr style="border:0;border-top:1px solid var(--border);margin:30px 0">
+
+<h3>Formal timed exam</h3>
+<p>15 questions • 15 minutes • one attempt can be restarted. The timer begins when you press Start.</p>
+<div class="timer" id="examTimer">15:00</div>
+<div style="margin:12px 0">
+  <button class="primary" id="startExam">Start Exam</button>
+  <button class="secondary" id="submitExam" disabled>Submit Exam</button>
+</div>
+<div id="examQuiz"></div>
+<div id="examResult" class="result"></div>
+
+<hr style="border:0;border-top:1px solid var(--border);margin:30px 0">
+
+<h3>Final setup checklist</h3>
+<div class="checklist" id="finalChecklist">
+<label><input type="checkbox" data-final="java"> Java 17/21 works from a fresh terminal.</label>
+<label><input type="checkbox" data-final="python"> Python 3.10+ and pip are available.</label>
+<label><input type="checkbox" data-final="venv"> The project virtual environment activates correctly.</label>
+<label><input type="checkbox" data-final="pyspark"> PySpark imports and reports its version.</label>
+<label><input type="checkbox" data-final="session"> SparkSession starts and stops cleanly.</label>
+<label><input type="checkbox" data-final="dataframe"> A DataFrame action produces the expected result.</label>
+<label><input type="checkbox" data-final="ui"> I inspected the Spark UI.</label>
+<label><input type="checkbox" data-final="lab"> The retail validation lab runs successfully.</label>
+</div>
+<div class="callout good" id="completionMessage"><strong>Progress:</strong> Complete the checklist and section tracking to finish the setup module.</div>
+</section>
+</main>
+
+<aside class="right-aside">
+  <div class="panel right-box">
+    <div class="nav-title">Module progress</div>
+    <div class="score-ring" id="progressRing">0%</div>
+    <p class="small" id="progressText">0 of 13 sections completed</p>
+  </div>
+  <div class="panel right-box notes-area">
+    <div class="nav-title">My notes</div>
+    <p class="small">Double-click any word or selected text in the lesson to create a contextual note.</p>
+    <textarea id="globalNotes" placeholder="Type your classroom notes here…"></textarea>
+    <button class="primary" id="saveNotes" style="margin-top:8px">Save Notes</button>
+    <button class="secondary" id="exportNotes" style="margin-top:8px">Export</button>
+  </div>
+  <div class="panel right-box">
+    <div class="nav-title">Fast commands</div>
+    <p><code>java -version</code></p>
+    <p><code>python --version</code></p>
+    <p><code>python -m pip show pyspark</code></p>
+    <p><code>pyspark</code></p>
+    <p><code>spark-submit app.py</code></p>
+  </div>
+</aside>
+</div>
+
+<footer>
+  <p><strong>Official references used:</strong>
+  <a href="https://spark.apache.org/docs/latest/api/python/getting_started/install.html" target="_blank" rel="noopener">PySpark installation</a> •
+  <a href="https://spark.apache.org/docs/latest/" target="_blank" rel="noopener">Apache Spark documentation</a> •
+  <a href="https://spark.apache.org/docs/latest/quick-start.html" target="_blank" rel="noopener">Spark quick start</a> •
+  <a href="https://docs.python.org/3/library/venv.html" target="_blank" rel="noopener">Python venv</a>
+  </p>
+  <p>Prepared as a self-contained classroom tutorial. Current pinned setup in this file: PySpark 4.1.2, Java 17/21, Python 3.10+.</p>
+</footer>
+
+<div id="toast"></div>
+
+<div class="modal" id="noteModal">
+  <div class="modal-card">
+    <h3 style="margin-top:0">Add contextual note</h3>
+    <p><strong>Selected:</strong> <span id="selectedText"></span></p>
+    <textarea id="contextNote" placeholder="Write your explanation, example, or doubt…"></textarea>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:10px">
+      <button class="secondary" id="closeModal">Cancel</button>
+      <button class="primary" id="saveContextNote">Save Note</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const PRACTICE = [{"q": "What is PySpark?", "options": ["A Python replacement for Java", "The Python API for Apache Spark", "A database server", "A Hadoop file format"], "answer": 1, "explanation": "PySpark is the Python API for Apache Spark. Python code communicates with Spark's JVM-based engine."}, {"q": "Which Java version is the safest choice for this tutorial?", "options": ["Java 8", "Java 11 only", "Java 17 or Java 21", "Java is not needed"], "answer": 2, "explanation": "Current Spark 4.1 documentation lists Java 17/21 support, and PySpark requires Java 17 or later."}, {"q": "Where should JAVA_HOME point?", "options": ["The Python folder", "The JDK root folder", "The JDK bin folder", "The Spark Python folder"], "answer": 1, "explanation": "JAVA_HOME must point to the JDK root, such as C:\\Program Files\\Java\\jdk-17, not its bin subfolder."}, {"q": "Why do we create a virtual environment?", "options": ["To increase RAM", "To isolate project packages", "To replace SparkSession", "To install Windows"], "answer": 1, "explanation": "A virtual environment keeps each project's Python packages isolated and reproducible."}, {"q": "Which command installs the pinned version used in this tutorial?", "options": ["npm install pyspark", "python -m pip install pyspark==4.1.2", "java install spark", "spark --install"], "answer": 1, "explanation": "Using python -m pip ensures pip belongs to the active Python interpreter."}, {"q": "What is the main entry point for DataFrame-based PySpark applications?", "options": ["SparkSession", "DataNode", "NameNode", "Reducer"], "answer": 0, "explanation": "SparkSession is the unified entry point for DataFrame, SQL, catalog, and related Spark functionality."}, {"q": "What does master('local[*]') mean?", "options": ["Connect only to HDFS", "Run locally using available logical CPU cores", "Use one remote executor", "Disable parallelism"], "answer": 1, "explanation": "local[*] runs Spark locally and allows it to use all available logical cores."}, {"q": "Which operation starts actual execution in the sample?", "options": ["select()", "filter()", "withColumn()", "show()"], "answer": 3, "explanation": "Transformations are lazy. An action such as show(), count(), collect(), or write starts execution."}, {"q": "What normally opens at http://localhost:4040 while a Spark application is running?", "options": ["HDFS NameNode UI", "Spark application UI", "Python installer", "YARN scheduler only"], "answer": 1, "explanation": "The Spark application UI normally uses port 4040 for the first running local application."}, {"q": "What should you do before closing a standalone PySpark program?", "options": ["Delete JAVA_HOME", "Call spark.stop()", "Uninstall py4j", "Format the working folder"], "answer": 1, "explanation": "spark.stop() cleanly closes the SparkSession and associated SparkContext resources."}];
+const EXAM = [{"q": "Which command confirms that Java is available on PATH?", "options": ["java -version", "pip -version", "spark.version()", "where python only"], "answer": 0}, {"q": "Which PowerShell command activates a .venv environment?", "options": [".venv/bin/activate", ".\\.venv\\Scripts\\Activate.ps1", "activate java", "python activate.ps1"], "answer": 1}, {"q": "What package is required for Python to communicate with the JVM in PySpark?", "options": ["Flask", "Py4J", "Django", "Numba"], "answer": 1}, {"q": "Which command prints the installed PySpark package information?", "options": ["python -m pip show pyspark", "java show spark", "pyspark --package", "spark inspect"], "answer": 0}, {"q": "Which builder call returns an existing session or creates one?", "options": ["newSessionOnly()", "open()", "getOrCreate()", "startDriver()"], "answer": 2}, {"q": "What does appName('RetailSetupCheck') configure?", "options": ["The Windows username", "The Spark application's display name", "The Python package name", "The executor hostname"], "answer": 1}, {"q": "Which API is generally preferred for structured data?", "options": ["DataFrame/Spark SQL", "Only raw sockets", "MapReduce Java API", "Windows Registry"], "answer": 0}, {"q": "Which command can launch a Python Spark application?", "options": ["spark-submit app.py", "hdfs-start app.py", "javac app.py", "npm run spark"], "answer": 0}, {"q": "A 'JAVA_GATEWAY_EXITED' error most commonly points to what?", "options": ["A CSS problem", "Java/JAVA_HOME/PATH configuration", "An Excel formula", "A browser cookie"], "answer": 1}, {"q": "Why is collect() risky on large datasets?", "options": ["It sends all selected results to the driver", "It always deletes partitions", "It disables Java", "It converts data to HDFS blocks"], "answer": 0}, {"q": "What does repartition(4) do?", "options": ["Creates four databases", "Reshuffles data into four partitions", "Creates four drivers", "Starts four Spark clusters"], "answer": 1}, {"q": "Which setting reduces noisy console output in a lab?", "options": ["spark.sparkContext.setLogLevel('WARN')", "spark.disable()", "python.quiet()", "java.stopLogs()"], "answer": 0}, {"q": "When using pip-installed PySpark locally, is SPARK_HOME mandatory for the basic path?", "options": ["Yes, always", "No, not normally", "Only for Python syntax", "Only for DataFrames"], "answer": 1}, {"q": "Which file should normally be committed to record Python dependencies?", "options": ["requirements.txt", ".venv executable files", "JDK binaries", "Temporary Spark logs"], "answer": 0}, {"q": "Which line cleanly terminates the tutorial application?", "options": ["spark.stop()", "driver.delete()", "session.killJava()", "pyspark.uninstall()"], "answer": 0}];
+const STORAGE_KEY = "pyspark_setup_tutorial_v1";
+
+function safeLoad() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}"); }
+  catch (_) { return {}; }
+}
+function safeSave(data) {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); return true; }
+  catch (_) { toast("Browser storage is unavailable; progress will last only for this page."); return false; }
+}
+let state = safeLoad();
+state.sections ||= {};
+state.final ||= {};
+state.globalNotes ||= "";
+state.contextNotes ||= [];
+
+function toast(message) {
+  const el = document.getElementById("toast");
+  el.textContent = message;
+  el.classList.add("show");
+  clearTimeout(window.__toastTimer);
+  window.__toastTimer = setTimeout(() => el.classList.remove("show"), 2200);
+}
+
+document.querySelectorAll(".copy-btn").forEach(btn => {
+  btn.addEventListener("click", async () => {
+    const text = btn.parentElement.querySelector("code").innerText;
+    try { await navigator.clipboard.writeText(text); btn.textContent = "Copied"; toast("Command copied"); }
+    catch (_) { toast("Copy failed. Select the command manually."); }
+    setTimeout(() => btn.textContent = "Copy", 1200);
+  });
+});
+
+document.getElementById("themeBtn").addEventListener("click", () => {
+  document.body.classList.toggle("dark");
+  state.dark = document.body.classList.contains("dark");
+  safeSave(state);
+  document.getElementById("themeBtn").textContent = state.dark ? "☀️" : "🌙";
+});
+if (state.dark) {
+  document.body.classList.add("dark");
+  document.getElementById("themeBtn").textContent = "☀️";
+}
+
+function updateProgress() {
+  const boxes = [...document.querySelectorAll("[data-section]")];
+  const done = boxes.filter(b => b.checked).length;
+  const pct = Math.round(done / boxes.length * 100);
+  document.getElementById("topProgress").style.width = pct + "%";
+  document.getElementById("progressRing").style.background =
+    `conic-gradient(var(--good) ${pct * 3.6}deg, var(--surface2) 0deg)`;
+  document.getElementById("progressRing").textContent = pct + "%";
+  document.getElementById("progressText").textContent = `${done} of ${boxes.length} sections completed`;
+
+  const finalBoxes = [...document.querySelectorAll("[data-final]")];
+  const finalDone = finalBoxes.filter(b => b.checked).length;
+  const msg = document.getElementById("completionMessage");
+  if (done === boxes.length && finalDone === finalBoxes.length) {
+    msg.innerHTML = "<strong>Module complete! 🎓</strong> Your workstation and tutorial activities are fully checked.";
+  } else {
+    msg.innerHTML = `<strong>Progress:</strong> ${done}/${boxes.length} sections and ${finalDone}/${finalBoxes.length} setup checks completed.`;
+  }
+}
+
+document.querySelectorAll("[data-section]").forEach(box => {
+  const id = box.dataset.section;
+  box.checked = Boolean(state.sections[id]);
+  box.addEventListener("click", e => e.stopPropagation());
+  box.addEventListener("change", () => {
+    state.sections[id] = box.checked;
+    safeSave(state);
+    updateProgress();
+  });
+});
+document.querySelectorAll("[data-final]").forEach(box => {
+  const id = box.dataset.final;
+  box.checked = Boolean(state.final[id]);
+  box.addEventListener("change", () => {
+    state.final[id] = box.checked;
+    safeSave(state);
+    updateProgress();
+  });
+});
+updateProgress();
+
+document.querySelectorAll(".tab-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const container = btn.closest("section");
+    container.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+    container.querySelectorAll(".tab-pane").forEach(p => p.classList.remove("active"));
+    btn.classList.add("active");
+    document.getElementById(btn.dataset.tab).classList.add("active");
+  });
+});
+
+const sections = [...document.querySelectorAll("main section")];
+const navLinks = [...document.querySelectorAll("#sideNav a")];
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      navLinks.forEach(a => a.classList.toggle("active", a.getAttribute("href") === "#" + entry.target.id));
+    }
+  });
+}, {rootMargin:"-35% 0px -55% 0px"});
+sections.forEach(s => observer.observe(s));
+
+document.getElementById("searchBox").addEventListener("input", e => {
+  const term = e.target.value.trim().toLowerCase();
+  sections.forEach(s => {
+    s.classList.toggle("hidden-by-search", term && !s.innerText.toLowerCase().includes(term));
+  });
+});
+
+document.getElementById("globalNotes").value = state.globalNotes;
+document.getElementById("saveNotes").addEventListener("click", () => {
+  state.globalNotes = document.getElementById("globalNotes").value;
+  safeSave(state);
+  toast("Notes saved");
+});
+document.getElementById("exportNotes").addEventListener("click", () => {
+  const lines = [
+    "PYSPARK SETUP — MY NOTES",
+    "========================",
+    "",
+    document.getElementById("globalNotes").value,
+    "",
+    "CONTEXTUAL NOTES",
+    "----------------"
+  ];
+  state.contextNotes.forEach((n,i) => lines.push(`${i+1}. ${n.text}\n   ${n.note}\n`));
+  const blob = new Blob([lines.join("\n")], {type:"text/plain"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "pyspark-setup-notes.txt";
+  a.click();
+  URL.revokeObjectURL(a.href);
+});
+
+let currentSelection = "";
+document.querySelector("main").addEventListener("dblclick", () => {
+  const text = window.getSelection().toString().trim();
+  if (!text || text.length > 180) return;
+  currentSelection = text;
+  document.getElementById("selectedText").textContent = text;
+  document.getElementById("contextNote").value = "";
+  document.getElementById("noteModal").classList.add("open");
+});
+document.getElementById("closeModal").addEventListener("click", () => {
+  document.getElementById("noteModal").classList.remove("open");
+});
+document.getElementById("saveContextNote").addEventListener("click", () => {
+  const note = document.getElementById("contextNote").value.trim();
+  if (!note) return toast("Write a note first");
+  state.contextNotes.push({text:currentSelection,note,date:new Date().toISOString()});
+  safeSave(state);
+  document.getElementById("noteModal").classList.remove("open");
+  toast("Contextual note saved");
+});
+
+function renderQuestions(targetId, questions, prefix, disabled=false) {
+  const root = document.getElementById(targetId);
+  root.innerHTML = questions.map((item, i) => `
+    <div class="question">
+      <strong>${i+1}. ${item.q}</strong>
+      ${item.options.map((opt,j) => `
+        <label><input type="radio" name="${prefix}${i}" value="${j}" ${disabled ? "disabled" : ""}> ${opt}</label>
+      `).join("")}
+      ${item.explanation ? `<div class="small" id="${prefix}exp${i}" style="display:none"></div>` : ""}
+    </div>
+  `).join("");
+}
+renderQuestions("practiceQuiz", PRACTICE, "p");
+
+document.getElementById("submitPractice").addEventListener("click", () => {
+  let score = 0;
+  PRACTICE.forEach((item,i) => {
+    const chosen = document.querySelector(`input[name="p${i}"]:checked`);
+    const exp = document.getElementById(`pexp${i}`);
+    if (chosen && Number(chosen.value) === item.answer) score++;
+    exp.style.display = "block";
+    exp.innerHTML = `<strong>${chosen && Number(chosen.value) === item.answer ? "✅ Correct" : "❌ Review"}:</strong> ${item.explanation}`;
+  });
+  const pct = Math.round(score/PRACTICE.length*100);
+  const result = document.getElementById("practiceResult");
+  result.style.display = "block";
+  result.style.background = pct >= 80 ? "color-mix(in srgb,var(--good) 16%,var(--surface))" : "color-mix(in srgb,var(--warn) 15%,var(--surface))";
+  result.textContent = `Practice score: ${score}/${PRACTICE.length} (${pct}%). ${pct>=80 ? "Excellent setup understanding! 😊" : "Review the explanations and try again. 💪"}`;
+  playTone(pct);
+});
+document.getElementById("resetPractice").addEventListener("click", () => {
+  renderQuestions("practiceQuiz", PRACTICE, "p");
+  document.getElementById("practiceResult").style.display = "none";
+});
+
+let examSeconds = 15*60;
+let examInterval = null;
+let examStarted = false;
+function updateTimer() {
+  const m = String(Math.floor(examSeconds/60)).padStart(2,"0");
+  const s = String(examSeconds%60).padStart(2,"0");
+  document.getElementById("examTimer").textContent = `${m}:${s}`;
+}
+document.getElementById("startExam").addEventListener("click", () => {
+  clearInterval(examInterval);
+  examSeconds = 15*60;
+  examStarted = true;
+  renderQuestions("examQuiz", EXAM, "e");
+  document.getElementById("submitExam").disabled = false;
+  document.getElementById("examResult").style.display = "none";
+  updateTimer();
+  examInterval = setInterval(() => {
+    examSeconds--;
+    updateTimer();
+    if (examSeconds <= 0) submitExam(true);
+  }, 1000);
+});
+document.getElementById("submitExam").addEventListener("click", () => submitExam(false));
+
+function submitExam(auto) {
+  if (!examStarted) return;
+  clearInterval(examInterval);
+  examStarted = false;
+  document.getElementById("submitExam").disabled = true;
+  let score = 0;
+  EXAM.forEach((item,i) => {
+    const chosen = document.querySelector(`input[name="e${i}"]:checked`);
+    if (chosen && Number(chosen.value) === item.answer) score++;
+    document.querySelectorAll(`input[name="e${i}"]`).forEach(x => x.disabled = true);
+  });
+  const pct = Math.round(score/EXAM.length*100);
+  const mood = pct >= 85 ? "Outstanding — interview ready! 🏆" : pct >= 70 ? "Good — reinforce troubleshooting. 🙂" : pct >= 50 ? "Developing — repeat the practical lab. 🔧" : "Revisit setup steps and retry. 📘";
+  const result = document.getElementById("examResult");
+  result.style.display = "block";
+  result.style.background = pct >= 70 ? "color-mix(in srgb,var(--good) 16%,var(--surface))" : "color-mix(in srgb,var(--bad) 12%,var(--surface))";
+  result.textContent = `${auto ? "Time completed. " : ""}Exam score: ${score}/${EXAM.length} (${pct}%). ${mood}`;
+  state.lastExam = {score,total:EXAM.length,pct,date:new Date().toISOString()};
+  safeSave(state);
+  playTone(pct);
+}
+updateTimer();
+
+function playTone(pct) {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain); gain.connect(ctx.destination);
+    osc.frequency.value = pct >= 70 ? 660 : 300;
+    gain.gain.setValueAtTime(.05, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(.001, ctx.currentTime + .35);
+    osc.start(); osc.stop(ctx.currentTime + .35);
+  } catch (_) {}
+}
+
+let lastSparkle = 0;
+document.addEventListener("mousemove", e => {
+  const now = Date.now();
+  if (now - lastSparkle < 70) return;
+  lastSparkle = now;
+  const sp = document.createElement("span");
+  sp.className = "sparkle";
+  sp.textContent = Math.random() > .5 ? "✦" : "·";
+  sp.style.left = e.clientX + "px";
+  sp.style.top = e.clientY + "px";
+  sp.style.color = Math.random() > .5 ? "var(--brand)" : "var(--brand2)";
+  document.body.appendChild(sp);
+  setTimeout(() => sp.remove(), 760);
+});
+
+window.addEventListener("beforeunload", () => {
+  state.globalNotes = document.getElementById("globalNotes").value;
+  safeSave(state);
+});
+</script>
+</body>
+</html>
