@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Spark Ecosystem — Complete Classroom Tutorial</title>
+<style>
+:root{--bg:#f5f7fb;--card:#fff;--text:#172033;--muted:#667085;--border:#dfe3eb;--accent:#ef4444;--accent2:#f97316;--good:#15803d;--warn:#b45309;--bad:#b91c1c}
+body.dark{--bg:#0f172a;--card:#172033;--text:#edf2f7;--muted:#aab5c8;--border:#334155}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.65}
+#bar{position:fixed;top:0;left:0;height:4px;background:linear-gradient(90deg,var(--accent),var(--accent2));width:0;z-index:9999}
+header{position:sticky;top:0;z-index:1000;background:color-mix(in srgb,var(--card) 93%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
+.head{max-width:1480px;margin:auto;padding:10px 18px;display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}
+.brand{font-weight:900}.brand small{display:block;color:var(--muted);font-weight:500}
+button,.btn{border:0;border-radius:10px;padding:9px 13px;background:var(--accent);color:#fff;font-weight:800;cursor:pointer;text-decoration:none}.secondary{background:var(--card);color:var(--text);border:1px solid var(--border)}
+.hero{max-width:1480px;margin:22px auto 0;padding:0 18px;display:grid;grid-template-columns:1.7fr 1fr;gap:18px}
+.hero-main{padding:38px;border-radius:25px;color:white;background:linear-gradient(135deg,#7f1d1d,#dc2626 52%,#f97316);box-shadow:0 20px 55px #7f1d1d35}
+.hero-main h1{font-size:clamp(36px,5vw,68px);line-height:1.04;margin:0 0 12px}.hero-main p{font-size:18px;max-width:900px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}.chip{border:1px solid #ffffff50;background:#ffffff1f;border-radius:999px;padding:6px 10px;font-size:13px}
+.sidecards{display:grid;gap:12px}.metric,.card,section{background:var(--card);border:1px solid var(--border);border-radius:18px;box-shadow:0 8px 24px #1720330c}.metric{padding:18px}.metric strong{font-size:22px;color:var(--accent)}
+.layout{max-width:1480px;margin:20px auto;padding:0 18px;display:grid;grid-template-columns:275px minmax(0,1fr) 250px;gap:18px;align-items:start}
+nav,.aside{position:sticky;top:82px;max-height:calc(100vh - 100px);overflow:auto;padding:15px;background:var(--card);border:1px solid var(--border);border-radius:16px}
+nav a{display:block;padding:7px 9px;border-radius:8px;color:var(--text);text-decoration:none;font-size:14px}nav a:hover{color:var(--accent);background:color-mix(in srgb,var(--accent) 10%,transparent)}
+main{min-width:0}section{padding:26px;margin-bottom:18px;transition:.2s}section:hover{transform:translateY(-1px);box-shadow:0 12px 36px #ef444415}
+h2{font-size:29px;margin-top:0;padding-bottom:8px;border-bottom:3px solid color-mix(in srgb,var(--accent) 26%,transparent)}h3{color:var(--accent);margin-top:24px}.lead{font-size:18px}.muted{color:var(--muted)}
+.grid2,.grid3,.grid4{display:grid;gap:14px}.grid2{grid-template-columns:repeat(2,1fr)}.grid3{grid-template-columns:repeat(3,1fr)}.grid4{grid-template-columns:repeat(4,1fr)}
+.box{padding:16px;border:1px solid var(--border);border-radius:14px;background:color-mix(in srgb,var(--card) 96%,var(--accent) 4%)}.goodbox{border-left:5px solid var(--good)}.warnbox{border-left:5px solid var(--warn)}.badbox{border-left:5px solid var(--bad)}
+code{font-family:Consolas,monospace;background:color-mix(in srgb,var(--accent) 9%,transparent);padding:2px 5px;border-radius:5px}pre{position:relative;background:#0b1020;color:#e8eef9;padding:20px;border-radius:14px;overflow:auto;line-height:1.55}.copy{position:absolute;right:10px;top:10px;background:#334155}
+table{width:100%;border-collapse:collapse;display:block;overflow:auto}th,td{border:1px solid var(--border);padding:11px;text-align:left;min-width:130px}th{background:color-mix(in srgb,var(--accent) 13%,var(--card))}
+.diagram{padding:22px;border:1px dashed var(--accent);border-radius:16px;background:color-mix(in srgb,var(--accent) 5%,var(--card));overflow:auto}.flow{display:flex;justify-content:center;align-items:center;gap:9px;flex-wrap:wrap}.node{min-width:125px;text-align:center;border:2px solid var(--accent);background:var(--card);padding:14px;border-radius:13px;font-weight:900}.arrow{font-size:24px;color:var(--accent)}figcaption{text-align:center;color:var(--muted);margin-top:12px}
+.progress-wrap{height:14px;border-radius:20px;overflow:hidden;background:var(--border)}.progress{height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent2))}
+.checkrow{display:flex;gap:9px;align-items:flex-start;margin:8px 0}.tag{font-size:12px;padding:3px 8px;border-radius:999px;background:color-mix(in srgb,var(--accent) 14%,transparent);font-weight:800}
+.qcard,.flash{border:1px solid var(--border);border-radius:14px;padding:16px;margin:12px 0}.flash{cursor:pointer}.flash .back{display:none}.flash.open .front{display:none}.flash.open .back{display:block}
+.option{display:block;padding:8px;border:1px solid var(--border);border-radius:9px;margin:5px 0}.result{padding:14px;border-radius:12px;margin-top:12px;font-weight:800}.correct{background:#dcfce7;color:#14532d;border:1px solid #22c55e}.wrong{background:#fee2e2;color:#7f1d1d;border:1px solid #ef4444}
+textarea,input[type=text],select{width:100%;padding:10px;border:1px solid var(--border);border-radius:9px;background:var(--card);color:var(--text)}textarea{min-height:130px}
+.sparkle{position:fixed;pointer-events:none;width:7px;height:7px;border-radius:50%;background:#facc15;z-index:9999;animation:fade .7s forwards}@keyframes fade{to{transform:scale(0) translateY(-16px);opacity:0}}
+.highlight{background:#fde68a!important;color:#111!important;border-radius:4px}.xp{font-size:28px;font-weight:900;color:var(--accent)}.hidden{display:none!important}.center{text-align:center}.small{font-size:13px}
+.certificate{border:8px double var(--accent);text-align:center;padding:32px}.certificate h2{border:0;font-family:Georgia,serif;font-size:37px}
+#topbtn{position:fixed;right:20px;bottom:20px;border-radius:50%;width:44px;height:44px;display:none}
+@media(max-width:1160px){.layout{grid-template-columns:240px minmax(0,1fr)}.aside{display:none}.hero{grid-template-columns:1fr}}
+@media(max-width:780px){.layout{grid-template-columns:1fr}.layout nav{position:static;max-height:none}.grid2,.grid3,.grid4{grid-template-columns:1fr}.hero-main{padding:25px}header{position:static}}
+@media print{header,nav,.aside,button,#bar,#topbtn{display:none!important}.layout,.hero{display:block;max-width:none}.hero-main{background:#fff;color:#111;border:2px solid #555;box-shadow:none}section{box-shadow:none;break-inside:avoid}.certificate{display:block!important}}
+</style>
+</head>
+<body>
+<div id="bar"></div>
+<header><div class="head"><div class="brand">⚡ TUT: Spark Ecosystem<small>Core, SQL, Structured Streaming, MLlib, GraphX and SparkR</small></div><div><button class="secondary" onclick="theme()">🌗 Theme</button> <button class="secondary" onclick="fontChange(1)">A+</button> <button class="secondary" onclick="fontChange(-1)">A−</button> <button class="secondary" onclick="muteToggle()">🔊 Sound</button> <button onclick="window.print()">🖨 Print / PDF</button></div></div></header>
+
+<div class="hero">
+<div class="hero-main"><h1>Spark Ecosystem</h1><p>Understand how the major Apache Spark components work together to support batch processing, SQL analytics, streaming, machine learning, graph computation and R-based data processing within one unified platform.</p><div class="chips"><span class="chip">⚙ Spark Core</span><span class="chip">📊 Spark SQL</span><span class="chip">🌊 Structured Streaming</span><span class="chip">🤖 MLlib</span><span class="chip">🕸 GraphX</span><span class="chip">📈 SparkR</span></div></div>
+<div class="sidecards"><div class="metric"><strong>75–100 min</strong><br>Suggested classroom duration</div><div class="metric"><strong>One Engine</strong><br>Multiple specialized processing libraries</div><div class="metric"><strong>Outcome</strong><br>Select the right Spark component for a business requirement.</div></div>
+</div>
+
+<div class="layout">
+<nav><b>Course Navigation</b>
+<a href="#s1">1. Outcomes</a><a href="#s2">2. Ecosystem Introduction</a><a href="#s3">3. Big Picture Diagram</a><a href="#s4">4. Spark Core</a><a href="#s5">5. Spark SQL</a><a href="#s6">6. Streaming</a><a href="#s7">7. MLlib</a><a href="#s8">8. GraphX</a><a href="#s9">9. SparkR</a><a href="#s10">10. Unified Use Case</a><a href="#s11">11. Comparison</a><a href="#s12">12. Best Practices</a><a href="#s13">13. Troubleshooting</a><a href="#s14">14. Interview Q&A</a><a href="#s15">15. Exercises</a><a href="#s16">16. Practice Quiz</a><a href="#s17">17. Timed Exam</a><a href="#s18">18. Summary</a><a href="#cert">Certificate</a>
+</nav>
+
+<main>
+<section id="s1"><h2>1. Learning Outcomes</h2><p class="lead">After completing this tutorial, you will be able to describe each major Spark ecosystem component, explain how the components share a common engine, and choose an appropriate component for batch, SQL, streaming, ML, graph or R workloads.</p>
+<div class="grid2"><div class="box"><h3>Prerequisites</h3><ul><li>Basic understanding of Apache Spark</li><li>Basic Python or SQL knowledge</li><li>Awareness of rows, columns and datasets</li><li>Understanding of driver and executor is helpful</li></ul></div><div class="box"><h3>Key Skills</h3><ul><li>Recognize ecosystem components</li><li>Match requirements to components</li><li>Understand shared execution architecture</li><li>Design a simple end-to-end Spark solution</li></ul></div></div>
+<h3>Preparation Tracker</h3><div class="progress-wrap"><div id="prepbar" class="progress"></div></div><p id="preptext">0% prepared</p><div id="checks"></div><button class="secondary" onclick="resetChecks()">Reset Progress</button>
+</section>
+
+<section id="s2"><h2>2. Introduction to the Spark Ecosystem</h2>
+<p>The <strong>Spark ecosystem</strong> is a family of libraries that run on top of the Apache Spark distributed processing engine. Instead of using separate platforms for SQL, machine learning, streaming and graph processing, Spark provides specialized modules that share common concepts such as DataFrames, partitions, executors and cluster resources.</p>
+<p>The ecosystem is valuable because teams can build a complete data platform using related APIs and one execution engine. For example, a company can clean data with Spark SQL, process real-time events with Structured Streaming, prepare machine-learning features with DataFrames and train models with MLlib.</p>
+<div class="box warnbox"><b>Important:</b> The ecosystem components are not separate Spark products running independently. Most components use Spark Core for task scheduling, memory management, fault recovery and distributed execution.</div>
+<h3>Memory Aid: “C-S-S-M-G-R”</h3><p><b>C</b>ore runs the engine, <b>S</b>QL handles structured data, <b>S</b>treaming handles continuous data, <b>M</b>Llib handles machine learning, <b>G</b>raphX handles graphs, and <b>R</b> enables R developers.</p>
+</section>
+
+<section id="s3"><h2>3. Spark Ecosystem Big Picture</h2>
+<figure class="diagram"><div class="flow"><div class="node">Spark SQL<br><small>Structured analytics</small></div><div class="node">Structured Streaming<br><small>Real-time pipelines</small></div><div class="node">MLlib<br><small>Machine learning</small></div><div class="node">GraphX<br><small>Graph processing</small></div><div class="node">SparkR<br><small>R API</small></div></div><div class="flow" style="margin-top:18px"><span class="arrow">↓</span><span class="arrow">↓</span><span class="arrow">↓</span><span class="arrow">↓</span><span class="arrow">↓</span></div><div class="flow"><div class="node" style="min-width:520px">Spark Core<br><small>Scheduling • Memory • Fault recovery • Distributed execution</small></div></div><div class="flow" style="margin-top:18px"><span class="arrow">↓</span></div><div class="flow"><div class="node">Standalone</div><div class="node">YARN</div><div class="node">Kubernetes</div><div class="node">Cloud Platforms</div></div><figcaption>All major modules rely on Spark Core and run using a cluster manager.</figcaption></figure>
+<h3>How to Read the Diagram</h3><ol><li>The upper layer contains specialized APIs and libraries.</li><li>Spark Core provides the common execution foundation.</li><li>A cluster manager allocates resources to the Spark application.</li><li>The same application can combine multiple modules.</li></ol>
+</section>
+
+<section id="s4"><h2>4. Spark Core</h2>
+<p><strong>Spark Core</strong> is the foundation of the ecosystem. It provides distributed task scheduling, memory management, fault recovery, data partitioning, communication with storage systems and the basic RDD abstraction.</p>
+<div class="grid3"><div class="box"><b>Scheduling</b><p>Breaks jobs into stages and tasks.</p></div><div class="box"><b>Memory</b><p>Manages execution and cached data.</p></div><div class="box"><b>Fault Recovery</b><p>Recomputes lost partitions using lineage.</p></div></div>
+<h3>Common Core Concepts</h3><ul><li><b>RDD:</b> Resilient Distributed Dataset, the low-level distributed collection abstraction.</li><li><b>Transformation:</b> Lazy operation such as <code>map</code> or <code>filter</code>.</li><li><b>Action:</b> Operation such as <code>count</code> that triggers execution.</li><li><b>Partition:</b> Logical chunk of data processed by a task.</li><li><b>DAG:</b> Directed Acyclic Graph representing computation dependencies.</li></ul>
+<pre><button class="copy" onclick="copyCode(this)">Copy</button><code>from pyspark.sql import SparkSession
+
+spark = SparkSession.builder.appName("CoreDemo").getOrCreate()
+sc = spark.sparkContext
+
+numbers = sc.parallelize([1, 2, 3, 4, 5])
+squares = numbers.map(lambda x: x * x)
+
+print(squares.collect())
+spark.stop()</code></pre>
+</section>
+
+<section id="s5"><h2>5. Spark SQL</h2>
+<p><strong>Spark SQL</strong> is used for structured and semi-structured data. It supports DataFrames, Datasets in supported languages, SQL queries, schema management and optimization through the Catalyst optimizer.</p>
+<div class="grid2"><div class="box goodbox"><h3>Use Spark SQL For</h3><ul><li>ETL and data cleansing</li><li>Joins and aggregations</li><li>Reading CSV, JSON, Parquet and databases</li><li>Business analytics</li><li>Lakehouse transformations</li></ul></div><div class="box warnbox"><h3>Key Internal Features</h3><ul><li>Catalyst query optimizer</li><li>Tungsten execution improvements</li><li>Column pruning</li><li>Predicate pushdown</li><li>Logical and physical plans</li></ul></div></div>
+<pre><button class="copy" onclick="copyCode(this)">Copy</button><code>employees = [
+    ("Asha", "IT", 70000),
+    ("Bala", "HR", 50000),
+    ("Cathy", "IT", 82000)
+]
+
+df = spark.createDataFrame(
+    employees,
+    ["name", "department", "salary"]
+)
+
+df.createOrReplaceTempView("employees")
+
+spark.sql("""
+    SELECT department, AVG(salary) AS average_salary
+    FROM employees
+    GROUP BY department
+""").show()</code></pre>
+</section>
+
+<section id="s6"><h2>6. Structured Streaming</h2>
+<p><strong>Structured Streaming</strong> is Spark’s modern stream-processing API. It uses the DataFrame and SQL model to process continuously arriving data. Conceptually, the input stream is treated as an unbounded table.</p>
+<figure class="diagram"><div class="flow"><div class="node">Kafka / Files / Socket</div><span class="arrow">→</span><div class="node">Streaming DataFrame</div><span class="arrow">→</span><div class="node">Transformations</div><span class="arrow">→</span><div class="node">Console / Kafka / Lake</div></div><figcaption>Streaming pipelines continuously read, process and write records.</figcaption></figure>
+<h3>Important Concepts</h3><ul><li><b>Trigger:</b> Controls when processing occurs.</li><li><b>Checkpoint:</b> Stores progress and recovery information.</li><li><b>Watermark:</b> Limits how long late event data is retained.</li><li><b>Output mode:</b> Append, update or complete.</li><li><b>Micro-batch:</b> Default model for processing small batches repeatedly.</li></ul>
+<pre><button class="copy" onclick="copyCode(this)">Copy</button><code>stream_df = (
+    spark.readStream
+         .format("rate")
+         .option("rowsPerSecond", 5)
+         .load()
+)
+
+result = stream_df.selectExpr("timestamp", "value * 10 AS score")
+
+query = (
+    result.writeStream
+          .format("console")
+          .outputMode("append")
+          .start()
+)
+
+query.awaitTermination()</code></pre>
+</section>
+
+<section id="s7"><h2>7. MLlib</h2>
+<p><strong>MLlib</strong> is Spark’s scalable machine-learning library. It provides algorithms and workflow tools for classification, regression, clustering, recommendation, feature engineering and model evaluation.</p>
+<h3>Main MLlib Building Blocks</h3>
+<div class="grid4"><div class="box"><b>Transformer</b><p>Converts one DataFrame into another.</p></div><div class="box"><b>Estimator</b><p>Learns a model from data.</p></div><div class="box"><b>Pipeline</b><p>Chains multiple ML stages.</p></div><div class="box"><b>Evaluator</b><p>Measures model performance.</p></div></div>
+<pre><button class="copy" onclick="copyCode(this)">Copy</button><code>from pyspark.ml.feature import VectorAssembler
+from pyspark.ml.regression import LinearRegression
+
+training = spark.createDataFrame([
+    (1.0, 10.0, 100.0),
+    (2.0, 20.0, 200.0),
+    (3.0, 30.0, 300.0)
+], ["feature1", "feature2", "label"])
+
+assembler = VectorAssembler(
+    inputCols=["feature1", "feature2"],
+    outputCol="features"
+)
+
+prepared = assembler.transform(training)
+
+model = LinearRegression(
+    featuresCol="features",
+    labelCol="label"
+).fit(prepared)
+
+model.transform(prepared).show()</code></pre>
+</section>
+
+<section id="s8"><h2>8. GraphX</h2>
+<p><strong>GraphX</strong> is Spark’s graph-processing library for the Scala API. It represents data using vertices and edges and provides graph algorithms such as PageRank, connected components and triangle counting.</p>
+<div class="grid2"><div class="box"><h3>Graph Terms</h3><ul><li><b>Vertex:</b> A node, such as a customer or web page</li><li><b>Edge:</b> A relationship between two vertices</li><li><b>Property:</b> Extra information on a vertex or edge</li></ul></div><div class="box"><h3>Typical Use Cases</h3><ul><li>Social-network analysis</li><li>Fraud-ring detection</li><li>Recommendation relationships</li><li>Network and dependency analysis</li></ul></div></div>
+<div class="box warnbox"><b>PySpark note:</b> GraphX is primarily a Scala API. Python projects commonly use graph-oriented libraries or platform-specific graph frameworks when direct GraphX access is required.</div>
+<figure class="diagram"><div class="flow"><div class="node">Customer A</div><span class="arrow">→</span><div class="node">Account X</div><span class="arrow">→</span><div class="node">Customer B</div><span class="arrow">→</span><div class="node">Device Z</div></div><figcaption>A graph can expose indirect relationships that normal row-by-row analysis may miss.</figcaption></figure>
+</section>
+
+<section id="s9"><h2>9. SparkR</h2>
+<p><strong>SparkR</strong> is an R package that provides access to Spark’s distributed data-processing capabilities. It is useful for analysts and data scientists who prefer the R language but need Spark scalability.</p>
+<h3>SparkR Capabilities</h3><ul><li>Create and manipulate Spark DataFrames from R</li><li>Run SQL queries</li><li>Perform aggregations and transformations</li><li>Use selected distributed machine-learning functions</li><li>Connect R-based analytical workflows to Spark clusters</li></ul>
+<pre><code># SparkR example
+library(SparkR)
+
+sparkR.session(appName = "SparkRDemo")
+
+df <- createDataFrame(data.frame(
+  name = c("Asha", "Bala"),
+  salary = c(60000, 72000)
+))
+
+showDF(df)
+sparkR.session.stop()</code></pre>
+</section>
+
+<section id="s10"><h2>10. Unified Real-Time Use Case</h2>
+<h3>Banking Fraud and Customer Analytics Platform</h3>
+<p>A bank wants to process historical transactions, detect suspicious payments in real time, train a fraud model, identify connected fraud accounts and support analysts using Python, SQL and R.</p>
+<figure class="diagram"><div class="flow"><div class="node">Transaction History</div><span class="arrow">→</span><div class="node">Spark SQL<br><small>Clean & aggregate</small></div><span class="arrow">→</span><div class="node">MLlib<br><small>Train fraud model</small></div></div><div class="flow" style="margin-top:16px"><div class="node">Live Card Events</div><span class="arrow">→</span><div class="node">Structured Streaming<br><small>Real-time scoring</small></div><span class="arrow">→</span><div class="node">Alerts</div></div><div class="flow" style="margin-top:16px"><div class="node">Accounts & Devices</div><span class="arrow">→</span><div class="node">GraphX<br><small>Fraud-ring links</small></div><span class="arrow">→</span><div class="node">Investigation View</div></div><figcaption>Multiple Spark modules cooperate within one data platform.</figcaption></figure>
+<table><tr><th>Requirement</th><th>Spark component</th><th>Reason</th></tr><tr><td>Clean historical transactions</td><td>Spark SQL</td><td>Structured transformations and SQL analytics</td></tr><tr><td>Score live events</td><td>Structured Streaming</td><td>Continuous processing with DataFrames</td></tr><tr><td>Train fraud model</td><td>MLlib</td><td>Distributed feature pipeline and algorithms</td></tr><tr><td>Find linked fraud accounts</td><td>GraphX</td><td>Vertex-edge relationship analysis</td></tr><tr><td>Run distributed workloads</td><td>Spark Core</td><td>Common execution engine</td></tr><tr><td>Support R analysts</td><td>SparkR</td><td>R interface to Spark</td></tr></table>
+</section>
+
+<section id="s11"><h2>11. Component Comparison</h2>
+<table><tr><th>Component</th><th>Main Purpose</th><th>Main Abstraction</th><th>Example</th></tr><tr><td>Spark Core</td><td>Distributed execution foundation</td><td>RDD, task, partition</td><td>Custom distributed transformation</td></tr><tr><td>Spark SQL</td><td>Structured data processing</td><td>DataFrame and SQL</td><td>Sales aggregation</td></tr><tr><td>Structured Streaming</td><td>Continuous data processing</td><td>Streaming DataFrame</td><td>Kafka event pipeline</td></tr><tr><td>MLlib</td><td>Scalable machine learning</td><td>Estimator, Transformer, Pipeline</td><td>Churn prediction</td></tr><tr><td>GraphX</td><td>Graph analytics</td><td>Vertex and edge</td><td>Fraud-ring analysis</td></tr><tr><td>SparkR</td><td>R access to Spark</td><td>Spark DataFrame in R</td><td>Distributed statistical analysis</td></tr></table>
+</section>
+
+<section id="s12"><h2>12. Best Practices</h2>
+<div class="grid2"><div class="box goodbox"><h3>Recommended</h3><ul><li>Prefer DataFrames and Spark SQL for structured workloads.</li><li>Use Structured Streaming instead of older DStream APIs for new projects.</li><li>Design MLlib workflows with reusable pipelines.</li><li>Checkpoint important streaming queries.</li><li>Use the simplest component that satisfies the requirement.</li><li>Monitor shuffles, skew and executor memory.</li></ul></div><div class="box badbox"><h3>Avoid</h3><ul><li>Using RDDs for tasks easily handled by DataFrames.</li><li>Combining every module without a business reason.</li><li>Running streaming without recovery planning.</li><li>Collecting large results at the driver.</li><li>Choosing GraphX for ordinary relational joins.</li><li>Treating MLlib as a substitute for data quality work.</li></ul></div></div>
+</section>
+
+<section id="s13"><h2>13. Troubleshooting and Common Confusions</h2>
+<table><tr><th>Problem</th><th>Likely Cause</th><th>Action</th></tr><tr><td>Unsure between Core and SQL</td><td>Confusing the engine with a library</td><td>Remember that Spark SQL runs on Spark Core.</td></tr><tr><td>Streaming query restarts from the beginning</td><td>Checkpoint missing or changed</td><td>Use a stable checkpoint location.</td></tr><tr><td>ML model expects a features column</td><td>Raw columns were not assembled</td><td>Use VectorAssembler or another feature transformer.</td></tr><tr><td>GraphX unavailable in PySpark</td><td>GraphX is a Scala-first API</td><td>Use Scala GraphX or another graph solution.</td></tr><tr><td>SQL query is slow</td><td>Large shuffle, skew or bad join strategy</td><td>Inspect the physical plan and partition distribution.</td></tr><tr><td>Streaming state grows continuously</td><td>No watermark or bounded state condition</td><td>Use event-time watermarks when appropriate.</td></tr></table>
+</section>
+
+<section id="s14"><h2>14. Interview Questions and Answers</h2><p>Click each card to reveal the answer.</p><div id="cards"></div><button class="secondary" onclick="resetSchedule()">Reset Flashcard Schedule</button></section>
+
+<section id="s15"><h2>15. Practical Exercises</h2>
+<h3>A. Match the Requirement</h3><div id="matching"></div><button onclick="checkMatching()">Check Matching</button><div id="matchresult"></div>
+<h3>B. Arrange the Ecosystem Flow</h3><p>Arrange the flow from business requirement to execution.</p><div id="ordering"></div><button onclick="checkOrder()">Check Order</button><div id="orderresult"></div>
+<h3>C. Fill in the Blank</h3>
+<div class="qcard"><p>The Spark library for structured data is Spark <input id="f1" type="text"></p><button onclick="fill('f1','SQL','r1')">Check</button><div id="r1"></div></div>
+<div class="qcard"><p>The scalable machine-learning library is <input id="f2" type="text"></p><button onclick="fill('f2','MLlib','r2')">Check</button><div id="r2"></div></div>
+</section>
+
+<section id="s16"><h2>16. Practice Quiz</h2><p>15 randomized questions with explanations.</p><div id="quiz"></div><button onclick="submitQuiz()">Submit Practice Quiz</button> <button class="secondary" onclick="startQuiz()">Retry / Reshuffle</button><div id="quizResult"></div></section>
+
+<section id="s17"><h2>17. Formal Timed Exam</h2><p><b>15 questions • 15 minutes • Pass mark 60%</b></p><button onclick="startExam()">Start Exam</button><div id="timer" class="xp"></div><div id="exam"></div><button id="examSubmit" class="hidden" onclick="submitExam()">Submit Exam</button><div id="examResult"></div><div id="weak"></div></section>
+
+<section id="s18"><h2>18. Summary and Revision</h2>
+<ul><li>Spark Core is the distributed execution foundation.</li><li>Spark SQL handles structured data, DataFrames and SQL queries.</li><li>Structured Streaming handles continuously arriving data.</li><li>MLlib supports scalable machine-learning pipelines.</li><li>GraphX supports graph computation, mainly through Scala.</li><li>SparkR provides R access to Spark.</li><li>All modules share Spark’s execution architecture and cluster resources.</li></ul>
+<h3>Learning Path</h3><div class="flow"><div class="node">Spark Core</div><span class="arrow">→</span><div class="node">Spark SQL</div><span class="arrow">→</span><div class="node">Streaming</div><span class="arrow">→</span><div class="node">MLlib</div><span class="arrow">→</span><div class="node">Optimization</div></div>
+</section>
+
+<section><h2>Personal Notes</h2><p>Double-click any word or paragraph to save it as a highlighted note.</p><textarea id="notes" placeholder="Your notes..."></textarea><button onclick="saveNotes()">Save Notes</button> <button class="secondary" onclick="clearNotes()">Clear Notes</button> <button class="secondary" onclick="exportData()">Export Data</button> <label class="btn secondary">Import Data<input id="importFile" type="file" hidden onchange="importData(event)"></label><h3>Score History</h3><div id="history"></div></section>
+
+<section id="cert" class="certificate hidden"><h2>Certificate of Completion</h2><p>This certifies that</p><input id="certname" type="text" placeholder="Enter learner name" style="max-width:420px;text-align:center"><h3>has successfully completed</h3><h1>Spark Ecosystem</h1><p>Core • SQL • Streaming • MLlib • GraphX • SparkR</p><p id="certdate"></p><button onclick="window.print()">Print Certificate</button></section>
+</main>
+
+<aside class="aside"><b>Learning Dashboard</b><p>XP</p><div id="xp" class="xp">0</div><p>Best Exam</p><div id="best" class="xp">0%</div><p>Badges</p><div id="badges">Start learning to earn badges.</div><hr><b>Trainer Flow</b><ol><li>Draw the ecosystem diagram.</li><li>Explain Spark Core first.</li><li>Map each component to a use case.</li><li>Demonstrate SQL and streaming.</li><li>Compare MLlib and GraphX workloads.</li><li>Conduct quiz and exam.</li></ol></aside>
+</div>
+<button id="topbtn" onclick="scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+const KEY='spark_ecosystem_tut_v1';let font=100,mute=false,quizQs=[],examQs=[],examTimer=null,used=[];
+const state=load()||{checks:{},notes:[],manual:'',scores:[],xp:0,best:0,schedule:{}};
+function load(){try{return JSON.parse(localStorage.getItem(KEY))}catch(e){return null}}function save(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}dash()}
+function theme(){document.body.classList.toggle('dark');localStorage.setItem(KEY+'_theme',document.body.classList.contains('dark')?'dark':'light')}if(localStorage.getItem(KEY+'_theme')==='dark')document.body.classList.add('dark');
+function fontChange(d){font=Math.max(80,Math.min(130,font+d*5));document.documentElement.style.fontSize=font+'%'}function muteToggle(){mute=!mute;event.target.textContent=mute?'🔇 Sound':'🔊 Sound'}
+function beep(ok=true){if(mute)return;try{let a=new AudioContext(),o=a.createOscillator(),g=a.createGain();o.connect(g);g.connect(a.destination);o.frequency.value=ok?650:220;g.gain.value=.05;o.start();o.stop(a.currentTime+.14)}catch(e){}}
+function copyCode(b){navigator.clipboard.writeText(b.parentElement.innerText.replace('Copy','').trim());b.textContent='Copied';setTimeout(()=>b.textContent='Copy',1000)}
+window.addEventListener('scroll',()=>{let h=document.documentElement;bar.style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%';topbtn.style.display=h.scrollTop>600?'block':'none'});
+document.addEventListener('mousemove',e=>{if(Math.random()<.08){let s=document.createElement('i');s.className='sparkle';s.style.left=e.clientX+'px';s.style.top=e.clientY+'px';document.body.appendChild(s);setTimeout(()=>s.remove(),700)}});
+
+const topics=['Explain Spark Core','Use Spark SQL','Understand Structured Streaming','Describe MLlib','Explain GraphX','Explain SparkR','Choose components for a use case','Compare all ecosystem modules'];
+function renderChecks(){checks.innerHTML=topics.map((x,i)=>`<label class="checkrow"><input type="checkbox" ${state.checks[i]?'checked':''} onchange="setCheck(${i},this.checked)"> ${x}</label>`).join('');let n=Object.values(state.checks).filter(Boolean).length,p=Math.round(n/topics.length*100);prepbar.style.width=p+'%';preptext.textContent=p+'% prepared'}
+function setCheck(i,v){state.checks[i]=v;if(v)state.xp+=5;save();renderChecks()}function resetChecks(){state.checks={};save();renderChecks()}
+
+const qa=[
+['Beginner','What is the Spark ecosystem?','It is a collection of specialized libraries built on top of Spark Core for SQL, streaming, machine learning, graph processing and R workloads.'],
+['Beginner','What is Spark Core?','Spark Core is the execution foundation that provides scheduling, memory management, fault recovery, partitioning and basic distributed abstractions.'],
+['Beginner','What is Spark SQL?','Spark SQL is the module for structured data processing using DataFrames and SQL queries.'],
+['Beginner','What is Structured Streaming?','It is Spark’s modern stream-processing API based on DataFrames and SQL.'],
+['Beginner','What is MLlib?','MLlib is Spark’s scalable machine-learning library.'],
+['Intermediate','How are Spark modules related?','The modules share Spark Core, executors, cluster resources and many common data abstractions.'],
+['Intermediate','What is Catalyst?','Catalyst is Spark SQL’s query optimizer, responsible for analyzing and optimizing logical plans.'],
+['Intermediate','What is a streaming checkpoint?','It stores query progress and state information so a streaming job can recover after failure.'],
+['Intermediate','What is a watermark?','A watermark defines how long a streaming query should wait for late event-time data before old state can be removed.'],
+['Intermediate','What is an MLlib pipeline?','A pipeline chains transformers and estimators into a reusable machine-learning workflow.'],
+['Advanced','Why prefer DataFrames over RDDs for structured data?','DataFrames provide schemas and allow Catalyst and the execution engine to optimize operations.'],
+['Advanced','What is GraphX used for?','GraphX is used for graph computation with vertices, edges and graph algorithms such as PageRank.'],
+['Advanced','Can GraphX be used directly from PySpark?','GraphX is mainly exposed through Scala. Python projects often use alternative graph libraries or Scala integration.'],
+['Advanced','How can one application use multiple modules?','A Spark application can use Spark SQL for preparation, MLlib for modeling and Structured Streaming for live processing while sharing one SparkSession and execution engine.'],
+['Advanced','Why is the unified ecosystem useful?','It reduces platform fragmentation and lets teams reuse data, APIs, cluster resources and operational knowledge across workloads.']
+];
+function cardsRender(){cards.innerHTML=qa.map((x,i)=>`<div class="flash" onclick="this.classList.toggle('open')"><div class="front"><span class="tag">${x[0]}</span><h3>${x[1]}</h3><p class="muted">Click to reveal</p></div><div class="back"><b>${x[2]}</b><div style="margin-top:10px"><button onclick="rate(event,${i},1)">Again</button> <button onclick="rate(event,${i},2)">Hard</button> <button onclick="rate(event,${i},3)">Good</button> <button onclick="rate(event,${i},4)">Easy</button></div></div></div>`).join('')}
+function rate(e,i,r){e.stopPropagation();state.schedule[i]=Date.now()+[0,1,3,7][r-1]*86400000;state.xp+=r;save()}function resetSchedule(){state.schedule={};save()}
+
+const match=[['Batch transformation engine','Spark Core'],['Structured analytics','Spark SQL'],['Live event pipeline','Structured Streaming'],['Model training','MLlib'],['Relationship analysis','GraphX'],['R language integration','SparkR']];
+function matchRender(){matching.innerHTML=match.map((x,i)=>`<div class="qcard"><b>${x[0]}</b><select id="m${i}"><option value="">Choose...</option>${match.map(y=>`<option>${y[1]}</option>`).join('')}</select></div>`).join('')}
+function checkMatching(){let n=match.filter((x,i)=>document.getElementById('m'+i).value===x[1]).length;matchresult.innerHTML=`<div class="result ${n===6?'correct':'wrong'}">${n}/6 correct.</div>`;state.xp+=n;save()}
+let order=['Business requirement','Choose Spark component','Build transformations','Spark Core creates tasks','Executors process partitions'].sort(()=>Math.random()-.5);
+function orderRender(){ordering.innerHTML=order.map((x,i)=>`<div class="qcard">${i+1}. ${x} <button class="secondary" onclick="move(${i},-1)">↑</button> <button class="secondary" onclick="move(${i},1)">↓</button></div>`).join('')}
+function move(i,d){let j=i+d;if(j<0||j>=order.length)return;[order[i],order[j]]=[order[j],order[i]];orderRender()}
+function checkOrder(){let a=['Business requirement','Choose Spark component','Build transformations','Spark Core creates tasks','Executors process partitions'];let ok=order.every((x,i)=>x===a[i]);orderresult.innerHTML=`<div class="result ${ok?'correct':'wrong'}">${ok?'Correct sequence!':'Try again.'}</div>`;if(ok){state.xp+=10;save()}}
+function fill(id,ans,out){let ok=document.getElementById(id).value.trim().toLowerCase()===ans.toLowerCase();document.getElementById(out).innerHTML=`<div class="result ${ok?'correct':'wrong'}">${ok?'Correct':'Answer: '+ans}</div>`;if(ok){state.xp+=5;save()}}
+
+const bank=[
+['Core','Which module is the foundation of the Spark ecosystem?',['Spark Core','SparkR','GraphX','MLlib'],0,'Spark Core provides the common execution foundation.'],
+['Core','Spark Core is responsible for...',['task scheduling and memory management','only SQL syntax','only R language support','dashboard design'],0,'Core handles distributed execution services.'],
+['Core','RDD belongs mainly to...',['Spark Core','SparkR only','GraphX only','Kafka'],0,'RDD is Spark Core’s low-level abstraction.'],
+['SQL','Which module supports DataFrames and SQL?',['Spark SQL','MLlib','GraphX','SparkR only'],0,'Spark SQL handles structured data.'],
+['SQL','Catalyst is associated with...',['Spark SQL','GraphX','SparkR','Kafka'],0,'Catalyst is the Spark SQL optimizer.'],
+['SQL','Which workload best fits Spark SQL?',['ETL join and aggregation','social graph traversal only','R package installation','cluster provisioning'],0,'Structured ETL is a Spark SQL workload.'],
+['Streaming','Which API is recommended for new Spark streaming applications?',['Structured Streaming','DStream only','GraphX','RDD collect loop'],0,'Structured Streaming is the modern API.'],
+['Streaming','A checkpoint stores...',['streaming progress and state','only source code comments','graph vertices only','SQL passwords'],0,'Checkpoints support recovery.'],
+['Streaming','A watermark helps manage...',['late event data and state','driver font size','cluster usernames','RDD names'],0,'Watermarks bound late-data state.'],
+['Streaming','Structured Streaming views input conceptually as...',['an unbounded table','a single fixed list','an image file','a graph edge only'],0,'It models streams as an unbounded table.'],
+['MLlib','Which module provides scalable machine learning?',['MLlib','GraphX','SparkR only','Spark Core only'],0,'MLlib is Spark’s ML library.'],
+['MLlib','An Estimator in MLlib...',['learns a model from data','always writes CSV','creates a cluster','stops Spark'],0,'Estimators fit models.'],
+['MLlib','A Transformer in MLlib...',['converts one DataFrame to another','allocates YARN containers','creates graph vertices only','installs Java'],0,'Transformers apply learned or fixed transformations.'],
+['MLlib','VectorAssembler is commonly used to...',['combine feature columns','stream Kafka data','create a graph edge','stop an executor'],0,'It creates a feature vector column.'],
+['GraphX','GraphX represents data mainly as...',['vertices and edges','rows only without relationships','HTML pages','R packages'],0,'Graphs use vertices and edges.'],
+['GraphX','Which use case best fits GraphX?',['fraud-ring relationships','simple salary average','CSV header detection','Java installation'],0,'Fraud rings require relationship analysis.'],
+['GraphX','GraphX is primarily exposed through...',['Scala','HTML','SQL Server only','Excel'],0,'GraphX is a Scala-first API.'],
+['SparkR','SparkR is intended mainly for...',['R users working with Spark','JavaScript UI development','cluster managers','graph storage only'],0,'SparkR exposes Spark to R.'],
+['SparkR','SparkR can work with...',['Spark DataFrames','only local arrays','only images','only GraphX edges'],0,'SparkR provides DataFrame APIs.'],
+['Architecture','All ecosystem modules ultimately rely on...',['Spark Core','a web browser','Excel formulas','only HDFS'],0,'Spark Core is the common engine.'],
+['Architecture','Which can manage Spark cluster resources?',['YARN','Catalyst','VectorAssembler','DataFrame column'],0,'YARN can act as a cluster manager.'],
+['Architecture','Executors are responsible for...',['running tasks','writing interview questions','creating SQL keywords','installing R'],0,'Executors run tasks on partitions.'],
+['Use Case','Real-time payment monitoring best fits...',['Structured Streaming','GraphX alone','SparkR alone','static collect'],0,'Continuous events require streaming.'],
+['Use Case','Customer churn model training best fits...',['MLlib','GraphX only','SparkR only','Spark UI'],0,'MLlib provides scalable model training.'],
+['Use Case','Historical revenue by city best fits...',['Spark SQL','GraphX','SparkR only','cluster manager'],0,'This is structured aggregation.'],
+['Best Practice','For structured data, prefer...',['DataFrames','raw RDDs always','collect to Python','one executor only'],0,'DataFrames allow optimization.'],
+['Best Practice','For new streaming projects, prefer...',['Structured Streaming','manual infinite loops','GraphX','RDD collect'],0,'Structured Streaming is the recommended model.'],
+['Best Practice','Why avoid unnecessary module combinations?',['They add complexity without value','Spark forbids multiple modules','DataFrames stop working','Java is removed'],0,'Architecture should remain requirement-driven.'],
+['Concept','One Spark application can use SQL and MLlib together because...',['they share the same engine and data abstractions','they are unrelated products','MLlib replaces Core','SQL disables executors'],0,'The ecosystem is unified.'],
+['Concept','The key benefit of the ecosystem is...',['multiple workload types on one platform','only faster printing','no need for data','no cluster resources'],0,'The ecosystem unifies multiple workload types.']
+].map((q,i)=>({id:i,topic:q[0],q:q[1],opts:q[2],ans:q[3],exp:q[4]}));
+function shuffle(a){return [...a].sort(()=>Math.random()-.5)}function mix(q){let c=shuffle(q.opts.map((x,i)=>({x,ok:i===q.ans})));return {...q,choices:c}}
+function renderSet(list,el,p){el.innerHTML=list.map((q,i)=>`<div class="qcard"><p><b>${i+1}. ${q.q}</b> <span class="tag">${q.topic}</span></p>${q.choices.map((o,j)=>`<label class="option"><input type="radio" name="${p}${i}" value="${j}"> ${o.x}</label>`).join('')}<div id="${p}e${i}"></div></div>`).join('')}
+function startQuiz(){quizQs=shuffle(bank).slice(0,15).map(mix);used=quizQs.map(x=>x.id);renderSet(quizQs,quiz,'q');quizResult.innerHTML=''}
+function grade(list,p){let score=0,miss=[];list.forEach((q,i)=>{let s=document.querySelector(`input[name="${p}${i}"]:checked`),ok=s&&q.choices[+s.value].ok;if(ok)score++;else miss.push(q);document.getElementById(p+'e'+i).innerHTML=`<div class="result ${ok?'correct':'wrong'}">${ok?'Correct':'Incorrect'} — ${q.exp}</div>`});return {score,miss}}
+function tier(p){return p===100?'🏆 Perfect':p>=90?'🌟 Excellent':p>=75?'👏 Very Good':p>=60?'✅ Passed':'📘 Keep Practising'}
+function submitQuiz(){let r=grade(quizQs,'q'),p=Math.round(r.score/15*100);quizResult.innerHTML=`<div class="result ${p>=60?'correct':'wrong'}">${tier(p)} — ${r.score}/15 (${p}%)</div>`;state.scores.push({type:'Quiz',score:p,date:new Date().toLocaleString()});state.xp+=r.score*2;save();historyRender();beep(p>=60)}
+function startExam(){clearInterval(examTimer);examQs=shuffle(bank.filter(x=>!used.includes(x.id))).slice(0,15).map(mix);renderSet(examQs,exam,'e');examSubmit.classList.remove('hidden');examResult.innerHTML='';weak.innerHTML='';let left=900;timer.textContent='15:00';examTimer=setInterval(()=>{left--;timer.textContent=Math.floor(left/60)+':'+String(left%60).padStart(2,'0');if(left<=0)submitExam()},1000)}
+function submitExam(){if(!examQs.length)return;clearInterval(examTimer);let r=grade(examQs,'e'),p=Math.round(r.score/15*100);examResult.innerHTML=`<div class="result ${p>=60?'correct':'wrong'}">${tier(p)} — ${r.score}/15 (${p}%)</div>`;state.scores.push({type:'Exam',score:p,date:new Date().toLocaleString()});state.xp+=r.score*5;state.best=Math.max(state.best,p);save();historyRender();beep(p>=60);if(r.miss.length)weak.innerHTML=`<h3>Weak Topics</h3><p>${[...new Set(r.miss.map(x=>x.topic))].join(', ')}</p>`;if(p>=60)cert.classList.remove('hidden')}
+
+function dash(){xp.textContent=state.xp||0;best.textContent=(state.best||0)+'%';let b=[];if(state.xp>=50)b.push('🎯 Starter');if(state.xp>=150)b.push('⚡ Ecosystem Learner');if(state.best>=60)b.push('✅ Exam Pass');if(state.best>=90)b.push('🏆 Spark Specialist');badges.textContent=b.join(' • ')||'Start learning to earn badges.'}
+function historyRender(){history.innerHTML=(state.scores||[]).slice().reverse().map(x=>`<div class="box">${x.type}: <b>${x.score}%</b> — ${x.date}</div>`).join('')||'<p>No attempts yet.</p>'}
+document.addEventListener('dblclick',e=>{let t=window.getSelection().toString().trim()||e.target.innerText?.trim();if(!t||t.length>300)return;state.notes.push(t);e.target.classList.add('highlight');notes.value=(state.notes||[]).join('\n• ');save()})
+function saveNotes(){state.manual=notes.value;save()}function clearNotes(){state.notes=[];state.manual='';notes.value='';document.querySelectorAll('.highlight').forEach(x=>x.classList.remove('highlight'));save()}
+function exportData(){let b=new Blob([JSON.stringify(state,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='spark-ecosystem-learning-data.json';a.click()}
+function importData(e){let r=new FileReader();r.onload=()=>{try{Object.assign(state,JSON.parse(r.result));save();location.reload()}catch(err){alert('Invalid file')}};r.readAsText(e.target.files[0])}
+
+renderChecks();cardsRender();matchRender();orderRender();startQuiz();dash();historyRender();notes.value=state.manual||(state.notes||[]).join('\n• ');certdate.textContent='Date: '+new Date().toLocaleDateString();
+</script>
+</body>
+</html>
