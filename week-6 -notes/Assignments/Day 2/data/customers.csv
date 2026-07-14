@@ -1,0 +1,16 @@
+customer_id,customer_name,zone,connection_type,tariff_per_kwh
+C001,Arun Kumar,North,Residential,6.5
+C002,Meena Ravi,South,Residential,6.5
+C003,Rakesh Singh,East,Commercial,9.75
+C004,Nisha Paul,West,Residential,6.5
+C005,John Mathew,Central,Industrial,12.25
+C006,Priya S,North,Commercial,9.75
+C007,Vijay Anand,South,Residential,6.5
+C008,Kavitha R,East,Commercial,9.75
+C009,Imran Khan,West,Residential,6.5
+C010,Divya N,Central,Industrial,12.25
+C011,Suresh B,North,Residential,6.5
+C012,Anitha K,South,Commercial,9.75
+C013,Rahul Dev,East,Residential,6.5
+C014,Lakshmi P,West,Commercial,9.75
+C015,Manoj K,Central,Industrial,12.25

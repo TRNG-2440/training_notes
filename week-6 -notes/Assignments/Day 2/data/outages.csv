@@ -1,0 +1,33 @@
+outage_id,outage_date,zone,duration_minutes,affected_customers,cause,status
+O501,2026-07-01,North,20,50,Equipment Failure,RESOLVED
+O502,2026-07-02,East,49,97,Scheduled Maintenance,RESOLVED
+O503,2026-07-03,Central,78,144,Weather,RESOLVED
+O504,2026-07-04,South,107,191,Grid Overload,IN_PROGRESS
+O505,2026-07-05,West,136,238,Cable Fault,RESOLVED
+O506,2026-07-06,South,165,285,Equipment Failure,RESOLVED
+O507,2026-07-07,West,194,332,Scheduled Maintenance,RESOLVED
+O508,2026-07-08,North,43,379,Weather,IN_PROGRESS
+O509,2026-07-09,East,72,426,Grid Overload,RESOLVED
+O510,2026-07-10,Central,101,473,Cable Fault,RESOLVED
+O511,2026-07-11,East,130,520,Equipment Failure,RESOLVED
+O512,2026-07-12,Central,159,567,Scheduled Maintenance,IN_PROGRESS
+O513,2026-07-13,South,188,614,Weather,RESOLVED
+O514,2026-07-14,,37,661,Grid Overload,RESOLVED
+O515,2026-07-15,North,66,708,Cable Fault,RESOLVED
+O516,2026-07-01,West,95,55,Equipment Failure,IN_PROGRESS
+O517,2026-07-02,North,124,102,Scheduled Maintenance,RESOLVED
+O518,2026-07-03,East,-10,149,Weather,RESOLVED
+O519,2026-07-04,Central,182,196,Grid Overload,RESOLVED
+O520,2026-07-05,South,31,243,Cable Fault,IN_PROGRESS
+O521,2026-07-06,Central,60,290,Equipment Failure,resolved
+O522,2026-07-07,South,89,337,Scheduled Maintenance,RESOLVED
+O523,2026-07-08,West,118,384,Weather,RESOLVED
+O524,2026-07-09,North,147,431,Grid Overload,IN_PROGRESS
+O525,2026-07-10,East,176,478,Cable Fault,RESOLVED
+O526,2026-07-40,North,25,525,Equipment Failure,RESOLVED
+O527,2026-07-12,East,54,572,Scheduled Maintenance,RESOLVED
+O528,2026-07-13,Central,83,619,Weather,IN_PROGRESS
+O529,2026-07-14,South,112,666,Grid Overload,RESOLVED
+O530,2026-07-15,West,141,713,Cable Fault,RESOLVED
+O508,2026-07-08,North,43,379,Weather,IN_PROGRESS
+O521,2026-07-06,Central,60,290,Equipment Failure,resolved

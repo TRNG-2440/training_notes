@@ -1,0 +1,468 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PySpark Smart Energy Utility Assignment</title>
+    <style>
+      :root {
+        --navy: #163a5f;
+        --blue: #236aa3;
+        --light: #eef6fb;
+        --border: #cfe0ec;
+        --text: #1d2a35;
+        --orange: #d35400;
+        --green: #1e8449;
+        --bg: #f5f8fb;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.55;
+      }
+      header {
+        background: linear-gradient(125deg, var(--navy), var(--blue));
+        color: white;
+        padding: 34px 22px;
+      }
+      .wrap,
+      main {
+        max-width: 1120px;
+        margin: auto;
+      }
+      h1 {
+        margin: 0 0 8px;
+        font-size: 2.1rem;
+      }
+      h2 {
+        color: var(--navy);
+        border-bottom: 2px solid var(--border);
+        padding-bottom: 7px;
+      }
+      h3 {
+        color: var(--blue);
+      }
+      main {
+        padding: 24px;
+      }
+      .card {
+        background: white;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 18px;
+        box-shadow: 0 4px 14px rgba(22, 58, 95, 0.07);
+      }
+      .meta {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
+        gap: 10px;
+      }
+      .meta div {
+        background: var(--light);
+        padding: 12px;
+        border-radius: 8px;
+      }
+      .marks {
+        float: right;
+        background: #fff3e6;
+        color: var(--orange);
+        border: 1px solid #f3c49b;
+        padding: 4px 10px;
+        border-radius: 16px;
+        font-weight: bold;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 12px 0;
+      }
+      th,
+      td {
+        border: 1px solid var(--border);
+        padding: 9px;
+        text-align: left;
+        vertical-align: top;
+      }
+      th {
+        background: var(--light);
+      }
+      code {
+        background: #edf2f7;
+        padding: 2px 5px;
+        border-radius: 4px;
+      }
+      pre {
+        background: #17202a;
+        color: #f4f6f7;
+        padding: 14px;
+        border-radius: 8px;
+        overflow: auto;
+      }
+      .note {
+        border-left: 5px solid var(--orange);
+        background: #fff8ef;
+        padding: 12px 14px;
+        border-radius: 6px;
+      }
+      .good {
+        border-left: 5px solid var(--green);
+        background: #effaf2;
+        padding: 12px 14px;
+        border-radius: 6px;
+      }
+      li {
+        margin-bottom: 7px;
+      }
+      footer {
+        text-align: center;
+        color: #607080;
+        padding: 22px;
+      }
+      @media print {
+        body {
+          background: white;
+        }
+        .card {
+          box-shadow: none;
+          break-inside: avoid;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="wrap">
+        <h1>PySpark Assignment: Smart Energy Utility Analytics</h1>
+        <p>
+          Scenario-based cohort exercise covering SparkSession, RDD
+          transformations/actions, DataFrames, aggregation, ordering, execution
+          plans and CSV processing.
+        </p>
+      </div>
+    </header>
+
+    <main>
+      <!-- <section class="card">
+<div class="meta">
+<div><strong>Total marks</strong><br>100</div>
+<div><strong>Recommended duration</strong><br>4 hours</div>
+<div><strong>Mode</strong><br>Individual / Pair</div>
+<div><strong>Platform</strong><br>VS Code or Databricks</div>
+</div>
+</section> -->
+
+      <section class="card">
+        <h2>Business Scenario</h2>
+        <p>
+          <strong>GridPulse Energy</strong> supplies electricity to residential,
+          commercial and industrial customers across five operational zones. The
+          operations team needs a PySpark solution to analyse meter consumption,
+          billing, outages and payment status.
+        </p>
+        <p>
+          The assignment follows the same learning progression as the reference
+          demos but uses a completely different industry scenario.
+        </p>
+      </section>
+
+      <section class="card">
+        <h2>Provided Files</h2>
+        <table>
+          <tr>
+            <th>File</th>
+            <th>Description</th>
+            <th>Main columns</th>
+          </tr>
+          <tr>
+            <td><code>customers.csv</code></td>
+            <td>Customer and tariff master</td>
+            <td>customer_id, zone, connection_type, tariff_per_kwh</td>
+          </tr>
+          <tr>
+            <td><code>meter_readings.csv</code></td>
+            <td>Daily meter consumption records</td>
+            <td>
+              reading_id, reading_date, customer_id, units_consumed,
+              payment_status
+            </td>
+          </tr>
+          <tr>
+            <td><code>outages.csv</code></td>
+            <td>Electricity outage events</td>
+            <td>
+              outage_id, zone, duration_minutes, affected_customers, status
+            </td>
+          </tr>
+        </table>
+        <div class="note">
+          <strong>Important:</strong> The data deliberately contains duplicates,
+          missing values, invalid dates, non-positive consumption/duration and
+          inconsistent casing. Do not manually modify the CSV files.
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>
+          Part A — SparkSession Runtime Inspection
+          <!-- <span class="marks">10 marks</span> -->
+        </h2>
+        <ol>
+          <li>
+            Create a SparkSession named
+            <code>EnergyUtilityAssignment</code> using <code>local[*]</code>.
+            <strong>(3)</strong>
+          </li>
+          <li>
+            Set the Spark log level to <code>ERROR</code>. <strong>(1)</strong>
+          </li>
+          <li>
+            Print Spark version, application name, master, default parallelism
+            and CPU count. <strong>(4)</strong>
+          </li>
+          <li>Stop the SparkSession correctly. <strong>(2)</strong></li>
+        </ol>
+      </section>
+
+      <section class="card">
+        <h2>
+          Part B — RDD Peak Consumption Analysis
+          <!-- <span class="marks">20 marks</span> -->
+        </h2>
+        <p>Create an RDD from this list using two partitions:</p>
+        <pre>[95, 240, 180, 410, 525, 160, 305, 275, 80, 620, 390, 145]</pre>
+        <ol>
+          <li>Print the number of partitions. <strong>(3)</strong></li>
+          <li>
+            Use <code>filter()</code> to keep readings greater than or equal to
+            300 units. <strong>(5)</strong>
+          </li>
+          <li>
+            Use <code>map()</code> to convert each retained reading into
+            <code>(reading, "PEAK")</code>. <strong>(4)</strong>
+          </li>
+          <li>
+            Display peak-reading count using <code>count()</code>.
+            <strong>(3)</strong>
+          </li>
+          <li>
+            Display the first three peak readings using <code>take(3)</code>.
+            <strong>(3)</strong>
+          </li>
+          <li>
+            Explain which operations are transformations and which are actions.
+            <strong>(2)</strong>
+          </li>
+        </ol>
+      </section>
+
+      <section class="card">
+        <h2>
+          Part C — RDD Outage Count by Zone
+          <!-- <span class="marks">20 marks</span> -->
+        </h2>
+        <ol>
+          <li>
+            Read <code>outages.csv</code> using
+            <code>spark.sparkContext.textFile()</code>. Remove the header
+            dynamically. <strong>(4)</strong>
+          </li>
+          <li>
+            Parse each row and extract zone and status. Trim spaces and convert
+            the status to uppercase. <strong>(4)</strong>
+          </li>
+          <li>
+            Remove blank zones and retain only <code>RESOLVED</code> outages.
+            <strong>(3)</strong>
+          </li>
+          <li>
+            Use <code>map()</code> and <code>reduceByKey()</code> to calculate
+            resolved-outage counts by zone. <strong>(5)</strong>
+          </li>
+          <li>
+            Sort the output alphabetically using <code>sortByKey()</code> and
+            print the results using <code>collect()</code>. <strong>(4)</strong>
+          </li>
+        </ol>
+      </section>
+
+      <section class="card">
+        <h2>
+          Part D — In-Memory DataFrame Billing Summary
+          <!-- <span class="marks">25 marks</span> -->
+        </h2>
+        <p>Create a DataFrame from the following data:</p>
+        <pre>
+(201, "North", 1480.00)
+(202, "South", 925.50)
+(203, "North", 1710.25)
+(204, "East", 2480.00)
+(205, "South", 1195.75)
+(206, "Central", 3450.50)
+(207, "East", 1890.00)
+(208, "West", 1325.25)
+</pre
+        >
+        <p>
+          Use columns <code>bill_id</code>, <code>zone</code> and
+          <code>bill_amount</code>.
+        </p>
+        <ol>
+          <li>
+            Create the DataFrame and display the original records.
+            <strong>(4)</strong>
+          </li>
+          <li>Print the schema. <strong>(2)</strong></li>
+          <li>
+            Group by zone and calculate bill count, total revenue and average
+            bill. <strong>(8)</strong>
+          </li>
+          <li>
+            Round monetary values to two decimal places. <strong>(3)</strong>
+          </li>
+          <li>
+            Order the report by total revenue descending. <strong>(3)</strong>
+          </li>
+          <li>
+            Display the report and call <code>explain()</code>. Identify two
+            plan operators. <strong>(5)</strong>
+          </li>
+        </ol>
+      </section>
+
+      <!-- <section class="card">
+        <h2>
+          Part E — CSV DataFrame Capstone <span class="marks">25 marks</span>
+        </h2>
+        <ol>
+          <li>
+            Read <code>meter_readings.csv</code> and
+            <code>customers.csv</code> with header and schema inference. Show
+            sample rows and print schemas. <strong>(4)</strong>
+          </li>
+          <li>
+            Clean meter readings using these rules: <strong>(7)</strong>
+            <ul>
+              <li>Remove duplicate <code>reading_id</code> records.</li>
+              <li>Trim customer ID and zone.</li>
+              <li>Convert meter and payment statuses to uppercase.</li>
+              <li>Convert reading date into a date column.</li>
+              <li>
+                Reject missing customer IDs, invalid dates and units less than
+                or equal to zero.
+              </li>
+              <li>
+                Where zone is blank, obtain the zone from the customer master.
+              </li>
+            </ul>
+          </li>
+          <li>
+            Join the readings with customers using <code>customer_id</code>.
+            <strong>(3)</strong>
+          </li>
+          <li>
+            Create <code>bill_amount = units_consumed × tariff_per_kwh</code>.
+            <strong>(3)</strong>
+          </li>
+          <li>
+            Create a zone summary containing reading count, total units, total
+            billed amount and average bill. Sort by total billed amount
+            descending. <strong>(5)</strong>
+          </li>
+          <li>
+            Display payment-status counts and the top five readings by bill
+            amount. <strong>(3)</strong>
+          </li>
+        </ol>
+      </section>
+
+      <section class="card">
+        <h2>Submission Requirements</h2>
+        <ul>
+          <li>
+            Completed Python source files or completed Databricks notebook.
+          </li>
+          <li>Screenshots or exported output of all important reports.</li>
+          <li>A short README explaining execution steps and assumptions.</li>
+          <li>Do not submit only screenshots; executable code is mandatory.</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>Evaluation Rubric</h2>
+        <table>
+          <tr>
+            <th>Section</th>
+            <th>Marks</th>
+            <th>Assessment focus</th>
+          </tr>
+          <tr>
+            <td>Part A</td>
+            <td>10</td>
+            <td>Correct SparkSession setup and runtime inspection</td>
+          </tr>
+          <tr>
+            <td>Part B</td>
+            <td>20</td>
+            <td>RDD partitions, filter, map and actions</td>
+          </tr>
+          <tr>
+            <td>Part C</td>
+            <td>20</td>
+            <td>CSV RDD parsing, pair RDD and reduceByKey</td>
+          </tr>
+          <tr>
+            <td>Part D</td>
+            <td>25</td>
+            <td>DataFrame creation, aggregation, sorting and explain</td>
+          </tr>
+          <tr>
+            <td>Part E</td>
+            <td>25</td>
+            <td>CSV cleaning, join, calculated column and business report</td>
+          </tr>
+          <tr>
+            <th>Total</th>
+            <th>100</th>
+            <th></th>
+          </tr>
+        </table>
+      </section>
+
+      <section class="card">
+        <h2>Viva Questions</h2>
+        <ol>
+          <li>
+            Why does printing an RDD variable not display all its records?
+          </li>
+          <li>What triggers execution in Spark?</li>
+          <li>
+            What is the difference between <code>reduceByKey()</code> and
+            <code>groupByKey()</code>?
+          </li>
+          <li>
+            Why can <code>collect()</code> be dangerous for a large dataset?
+          </li>
+          <li>
+            Why is a DataFrame normally preferred for structured analytics?
+          </li>
+          <li>
+            What does an <code>Exchange</code> operator in an execution plan
+            indicate?
+          </li>
+        </ol>
+        <div class="good">
+          <strong>Professional practice:</strong> Use readable variable names,
+          avoid unnecessary <code>collect()</code>, write comments for cleaning
+          rules and ensure the complete solution runs from top to bottom.
+        </div>
+      </section> -->
+    </main>
+    <footer>PySpark Smart Energy Utility Cohort Assignment</footer>
+  </body>
+</html>
