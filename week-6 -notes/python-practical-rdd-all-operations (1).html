@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Complete practical PySpark RDD tutorial covering creation, transformations, actions, Pair RDD operations, partitions, persistence, shared variables, input/output, debugging, quizzes, and labs.">
+<title>Python Practical RDD — Complete PySpark Operations</title>
+<style>
+:root{
+  --bg:#f4f7fb;--surface:#ffffff;--surface-2:#eef3f9;--text:#172033;--muted:#52627a;
+  --primary:#155eef;--primary-2:#0b3f9c;--accent:#7c3aed;--success:#087443;--warning:#9a5b00;
+  --danger:#b42318;--border:#c9d5e5;--shadow:0 10px 30px rgba(20,42,78,.10);
+  --code:#0d1526;--code-text:#e8eefc;--note:#fff2a8;--focus:#ffbf47;--header-h:76px;
+}
+html[data-theme="dark"]{
+  --bg:#0b1220;--surface:#111c2f;--surface-2:#17243a;--text:#edf4ff;--muted:#b9c7dc;
+  --primary:#77a7ff;--primary-2:#bed3ff;--accent:#c4a2ff;--success:#6ee7b7;--warning:#ffd37a;
+  --danger:#ff9b93;--border:#33465f;--shadow:0 12px 30px rgba(0,0,0,.32);
+  --code:#070c15;--code-text:#f1f5ff;--note:#6b5810;--focus:#ffd166;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:calc(var(--header-h) + 20px)}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;line-height:1.65}
+a{color:var(--primary);text-decoration-thickness:2px;text-underline-offset:3px}
+button,input,textarea{font:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--focus);outline-offset:3px}
+.sticky-header{position:sticky;top:0;z-index:1000;min-height:var(--header-h);display:flex;align-items:center;gap:14px;padding:10px clamp(12px,3vw,30px);background:color-mix(in srgb,var(--surface) 95%,transparent);border-bottom:1px solid var(--border);backdrop-filter:blur(12px)}
+.brand{min-width:0;flex:1}.brand strong{display:block;font-size:clamp(1rem,2.3vw,1.28rem);line-height:1.25}.brand small{color:var(--muted)}
+.header-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.icon-btn,.btn{border:1px solid var(--border);background:var(--surface);color:var(--text);border-radius:10px;padding:.58rem .82rem;font-weight:750;box-shadow:0 2px 8px rgba(0,0,0,.04)}
+.btn.primary{background:var(--primary);border-color:var(--primary);color:#fff}.btn.danger{background:var(--danger);border-color:var(--danger);color:#fff}.btn.ghost{background:transparent}
+.progress-wrap{display:grid;gap:4px;min-width:150px}.progress-meta{font-size:.78rem;color:var(--muted);font-weight:800}.progress-track{height:9px;background:var(--surface-2);border:1px solid var(--border);border-radius:999px;overflow:hidden}.progress-fill{height:100%;width:0;background:linear-gradient(90deg,var(--primary),var(--accent));transition:width .25s}
+.storage-hint{display:none;margin:0;padding:.45rem .8rem;background:#fff7d6;color:#653c00;border-bottom:1px solid #d9b84a;text-align:center;font-weight:700;font-size:.88rem}.storage-hint.show{display:block}
+.layout{max-width:1600px;margin:auto;padding:18px;display:grid;grid-template-columns:260px minmax(0,1fr) 300px;gap:18px;align-items:start}
+.toc,.notes-panel{position:sticky;top:calc(var(--header-h) + 18px);max-height:calc(100vh - var(--header-h) - 36px);overflow:auto;background:var(--surface);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow)}
+.panel-head{position:sticky;top:0;z-index:2;background:var(--surface);padding:14px;border-bottom:1px solid var(--border)}
+.panel-head h2{font-size:1rem;margin:0 0 6px}.panel-head p{font-size:.8rem;margin:0;color:var(--muted)}
+.toc nav{padding:8px}.toc a{display:block;padding:8px 10px;border-radius:9px;color:var(--text);text-decoration:none;font-size:.88rem;font-weight:650}.toc a:hover,.toc a.active{background:var(--surface-2);color:var(--primary)}
+main{min-width:0}.section-card{scroll-margin-top:calc(var(--header-h) + 20px);background:var(--surface);border:1px solid var(--border);border-radius:18px;box-shadow:var(--shadow);padding:clamp(18px,3vw,34px);margin-bottom:20px;overflow:hidden}.section-title-row{display:flex;gap:12px;justify-content:space-between;align-items:flex-start;border-bottom:1px solid var(--border);padding-bottom:12px;margin-bottom:20px}.section-title-row h2{margin:0;font-size:clamp(1.3rem,3vw,2rem);line-height:1.25}.prepared-label{display:flex;align-items:center;gap:7px;color:var(--muted);font-size:.82rem;font-weight:800;white-space:nowrap}.prepared-label input{width:18px;height:18px;accent-color:var(--primary)}
+h1{font-size:clamp(2rem,6vw,4rem);line-height:1.05;margin:.2rem 0 1rem;letter-spacing:-.035em}.lede{font-size:clamp(1.05rem,2.4vw,1.32rem);color:var(--muted);max-width:900px}.eyebrow{display:inline-flex;gap:7px;align-items:center;font-weight:850;letter-spacing:.08em;text-transform:uppercase;color:var(--primary);font-size:.78rem}.objective-grid,.two-col,.three-col{display:grid;gap:14px}.objective-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.two-col{grid-template-columns:repeat(2,minmax(0,1fr))}.three-col{grid-template-columns:repeat(3,minmax(0,1fr))}
+.card{background:var(--surface-2);border:1px solid var(--border);border-radius:14px;padding:16px}.card h3,.card h4{margin-top:0}.number-badge{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:999px;background:var(--primary);color:#fff;font-weight:900;margin-right:8px}
+.callout{border-left:5px solid var(--primary);background:var(--surface-2);padding:14px 16px;border-radius:10px;margin:16px 0}.callout strong:first-child{display:block;color:var(--primary);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px}.callout.warning{border-left-color:var(--warning)}.callout.warning strong:first-child{color:var(--warning)}.callout.success{border-left-color:var(--success)}.callout.success strong:first-child{color:var(--success)}.callout.danger{border-left-color:var(--danger)}.callout.danger strong:first-child{color:var(--danger)}
+.lifecycle-early{font-size:1.05rem;font-weight:850;background:linear-gradient(135deg,var(--surface-2),transparent);padding:15px;border:1px solid var(--border);border-radius:12px}.lifecycle-early span{color:var(--primary)}
+code{background:var(--surface-2);border-radius:5px;padding:.1em .35em;color:var(--primary-2);font-weight:700}pre{position:relative;background:var(--code);color:var(--code-text);padding:18px;border-radius:14px;overflow:auto;border:1px solid #33415c;line-height:1.55}pre code{background:transparent;color:inherit;padding:0;font-weight:500}.copy-btn{position:absolute;right:10px;top:10px;background:#22314d;color:#fff;border:1px solid #536581;border-radius:8px;padding:.35rem .55rem;font-size:.78rem}
+table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.92rem}caption{text-align:left;font-weight:850;margin-bottom:8px}th,td{border:1px solid var(--border);padding:10px;vertical-align:top;text-align:left}th{background:var(--surface-2)}.table-wrap{overflow-x:auto}.yes{color:var(--success);font-weight:850}.no{color:var(--danger);font-weight:850}
+.diagram{margin:24px 0;background:linear-gradient(145deg,var(--surface-2),var(--surface));border:1px solid var(--border);border-radius:16px;padding:16px}.diagram figcaption{font-weight:900;font-size:1.06rem;margin-bottom:10px}.legend{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}.legend span{display:inline-flex;align-items:center;gap:6px;font-size:.8rem;background:var(--surface);border:1px solid var(--border);padding:5px 8px;border-radius:999px}.legend i{width:12px;height:12px;border-radius:3px;display:inline-block}.lg-plan{background:#bcd5ff}.lg-trigger{background:#ffd48b}.lg-run{background:#b9f1d1}.lg-shuffle{background:#f6a7a1}
+.flow-row{display:flex;align-items:stretch;gap:8px;overflow-x:auto;padding:8px 2px}.flow-box{min-width:132px;flex:1;border:2px solid var(--border);border-radius:12px;padding:12px;text-align:center;background:var(--surface);font-weight:800}.flow-box small{display:block;color:var(--muted);font-weight:600;margin-top:4px}.flow-box.plan{border-color:#5b8de3;background:color-mix(in srgb,#bcd5ff 35%,var(--surface))}.flow-box.trigger{border-color:#d28a16;background:color-mix(in srgb,#ffd48b 35%,var(--surface))}.flow-box.run{border-color:#1f9d62;background:color-mix(in srgb,#b9f1d1 35%,var(--surface))}.flow-arrow{min-width:66px;display:grid;place-items:center;text-align:center;color:var(--muted);font-size:.76rem;font-weight:850}.flow-arrow b{display:block;color:var(--primary);font-size:1.35rem;line-height:1}.shuffle-boundary{border:3px dashed var(--danger);border-radius:12px;padding:8px;color:var(--danger);font-weight:900;text-align:center;min-width:104px;display:grid;place-items:center}
+.operator-chain{display:flex;align-items:center;gap:7px;overflow-x:auto}.op{min-width:120px;padding:12px;border-radius:10px;border:2px solid var(--primary);background:var(--surface);text-align:center;font-weight:850}.op.stage1{border-color:var(--accent)}.op.stage0{border-color:var(--primary)}.op.action{border-color:var(--warning)}.arrow{min-width:42px;text-align:center;font-weight:900;color:var(--muted)}
+.stage-grid{display:grid;grid-template-columns:1fr 90px 1fr;gap:12px;align-items:stretch}.stage-lane{border:2px solid var(--primary);border-radius:14px;padding:14px;background:var(--surface)}.stage-lane.stage-one{border-color:var(--accent)}.partition-grid,.task-grid,.executor-grid{display:grid;grid-template-columns:repeat(4,minmax(72px,1fr));gap:8px}.stage-one .partition-grid,.stage-one .task-grid{grid-template-columns:repeat(2,minmax(88px,1fr))}.partition,.task,.executor{border:1px solid var(--border);background:var(--surface-2);border-radius:9px;padding:8px;text-align:center;font-weight:800;font-size:.82rem;overflow-wrap:anywhere;word-break:break-word;min-width:0}.task{border-color:var(--success)}.executor{border-color:var(--accent)}.shuffle-column{display:grid;place-items:center;text-align:center;border:3px dashed var(--danger);border-radius:14px;padding:8px;color:var(--danger);font-weight:900;background:color-mix(in srgb,#f6a7a1 16%,var(--surface))}
+.task-map{display:grid;grid-template-columns:1fr 50px 1fr 50px 1fr;gap:8px;align-items:center}.task-map .col{display:grid;gap:8px}.map-arrow{text-align:center;color:var(--primary);font-weight:900;font-size:1.5rem}
+.explain-list li{margin-bottom:8px}.flow-narrative{counter-reset:step;list-style:none;padding:0}.flow-narrative li{counter-increment:step;margin:8px 0;padding-left:42px;position:relative}.flow-narrative li::before{content:counter(step);position:absolute;left:0;top:0;width:28px;height:28px;display:grid;place-items:center;border-radius:50%;background:var(--primary);color:#fff;font-weight:900}
+.check{border:1px dashed var(--primary);border-radius:12px;padding:12px;margin:15px 0;background:var(--surface-2)}.check button{background:transparent;border:0;color:var(--primary);font-weight:850;padding:0}.check-answer{display:none;margin-top:8px}.check-answer.show{display:block}
+.stage-card{border:2px solid var(--primary);border-radius:16px;padding:18px;margin:18px 0;background:var(--surface)}.stage-card.stage1{border-color:var(--accent)}.metric-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:12px 0}.metric{background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:10px;text-align:center}.metric b{display:block;font-size:1.25rem;color:var(--primary)}
+.qa{border:1px solid var(--border);border-radius:12px;margin:10px 0;background:var(--surface)}.qa summary{cursor:pointer;padding:13px 15px;font-weight:850}.qa .answer{padding:0 15px 15px}.tag{display:inline-block;padding:2px 7px;border-radius:999px;font-size:.72rem;margin-right:6px;background:var(--surface-2);border:1px solid var(--border)}
+.quiz-shell,.exam-shell{border:1px solid var(--border);border-radius:16px;padding:14px;background:var(--surface-2)}.question{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px;margin:12px 0}.question.correct{border-left:6px solid var(--success)}.question.wrong{border-left:6px solid var(--danger)}.question h4{margin:0 0 10px}.option{display:flex;gap:9px;align-items:flex-start;padding:8px;border-radius:8px;margin:5px 0}.option:hover{background:var(--surface-2)}.option.correct-answer{background:color-mix(in srgb,var(--success) 18%,var(--surface))}.option.user-wrong{background:color-mix(in srgb,var(--danger) 16%,var(--surface))}.explanation{display:none;margin-top:10px;padding:10px;border-radius:8px;background:var(--surface-2)}.question.reviewed .explanation{display:block}.result-box{display:none;margin-top:14px;padding:15px;border-radius:12px;background:var(--surface);border:2px solid var(--primary)}.result-box.show{display:block}.exam-locked{padding:24px;text-align:center;color:var(--muted)}.timer{font-variant-numeric:tabular-nums;font-size:1.25rem;font-weight:900;padding:.4rem .7rem;border-radius:9px;background:var(--surface);border:1px solid var(--border)}.timer.warning{background:#fff1f0;color:#8c1d18;border-color:#e58b84}.exam-top{display:flex;gap:10px;justify-content:space-between;align-items:center;flex-wrap:wrap;margin-bottom:12px}.print-answer{display:none}
+.notes-list{padding:10px}.note-empty{padding:14px;color:var(--muted);font-size:.88rem}.note-row{border:1px solid var(--border);border-radius:10px;padding:10px;margin:8px 0;background:var(--surface-2);cursor:pointer}.note-row:hover{border-color:var(--primary)}.note-word{font-weight:900;color:var(--primary)}.note-meta{font-size:.72rem;color:var(--muted);margin-top:5px}.note-actions{display:flex;gap:6px;margin-top:8px}.note-actions button{font-size:.74rem;padding:.3rem .5rem;border-radius:7px;border:1px solid var(--border);background:var(--surface);color:var(--text)}.noted-word{background:var(--note);color:var(--text);border-bottom:3px solid #e1a400;border-radius:3px;padding:0 2px;cursor:pointer}.noted-word.flash{animation:flashNote 1.4s ease}@keyframes flashNote{0%,100%{box-shadow:none}30%,70%{box-shadow:0 0 0 7px color-mix(in srgb,var(--focus) 55%,transparent)}}
+.note-popup{position:fixed;z-index:2000;width:min(320px,calc(100vw - 24px));display:none;background:var(--surface);border:1px solid var(--border);border-radius:12px;box-shadow:0 18px 50px rgba(0,0,0,.28);padding:12px}.note-popup.show{display:block}.note-popup label{display:block;font-weight:850;margin-bottom:6px}.note-popup input{width:100%;border:1px solid var(--border);border-radius:8px;padding:9px;background:var(--surface);color:var(--text)}.popup-actions{display:flex;gap:7px;margin-top:9px;justify-content:flex-end}.popup-actions button{border:1px solid var(--border);background:var(--surface-2);color:var(--text);border-radius:7px;padding:.4rem .6rem}
+.sparkle{position:fixed;pointer-events:none;z-index:9999;font-size:10px;animation:spark .7s ease-out forwards}@keyframes spark{to{transform:translateY(-18px) scale(0);opacity:0}}
+.mobile-panel-toggle{display:none;position:fixed;bottom:14px;right:14px;z-index:1100;border:0;border-radius:999px;background:var(--primary);color:#fff;padding:.75rem 1rem;font-weight:900;box-shadow:var(--shadow)}
+.kbd{font-family:ui-monospace,monospace;border:1px solid var(--border);box-shadow:inset 0 -1px 0 var(--border);border-radius:5px;padding:1px 5px;background:var(--surface-2)}
+.footer-note{text-align:center;color:var(--muted);padding:18px}
+@media(max-width:1100px){.layout{grid-template-columns:220px minmax(0,1fr)}.notes-panel{position:fixed;right:12px;bottom:70px;top:auto;width:min(360px,calc(100vw - 24px));max-height:70vh;z-index:1050;transform:translateX(calc(100% + 24px));transition:transform .25s}.notes-panel.open{transform:translateX(0)}.mobile-panel-toggle{display:block}}
+@media(max-width:760px){:root{--header-h:104px}.sticky-header{align-items:flex-start}.brand small{display:none}.progress-wrap{min-width:120px}.layout{grid-template-columns:1fr;padding:10px}.toc{position:relative;top:0;max-height:none}.toc nav{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.objective-grid,.two-col,.three-col{grid-template-columns:1fr}.section-title-row{display:block}.prepared-label{margin-top:10px}.flow-row,.operator-chain{flex-direction:column;overflow:visible}.flow-arrow,.arrow{min-height:42px;transform:rotate(90deg)}.stage-grid{grid-template-columns:1fr}.shuffle-column{min-height:70px}.partition-grid,.task-grid,.executor-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.task-map{grid-template-columns:1fr}.task{font-size:.76rem}.map-arrow{transform:rotate(90deg)}.metric-strip{grid-template-columns:repeat(2,1fr)}.header-actions .icon-btn{padding:.42rem .55rem;font-size:.8rem}}
+@media(max-width:430px){:root{--header-h:122px}.sticky-header{flex-wrap:wrap}.brand{flex-basis:100%}.header-actions{width:100%;justify-content:space-between}.progress-wrap{flex:1}.toc nav{grid-template-columns:1fr}.section-card{padding:16px}.metric-strip{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.sparkle{display:none!important}*{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}}
+@media print{.sticky-header,.toc,.notes-panel,.mobile-panel-toggle,.prepared-label,.icon-btn,.btn,.copy-btn,.note-popup,.sparkle,.quiz-actions,.exam-controls,.storage-hint{display:none!important}.layout{display:block;max-width:none;padding:0}.section-card{box-shadow:none;break-inside:avoid;border:1px solid #999}.check-answer,.print-answer,.explanation{display:block!important}.exam-locked{display:none}.question{break-inside:avoid}.question .option.correct-answer{outline:2px solid #000}.result-box{display:block!important}body{background:#fff;color:#000}a{color:#000}}
+
+.tag{display:inline-block;padding:.2rem .5rem;border-radius:999px;background:var(--primary);color:#fff;font-size:.72rem;font-weight:850;margin-bottom:.35rem}.certificate{margin-top:20px;padding:20px;border:2px dashed var(--primary);border-radius:16px;background:var(--surface-2)}.certificate input{width:min(100%,420px);padding:.7rem;border:1px solid var(--border);border-radius:9px;background:var(--surface);color:var(--text);margin-right:8px}.certificate-paper{margin-top:16px;padding:24px;text-align:center;background:var(--surface);border:4px double var(--primary);border-radius:12px}.section-card:hover{border-color:color-mix(in srgb,var(--primary) 45%,var(--border))}
+</style>
+</head>
+<body>
+<header class="sticky-header">
+  <div class="brand"><strong>Python Practical RDD</strong><small>Creation • Transformations • Actions • Pair RDD • Performance</small></div>
+  <div class="header-actions">
+    <div class="progress-wrap" aria-label="Course progress">
+      <div class="progress-meta" id="progressText">0 / 16 prepared</div>
+      <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    </div>
+    <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme">🌙 Theme</button>
+    <button class="icon-btn" id="muteToggle" type="button" aria-pressed="false">🔊 Sound</button>
+    <button class="icon-btn" id="resetProgress" type="button">Reset</button>
+  </div>
+</header>
+<div class="storage-hint" id="storageHint">Browser storage is blocked. Notes and progress still work for this session, but they will not persist after the page closes.</div>
+<div class="layout">
+<aside class="toc" id="tocPanel" aria-label="Table of contents">
+  <div class="panel-head"><h2>Table of Contents</h2><p>16 sections — links stay clear of the sticky header.</p></div>
+  <nav id="tocNav">
+<a href="#s1">1. Course Overview</a>
+<a href="#s2">2. RDD Foundations</a>
+<a href="#s3">3. Setup and Practice Data</a>
+<a href="#s4">4. RDD Creation Options</a>
+<a href="#s5">5. Execution Model and Operation Families</a>
+<a href="#s6">6. Core Narrow Transformations</a>
+<a href="#s7">7. Set, Sampling, Sorting and Partition Transformations</a>
+<a href="#s8">8. Pair RDD Operations</a>
+<a href="#s9">9. Actions and Statistical Operations</a>
+<a href="#s10">10. Persistence, Checkpointing and Lineage</a>
+<a href="#s11">11. Partitions and Performance Tuning</a>
+<a href="#s12">12. Broadcast Variables and Accumulators</a>
+<a href="#s13">13. Input, Output and Advanced APIs</a>
+<a href="#s14">14. End-to-End Retail Practical Project</a>
+<a href="#s15">15. Complete RDD Method Map</a>
+<a href="#s16">16. Troubleshooting and Best Practices</a>
+<a href="#s17">17. Interview Questions and Flash Review</a>
+<a href="#s18">18. Practice Quiz</a>
+<a href="#s19">19. Formal Timed Exam</a>
+<a href="#s20">20. Glossary, Summary and Certificate</a>
+  </nav>
+</aside>
+
+<main id="tutorialBody">
+<section class="section-card" id="s1">
+<div class="section-title-row"><div><span class="eyebrow">Section 1</span><h2>Course Overview</h2></div><label class="prepared-label"><input type="checkbox" class="prepared" data-section="s1"> Mark as prepared</label></div>
+<span class="eyebrow">Complete hands-on PySpark RDD handbook</span>
+<h1>Python Practical RDD — All Major Operations</h1>
+<p class="lede">Learn how to create, transform, aggregate, join, partition, cache, debug, and save RDDs using executable Python examples built around a retail transaction dataset.</p>
+<div class="objective-grid">
+  <div class="card"><h3>🎯 Objective 1</h3><p>Create RDDs from Python collections, files, DataFrames, ranges, binary data, SequenceFiles, and Hadoop-compatible sources.</p></div>
+  <div class="card"><h3>🎯 Objective 2</h3><p>Practise narrow, wide, set, Pair RDD, sampling, sorting, partitioning, and key-based transformations.</p></div>
+  <div class="card"><h3>🎯 Objective 3</h3><p>Use actions safely, understand driver-memory risks, and choose statistical or approximate actions correctly.</p></div>
+  <div class="card"><h3>🎯 Objective 4</h3><p>Build an end-to-end retail analytics pipeline with persistence, broadcast variables, accumulators, joins, and output files.</p></div>
+</div>
+<div class="callout success"><strong>Before You Start</strong>Use Python 3.10+, Java 17 or 21, and PySpark 4.1.2 for the closest match to this tutorial. Run locally with <code>local[4]</code>, or adapt the same code for YARN, Kubernetes, Databricks, EMR, or another Spark environment.</div>
+<div class="callout"><strong>Memory Hook</strong><b>C-T-A:</b> Create an RDD → apply lazy Transformations → call an Action to execute.</div>
+<div class="check"><button type="button" class="check-btn">Check yourself: Does calling map() immediately process all records?</button><div class="check-answer">No. <code>map()</code> is lazy. It records a transformation in the lineage; an action such as <code>collect()</code>, <code>count()</code>, or <code>saveAsTextFile()</code> triggers execution.</div></div>
+</section>
+<section class="section-card" id="s2">
+<div class="section-title-row"><div><span class="eyebrow">Section 2</span><h2>RDD Foundations</h2></div><label class="prepared-label"><input type="checkbox" class="prepared" data-section="s2"> Mark as prepared</label></div>
+<p>An <b>RDD</b>, or Resilient Distributed Dataset, is Spark’s low-level distributed collection abstraction. It is <b>resilient</b> because Spark can recompute missing partitions from lineage, <b>distributed</b> because partitions can live across executors, and a <b>dataset</b> because it contains records that can be processed in parallel.</p>
+<p>RDDs are immutable. A transformation never changes the original RDD; it returns a new RDD description. This protects parallel computations from accidental shared-state mutation and gives Spark a lineage graph for fault recovery.</p>
+<p>For structured tables, DataFrames are usually preferred because Catalyst and Tungsten can optimize the query plan. RDDs remain useful for unstructured records, custom partition-level algorithms, legacy Spark code, low-level control, and transformations that do not fit relational expressions.</p>
+<div class="two-col">
+ <div class="card"><h3>Use an RDD when</h3><ul><li>Records are unstructured Python objects.</li><li>You need <code>mapPartitions()</code> or custom key partitioning.</li><li>You are teaching Spark execution fundamentals.</li><li>You must maintain an existing RDD codebase.</li></ul></div>
+ <div class="card"><h3>Prefer a DataFrame when</h3><ul><li>Data has columns and a known schema.</li><li>You need SQL, joins, aggregation, or BI workloads.</li><li>Query optimization and efficient serialization matter.</li><li>You want Spark Connect compatibility.</li></ul></div>
+</div>
+<figure class="diagram"><figcaption>Diagram 1 — How an RDD Is Structured</figcaption><div class="legend"><span><i class="lg-plan"></i>Driver lineage</span><span><i class="lg-run"></i>Partitions/tasks</span><span><i style="background:#d6b9ff"></i>Executors</span></div><p><b>How to read this:</b> The driver stores the recipe; executors compute partition slices when an action starts.</p><div class="flow-row"><div class="flow-box plan">Driver<small>RDD lineage recipe</small></div><div class="flow-arrow"><span>action submits work</span><b>→</b></div><div class="flow-box run">Partition P0<small>Task 0</small></div><div class="flow-box run">Partition P1<small>Task 1</small></div><div class="flow-box run">Partition P2<small>Task 2</small></div><div class="flow-box run">Partition P3<small>Task 3</small></div><div class="flow-arrow"><span>scheduled on</span><b>→</b></div><div class="flow-box run">Executors<small>parallel processing</small></div></div><h4>Flow narrative</h4><ol><li>The driver records how the RDD should be computed.</li><li>An action creates a job.</li><li>Each stage creates one task per partition.</li><li>Executors run tasks and return or write results.</li></ol></figure>
+<div class="callout warning"><strong>Common Confusion</strong>An RDD is not a Python list spread across machines. It is a distributed, lazy computation whose records are available only when tasks materialize partitions.</div>
+<div class="check"><button type="button" class="check-btn">Check yourself: What provides RDD fault tolerance?</button><div class="check-answer">The lineage graph. If a partition is lost, Spark can recompute it from its parent transformations instead of requiring a full replicated copy.</div></div>
+</section>
+<section class="section-card" id="s3">
+<div class="section-title-row"><div><span class="eyebrow">Section 3</span><h2>Setup and Practice Data</h2></div><label class="prepared-label"><input type="checkbox" class="prepared" data-section="s3"> Mark as prepared</label></div>
+<h3>Install and verify</h3>
+<pre><button class="copy-btn" type="button">Copy</button><code># Command Prompt / PowerShell / terminal
+python --version
+java -version
+pip install pyspark==4.1.2
+python -c "import pyspark; print(pyspark.__version__)"</code></pre>
+<h3>Create the Spark application and common practice RDDs</h3>
+<pre><button class="copy-btn" type="button">Copy</button><code>from pyspark.sql import SparkSession
+
+spark = (SparkSession.builder
+         .appName("PythonPracticalRDD")
+         .master("local[4]")
+         .getOrCreate())
+
+sc = spark.sparkContext
+sc.setLogLevel("WARN")
+
+transactions_data = [
+    (1001, "C101", "Laptop",      "Electronics", 1, 65000.0, "Chennai",   "PAID"),
+    (1002, "C102", "Mouse",       "Electronics", 2,   800.0, "Coimbatore","PAID"),
+    (1003, "C101", "Keyboard",    "Electronics", 1,  1500.0, "Chennai",   "PAID"),
+    (1004, "C103", "Chair",       "Furniture",   1,  7000.0, "Bengaluru", "PENDING"),
+    (1005, "C104", "Desk",        "Furniture",   1, 12000.0, "Hyderabad", "PAID"),
+    (1006, "C105", "Notebook",    "Stationery",  5,   100.0, "Chennai",   "PAID"),
+    (1007, "C102", "USB Cable",   "Electronics", 3,   300.0, "Coimbatore","CANCELLED"),
+    (1008, "C106", "Monitor",     "Electronics", 2, 15000.0, "Hyderabad", "PAID"),
+    (1009, "C103", "Pen",         "Stationery", 10,    20.0, "Bengaluru", "PAID"),
+    (1010, "C107", "Office Lamp", "Furniture",   2,  1200.0, "Chennai",   "PAID"),
+]
+
+transactions = sc.parallelize(transactions_data, 4)
+products = sc.parallelize([
+    ("Laptop", "Premium"), ("Mouse", "Standard"), ("Keyboard", "Standard"),
+    ("Chair", "Standard"), ("Desk", "Premium"), ("Notebook", "Budget"),
+    ("USB Cable", "Budget"), ("Monitor", "Premium"), ("Pen", "Budget"),
+    ("Office Lamp", "Standard")
+], 2)
+
+# Tuple field positions used throughout
+TXN_ID, CUSTOMER, PRODUCT, CATEGORY, QTY, PRICE, CITY, STATUS = range(8)</code></pre>
+<h3>Quick verification</h3>
+<pre><button class="copy-btn" type="button">Copy</button><code>print("Partitions:", transactions.getNumPartitions())
+print("Rows:", transactions.count())
+print("First row:", transactions.first())
+print("Sample rows:", transactions.take(3))
+print("RDD name before setName:", transactions.name())
+transactions.setName("RetailTransactions")
+print("RDD name after setName:", transactions.name())</code></pre>
+<div class="callout success"><strong>Expected Result</strong><code>transactions</code> has 10 rows and 4 partitions. Every later practical uses this same tuple layout, so keep the field constants available.</div>
+<div class="callout warning"><strong>Windows Note</strong>For current local PySpark, install a supported Java runtime and ensure <code>JAVA_HOME</code> and <code>PATH</code> point to it. Do not create a second active <code>SparkContext</code> inside the same process.</div>
+</section>
+<section class="section-card" id="s4">
+<div class="section-title-row"><div><span class="eyebrow">Section 4</span><h2>RDD Creation Options</h2></div><label class="prepared-label"><input type="checkbox" class="prepared" data-section="s4"> Mark as prepared</label></div>
+<p>RDD creation begins either with an in-memory collection on the driver or with an external data source. The chosen method determines record shape, initial partitions, data locality, and whether workers can access the source.</p>
+<div class="table-wrap"><table><caption>Creation API map</caption><thead><tr><th>Creation option</th><th>Records produced</th><th>Best use</th></tr></thead><tbody><tr><td><code>sc.parallelize(iterable, numSlices)</code></td><td>Python iterable on the driver</td><td>Small test data; training; generated collections</td></tr><tr><td><code>sc.range(start, end, step, numSlices)</code></td><td>Distributed numeric range</td><td>Large integer ranges without first building one Python list</td></tr><tr><td><code>sc.textFile(path, minPartitions)</code></td><td>One line per record</td><td>Text, CSV-like raw files, logs</td></tr><tr><td><code>sc.wholeTextFiles(path)</code></td><td>(filename, complete file text)</td><td>Many small documents where each file is one logical record</td></tr><tr><td><code>sc.binaryFiles(path)</code></td><td>(filename, PortableDataStream)</td><td>Binary content such as images or archives</td></tr><tr><td><code>sc.binaryRecords(path, recordLength)</code></td><td>Fixed-length binary records</td><td>Legacy fixed-width binary formats</td></tr><tr><td><code>sc.pickleFile(path)</code></td><td>Objects saved by saveAsPickleFile</td><td>Python-object round trip</td></tr><tr><td><code>sc.sequenceFile(path, keyClass, valueClass)</code></td><td>Hadoop SequenceFile pairs</td><td>Hadoop ecosystem interoperability</td></tr><tr><td><code>sc.hadoopFile / sc.newAPIHadoopFile</code></td><td>Hadoop InputFormat records</td><td>Legacy/custom Hadoop sources</td></tr><tr><td><code>sc.emptyRDD()</code></td><td>Empty distributed collection</td><td>Union pipelines, default branches, tests</td></tr><tr><td><code>sc.union([rdd1, rdd2, ...])</code></td><td>Combined RDD</td><td>Combine many RDDs in one call</td></tr><tr><td><code>dataframe.rdd</code></td><td>RDD[Row]</td><td>Drop from DataFrame API to low-level RDD processing</td></tr></tbody></table></div>
+<h3>Practical creation examples</h3>
+<pre><button class="copy-btn" type="button">Copy</button><code># 1. Python collection
+numbers = sc.parallelize(range(1, 21), 4)
+
+# 2. Distributed range
+large_ids = sc.range(1, 1_000_001, 1, numSlices=8)
+
+# 3. Text file: each record is one line
+lines = sc.textFile("data/orders.csv", minPartitions=4)
+
+# 4. Whole files: each record is (path, full content)
+documents = sc.wholeTextFiles("data/policies/*.txt")
+
+# 5. Empty RDD
+empty = sc.emptyRDD()
+
+# 6. Union many RDDs
+all_months = sc.union([jan_rdd, feb_rdd, mar_rdd])
+
+# 7. Convert DataFrame rows to RDD
+row_rdd = spark.createDataFrame([(1, "A"), (2, "B")], ["id", "name"]).rdd</code></pre>
+<div class="callout warning"><strong>Watch Out</strong><code>parallelize()</code> copies driver-side data into Spark. Do not create a massive Python list on the driver merely to parallelize it; read from distributed storage or use <code>sc.range()</code>.</div>
+<div class="callout"><strong>Local-File Rule</strong>In a cluster, a local path must exist on every worker at the same path. Prefer HDFS, S3-compatible storage, ADLS, GCS, or another shared source.</div>
+<div class="check"><button type="button" class="check-btn">Check yourself: Which option keeps each complete small file together?</button><div class="check-answer"><code>wholeTextFiles()</code>, which returns one <code>(filename, content)</code> pair per file.</div></div>
+</section>
+<section class="section-card" id="s5">
+<div class="section-title-row"><div><span class="eyebrow">Section 5</span><h2>Execution Model and Operation Families</h2></div><label class="prepared-label"><input type="checkbox" class="prepared" data-section="s5"> Mark as prepared</label></div>
+<p>RDD APIs fall into two primary families. A <b>transformation</b> returns another RDD and is normally lazy. An <b>action</b> returns a driver value, writes external output, or performs a side effect and therefore triggers a Spark job.</p>
+<div class="three-col"><div class="card"><h3>Narrow transformation</h3><p>Each child partition depends on a small number of parent partitions. Examples: <code>map</code>, <code>filter</code>, <code>flatMap</code>, <code>mapPartitions</code>.</p></div><div class="card"><h3>Wide transformation</h3><p>Records move across partitions. Examples: <code>reduceByKey</code>, <code>groupByKey</code>, <code>distinct</code>, <code>join</code>, <code>sortByKey</code>.</p></div><div class="card"><h3>Action</h3><p>Requests a result or output. Examples: <code>count</code>, <code>collect</code>, <code>take</code>, <code>reduce</code>, and save methods.</p></div></div>
+<figure class="diagram"><figcaption>Diagram 2 — Practical RDD Pipeline</figcaption><div class="legend"><span><i class="lg-plan"></i>Lazy narrow work</span><span><i class="lg-shuffle"></i>Shuffle</span><span><i class="lg-trigger"></i>Action</span></div><p><b>How to read this:</b> The first three transformations are pipelined. Key aggregation creates a shuffle. The action starts all pending work.</p><div class="operator-chain"><div class="op stage0">parallelize<small><br>4 partitions</small></div><div class="arrow">→</div><div class="op stage0">filter PAID</div><div class="arrow">→</div><div class="op stage0">map (city, amount)</div><div class="arrow">shuffle →</div><div class="shuffle-boundary">reduceByKey</div><div class="arrow">→</div><div class="op action">collect</div></div><h4>Flow narrative</h4><ol><li>Creation and transformations extend lineage.</li><li><code>reduceByKey</code> records a wide dependency.</li><li><code>collect()</code> creates a job.</li><li>Stage 0 computes local records and shuffle output.</li><li>Stage 1 merges city totals and returns them.</li></ol></figure>
+<pre><button class="copy-btn" type="button">Copy</button><code>city_revenue = (transactions
+    .filter(lambda t: t[STATUS] == "PAID")
+    .map(lambda t: (t[CITY], t[QTY] * t[PRICE]))
+    .reduceByKey(lambda a, b: a + b, numPartitions=2))
+
+print(city_revenue.toDebugString().decode("utf-8"))
+print(city_revenue.collect())</code></pre>
+<div class="callout success"><strong>Memory Hook</strong><b>Narrow stays near; wide travels worldwide.</b> Narrow work usually remains within a partition. Wide work redistributes records.</div>
+</section>
+<section class="section-card" id="s6">
+<div class="section-title-row"><div><span class="eyebrow">Section 6</span><h2>Core Narrow Transformations</h2></div><label class="prepared-label"><input type="checkbox" class="prepared" data-section="s6"> Mark as prepared</label></div>
+<h3>1. map — one input record to one output record</h3>
+<pre><button class="copy-btn" type="button">Copy</button><code>amounts = transactions.map(lambda t: t[QTY] * t[PRICE])
+print(amounts.collect())</code></pre>
+<h3>2. flatMap — one input record to zero, one, or many outputs</h3>
+<pre><button class="copy-btn" type="button">Copy</button><code>sentences = sc.parallelize(["spark is fast", "python with spark"], 2)
+words = sentences.flatMap(lambda line: line.split())
+print(words.collect())
+# ['spark', 'is', 'fast', 'python', 'with', 'spark']</code></pre>
+<h3>3. filter — retain records matching a predicate</h3>
+<pre><button class="copy-btn" type="button">Copy</button><code>paid = transactions.filter(lambda t: t[STATUS] == "PAID")
+large_paid = paid.filter(lambda t: t[QTY] * t[PRICE] &gt;= 10_000)
+print(large_paid.collect())</code></pre>
+<h3>4. mapPartitions — initialize once per partition</h3>
+<pre><button class="copy-btn" type="button">Copy</button><code>def summarize_partition(rows):
+    rows = list(rows)
+    yield {
+        "row_count": len(rows),
+        "revenue": sum(t[QTY] * t[PRICE] for t in rows)
+    }
+
+partition_summaries = transactions.mapPartitions(summarize_partition)
+print(partition_summaries.collect())</code></pre>
+<h3>5. mapPartitionsWithIndex — include partition number</h3>
+<pre><button class="copy-btn" type="button">Copy</button><code>def inspect_partition(index, rows):
+    rows = list(rows)
+    yield (index, len(rows), [t[TXN_ID] for t in rows])
+
+print(transactions.mapPartitionsWithIndex(inspect_partition).collect())</code></pre>
+<h3>6. glom — view each partition as a Python list</h3>
+<pre><button class="copy-btn" type="button">Copy</button><code>for partition_no, rows in enumerate(transactions.glom().collect()):
+    print(partition_no, rows)</code></pre>
+<h3>7. key/value helpers</h3>
+<pre><button class="copy-btn" type="button">Copy</button><code>by_customer = transactions.keyBy(lambda t: t[CUSTOMER])
+customer_keys = by_customer.keys()
+original_rows = by_customer.values()
+
+amount_by_customer = transactions.map(
+    lambda t: (t[CUSTOMER], t[QTY] * t[PRICE])
+)
+with_tax = amount_by_customer.mapValues(lambda amount: round(amount * 1.18, 2))
+expanded = sc.parallelize([("A", [1, 2]), ("B", [3])]).flatMapValues(lambda xs: xs)
+
+print(customer_keys.take(3))
+print(with_tax.take(3))
+print(expanded.collect())</code></pre>
+<div class="table-wrap"><table><caption>Choosing the correct narrow transformation</caption><thead><tr><th>Method</th><th>Record cardinality</th><th>Partition-aware?</th><th>Common use</th></tr></thead><tbody><tr><td><code>map</code></td><td>1 → 1</td><td>No</td><td>Convert each record</td></tr><tr><td><code>flatMap</code></td><td>1 → many</td><td>No</td><td>Split/explode</td></tr><tr><td><code>filter</code></td><td>1 → 0 or 1</td><td>No</td><td>Remove unwanted records</td></tr><tr><td><code>mapPartitions</code></td><td>Partition → iterable</td><td>Yes</td><td>Reuse a DB connection or model per partition</td></tr><tr><td><code>mapPartitionsWithIndex</code></td><td>Partition + index → iterable</td><td>Yes</td><td>Debug partition distribution</td></tr><tr><td><code>mapValues</code></td><td>(K,V) → (K,U)</td><td>Retains key partitioning</td><td>Transform values without changing keys</td></tr></tbody></table></div>
+<div class="callout warning"><strong>Watch Out</strong>A function passed to <code>map</code> runs on executors. Do not depend on mutable driver state, local-only files, or non-serializable database connections captured in the closure.</div>
+</section>
+<section class="section-card" id="s7">
+<div class="section-title-row"><div><span class="eyebrow">Section 7</span><h2>Set, Sampling, Sorting and Partition Transformations</h2></div><label class="prepared-label"><input type="checkbox" class="prepared" data-section="s7"> Mark as prepared</label></div>
+<div class="two-col">
+<div class="card"><h3>Set-like operations</h3><pre><button class="copy-btn" type="button">Copy</button><code>a = sc.parallelize([1, 2, 2, 3, 4], 2)
+b = sc.parallelize([3, 4, 5], 2)
+
+print(a.distinct().collect())
+print(a.union(b).collect())       # duplicates remain
+print(a.intersection(b).collect())
+print(a.subtract(b).collect())
+print(a.cartesian(b).take(8))</code></pre></div>
+<div class="card"><h3>Sampling and splitting</h3><pre><button class="copy-btn" type="button">Copy</button><code>sample_without = transactions.sample(False, 0.4, seed=42)
+sample_with = transactions.sample(True, 1.5, seed=42)
+train, test = transactions.randomSplit([0.8, 0.2], seed=42)
+fixed_sample = transactions.takeSample(False, 3, seed=42)
+
+# Stratified sampling on a Pair RDD
+by_category = transactions.map(lambda t: (t[CATEGORY], t))
+fractions = {"Electronics": 0.5, "Furniture": 1.0, "Stationery": 0.5}
+stratified = by_category.sampleByKey(False, fractions, seed=42)</code></pre></div>
+</div>
+<h3>Sorting</h3>
+<pre><button class="copy-btn" type="button">Copy</button><code># Sort complete records by transaction amount descending
+sorted_transactions = transactions.sortBy(
+    lambda t: t[QTY] * t[PRICE], ascending=False, numPartitions=2
+)
+
+# Pair-RDD key sort
+city_amount = transactions.map(lambda t: (t[CITY], t[QTY] * t[PRICE]))
+city_amount_sorted = city_amount.sortByKey(ascending=True, numPartitions=2)
+
+print(sorted_transactions.take(5))</code></pre>
+<h3>Partition-count transformations</h3>
+<pre><button class="copy-btn" type="button">Copy</button><code>print("Original:", transactions.getNumPartitions())
+
+more = transactions.repartition(8)       # full shuffle; increase or decrease
+fewer = more.coalesce(2)                  # usually no shuffle; best for decreasing
+balanced_fewer = more.coalesce(2, shuffle=True)
+
+print(more.getNumPartitions(), fewer.getNumPartitions())</code></pre>
+<h3>Zip and IDs</h3>
+<pre><button class="copy-btn" type="button">Copy</button><code>names = sc.parallelize(["A", "B", "C"], 2)
+scores = sc.parallelize([80, 90, 70], 2)
+print(names.zip(scores).collect())
+print(names.zipWithIndex().collect())
+print(names.zipWithUniqueId().collect())</code></pre>
+<div class="callout danger"><strong>Cartesian Warning</strong><code>cartesian()</code> creates every possible pair. If RDD A has one million records and RDD B has one million, the result has one trillion pairs.</div>
+<div class="callout warning"><strong>Zip Requirement</strong><code>zip()</code> requires both RDDs to have the same number of partitions and the same number of records in each corresponding partition.</div>
+</section>
+<section class="section-card" id="s8">
+<div class="section-title-row"><div><span class="eyebrow">Section 8</span><h2>Pair RDD Operations</h2></div><label class="prepared-label"><input type="checkbox" class="prepared" data-section="s8"> Mark as prepared</label></div>
+<p>A Pair RDD contains <code>(key, value)</code> tuples. Key-based APIs enable aggregation, partitioning, lookup, joins, and grouped processing.</p>
+<h3>Aggregation choices</h3>
+<pre><button class="copy-btn" type="button">Copy</button><code>amount_by_category = transactions.map(
+    lambda t: (t[CATEGORY], t[QTY] * t[PRICE])
+)
+
+# Sum values; map-side combine reduces shuffle traffic
+sum_by_category = amount_by_category.reduceByKey(lambda a, b: a + b)
+
+# Collect every value per key; can consume large memory
+all_amounts = amount_by_category.groupByKey().mapValues(list)
+
+# Zero value + within-partition function + between-partition function
+stats_by_category = amount_by_category.aggregateByKey(
+    (0.0, 0),
+    lambda acc, value: (acc[0] + value, acc[1] + 1),
+    lambda left, right: (left[0] + right[0], left[1] + right[1])
+)
+average_by_category = stats_by_category.mapValues(lambda x: x[0] / x[1])
+
+# Generic aggregation foundation
+average2 = amount_by_category.combineByKey(
+    lambda value: (value, 1),
+    lambda acc, value: (acc[0] + value, acc[1] + 1),
+    lambda a, b: (a[0] + b[0], a[1] + b[1])
+).mapValues(lambda x: x[0] / x[1])
+
+# Neutral zero value added with an associative function
+folded = amount_by_category.foldByKey(0.0, lambda a, b: a + b)</code></pre>
+<div class="callout success"><strong>Selection Rule</strong>Use <code>reduceByKey</code> for same-type associative aggregation; <code>aggregateByKey</code> or <code>combineByKey</code> when the output type differs; avoid <code>groupByKey</code> when you only need a sum, count, min, max, or average.</div>
+<h3>Joins and grouped relationships</h3>
+<pre><button class="copy-btn" type="button">Copy</button><code>txn_by_product = transactions.map(lambda t: (t[PRODUCT], t))
+
+inner = txn_by_product.join(products)
+left = txn_by_product.leftOuterJoin(products)
+right = txn_by_product.rightOuterJoin(products)
+full = txn_by_product.fullOuterJoin(products)
+
+# Values from each RDD are grouped separately per key
+co_grouped = txn_by_product.cogroup(products)
+grouped_many = txn_by_product.groupWith(products)
+
+print(inner.take(3))</code></pre>
+<h3>Other Pair RDD tools</h3>
+<pre><button class="copy-btn" type="button">Copy</button><code># Remove keys found in another RDD
+blocked_customers = sc.parallelize([("C102", True), ("C105", True)])
+by_customer = transactions.map(lambda t: (t[CUSTOMER], t))
+allowed = by_customer.subtractByKey(blocked_customers)
+
+# Return matching values to the driver
+print(by_customer.lookup("C101"))
+
+# Number of records per key, returned as a driver dictionary
+print(by_customer.countByKey())
+
+# Reduce and return a driver dictionary
+print(amount_by_category.reduceByKeyLocally(lambda a, b: a + b))
+
+# Apply a stable partitioner
+partitioned = amount_by_category.partitionBy(4)
+
+# Partition and sort in one operation
+sorted_partitioned = amount_by_category.repartitionAndSortWithinPartitions(
+    numPartitions=4
+)</code></pre>
+<figure class="diagram"><figcaption>Diagram 3 — reduceByKey versus groupByKey</figcaption><div class="legend"><span><i class="lg-run"></i>Map-side combine</span><span><i class="lg-shuffle"></i>Network shuffle</span></div><p><b>How to read this:</b> Both bring identical keys together, but reduceByKey can merge values before network transfer.</p><div class="stage-grid"><div class="stage-lane"><h4>reduceByKey</h4><div class="partition-grid"><div class="partition">A: 1,1,1 → A:3</div><div class="partition">A:1,1 → A:2</div></div><p>Smaller combined records cross the shuffle.</p></div><div class="shuffle-column">SHUFFLE</div><div class="stage-lane stage-one"><h4>groupByKey</h4><div class="partition-grid"><div class="partition">A:1,1,1</div><div class="partition">A:1,1</div></div><p>All values cross before grouping.</p></div></div><h4>Flow narrative</h4><ol><li>Input partitions contain repeated keys.</li><li><code>reduceByKey</code> combines locally where possible.</li><li><code>groupByKey</code> sends every value.</li><li>For simple aggregation, reduceByKey normally reduces shuffle size and memory pressure.</li></ol></figure>
+</section>
+<section class="section-card" id="s9">
+<div class="section-title-row"><div><span class="eyebrow">Section 9</span><h2>Actions and Statistical Operations</h2></div><label class="prepared-label"><input type="checkbox" class="prepared" data-section="s9"> Mark as prepared</label></div>
+<h3>Safe inspection actions</h3>
+<pre><button class="copy-btn" type="button">Copy</button><code>print(transactions.count())
+print(transactions.first())
+print(transactions.take(3))
+print(transactions.takeOrdered(3, key=lambda t: t[QTY] * t[PRICE]))
+print(transactions.top(3, key=lambda t: t[QTY] * t[PRICE]))
+print(transactions.isEmpty())
+
+# Stream partitions through an iterator instead of building one huge list immediately
+for row in transactions.toLocalIterator():
+    pass</code></pre>
+<h3>Driver-return actions</h3>
+<pre><button class="copy-btn" type="button">Copy</button><code>small_result = transactions.collect()       # all records to driver
+small_map = products.collectAsMap()       # keys should be unique
+category_counts = transactions.map(lambda t: t[CATEGORY]).countByValue()
+customer_counts = transactions.map(lambda t: (t[CUSTOMER], 1)).countByKey()
+
+print(category_counts)
+print(customer_counts)</code></pre>
+<h3>Aggregation actions</h3>
+<pre><button class="copy-btn" type="button">Copy</button><code>numbers = sc.parallelize([10, 20, 30, 40, 50], 2)
+
+print(numbers.reduce(lambda a, b: a + b))
+print(numbers.fold(0, lambda a, b: a + b))
+print(numbers.aggregate(
+    (0, 0),
+    lambda acc, x: (acc[0] + x, acc[1] + 1),
+    lambda a, b: (a[0] + b[0], a[1] + b[1])
+))
+print(numbers.treeReduce(lambda a, b: a + b, depth=2))
+print(numbers.treeAggregate(
+    (0, 0),
+    lambda acc, x: (acc[0] + x, acc[1] + 1),
+    lambda a, b: (a[0] + b[0], a[1] + b[1]),
+    depth=2
+))</code></pre>
+<h3>Numeric and approximate actions</h3>
+<pre><button class="copy-btn" type="button">Copy</button><code>print(numbers.sum())
+print(numbers.min(), numbers.max())
+print(numbers.mean())
+print(numbers.variance(), numbers.stdev())
+print(numbers.sampleVariance(), numbers.sampleStdev())
+print(numbers.stats())
+print(numbers.histogram([0, 20, 40, 60]))
+
+print(numbers.countApprox(timeout=1000, confidence=0.95))
+print(numbers.countApproxDistinct(relativeSD=0.05))
+print(numbers.meanApprox(timeout=1000, confidence=0.95))
+print(numbers.sumApprox(timeout=1000, confidence=0.95))</code></pre>
+<h3>Side-effect and output actions</h3>
+<pre><button class="copy-btn" type="button">Copy</button><code>def print_partition(rows):
+    for row in rows:
+        print(row)
+
+transactions.foreach(lambda row: None)
+transactions.foreachPartition(print_partition)
+transactions.saveAsTextFile("output/transactions_text")
+transactions.saveAsPickleFile("output/transactions_pickle")</code></pre>
+<div class="callout danger"><strong>Driver Memory Risk</strong><code>collect()</code>, <code>collectAsMap()</code>, <code>countByValue()</code>, <code>countByKey()</code>, and <code>reduceByKeyLocally()</code> return data to the driver. Use them only when the result is provably small.</div>
+<div class="callout warning"><strong>Side-Effect Rule</strong><code>foreach()</code> runs on executors, not the driver. Writing to an executor’s local file system does not create one centralized file and tasks may retry.</div>
+</section>
+<section class="section-card" id="s10">
+<div class="section-title-row"><div><span class="eyebrow">Section 10</span><h2>Persistence, Checkpointing and Lineage</h2></div><label class="prepared-label"><input type="checkbox" class="prepared" data-section="s10"> Mark as prepared</label></div>
+<p>When the same expensive RDD feeds multiple actions, Spark recomputes it unless it is persisted. Persistence stores materialized partitions after the first action. Checkpointing truncates long lineage by saving a reliable copy to checkpoint storage.</p>
+<pre><button class="copy-btn" type="button">Copy</button><code>from pyspark import StorageLevel
+
+paid_enriched = (transactions
+    .filter(lambda t: t[STATUS] == "PAID")
+    .map(lambda t: (t, t[QTY] * t[PRICE])))
+
+# Shortcut: default RDD cache level in PySpark
+paid_enriched.cache()
+
+# Or choose a level explicitly before materialization
+paid_enriched.persist(StorageLevel.MEMORY_AND_DISK)
+
+# First action computes and stores partitions
+print(paid_enriched.count())
+# Later action can reuse cached partitions
+print(paid_enriched.take(3))
+
+print(paid_enriched.getStorageLevel())
+paid_enriched.unpersist(blocking=False)</code></pre>
+<h3>Reliable checkpoint</h3>
+<pre><button class="copy-btn" type="button">Copy</button><code>sc.setCheckpointDir("checkpoint/rdd")
+long_lineage = transactions.map(lambda x: x).filter(lambda x: True)
+long_lineage.checkpoint()
+long_lineage.count()  # materializes the checkpoint
+print(long_lineage.isCheckpointed())
+print(long_lineage.getCheckpointFile())</code></pre>
+<h3>Local checkpoint</h3>
+<pre><button class="copy-btn" type="button">Copy</button><code>temporary_lineage_cut = transactions.map(lambda x: x)
+temporary_lineage_cut.localCheckpoint()
+temporary_lineage_cut.count()
+print(temporary_lineage_cut.isLocallyCheckpointed())</code></pre>
+<div class="table-wrap"><table><thead><tr><th>Feature</th><th>Main goal</th><th>Fault tolerance</th><th>Typical use</th></tr></thead><tbody><tr><td><code>cache/persist</code></td><td>Reuse computed partitions</td><td>Lineage can recompute lost blocks</td><td>Iterative algorithms and multiple actions</td></tr><tr><td><code>checkpoint</code></td><td>Cut lineage and save reliably</td><td>Reliable storage</td><td>Very long or cyclic-looking iterative lineage</td></tr><tr><td><code>localCheckpoint</code></td><td>Cut lineage cheaply</td><td>Not reliable like durable checkpoint</td><td>Temporary optimization where recomputation risk is acceptable</td></tr></tbody></table></div>
+<div class="callout success"><strong>Web UI Tip</strong>A persisted RDD appears in the Storage tab only after an action materializes it. Give it a readable name with <code>setName()</code>.</div>
+</section>
+<section class="section-card" id="s11">
+<div class="section-title-row"><div><span class="eyebrow">Section 11</span><h2>Partitions and Performance Tuning</h2></div><label class="prepared-label"><input type="checkbox" class="prepared" data-section="s11"> Mark as prepared</label></div>
+<p>A partition is the unit a task processes. Too few partitions underuse the cluster; too many tiny partitions increase scheduling overhead. Wide operations also create new partitioning decisions that affect later joins and aggregations.</p>
+<pre><button class="copy-btn" type="button">Copy</button><code>print(transactions.getNumPartitions())
+print(transactions.glom().map(len).collect())
+print(transactions.toDebugString().decode("utf-8"))
+
+# Inspect records per partition
+sizes = transactions.mapPartitionsWithIndex(
+    lambda idx, rows: [(idx, sum(1 for _ in rows))]
+)
+print(sizes.collect())</code></pre>
+<h3>Custom partition function</h3>
+<pre><button class="copy-btn" type="button">Copy</button><code>def customer_partitioner(customer_id):
+    return int(customer_id[1:]) % 4
+
+customer_amount = transactions.map(
+    lambda t: (t[CUSTOMER], t[QTY] * t[PRICE])
+)
+partitioned = customer_amount.partitionBy(4, customer_partitioner)
+print(partitioned.glom().collect())</code></pre>
+<h3>Practical tuning checklist</h3>
+<div class="two-col"><div class="card"><h4>Reduce data before shuffle</h4><p>Filter rows and map to only necessary fields before <code>reduceByKey</code>, joins, distinct, or sorting.</p></div><div class="card"><h4>Aggregate locally</h4><p>Prefer <code>reduceByKey</code>, <code>aggregateByKey</code>, or <code>combineByKey</code> over <code>groupByKey</code> for aggregates.</p></div><div class="card"><h4>Reuse partitioners</h4><p>Key-preserving APIs such as <code>mapValues</code> can retain partitioning and reduce future shuffle.</p></div><div class="card"><h4>Inspect skew</h4><p>Compare task input, shuffle-read size, and duration in the Stages tab. A few oversized partitions create stragglers.</p></div></div>
+<div class="callout warning"><strong>coalesce versus repartition</strong><code>repartition(n)</code> always shuffles and balances. <code>coalesce(n)</code> usually avoids shuffle and is efficient for reducing partitions, but may create uneven partition sizes.</div>
+</section>
+<section class="section-card" id="s12">
+<div class="section-title-row"><div><span class="eyebrow">Section 12</span><h2>Broadcast Variables and Accumulators</h2></div><label class="prepared-label"><input type="checkbox" class="prepared" data-section="s12"> Mark as prepared</label></div>
+<h3>Broadcast variable — efficient read-only lookup</h3>
+<pre><button class="copy-btn" type="button">Copy</button><code>tax_rate_by_category = {
+    "Electronics": 0.18,
+    "Furniture": 0.12,
+    "Stationery": 0.05
+}
+tax_rates_bc = sc.broadcast(tax_rate_by_category)
+
+with_tax = transactions.map(lambda t: (
+    t[TXN_ID],
+    t[QTY] * t[PRICE],
+    (t[QTY] * t[PRICE]) * tax_rates_bc.value[t[CATEGORY]]
+))
+print(with_tax.collect())
+
+tax_rates_bc.unpersist()
+# tax_rates_bc.destroy()  # permanent; cannot use afterward</code></pre>
+<h3>Accumulator — executor-to-driver counter</h3>
+<pre><button class="copy-btn" type="button">Copy</button><code>invalid_status_count = sc.accumulator(0)
+valid_statuses = {"PAID", "PENDING", "CANCELLED"}
+
+def validate(row):
+    if row[STATUS] not in valid_statuses:
+        invalid_status_count.add(1)
+    return row
+
+validated = transactions.map(validate)
+validated.count()  # an action is required
+print("Invalid statuses:", invalid_status_count.value)</code></pre>
+<div class="callout danger"><strong>Accumulator Semantics</strong>Do not use an accumulator to produce business-critical exactly-once results. Tasks can retry, so updates inside transformations may be applied more than once. Use accumulators mainly for diagnostics and counters.</div>
+<div class="callout warning"><strong>Closure Mistake</strong>Updating a normal Python variable inside <code>map()</code> does not update the driver variable. Every task receives a serialized copy.</div>
+<div class="check"><button type="button" class="check-btn">Check yourself: When is a broadcast variable better than capturing a Python dictionary directly?</button><div class="check-answer">When the same large read-only lookup is reused by many tasks or stages. Broadcasting avoids repeatedly shipping a separate copy with task closures.</div></div>
+</section>
+<section class="section-card" id="s13">
+<div class="section-title-row"><div><span class="eyebrow">Section 13</span><h2>Input, Output and Advanced APIs</h2></div><label class="prepared-label"><input type="checkbox" class="prepared" data-section="s13"> Mark as prepared</label></div>
+<h3>Text, Pickle, SequenceFile, and Hadoop output</h3>
+<pre><button class="copy-btn" type="button">Copy</button><code># Directory output: one part file per output partition
+transactions.map(str).saveAsTextFile("output/transactions")
+transactions.saveAsPickleFile("output/transactions_pickle", batchSize=10)
+
+pair_output = transactions.map(lambda t: (str(t[TXN_ID]), t[PRODUCT]))
+pair_output.saveAsSequenceFile("output/transaction_products")
+
+# Hadoop APIs require the correct Java InputFormat/OutputFormat classes and config
+# pair_output.saveAsNewAPIHadoopFile(path, outputFormatClass, keyClass, valueClass)</code></pre>
+<h3>External command with pipe</h3>
+<pre><button class="copy-btn" type="button">Copy</button><code># UNIX-like environment example; every partition is piped to the command
+upper = sc.parallelize(["spark", "python"], 2).pipe("tr a-z A-Z")
+print(upper.collect())</code></pre>
+<h3>Barrier execution</h3>
+<pre><button class="copy-btn" type="button">Copy</button><code># Advanced/experimental: all tasks in the barrier stage must launch together
+def barrier_task(rows):
+    from pyspark import BarrierTaskContext
+    ctx = BarrierTaskContext.get()
+    ctx.barrier()
+    return rows
+
+barrier_rdd = transactions.barrier().mapPartitions(barrier_task)</code></pre>
+<h3>Resource profiles and lifecycle utilities</h3>
+<pre><button class="copy-btn" type="button">Copy</button><code>print(transactions.id())
+print(transactions.name())
+print(transactions.getResourceProfile())
+print(transactions.getStorageLevel())
+
+# Advanced cleanup; use only when you understand recomputation implications
+# transactions.cleanShuffleDependencies(blocking=False)
+
+# A job-group-aware collection option
+# result = transactions.collectWithJobGroup("retail-audit", "Collect retail audit")</code></pre>
+<div class="callout warning"><strong>Output Directory Rule</strong>Most Spark save methods fail when the target directory already exists. Delete or version the directory, or write through a higher-level storage layer that supports overwrite modes.</div>
+<div class="callout"><strong>Advanced API Rule</strong><code>barrier()</code>, Hadoop-format methods, resource profiles, and shuffle-dependency cleanup are specialized tools. Use them only when the deployment and failure model require them.</div>
+</section>
+<section class="section-card" id="s14">
+<div class="section-title-row"><div><span class="eyebrow">Section 14</span><h2>End-to-End Retail Practical Project</h2></div><label class="prepared-label"><input type="checkbox" class="prepared" data-section="s14"> Mark as prepared</label></div>
+<h3>Business requirement</h3><p>A retail operations team needs paid-order revenue by category, customer-level spending statistics, product-segment enrichment, data-quality counters, and the three highest-value transactions. The same cleaned RDD feeds several outputs, so it should be persisted.</p>
+<h3>Expected deliverables</h3><ul><li>Paid record count</li><li>Rejected record count</li><li>Category revenue sorted descending</li><li>Customer total, order count, and average</li><li>Product-segment left join</li><li>Top-three transaction list</li><li>Distributed text output</li></ul>
+<pre><button class="copy-btn" type="button">Copy</button><code>from operator import add
+from pyspark import StorageLevel
+
+# 1. Validate and count rejected rows
+invalid_rows = sc.accumulator(0)
+valid_statuses = {"PAID", "PENDING", "CANCELLED"}
+
+def validate(t):
+    if t[STATUS] not in valid_statuses or t[QTY] &lt;= 0 or t[PRICE] &lt; 0:
+        invalid_rows.add(1)
+        return False
+    return True
+
+valid = transactions.filter(validate)
+
+# 2. Keep paid transactions and calculate gross amount
+paid = (valid
+    .filter(lambda t: t[STATUS] == "PAID")
+    .map(lambda t: (t, t[QTY] * t[PRICE]))
+    .persist(StorageLevel.MEMORY_AND_DISK))
+
+# 3. First action materializes cache
+paid_count = paid.count()
+
+# 4. Revenue by category
+category_revenue = (paid
+    .map(lambda x: (x[0][CATEGORY], x[1]))
+    .reduceByKey(add, numPartitions=2)
+    .sortBy(lambda pair: pair[1], ascending=False))
+
+# 5. Customer statistics: total and order count
+customer_stats = (paid
+    .map(lambda x: (x[0][CUSTOMER], x[1]))
+    .aggregateByKey(
+        (0.0, 0),
+        lambda acc, amount: (acc[0] + amount, acc[1] + 1),
+        lambda a, b: (a[0] + b[0], a[1] + b[1])
+    )
+    .mapValues(lambda x: {"total": x[0], "orders": x[1], "average": x[0] / x[1]}))
+
+# 6. Join transactions to product segment
+transaction_products = paid.map(lambda x: (x[0][PRODUCT], (x[0], x[1])))
+enriched = transaction_products.leftOuterJoin(products)
+
+# 7. Top three transactions without collecting everything
+result_top3 = paid.takeOrdered(3, key=lambda x: -x[1])
+
+# 8. Inspect and save small curated outputs
+print("Paid count:", paid_count)
+print("Invalid rows:", invalid_rows.value)
+print("Category revenue:", category_revenue.collect())
+print("Customer stats:", customer_stats.collect())
+print("Top 3:", result_top3)
+
+enriched.map(str).saveAsTextFile("output/retail_enriched")
+paid.unpersist()</code></pre>
+<figure class="diagram"><figcaption>Diagram 4 — Retail RDD Project Flow</figcaption><div class="legend"><span><i class="lg-plan"></i>Narrow preparation</span><span><i class="lg-shuffle"></i>Wide/key operations</span><span><i class="lg-run"></i>Reusable cache/output</span></div><p><b>How to read this:</b> Read left to right. The cleaned paid RDD is persisted once and reused by three branches.</p><div class="flow-row"><div class="flow-box plan">Raw transactions<small>4 partitions</small></div><div class="flow-arrow"><span>filter/validate</span><b>→</b></div><div class="flow-box run">Paid RDD cached<small>reused</small></div><div class="flow-arrow"><span>branch 1</span><b>→</b></div><div class="flow-box run">reduceByKey<small>category revenue</small></div><div class="flow-arrow"><span>branch 2</span><b>→</b></div><div class="flow-box run">aggregateByKey<small>customer stats</small></div><div class="flow-arrow"><span>branch 3</span><b>→</b></div><div class="flow-box run">leftOuterJoin<small>product segment</small></div></div><h4>Flow narrative</h4><ol><li>Validation filters unusable records and increments a diagnostic accumulator.</li><li>Paid rows are enriched with amount and persisted.</li><li>The first action materializes the cache.</li><li>Three downstream branches reuse the same cached partitions.</li><li>Wide key operations shuffle only required fields.</li><li>Small summaries return to the driver; enriched records are written distributed.</li></ol></figure>
+<div class="callout success"><strong>Conclusion</strong>This project demonstrates the practical lifecycle of an RDD application: create, validate, transform, persist, aggregate, join, inspect safely, write distributed output, and release cached storage.</div>
+</section>
+<section class="section-card" id="s15">
+<div class="section-title-row"><div><span class="eyebrow">Section 15</span><h2>Complete RDD Method Map</h2></div><label class="prepared-label"><input type="checkbox" class="prepared" data-section="s15"> Mark as prepared</label></div>
+<p>This quick-reference covers the major public RDD methods and SparkContext creation options available in current PySpark. Methods that return data to the driver must be used with bounded results; methods that require Hadoop classes or barrier scheduling are specialized.</p>
+<h3>Creation through SparkContext</h3><div class="table-wrap"><table><thead><tr><th>Method</th><th>Purpose</th></tr></thead><tbody><tr><td><code>parallelize</code></td><td>Distribute a driver collection</td></tr><tr><td><code>range</code></td><td>Distributed numeric range</td></tr><tr><td><code>textFile</code></td><td>Read text lines</td></tr><tr><td><code>wholeTextFiles</code></td><td>Read complete files as pairs</td></tr><tr><td><code>binaryFiles</code></td><td>Read binary files</td></tr><tr><td><code>binaryRecords</code></td><td>Read fixed-length binary records</td></tr><tr><td><code>pickleFile</code></td><td>Read saved Python objects</td></tr><tr><td><code>sequenceFile</code></td><td>Read Hadoop SequenceFile</td></tr><tr><td><code>hadoopFile</code></td><td>Old Hadoop InputFormat</td></tr><tr><td><code>newAPIHadoopFile</code></td><td>New Hadoop InputFormat</td></tr><tr><td><code>emptyRDD</code></td><td>Create empty RDD</td></tr><tr><td><code>union</code></td><td>Union a list of RDDs</td></tr></tbody></table></div><h3>General transformations</h3><div class="table-wrap"><table><thead><tr><th>Method</th><th>Purpose</th></tr></thead><tbody><tr><td><code>map</code></td><td>1-to-1 conversion</td></tr><tr><td><code>flatMap</code></td><td>1-to-many conversion</td></tr><tr><td><code>filter</code></td><td>Keep matching elements</td></tr><tr><td><code>mapPartitions</code></td><td>Process one partition iterator</td></tr><tr><td><code>mapPartitionsWithIndex</code></td><td>Process partition with index</td></tr><tr><td><code>mapPartitionsWithSplit</code></td><td>Alias-style partition index API</td></tr><tr><td><code>glom</code></td><td>Partition contents as lists</td></tr><tr><td><code>keyBy</code></td><td>Create keys from records</td></tr><tr><td><code>keys</code></td><td>Extract keys</td></tr><tr><td><code>values</code></td><td>Extract values</td></tr><tr><td><code>mapValues</code></td><td>Transform values, keep keys</td></tr><tr><td><code>flatMapValues</code></td><td>Expand values, keep keys</td></tr></tbody></table></div><h3>Set, sampling, ordering, partitioning</h3><div class="table-wrap"><table><thead><tr><th>Method</th><th>Purpose</th></tr></thead><tbody><tr><td><code>distinct</code></td><td>Remove duplicates</td></tr><tr><td><code>union</code></td><td>Combine RDDs, retain duplicates</td></tr><tr><td><code>intersection</code></td><td>Common elements</td></tr><tr><td><code>subtract</code></td><td>Elements not in other RDD</td></tr><tr><td><code>cartesian</code></td><td>All possible pairs</td></tr><tr><td><code>sample</code></td><td>Fractional sample</td></tr><tr><td><code>randomSplit</code></td><td>Weighted split</td></tr><tr><td><code>sortBy</code></td><td>Sort by key function</td></tr><tr><td><code>repartition</code></td><td>Change partitions with shuffle</td></tr><tr><td><code>coalesce</code></td><td>Usually reduce partitions</td></tr><tr><td><code>partitionBy</code></td><td>Apply key partitioner</td></tr><tr><td><code>repartitionAndSortWithinPartitions</code></td><td>Partition and local key-sort</td></tr><tr><td><code>zip</code></td><td>Pair corresponding elements</td></tr><tr><td><code>zipWithIndex</code></td><td>Add consecutive indices</td></tr><tr><td><code>zipWithUniqueId</code></td><td>Add unique IDs without full ordering</td></tr></tbody></table></div><h3>Pair RDD transformations/actions</h3><div class="table-wrap"><table><thead><tr><th>Method</th><th>Purpose</th></tr></thead><tbody><tr><td><code>reduceByKey</code></td><td>Associative key aggregation</td></tr><tr><td><code>groupByKey</code></td><td>Group all values per key</td></tr><tr><td><code>aggregateByKey</code></td><td>Typed key aggregation with zero value</td></tr><tr><td><code>combineByKey</code></td><td>Generic key combiner</td></tr><tr><td><code>foldByKey</code></td><td>Key fold with neutral value</td></tr><tr><td><code>sortByKey</code></td><td>Sort key-value records</td></tr><tr><td><code>join</code></td><td>Inner join</td></tr><tr><td><code>leftOuterJoin</code></td><td>Left outer join</td></tr><tr><td><code>rightOuterJoin</code></td><td>Right outer join</td></tr><tr><td><code>fullOuterJoin</code></td><td>Full outer join</td></tr><tr><td><code>cogroup</code></td><td>Group values from two RDDs separately</td></tr><tr><td><code>groupWith</code></td><td>Cogroup multiple RDDs</td></tr><tr><td><code>subtractByKey</code></td><td>Remove keys found in other RDD</td></tr><tr><td><code>lookup</code></td><td>Driver list for a key</td></tr><tr><td><code>countByKey</code></td><td>Driver count dictionary</td></tr><tr><td><code>reduceByKeyLocally</code></td><td>Driver reduced dictionary</td></tr><tr><td><code>collectAsMap</code></td><td>Driver key-value dictionary</td></tr><tr><td><code>sampleByKey</code></td><td>Stratified sampling</td></tr></tbody></table></div><h3>Actions and statistics</h3><div class="table-wrap"><table><thead><tr><th>Method</th><th>Purpose</th></tr></thead><tbody><tr><td><code>collect</code></td><td>All elements to driver</td></tr><tr><td><code>collectWithJobGroup</code></td><td>Collect with job group metadata</td></tr><tr><td><code>count</code></td><td>Element count</td></tr><tr><td><code>countApprox</code></td><td>Approximate count</td></tr><tr><td><code>countApproxDistinct</code></td><td>Approximate distinct count</td></tr><tr><td><code>countByValue</code></td><td>Driver frequency dictionary</td></tr><tr><td><code>first</code></td><td>First element</td></tr><tr><td><code>take</code></td><td>First N elements</td></tr><tr><td><code>top</code></td><td>Largest N elements</td></tr><tr><td><code>takeOrdered</code></td><td>Smallest/ordered N elements</td></tr><tr><td><code>takeSample</code></td><td>Fixed-size sample</td></tr><tr><td><code>toLocalIterator</code></td><td>Partition-wise driver iterator</td></tr><tr><td><code>isEmpty</code></td><td>Test emptiness</td></tr><tr><td><code>reduce</code></td><td>Global associative reduce</td></tr><tr><td><code>fold</code></td><td>Global fold with zero value</td></tr><tr><td><code>aggregate</code></td><td>Two-level typed aggregate</td></tr><tr><td><code>treeReduce</code></td><td>Tree-pattern reduce</td></tr><tr><td><code>treeAggregate</code></td><td>Tree-pattern aggregate</td></tr><tr><td><code>sum</code></td><td>Numeric sum</td></tr><tr><td><code>sumApprox</code></td><td>Approximate sum</td></tr><tr><td><code>min</code></td><td>Minimum</td></tr><tr><td><code>max</code></td><td>Maximum</td></tr><tr><td><code>mean</code></td><td>Mean</td></tr><tr><td><code>meanApprox</code></td><td>Approximate mean</td></tr><tr><td><code>variance</code></td><td>Population variance</td></tr><tr><td><code>stdev</code></td><td>Population standard deviation</td></tr><tr><td><code>sampleVariance</code></td><td>Sample variance</td></tr><tr><td><code>sampleStdev</code></td><td>Sample standard deviation</td></tr><tr><td><code>stats</code></td><td>StatCounter summary</td></tr><tr><td><code>histogram</code></td><td>Bucket counts</td></tr><tr><td><code>foreach</code></td><td>Side effect per element</td></tr><tr><td><code>foreachPartition</code></td><td>Side effect per partition</td></tr></tbody></table></div><h3>Persistence, lineage, metadata</h3><div class="table-wrap"><table><thead><tr><th>Method</th><th>Purpose</th></tr></thead><tbody><tr><td><code>cache</code></td><td>Default persistence</td></tr><tr><td><code>persist</code></td><td>Chosen storage level</td></tr><tr><td><code>unpersist</code></td><td>Remove cached blocks</td></tr><tr><td><code>checkpoint</code></td><td>Reliable lineage checkpoint</td></tr><tr><td><code>localCheckpoint</code></td><td>Local non-reliable checkpoint</td></tr><tr><td><code>isCheckpointed</code></td><td>Checkpoint state</td></tr><tr><td><code>isLocallyCheckpointed</code></td><td>Local checkpoint state</td></tr><tr><td><code>getCheckpointFile</code></td><td>Checkpoint path</td></tr><tr><td><code>toDebugString</code></td><td>Lineage text</td></tr><tr><td><code>setName</code></td><td>Set readable RDD name</td></tr><tr><td><code>name</code></td><td>Get name</td></tr><tr><td><code>id</code></td><td>Get RDD ID</td></tr><tr><td><code>getNumPartitions</code></td><td>Partition count</td></tr><tr><td><code>getStorageLevel</code></td><td>Current storage level</td></tr><tr><td><code>cleanShuffleDependencies</code></td><td>Remove shuffle dependencies/ancestors</td></tr><tr><td><code>getResourceProfile</code></td><td>Read resource profile</td></tr><tr><td><code>withResources</code></td><td>Attach resource profile</td></tr></tbody></table></div><h3>Output and specialized</h3><div class="table-wrap"><table><thead><tr><th>Method</th><th>Purpose</th></tr></thead><tbody><tr><td><code>saveAsTextFile</code></td><td>Write text directory</td></tr><tr><td><code>saveAsPickleFile</code></td><td>Write Python objects</td></tr><tr><td><code>saveAsSequenceFile</code></td><td>Write Hadoop SequenceFile</td></tr><tr><td><code>saveAsHadoopFile</code></td><td>Old Hadoop OutputFormat</td></tr><tr><td><code>saveAsHadoopDataset</code></td><td>Old Hadoop dataset API</td></tr><tr><td><code>saveAsNewAPIHadoopFile</code></td><td>New Hadoop OutputFormat</td></tr><tr><td><code>saveAsNewAPIHadoopDataset</code></td><td>New Hadoop dataset API</td></tr><tr><td><code>pipe</code></td><td>Pipe partition records to external process</td></tr><tr><td><code>barrier</code></td><td>Barrier stage execution</td></tr></tbody></table></div>
+<div class="callout"><strong>How to Use This Map</strong>First decide whether you need creation, transformation, action, pair-key processing, partition control, persistence, or output. Then inspect whether the method creates a shuffle or returns data to the driver.</div>
+</section>
+<section class="section-card" id="s16">
+<div class="section-title-row"><div><span class="eyebrow">Section 16</span><h2>Troubleshooting and Best Practices</h2></div><label class="prepared-label"><input type="checkbox" class="prepared" data-section="s16"> Mark as prepared</label></div>
+<div class="table-wrap"><table><thead><tr><th>Symptom</th><th>Likely cause</th><th>Fix</th></tr></thead><tbody><tr><td>Java gateway process exited / JAVA_HOME error</td><td>Java missing, unsupported, or incorrectly configured</td><td>Install Java 17/21; set JAVA_HOME; reopen the terminal</td></tr><tr><td>ValueError: Cannot run multiple SparkContexts</td><td>A context already exists</td><td>Reuse spark.sparkContext or stop the old context</td></tr><tr><td>PicklingError / cannot serialize object</td><td>Closure captures non-serializable state</td><td>Create resources inside mapPartitions; pass plain serializable configuration</td></tr><tr><td>collect() crashes driver</td><td>Result is too large</td><td>Use take, distributed write, aggregation, or toLocalIterator carefully</td></tr><tr><td>groupByKey causes slow stage or OOM</td><td>All values are shuffled and grouped</td><td>Use reduceByKey/aggregateByKey/combineByKey</td></tr><tr><td>zip fails</td><td>Partition counts or per-partition record counts differ</td><td>Repartition deterministically or use zipWithIndex/join</td></tr><tr><td>saveAsTextFile path already exists</td><td>Spark output directory must be new</td><td>Delete/version path or use a storage API with overwrite support</td></tr><tr><td>Accumulator value stays zero</td><td>No action executed</td><td>Trigger an action; remember transformations are lazy</td></tr><tr><td>Unexpected repeated accumulator count</td><td>Tasks retried or lineage evaluated multiple times</td><td>Do not use accumulator as exact business output; persist when reusing</td></tr><tr><td>One task runs much longer</td><td>Data skew or oversized record</td><td>Inspect partition sizes; change key/partitioner; salt skewed keys</td></tr><tr><td>Output has many part files</td><td>One file per output partition</td><td>Coalesce carefully for small outputs or compact downstream</td></tr><tr><td>Local file missing on workers</td><td>Path exists only on driver</td><td>Use shared/distributed storage</td></tr></tbody></table></div>
+<h3>Best practices with reasons</h3><div class="two-col"><div class="card"><h4>Filter and project early</h4><p><b>Why:</b> fewer and smaller records enter expensive shuffle operations.</p></div><div class="card"><h4>Use associative and commutative reducers</h4><p><b>Why:</b> Spark may combine values in different orders across partitions.</p></div><div class="card"><h4>Persist only reused expensive RDDs</h4><p><b>Why:</b> caching consumes executor storage and may evict useful data.</p></div><div class="card"><h4>Use mapPartitions for expensive setup</h4><p><b>Why:</b> one connection/model initialization per partition is cheaper than per row.</p></div><div class="card"><h4>Name important RDDs</h4><p><b>Why:</b> the Web UI Storage tab becomes easier to interpret.</p></div><div class="card"><h4>Prefer DataFrames for structured analytics</h4><p><b>Why:</b> Spark can optimize schemas, expressions, joins, and storage.</p></div></div>
+<div class="callout danger"><strong>Never Do This</strong>Do not modify external systems non-idempotently inside <code>map()</code> or <code>foreach()</code> without handling task retries. A failed task can run again and duplicate side effects.</div>
+</section>
+<section class="section-card" id="s17">
+<div class="section-title-row"><div><span class="eyebrow">Section 17</span><h2>Interview Questions and Flash Review</h2></div><label class="prepared-label"><input type="checkbox" class="prepared" data-section="s17"> Mark as prepared</label></div>
+<p>Read the answer aloud as though responding in an interview. State the definition, practical reason, and one risk or example.</p><div class="two-col"><div class="card"><span class="tag">Beginner</span><h3>1. What is an RDD?</h3><p>An RDD is an immutable, partitioned, fault-tolerant distributed collection. Spark records how to compute each partition and executes that recipe in parallel after an action.</p></div><div class="card"><span class="tag">Beginner</span><h3>2. What is the difference between a transformation and an action?</h3><p>A transformation returns another RDD and is lazy. An action requests a driver result, external output, or side effect and triggers a job.</p></div><div class="card"><span class="tag">Beginner</span><h3>3. Why is an RDD immutable?</h3><p>Immutability avoids unsafe shared updates and allows Spark to preserve lineage for deterministic recomputation after failures.</p></div><div class="card"><span class="tag">Beginner</span><h3>4. What is a partition?</h3><p>A partition is a logical slice of an RDD. In a stage, Spark normally creates one task for each partition.</p></div><div class="card"><span class="tag">Beginner</span><h3>5. map versus flatMap?</h3><p>map returns one output per input. flatMap returns an iterable per input and flattens those iterables, so one input can produce zero or many outputs.</p></div><div class="card"><span class="tag">Beginner</span><h3>6. Why should collect be used carefully?</h3><p>collect transfers every record to driver memory. A large RDD can crash the driver or cause heavy network transfer.</p></div><div class="card"><span class="tag">Intermediate</span><h3>7. reduceByKey versus groupByKey?</h3><p>reduceByKey can combine values locally before shuffle, so it is normally better for sums, counts, min, max, and similar aggregates. groupByKey sends all values and stores grouped collections.</p></div><div class="card"><span class="tag">Intermediate</span><h3>8. repartition versus coalesce?</h3><p>repartition performs a full shuffle and balances data. coalesce usually avoids shuffle and is efficient for reducing partitions, but can leave them uneven.</p></div><div class="card"><span class="tag">Intermediate</span><h3>9. Why use mapPartitions?</h3><p>It lets one function process a partition iterator and reuse expensive setup such as a connection, parser, or model for many records.</p></div><div class="card"><span class="tag">Intermediate</span><h3>10. What does mapValues preserve?</h3><p>It changes only values in a Pair RDD and can preserve the existing key partitioner, which may avoid later shuffle.</p></div><div class="card"><span class="tag">Intermediate</span><h3>11. aggregateByKey versus combineByKey?</h3><p>aggregateByKey provides a zero value plus separate within- and between-partition functions. combineByKey is the most generic key combiner and explicitly defines creation, value merge, and combiner merge.</p></div><div class="card"><span class="tag">Intermediate</span><h3>12. When should an RDD be cached?</h3><p>Cache it when it is expensive to compute and reused by multiple actions or branches. Materialize it with an action and unpersist it when no longer needed.</p></div><div class="card"><span class="tag">Intermediate</span><h3>13. What is a broadcast variable?</h3><p>A broadcast variable distributes a large read-only object efficiently so tasks can access the executor-local cached copy instead of receiving repeated closure copies.</p></div><div class="card"><span class="tag">Advanced</span><h3>14. How does lineage provide fault tolerance?</h3><p>Each RDD stores dependencies on parent RDDs. When a partition is lost, Spark reruns only the required parent transformations to reconstruct it.</p></div><div class="card"><span class="tag">Advanced</span><h3>15. Why must reduce functions be associative and commutative?</h3><p>Distributed partial results may be combined in different grouping orders. Associative and commutative functions produce stable results regardless of that order.</p></div><div class="card"><span class="tag">Advanced</span><h3>16. Why can accumulators overcount?</h3><p>A failed or speculative task can execute again. Updates performed inside transformations can therefore occur more than once.</p></div><div class="card"><span class="tag">Advanced</span><h3>17. How do partitioners reduce shuffle?</h3><p>If two key-value RDDs already share a compatible partitioner, key-preserving operations and joins can reuse partition placement instead of redistributing every record.</p></div><div class="card"><span class="tag">Advanced</span><h3>18. What is the purpose of checkpointing?</h3><p>Checkpointing materializes an RDD to checkpoint storage and truncates long lineage, reducing recovery cost and scheduler complexity for iterative workflows.</p></div><div class="card"><span class="tag">Advanced</span><h3>19. What is data skew?</h3><p>Skew occurs when a few partitions contain much more work or data than others. Those tasks become stragglers while other executor slots sit idle.</p></div><div class="card"><span class="tag">Advanced</span><h3>20. When would you use treeAggregate or treeReduce?</h3><p>Use tree-based aggregation when merging many partition results into the driver would create a bottleneck. The multi-level tree distributes part of the merge work.</p></div></div>
+<div class="check"><button type="button" class="check-btn">Check yourself: Why is reduceByKey normally preferred to groupByKey for a sum?</button><div class="check-answer">Because <code>reduceByKey</code> can merge values within each source partition before the network shuffle, reducing transferred data and downstream memory usage.</div></div>
+</section>
+<section class="section-card" id="s18">
+<div class="section-title-row"><div><span class="eyebrow">Section 18</span><h2>Practice Quiz</h2></div><label class="prepared-label"><input type="checkbox" class="prepared" data-section="s18"> Mark as prepared</label></div>
+<p>Answer all 20 questions. Explanations appear only after submission.</p>
+<div class="quiz-shell"><div id="quizQuestions"></div><div class="quiz-actions"><button class="btn primary" id="submitQuiz" type="button">Submit Practice Quiz</button> <button class="btn" id="retryQuiz" type="button" hidden>Retry</button></div><div class="result-box" id="quizResult" aria-live="polite"></div></div>
+</section>
+<section class="section-card" id="s19">
+<div class="section-title-row"><div><span class="eyebrow">Section 19</span><h2>Formal Timed Exam</h2></div><label class="prepared-label"><input type="checkbox" class="prepared" data-section="s19"> Mark as prepared</label></div>
+<p>15 different questions • 15 minutes • 1 mark each • pass mark 60%. The questions remain locked until you press Start Test.</p>
+<div class="exam-shell"><div class="exam-top"><div class="exam-controls"><button class="btn primary" id="startExam" type="button">Start Test</button> <button class="btn" id="restartExam" type="button" hidden>Restart Exam</button></div><div class="timer" id="examTimer">15:00</div></div><div class="exam-locked" id="examLocked">Questions are locked. Press <b>Start Test</b> to begin.</div><div id="examQuestions" hidden></div><div class="exam-controls" id="examSubmitWrap" hidden><button class="btn primary" id="submitExam" type="button">Submit Formal Exam</button></div><div class="result-box" id="examResult" aria-live="polite"></div></div>
+</section>
+<section class="section-card" id="s20">
+<div class="section-title-row"><div><span class="eyebrow">Section 20</span><h2>Glossary, Summary and Certificate</h2></div><label class="prepared-label"><input type="checkbox" class="prepared" data-section="s20"> Mark as prepared</label></div>
+<h3>Glossary</h3><div class="three-col"><div class="card"><h3>Action</h3><p>An operation that triggers a Spark job and returns/writes a result.</p></div><div class="card"><h3>Accumulator</h3><p>A shared add-only variable used mainly for counters and diagnostics.</p></div><div class="card"><h3>Broadcast variable</h3><p>A read-only value efficiently cached on executors.</p></div><div class="card"><h3>Checkpoint</h3><p>A materialized copy used to truncate lineage.</p></div><div class="card"><h3>Closure</h3><p>The function and captured variables serialized to executors.</p></div><div class="card"><h3>DAG</h3><p>Directed acyclic graph of RDD dependencies.</p></div><div class="card"><h3>Driver</h3><p>The process coordinating the Spark application.</p></div><div class="card"><h3>Executor</h3><p>A worker process that runs tasks and stores cached data.</p></div><div class="card"><h3>Lineage</h3><p>The transformation recipe used to compute an RDD.</p></div><div class="card"><h3>Narrow dependency</h3><p>A child partition depends on a small number of parent partitions.</p></div><div class="card"><h3>Pair RDD</h3><p>An RDD whose records are key-value tuples.</p></div><div class="card"><h3>Partition</h3><p>A logical data slice processed by one task in a stage.</p></div><div class="card"><h3>Partitioner</h3><p>A rule that maps a key to a partition index.</p></div><div class="card"><h3>Persistence</h3><p>Keeping computed RDD partitions for reuse.</p></div><div class="card"><h3>RDD</h3><p>Resilient Distributed Dataset.</p></div><div class="card"><h3>Shuffle</h3><p>Redistribution of records across partitions.</p></div><div class="card"><h3>Stage</h3><p>A shuffle-bounded set of parallel tasks.</p></div><div class="card"><h3>Task</h3><p>The smallest scheduled work unit for one stage partition.</p></div><div class="card"><h3>Transformation</h3><p>A lazy operation returning a new RDD.</p></div><div class="card"><h3>Wide dependency</h3><p>A child partition depends on records from many parent partitions.</p></div></div>
+<h3>Final cheat list</h3><div class="two-col"><div class="card"><b>Create:</b> parallelize, range, textFile, wholeTextFiles, DataFrame.rdd.<br><b>Narrow:</b> map, flatMap, filter, mapPartitions.<br><b>Wide:</b> distinct, joins, reduceByKey, groupByKey, sort.</div><div class="card"><b>Actions:</b> count, take, collect, reduce, save.<br><b>Pair RDD:</b> reduceByKey, aggregateByKey, combineByKey, join.<br><b>Performance:</b> filter early, avoid groupByKey, inspect partitions, persist reused RDDs.</div></div>
+<div class="callout success"><strong>Final Memory Hook</strong><b>Create → Transform → Shuffle only when needed → Act safely → Persist reused work → Unpersist.</b></div>
+<h3>What to learn next</h3><p>Move next to DataFrames and Spark SQL, Catalyst physical plans, join strategies, Adaptive Query Execution, structured streaming, Spark UI performance analysis, and production deployment with <code>spark-submit</code>.</p>
+<div class="certificate"><h3>Certificate of Completion</h3><p>Enter your name after completing the sections, quiz, and exam.</p><input id="studentName" type="text" placeholder="Your name"><button class="btn primary" id="generateCertificate" type="button">Generate Certificate</button><div id="certificateOutput"></div></div>
+</section><div class="footer-note">Double-click one word in tutorial text to attach a personal note. Your note list appears in the Notes panel.</div>
+</main>
+
+<aside class="notes-panel" id="notesPanel" aria-label="Personal notes">
+  <div class="panel-head"><h2>📝 Word Notes</h2><p>Double-click one word in tutorial text. Click a note row to jump back to its word.</p><button class="btn danger" id="clearNotes" type="button">Clear all</button></div>
+  <div class="notes-list" id="notesList"></div>
+</aside>
+</div>
+<button class="mobile-panel-toggle" id="notesToggle" type="button">📝 Notes</button>
+
+<div class="note-popup" id="notePopup" role="dialog" aria-modal="false" aria-labelledby="notePopupLabel">
+  <label id="notePopupLabel" for="noteInput">Note for “<span id="popupWord"></span>”</label>
+  <input id="noteInput" type="text" maxlength="240" placeholder="Type a short note about this word">
+  <div class="popup-actions"><button id="deleteNotePopup" type="button">Delete</button><button id="cancelNote" type="button">Cancel</button><button id="saveNote" type="button">Save</button></div>
+</div>
+
+<script>
+(() => {
+'use strict';
+const KEYS={progress:'pythonRDDAllProgress',notes:'pythonRDDAllNotes',theme:'pythonRDDAllTheme',mute:'pythonRDDAllMute'};
+const memoryStore={};
+let storageAvailable=false;
+try{const k='__python_rdd_test__';localStorage.setItem(k,'1');const ok=localStorage.getItem(k)==='1';localStorage.removeItem(k);storageAvailable=ok;}catch(e){storageAvailable=false;}
+if(!storageAvailable) document.getElementById('storageHint').classList.add('show');
+function safeGet(key,fallback){try{if(storageAvailable){const raw=localStorage.getItem(key);return raw===null?fallback:JSON.parse(raw);}return Object.prototype.hasOwnProperty.call(memoryStore,key)?memoryStore[key]:fallback;}catch(e){return Object.prototype.hasOwnProperty.call(memoryStore,key)?memoryStore[key]:fallback;}}
+function safeSet(key,value){memoryStore[key]=value;try{if(storageAvailable)localStorage.setItem(key,JSON.stringify(value));}catch(e){storageAvailable=false;document.getElementById('storageHint').classList.add('show');}}
+function safeRemove(key){delete memoryStore[key];try{if(storageAvailable)localStorage.removeItem(key);}catch(e){storageAvailable=false;}}
+
+// Theme and sound
+let muted=!!safeGet(KEYS.mute,false);
+const muteToggle=document.getElementById('muteToggle');
+function refreshMute(){muteToggle.textContent=muted?'🔇 Muted':'🔊 Sound';muteToggle.setAttribute('aria-pressed',String(muted));}
+refreshMute();muteToggle.addEventListener('click',()=>{muted=!muted;safeSet(KEYS.mute,muted);refreshMute();});
+const savedTheme=safeGet(KEYS.theme,'light');document.documentElement.dataset.theme=savedTheme==='dark'?'dark':'light';
+const themeToggle=document.getElementById('themeToggle');
+function refreshTheme(){themeToggle.textContent=document.documentElement.dataset.theme==='dark'?'☀️ Light':'🌙 Dark';}
+refreshTheme();themeToggle.addEventListener('click',()=>{const next=document.documentElement.dataset.theme==='dark'?'light':'dark';document.documentElement.dataset.theme=next;safeSet(KEYS.theme,next);refreshTheme();});
+function playResultSound(pct){if(muted)return;try{const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;const ctx=new AC();const now=ctx.currentTime;const freqs=pct===100?[523,659,784,1047]:pct>=75?[523,659,784]:pct>=60?[440,554]:[330,294];freqs.forEach((f,i)=>{const osc=ctx.createOscillator(),gain=ctx.createGain();osc.type=pct<60?'sine':'triangle';osc.frequency.value=f;gain.gain.setValueAtTime(.0001,now+i*.12);gain.gain.exponentialRampToValueAtTime(.13,now+i*.12+.02);gain.gain.exponentialRampToValueAtTime(.0001,now+i*.12+.18);osc.connect(gain).connect(ctx.destination);osc.start(now+i*.12);osc.stop(now+i*.12+.2);});setTimeout(()=>ctx.close(),1200);}catch(e){}}
+function tier(pct){if(pct===100)return['🤩🎉','Perfect! Flawless run.'];if(pct>=90)return['😄','Excellent - interview-ready!'];if(pct>=75)return['🙂','Well done - solid grasp.'];if(pct>=60)return['😌','Good - revise the misses.'];return['💪','Needs focus - review & retry.'];}
+
+// Progress
+const checks=[...document.querySelectorAll('.prepared')];let progress=safeGet(KEYS.progress,{});if(!progress||typeof progress!=='object')progress={};
+checks.forEach(cb=>{cb.checked=!!progress[cb.dataset.section];cb.addEventListener('change',()=>{progress[cb.dataset.section]=cb.checked;safeSet(KEYS.progress,progress);updateProgress();});});
+function updateProgress(){const done=checks.filter(c=>c.checked).length;document.getElementById('progressText').textContent=`${done} / ${checks.length} prepared`;document.getElementById('progressFill').style.width=`${(done/checks.length)*100}%`;}
+updateProgress();document.getElementById('resetProgress').addEventListener('click',()=>{progress={};checks.forEach(c=>c.checked=false);safeRemove(KEYS.progress);updateProgress();});
+
+// TOC and active section
+const tocLinks=[...document.querySelectorAll('#tocNav a')];tocLinks.forEach(a=>a.addEventListener('click',e=>{e.preventDefault();const el=document.querySelector(a.getAttribute('href'));el&&el.scrollIntoView({behavior:'smooth',block:'start'});}));
+const io=new IntersectionObserver(entries=>{const visible=entries.filter(e=>e.isIntersecting).sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];if(!visible)return;tocLinks.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+visible.target.id));},{rootMargin:'-20% 0px -65% 0px',threshold:[0,.1,.5]});document.querySelectorAll('.section-card').forEach(s=>io.observe(s));
+
+// Check yourself and copy
+[...document.querySelectorAll('.check-btn')].forEach(btn=>btn.addEventListener('click',()=>{const a=btn.nextElementSibling;const open=a.classList.toggle('show');btn.setAttribute('aria-expanded',String(open));}));
+[...document.querySelectorAll('.copy-btn')].forEach(btn=>btn.addEventListener('click',async()=>{const text=btn.parentElement.querySelector('code').innerText;try{await navigator.clipboard.writeText(text);btn.textContent='Copied';setTimeout(()=>btn.textContent='Copy',1100);}catch(e){btn.textContent='Select manually';}}));
+
+// Quiz and exam data
+const quizData=[{"q":"Which operation creates an RDD from a Python list?","o":["collect","parallelize","reduce","persist"],"a":1,"e":"SparkContext.parallelize distributes an existing driver collection into partitions."},{"q":"Which operation can produce many outputs from one input?","o":["map","flatMap","first","fold"],"a":1,"e":"flatMap applies a function and flattens each returned iterable."},{"q":"Which operation is an action?","o":["filter","mapValues","count","repartition"],"a":2,"e":"count requests the number of records and triggers a job."},{"q":"What does union do with duplicate records?","o":["Always removes them","Keeps them","Raises an error","Keeps only keys"],"a":1,"e":"RDD union concatenates the two RDDs and retains duplicates."},{"q":"Which is normally better for summing values by key?","o":["groupByKey","reduceByKey","cartesian","zip"],"a":1,"e":"reduceByKey can combine values before shuffle and normally transfers less data."},{"q":"What does mapPartitions receive?","o":["One record","A partition iterator","Only a partition number","A DataFrame"],"a":1,"e":"mapPartitions calls the function once with an iterator for each partition."},{"q":"Which operation returns all records to the driver?","o":["collect","filter","map","coalesce"],"a":0,"e":"collect materializes the full RDD as a driver-side list."},{"q":"Which method changes only Pair RDD values while keeping keys?","o":["mapValues","keyBy","keys","groupBy"],"a":0,"e":"mapValues applies a function to each value and can preserve the partitioner."},{"q":"What does repartition always perform?","o":["Checkpoint","Full shuffle","Driver collection","Broadcast"],"a":1,"e":"repartition changes partition count through a shuffle to rebalance records."},{"q":"Which method is commonly used to reduce partitions without a full shuffle?","o":["coalesce","cartesian","distinct","join"],"a":0,"e":"coalesce normally combines existing partitions and is efficient for decreasing count."},{"q":"Which tool efficiently shares a large read-only lookup?","o":["Accumulator","Broadcast variable","collectAsMap only","Checkpoint"],"a":1,"e":"A broadcast variable caches a read-only value on executors."},{"q":"Why can an accumulator overcount?","o":["RDDs are mutable","Tasks can retry","It runs only on driver","It removes duplicates"],"a":1,"e":"Retried or speculative task attempts can repeat accumulator updates."},{"q":"What is the output of glom?","o":["One list per partition","One key per record","A DataFrame","Only partition counts"],"a":0,"e":"glom turns the records of each partition into a list, producing one list per partition."},{"q":"Which method can create an average with a different output type per key?","o":["aggregateByKey","distinct","subtract","first"],"a":0,"e":"aggregateByKey can accumulate values into a result type different from the input value type."},{"q":"Which action is safer for previewing a large RDD?","o":["collect","take(10)","collectAsMap","countByValue"],"a":1,"e":"take(10) returns only a bounded sample to the driver."},{"q":"Which operation removes records whose keys occur in another Pair RDD?","o":["subtractByKey","subtract","intersection","groupWith"],"a":0,"e":"subtractByKey retains pairs whose key does not appear in the other RDD."},{"q":"What does cache do immediately when called?","o":["Computes every partition","Marks the RDD for persistence","Writes a checkpoint","Collects to driver"],"a":1,"e":"cache marks the RDD; the first later action computes and stores partitions."},{"q":"Which method reveals recursive RDD dependencies?","o":["toDebugString","stats","lookup","id"],"a":0,"e":"toDebugString returns a textual lineage/dependency description."},{"q":"Which operation creates every possible pair between two RDDs?","o":["join","cartesian","zip","cogroup"],"a":1,"e":"cartesian creates the cross product and can become enormous."},{"q":"What must be true for zip?","o":["Both RDDs are cached","Same partitions and same per-partition record counts","Keys are unique","Both are Pair RDDs"],"a":1,"e":"zip pairs corresponding elements and requires compatible partition structures."}];
+const examData=[{"q":"Which creation method avoids building a huge driver list for a numeric sequence?","o":["sc.range","parallelize(list(range(...)))","collect","wholeTextFiles"],"a":0,"e":"sc.range creates the numeric range as a distributed RDD."},{"q":"Which statement about RDD transformations is correct?","o":["They mutate the original RDD","They are normally lazy and return new RDDs","They always return driver values","They cannot cause shuffle"],"a":1,"e":"RDDs are immutable; transformations define new lazy RDDs."},{"q":"Why is mapPartitions suitable for database writes?","o":["It guarantees exactly once","It can open one connection per partition","It runs on driver only","It removes retries"],"a":1,"e":"A partition function can initialize and reuse a connection for many rows, but writes must still be idempotent."},{"q":"Which Pair RDD operation is the generic foundation for custom aggregation?","o":["combineByKey","first","union","sample"],"a":0,"e":"combineByKey explicitly defines combiner creation and both merge operations."},{"q":"What does leftOuterJoin return for a missing right-side value?","o":["The left record is removed","The right value is None","An exception","Zero automatically"],"a":1,"e":"The left key remains and the optional right-side value is represented as None in PySpark."},{"q":"Which operation can retain an existing key partitioner?","o":["mapValues","map changing keys","distinct","cartesian"],"a":0,"e":"mapValues transforms values without changing keys and retains partitioning metadata."},{"q":"When does a cached RDD appear in the Storage tab?","o":["Immediately after cache()","After an action materializes it","Only after checkpoint","Never for RDDs"],"a":1,"e":"Persistence is lazy; an action must compute and store partitions."},{"q":"What is the key risk of localCheckpoint?","o":["It always collects data","It is not reliable durable storage","It forces one partition","It removes all transformations immediately"],"a":1,"e":"Local checkpoint uses executor storage and does not provide the same reliability as a durable checkpoint."},{"q":"Which method sorts records within newly partitioned key buckets?","o":["repartitionAndSortWithinPartitions","sortBy only","coalesce","groupWith"],"a":0,"e":"It applies a partitioner and sorts records by key inside each resulting partition."},{"q":"Why are non-associative functions unsafe in reduce?","o":["Spark may combine partial results in different orders","They use too few partitions","They always return strings","They disable lineage"],"a":0,"e":"Distributed reduction order is not fixed, so non-associative logic may return inconsistent results."},{"q":"Which action returns a partition-wise iterator to the driver?","o":["toLocalIterator","flatMapValues","partitionBy","glom"],"a":0,"e":"toLocalIterator yields records as partitions are fetched, reducing the need for one immediate full list."},{"q":"What is data skew?","o":["All partitions have equal size","A few partitions contain disproportionately heavy work","The driver has no SparkContext","RDD data is sorted"],"a":1,"e":"Skew creates long-running tasks and poor cluster utilization."},{"q":"Which method should be used for a fixed-size random driver sample?","o":["takeSample","sample only","randomSplit only","countApprox"],"a":0,"e":"takeSample returns a requested number of sampled elements to the driver."},{"q":"What does checkpoint primarily change after materialization?","o":["The programming language","The lineage root","The number of executors","The master URL"],"a":1,"e":"Checkpointed data becomes a new reliable lineage starting point."},{"q":"Which sentence is correct?","o":["collect is always safe","groupByKey is always faster","Filter early and aggregate before shuffle when possible","Accumulators guarantee exactly-once totals"],"a":2,"e":"Reducing rows and payload before wide operations normally improves shuffle performance."}];
+function renderQuestions(data,container,prefix){container.innerHTML=data.map((x,i)=>`<article class="question" data-index="${i}"><h4>${i+1}. ${x.q}</h4>${x.o.map((op,j)=>`<label class="option"><input type="radio" name="${prefix}${i}" value="${j}"> <span>${op}</span></label>`).join('')}<div class="explanation"></div><div class="print-answer"><b>Correct answer:</b> ${x.o[x.a]} — ${x.e}</div></article>`).join('');}
+function review(data,container,prefix){let score=0;[...container.querySelectorAll('.question')].forEach((qEl,i)=>{const picked=container.querySelector(`input[name="${prefix}${i}"]:checked`);const selected=picked?Number(picked.value):-1;const correct=selected===data[i].a;if(correct)score++;qEl.classList.add('reviewed',correct?'correct':'wrong');[...qEl.querySelectorAll('.option')].forEach((lab,j)=>{if(j===data[i].a)lab.classList.add('correct-answer');if(j===selected&&j!==data[i].a)lab.classList.add('user-wrong');lab.querySelector('input').disabled=true;});const userText=selected>=0?data[i].o[selected]:'Not answered';qEl.querySelector('.explanation').innerHTML=`<b>Your answer:</b> ${userText}<br><b>Correct answer:</b> ${data[i].o[data[i].a]}<br><b>Explanation:</b> ${data[i].e}`;});return score;}
+function resetReviewed(container){container.querySelectorAll('.question').forEach(q=>{q.classList.remove('reviewed','correct','wrong');q.querySelectorAll('.option').forEach(l=>l.classList.remove('correct-answer','user-wrong'));q.querySelectorAll('input').forEach(i=>{i.disabled=false;i.checked=false;});q.querySelector('.explanation').innerHTML='';});}
+const quizContainer=document.getElementById('quizQuestions');renderQuestions(quizData,quizContainer,'quiz');
+document.getElementById('submitQuiz').addEventListener('click',()=>{const score=review(quizData,quizContainer,'quiz');const pct=Math.round(score/quizData.length*100),[emoji,msg]=tier(pct);const box=document.getElementById('quizResult');box.classList.add('show');box.innerHTML=`<h3>${emoji} ${msg}</h3><p><b>Score:</b> ${score}/${quizData.length} (${pct}%)</p>`;document.getElementById('submitQuiz').hidden=true;document.getElementById('retryQuiz').hidden=false;playResultSound(pct);});
+document.getElementById('retryQuiz').addEventListener('click',()=>{resetReviewed(quizContainer);document.getElementById('quizResult').classList.remove('show');document.getElementById('quizResult').innerHTML='';document.getElementById('submitQuiz').hidden=false;document.getElementById('retryQuiz').hidden=true;});
+
+// Exam
+const examContainer=document.getElementById('examQuestions');renderQuestions(examData,examContainer,'exam');let examSeconds=900,examTimerId=null,examStarted=false,examSubmitted=false;
+function updateTimer(){const m=String(Math.floor(examSeconds/60)).padStart(2,'0'),s=String(examSeconds%60).padStart(2,'0');const el=document.getElementById('examTimer');el.textContent=`${m}:${s}`;el.classList.toggle('warning',examSeconds<=60);}
+function startExam(){examStarted=true;examSubmitted=false;examSeconds=900;updateTimer();document.getElementById('examLocked').hidden=true;examContainer.hidden=false;document.getElementById('examSubmitWrap').hidden=false;document.getElementById('startExam').hidden=true;document.getElementById('restartExam').hidden=true;document.getElementById('examResult').classList.remove('show');examTimerId=setInterval(()=>{examSeconds--;updateTimer();if(examSeconds<=0){clearInterval(examTimerId);submitExam(true);}},1000);}
+function submitExam(auto=false){if(!examStarted||examSubmitted)return;examSubmitted=true;clearInterval(examTimerId);const score=review(examData,examContainer,'exam');const pct=Math.round(score/examData.length*100),passed=pct>=60,[emoji,msg]=tier(pct);const box=document.getElementById('examResult');box.classList.add('show');box.innerHTML=`<h3>${emoji} ${msg}</h3><p><b>Marks:</b> ${score}/${examData.length}</p><p><b>Percentage:</b> ${pct}%</p><p><b>Result:</b> ${passed?'PASS':'FAIL'} (pass mark 60%)${auto?' — auto-submitted when time ended.':''}</p>`;document.getElementById('examSubmitWrap').hidden=true;document.getElementById('restartExam').hidden=false;playResultSound(pct);}
+function restartExam(){clearInterval(examTimerId);examStarted=false;examSubmitted=false;examSeconds=900;updateTimer();resetReviewed(examContainer);examContainer.hidden=true;document.getElementById('examLocked').hidden=false;document.getElementById('examSubmitWrap').hidden=true;document.getElementById('startExam').hidden=false;document.getElementById('restartExam').hidden=true;const box=document.getElementById('examResult');box.classList.remove('show');box.innerHTML='';}
+document.getElementById('startExam').addEventListener('click',startExam);document.getElementById('submitExam').addEventListener('click',()=>submitExam(false));document.getElementById('restartExam').addEventListener('click',restartExam);updateTimer();
+
+// Notes system
+let notes=safeGet(KEYS.notes,[]);if(!Array.isArray(notes))notes=[];
+let activeSpan=null,activeNote=null,newSpan=false;
+const popup=document.getElementById('notePopup'),noteInput=document.getElementById('noteInput'),popupWord=document.getElementById('popupWord'),deletePopup=document.getElementById('deleteNotePopup');
+function textNodesIn(section){const walker=document.createTreeWalker(section,NodeFilter.SHOW_TEXT,{acceptNode(node){const p=node.parentElement;if(!p||p.closest('script,style,button,a,input,textarea,label,.notes-panel,.toc,.quiz-shell,.exam-shell,.note-popup,.noted-word'))return NodeFilter.FILTER_REJECT;if(!node.nodeValue.trim())return NodeFilter.FILTER_REJECT;return NodeFilter.FILTER_ACCEPT;}});const arr=[];let n;while(n=walker.nextNode())arr.push(n);return arr;}
+function occurrenceIndex(section,word,targetNode,targetOffset){let count=0;const re=new RegExp(`\\b${word.replace(/[.*+?^${}()|[\\]\\\\]/g,'\\$&')}\\b`,'gi');for(const node of textNodesIn(section)){let m;while((m=re.exec(node.nodeValue))){if(node===targetNode&&m.index===targetOffset)return count;count++;}}return count;}
+function wrapOccurrence(note){if(document.querySelector(`.noted-word[data-note-id="${note.id}"]`))return;const section=document.getElementById(note.sectionId);if(!section)return;let count=0;const escaped=note.word.replace(/[.*+?^${}()|[\\]\\\\]/g,'\\$&');const re=new RegExp(`\\b${escaped}\\b`,'gi');for(const node of textNodesIn(section)){let m;while((m=re.exec(node.nodeValue))){if(count===Number(note.occurrenceIndex||0)){const range=document.createRange();range.setStart(node,m.index);range.setEnd(node,m.index+m[0].length);const span=document.createElement('span');span.className='noted-word';span.dataset.noteId=note.id;span.title=note.note||'Click to edit note';try{range.surroundContents(span);}catch(e){return;}return;}count++;}}}
+function restoreHighlights(){notes.forEach(wrapOccurrence);}
+function sectionInfo(el){const section=el.closest('.section-card');return{section,sectionId:section?section.id:'',sectionTitle:section?section.querySelector('h1,h2')?.textContent.trim()||section.id:''};}
+function positionPopup(span){const r=span.getBoundingClientRect();popup.classList.add('show');const w=popup.offsetWidth||320,h=popup.offsetHeight||160;let left=r.left,top=r.bottom+8;left=Math.max(12,Math.min(left,window.innerWidth-w-12));if(top+h>window.innerHeight-12)top=Math.max(12,r.top-h-8);top=Math.max(12,Math.min(top,window.innerHeight-h-12));popup.style.left=left+'px';popup.style.top=top+'px';}
+function openPopup(span,note,isNew=false){activeSpan=span;activeNote=note||null;newSpan=isNew;popupWord.textContent=span.textContent;noteInput.value=note?.note||'';deletePopup.style.display=note?'inline-block':'none';positionPopup(span);setTimeout(()=>noteInput.focus(),0);}
+function closePopup(removeUnsaved=false){popup.classList.remove('show');if(removeUnsaved&&newSpan&&activeSpan&&!activeNote){activeSpan.replaceWith(document.createTextNode(activeSpan.textContent));}activeSpan=null;activeNote=null;newSpan=false;window.getSelection()?.removeAllRanges();}
+function renderNotes(){const list=document.getElementById('notesList');if(!notes.length){list.innerHTML='<div class="note-empty">No notes yet. Double-click a single word in tutorial text.</div>';return;}list.innerHTML=notes.slice().sort((a,b)=>b.timestamp.localeCompare(a.timestamp)).map(n=>`<div class="note-row" data-note-id="${n.id}" tabindex="0"><div class="note-word">${escapeHtml(n.word)}</div><div>${escapeHtml(n.note||'(empty note)')}</div><div class="note-meta">${escapeHtml(n.sectionTitle)} • ${new Date(n.timestamp).toLocaleString()}</div><div class="note-actions"><button type="button" data-action="edit">Edit</button><button type="button" data-action="delete">Delete</button></div></div>`).join('');}
+function escapeHtml(s){return String(s).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));}
+function saveNotes(){safeSet(KEYS.notes,notes);renderNotes();}
+function deleteNote(id){notes=notes.filter(n=>n.id!==id);document.querySelectorAll(`.noted-word[data-note-id="${id}"]`).forEach(span=>span.replaceWith(document.createTextNode(span.textContent)));saveNotes();}
+document.getElementById('tutorialBody').addEventListener('dblclick',e=>{if(e.target.closest('button,a,input,textarea,label,.quiz-shell,.exam-shell,.check,.noted-word,pre,code'))return;const sel=window.getSelection();const word=sel?sel.toString().trim():'';if(!word||/\s/.test(word))return;const range=sel.getRangeAt(0);if(range.collapsed||range.startContainer!==range.endContainer)return;const info=sectionInfo(range.startContainer.parentElement);if(!info.section)return;const idx=occurrenceIndex(info.section,word,range.startContainer,range.startOffset);const span=document.createElement('span');span.className='noted-word';try{range.surroundContents(span);}catch(err){return;}span.dataset.temp='1';const draft={id:'n'+Date.now()+Math.random().toString(16).slice(2),word,note:'',sectionId:info.sectionId,sectionTitle:info.sectionTitle,timestamp:new Date().toISOString(),occurrenceIndex:idx};openPopup(span,draft,true);});
+document.getElementById('tutorialBody').addEventListener('click',e=>{const span=e.target.closest('.noted-word');if(!span)return;const note=notes.find(n=>n.id===span.dataset.noteId);if(note)openPopup(span,note,false);});
+document.getElementById('saveNote').addEventListener('click',()=>{if(!activeSpan||!activeNote)return;const text=noteInput.value.trim();const existing=notes.findIndex(n=>n.id===activeNote.id);activeNote.note=text;activeNote.timestamp=new Date().toISOString();if(existing>=0)notes[existing]=activeNote;else notes.push(activeNote);activeSpan.dataset.noteId=activeNote.id;delete activeSpan.dataset.temp;activeSpan.title=text||'Click to edit note';saveNotes();closePopup(false);});
+document.getElementById('cancelNote').addEventListener('click',()=>closePopup(true));deletePopup.addEventListener('click',()=>{if(activeNote)deleteNote(activeNote.id);closePopup(false);});
+noteInput.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();document.getElementById('saveNote').click();}if(e.key==='Escape')closePopup(true);});
+document.getElementById('notesList').addEventListener('click',e=>{const row=e.target.closest('.note-row');if(!row)return;const id=row.dataset.noteId;const action=e.target.dataset.action;if(action==='delete'){e.stopPropagation();deleteNote(id);return;}const note=notes.find(n=>n.id===id);let span=document.querySelector(`.noted-word[data-note-id="${id}"]`);if(!span&&note){wrapOccurrence(note);span=document.querySelector(`.noted-word[data-note-id="${id}"]`);}if(action==='edit'){e.stopPropagation();if(span&&note)openPopup(span,note,false);return;}if(span){const y=span.getBoundingClientRect().top+window.scrollY-(document.querySelector('.sticky-header').offsetHeight+18);window.scrollTo({top:y,behavior:'smooth'});span.classList.remove('flash');void span.offsetWidth;span.classList.add('flash');setTimeout(()=>span.classList.remove('flash'),1500);}});
+document.getElementById('notesList').addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.classList.contains('note-row')){e.preventDefault();e.target.click();}});
+document.getElementById('clearNotes').addEventListener('click',()=>{notes=[];document.querySelectorAll('.noted-word').forEach(span=>span.replaceWith(document.createTextNode(span.textContent)));safeRemove(KEYS.notes);renderNotes();});
+document.addEventListener('mousedown',e=>{if(popup.classList.contains('show')&&!e.target.closest('.note-popup')&&!e.target.closest('.noted-word'))closePopup(true);});
+restoreHighlights();renderNotes();
+
+
+// Certificate
+const certBtn=document.getElementById('generateCertificate');if(certBtn){certBtn.addEventListener('click',()=>{const name=document.getElementById('studentName').value.trim();const out=document.getElementById('certificateOutput');if(!name){out.innerHTML='<p>Please enter your name.</p>';return;}out.innerHTML=`<div class="certificate-paper"><div class="eyebrow">Certificate of Completion</div><h2>${escapeHtml(name)}</h2><p>has completed the <b>Python Practical RDD — Complete PySpark Operations</b> tutorial.</p><p>${new Date().toLocaleDateString()}</p></div>`;});}
+
+// Mobile notes panel
+const notesPanel=document.getElementById('notesPanel');document.getElementById('notesToggle').addEventListener('click',()=>notesPanel.classList.toggle('open'));
+
+// Sparkle trail, throttled and motion-aware
+const reduceMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches;let lastSpark=0;if(!reduceMotion){document.addEventListener('pointermove',e=>{const now=performance.now();if(now-lastSpark<70)return;lastSpark=now;const s=document.createElement('span');s.className='sparkle';s.textContent='✦';s.style.left=e.clientX+'px';s.style.top=e.clientY+'px';document.body.appendChild(s);setTimeout(()=>s.remove(),750);},{passive:true});}
+})();
+</script>
+</body>
+</html>
