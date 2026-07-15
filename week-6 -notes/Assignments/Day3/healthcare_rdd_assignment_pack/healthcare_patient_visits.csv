@@ -1,0 +1,35 @@
+visit_id,visit_date,patient_id,patient_name,age,city,department,doctor_id,visit_type,diagnosis,bill_amount,payment_status,rating
+V001,46204,P101,James Miller,34,New York,Cardiology,D201,OPD,Hypertension,1200,PAID,5
+V002,46204,P102,Emily Johnson,45,Los Angeles,Orthopedics,D202,OPD,Knee Pain,900,PAID,4
+V003,46205,P103,Michael Brown,29,Chicago,Dermatology,D203,OPD,Allergy,700,PAID,5
+V004,46205,P104,Sarah Davis,54,Houston,Cardiology,D201,Emergency,Chest Pain,4500,PENDING,3
+V005,46206,P105,Robert Wilson,62,Phoenix,Neurology,D204,Emergency,Stroke Symptoms,7200,PAID,4
+V006,46206,P106,Jessica Martinez,37,Philadelphia,General Medicine,D205,OPD,Fever,500,PAID,5
+V007,46207,P107,David Anderson,41,San Antonio,Orthopedics,D202,OPD,Back Pain,1100,CANCELLED,2
+V008,46207,P108,Ashley Thomas,26,San Diego,Dermatology,D203,OPD,Acne,650,PAID,4
+V009,46208,P109,Christopher Taylor,48,Dallas,Cardiology,D201,OPD,High BP,1400,PAID,5
+V010,46208,P110,Amanda Moore,33,San Jose,General Medicine,D205,OPD,Cold,450,PAID,4
+V011,46209,P111,Matthew Jackson,57,Austin,Neurology,D204,OPD,Migraine,2300,PAID,5
+V012,46209,P112,Megan White,39,Jacksonville,Orthopedics,D202,Emergency,Fracture,5200,PAID,4
+V013,46210,P113,Daniel Harris,44,Fort Worth,Cardiology,D201,OPD,Palpitations,1700,PAID,3
+V014,46210,P114,Lauren Martin,31,Columbus,Dermatology,D203,OPD,Rash,800,PENDING,4
+V015,46211,P115,Andrew Thompson,50,Charlotte,General Medicine,D205,OPD,Diabetes Review,1000,PAID,5
+V016,46211,P116,Nicole Garcia,28,San Francisco,Neurology,D204,OPD,Headache,1500,PAID,4
+V017,46212,P117,Joshua Martinez,46,Indianapolis,Orthopedics,D202,OPD,Shoulder Pain,1200,PAID,4
+V018,46212,P118,Rachel Robinson,35,Seattle,Cardiology,D201,Emergency,Shortness of Breath,6100,PAID,5
+V019,46213,P119,Kevin Clark,63,Denver,General Medicine,D205,OPD,Annual Checkup,750,PAID,5
+V020,46213,P120,Stephanie Lewis,42,Washington,Dermatology,D203,OPD,Eczema,950,PAID,4
+V021,46214,P121,Brian Lee,52,Boston,Neurology,D204,Emergency,Seizure,6800,PENDING,3
+V022,46214,P122,Heather Walker,24,Nashville,General Medicine,D205,OPD,Viral Fever,600,PAID,5
+V023,46215,P123,Jason Hall,38,Baltimore,Orthopedics,D202,OPD,Wrist Pain,850,PAID,4
+V024,46215,P124,Brittany Allen,47,Oklahoma City,Cardiology,D201,OPD,Cholesterol Review,1300,CANCELLED,2
+V025,46216,P125,Ryan Young,55,Las Vegas,Neurology,D204,OPD,Nerve Pain,2600,PAID,4
+V026,46216,P126,Kayla Hernandez,30,Portland,Dermatology,D203,OPD,Skin Infection,1000,PAID,5
+V027,46217,P127,Brandon King,49,Milwaukee,General Medicine,D205,OPD,Asthma Review,900,PAID,4
+V028,46217,P128,Olivia Wright,36,Albuquerque,Orthopedics,D202,Emergency,Sprain,3000,PAID,4
+V029,46218,P129,Justin Scott,58,Tucson,Cardiology,D201,OPD,Heart Review,2200,PAID,5
+V030,46218,P130,Samantha Green,27,Atlanta,General Medicine,D205,OPD,Food Poisoning,850,PAID,4
+V031,46219,P131,William Adams,0,Miami,Neurology,D204,OPD,Dizziness,1800,PAID,3
+V032,46219,P132,Elizabeth Baker,40,,Cardiology,D201,OPD,Hypertension,1500,PAID,4
+V033,46220,P133,Anthony Nelson,51,Minneapolis,Dermatology,D203,OPD,Psoriasis,-900,PAID,4
+V034,46220,P134,Victoria Carter,43,New Orleans,General Medicine,D205,OPD,Fever,700,UNKNOWN,5
