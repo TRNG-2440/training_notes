@@ -1,0 +1,6 @@
+hub_id,hub_city,region,manager,sla_target_pct
+HUB-CBE,Coimbatore,South,Meena,92.0
+HUB-CHE,Chennai,South,Arun,90.0
+HUB-HYD,Hyderabad,South-Central,Suresh,91.0
+HUB-BLR,Bengaluru,South,Divya,93.0
+HUB-PUN,Pune,West,Rahul,89.0

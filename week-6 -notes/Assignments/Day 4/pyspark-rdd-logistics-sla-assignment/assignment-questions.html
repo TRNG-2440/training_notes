@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PySpark RDD Assignment Questions</title>
+<style>
+body{font-family:Segoe UI,Arial,sans-serif;margin:0;background:#f5f7fa;color:#1f2937;line-height:1.6}
+header{background:linear-gradient(135deg,#17324d,#245d8f);color:white;padding:30px}
+main{max-width:1050px;margin:auto;padding:24px}
+.card{background:white;border:1px solid #ccd6e0;border-radius:12px;padding:20px;margin-bottom:18px;box-shadow:0 4px 14px rgba(0,0,0,.06)}
+h1,h2,h3{margin-top:0}
+.question{background:#eaf3ff;border-left:5px solid #245d8f;padding:14px;border-radius:8px}
+.answer{background:#e8f8ec;border-left:5px solid #218c4a;padding:14px;border-radius:8px}
+pre{background:#17202a;color:#f8f8f2;padding:16px;border-radius:8px;overflow:auto;white-space:pre-wrap}
+code{font-family:Consolas,monospace}
+.path{font-family:Consolas,monospace;background:#eef1f5;padding:2px 6px;border-radius:4px}
+footer{text-align:center;padding:20px;color:#5f6b76}
+</style>
+</head>
+<body>
+<header>
+<h1>PySpark RDD Assignment Questions</h1>
+<p>Logistics Delivery SLA Analysis</p>
+</header>
+<main>
+<section class="card">
+<h2>Business Requirement</h2>
+<p>Build a PySpark RDD pipeline that loads shipment-event and hub-master CSV files, validates rows, separates rejected events, calculates delivery SLA KPIs by hub, joins the result with hub master data, sorts the report, and saves final CSV files.</p>
+<p><strong>Input files:</strong> <span class="path">data/delivery_events.csv</span> and <span class="path">data/hub_master.csv</span></p>
+<p><strong>Output files:</strong></p>
+<p><span class="path">output/generated/hub_sla_report/hub_sla_report.csv</span></p>
+<p><span class="path">output/generated/rejected_delivery_events/rejected_delivery_events.csv</span></p>
+</section>
+<section class="card"><h3>Q1. Input path validation</h3><div class="question"><strong>Requirement:</strong> Before creating an RDD, check that `delivery_events.csv` and `hub_master.csv` exist. Raise a meaningful `FileNotFoundError` when a file is absent.</div></section><section class="card"><h3>Q2. Load data using RDDs</h3><div class="question"><strong>Requirement:</strong> Load both CSV files with `sc.textFile()`. Use at least two partitions and print the raw line count and header.</div></section><section class="card"><h3>Q3. Remove headers and blank rows</h3><div class="question"><strong>Requirement:</strong> Create data-only RDDs by removing the first header line and empty lines.</div></section><section class="card"><h3>Q4. Parse and validate events</h3><div class="question"><strong>Requirement:</strong> Use `mapPartitions()` to parse CSV rows and `map()` to classify each row as valid or rejected. Cache the classified RDD.</div></section><section class="card"><h3>Q5. Split valid and rejected records</h3><div class="question"><strong>Requirement:</strong> Create one RDD containing clean event dictionaries and another containing rejected rows and rejection reasons.</div></section><section class="card"><h3>Q6. Filter business-eligible records</h3><div class="question"><strong>Requirement:</strong> Only `DELIVERED` shipments are eligible for SLA reporting. Filter all other statuses.</div></section><section class="card"><h3>Q7. Create the Pair RDD</h3><div class="question"><strong>Requirement:</strong> Create `(hub_id, metrics)` where metrics are delivered count, on-time count, delay hours and delivery charge.</div></section><section class="card"><h3>Q8. Aggregate by hub</h3><div class="question"><strong>Requirement:</strong> Use `aggregateByKey()` to calculate hub-level totals.</div></section><section class="card"><h3>Q9. Load and prepare the master Pair RDD</h3><div class="question"><strong>Requirement:</strong> Load `hub_master.csv` and prepare `(hub_id, (city, region, manager, target))`.</div></section><section class="card"><h3>Q10. Join transactional and master data</h3><div class="question"><strong>Requirement:</strong> Perform an inner join on `hub_id` and explain why the key must match in both Pair RDDs.</div></section><section class="card"><h3>Q11. Calculate final KPIs</h3><div class="question"><strong>Requirement:</strong> Calculate on-time percentage, average delay, total charge, SLA gap and target status.</div></section><section class="card"><h3>Q12. Sort the final report</h3><div class="question"><strong>Requirement:</strong> Sort hubs by `on_time_pct` from highest to lowest.</div></section><section class="card"><h3>Q13. Save the required output files</h3><div class="question"><strong>Requirement:</strong> Save the final report and rejected records in the exact specified locations. Use Python `csv.writer` or `DictWriter` after collecting the final small result so it works on Windows without native Hadoop utilities.</div></section><section class="card"><h3>Q14. Reload and verify saved output</h3><div class="question"><strong>Requirement:</strong> Read both saved files after writing and print their contents.</div></section><section class="card"><h3>Q15. Reconciliation check</h3><div class="question"><strong>Requirement:</strong> Prove that no input records were silently lost.</div></section>
+</main>
+<footer>Questions Only</footer>
+</body>
+</html>
