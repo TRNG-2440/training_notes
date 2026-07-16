@@ -1,0 +1,11 @@
+RETAIL PAIR-RDD PIPELINE — EXPECTED RESULT
+
+Input rows: 20
+Valid rows: 18
+Rejected rows: 2
+Completed rows used for report: 15
+
+Category report:
+- Electronics: orders=5, units=8, revenue=204540.00, target=200000.00, achievement=102.27%
+- Fashion: orders=4, units=14, revenue=25420.00, target=30000.00, achievement=84.73%
+- Grocery: orders=6, units=71, revenue=9074.00, target=10000.00, achievement=90.74%

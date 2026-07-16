@@ -1,0 +1,4 @@
+category,department,manager,completed_orders,units_sold,net_revenue,average_order_value,monthly_target,achievement_pct
+Electronics,Digital,Anita,5,8,204540.0,40908.0,200000.0,102.27
+Fashion,Lifestyle,Rahul,4,14,25420.0,6355.0,30000.0,84.73
+Grocery,Daily Needs,Meena,6,71,9074.0,1512.33,10000.0,90.74

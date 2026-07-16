@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Complete Amazon EMR Spark cluster manager and data engineering tutorial with open NOAA dataset and hands-on reference application.">
+<title>AWS EMR Spark Cluster Manager — Data Engineering Tutorial</title>
+<style>
+:root{--bg:#f3f6fb;--panel:#fff;--panel2:#edf3fa;--text:#172033;--muted:#5d6c82;--brand:#6d28d9;--blue:#155eef;--green:#087443;--amber:#9a5b00;--red:#b42318;--border:#cbd7e6;--code:#0d1526;--code-text:#eaf1ff;--shadow:0 10px 28px rgba(20,42,78,.10);--header:72px}
+html[data-theme="dark"]{--bg:#0b1220;--panel:#111c2f;--panel2:#18263c;--text:#edf4ff;--muted:#b8c6da;--brand:#c4a2ff;--blue:#79a8ff;--green:#6ee7b7;--amber:#ffd37a;--red:#ff9b93;--border:#33465f;--code:#070c15;--shadow:0 12px 28px rgba(0,0,0,.32)}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:92px}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,Segoe UI,Arial,sans-serif;line-height:1.65}
+a{color:var(--blue);text-underline-offset:3px}code{font-family:Consolas,monospace;background:var(--panel2);color:var(--blue);padding:.08em .3em;border-radius:5px}
+header{position:fixed;top:0;left:295px;right:0;height:var(--header);z-index:50;background:color-mix(in srgb,var(--panel) 95%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 22px}
+header strong{color:var(--brand)}button{cursor:pointer;border:1px solid var(--border);background:var(--panel);color:var(--text);border-radius:9px;padding:8px 11px;font-weight:750}button:hover{box-shadow:0 5px 14px rgba(0,0,0,.12);transform:translateY(-1px)}
+aside{position:fixed;inset:0 auto 0 0;width:295px;background:linear-gradient(180deg,#241052,#10213f);color:#fff;padding:18px 14px;overflow:auto;z-index:60}
+aside h1{font-size:20px;line-height:1.2;margin:0 0 5px}aside p{font-size:12px;color:#d4dcff}#search{width:100%;border:0;border-radius:9px;padding:10px;margin:9px 0 12px}.nav-link{display:block;color:#edf2ff;text-decoration:none;padding:7px 9px;border-radius:8px;font-size:12.5px}.nav-link:hover,.nav-link.active{background:rgba(255,255,255,.14)}
+.progress-track{height:8px;background:rgba(255,255,255,.18);border-radius:999px;overflow:hidden}#progressBar{height:100%;width:0;background:linear-gradient(90deg,#34d399,#60a5fa);transition:.25s}#progressText{font-size:12px;color:#d4dcff;margin:5px 0 12px}
+main{margin-left:295px;padding:94px 24px 60px;max-width:1550px}.hero{background:linear-gradient(135deg,#6d28d9,#155eef);color:#fff;border-radius:20px;padding:32px;box-shadow:var(--shadow);margin-bottom:20px}.hero h1{font-size:clamp(2rem,4vw,3.4rem);line-height:1.05;margin:0 0 12px}.hero p{font-size:1.1rem;max-width:980px}.badge-row{display:flex;flex-wrap:wrap;gap:7px}.badge{background:rgba(255,255,255,.17);border:1px solid rgba(255,255,255,.25);padding:5px 9px;border-radius:999px;font-size:12px}
+.tutorial-section{background:var(--panel);border:1px solid var(--border);border-radius:18px;padding:clamp(18px,3vw,32px);margin:18px 0;box-shadow:var(--shadow);transition:.2s}.tutorial-section:hover{border-color:color-mix(in srgb,var(--brand) 55%,var(--border));transform:translateY(-1px)}.section-title{display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid var(--border);margin-bottom:18px}.section-title h2{margin:0 0 13px;color:var(--brand);font-size:clamp(1.4rem,2.7vw,2rem)}.eyebrow{color:var(--blue);font-weight:850;text-transform:uppercase;letter-spacing:.09em;font-size:.75rem}.complete-label{font-size:13px;color:var(--muted);white-space:nowrap}.complete-label input{width:18px;height:18px;accent-color:var(--green)}
+.lead{font-size:1.15rem;color:var(--muted)}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:13px}.grid.three{grid-template-columns:repeat(auto-fit,minmax(275px,1fr))}.grid.four{grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}.card{background:var(--panel2);border:1px solid var(--border);border-radius:13px;padding:15px}.card h3{margin-top:0;color:var(--blue)}.callout,.memory,.check{background:var(--panel2);border-left:5px solid var(--blue);border-radius:10px;padding:13px 15px;margin:16px 0}.callout.success{border-color:var(--green)}.callout.warning{border-color:var(--amber)}.callout.danger{border-color:var(--red)}.memory{border-color:var(--brand);font-size:1.05rem;font-weight:750}.check .answer{display:none;margin-top:8px}.check .answer.show{display:block}
+table{width:100%;border-collapse:collapse;display:block;overflow:auto;margin:15px 0}th,td{border:1px solid var(--border);padding:9px 10px;text-align:left;vertical-align:top}th{background:var(--panel2);color:var(--brand)}.steps li{margin:7px 0}.path{font-family:Consolas,monospace;background:var(--code);color:var(--code-text);border-radius:10px;padding:12px;overflow:auto}
+.diagram{background:linear-gradient(145deg,var(--panel2),var(--panel));border:1px solid var(--border);border-radius:15px;padding:17px;margin:22px 0;overflow:auto}.diagram figcaption{font-weight:850;color:var(--brand);margin-bottom:14px}.flow,.pipeline{display:flex;align-items:center;gap:9px;min-width:760px}.box,.pipe,.node,.aws-service,.s3{border:2px solid var(--blue);background:var(--panel);border-radius:12px;padding:13px;text-align:center;font-weight:750}.manager{border-color:var(--amber)}.executor,.core{border-color:var(--green)}.primary{border-color:var(--brand)}.task{border-color:var(--amber)}.workers,.node-row{display:flex;gap:8px}.arrow,.down{text-align:center;font-weight:900;color:var(--blue);min-width:70px}.emr-architecture{display:grid;gap:10px;justify-items:center}.node-row{width:100%;justify-content:center;flex-wrap:wrap}.node{min-width:220px}.s3{border-color:#0ea5e9;width:min(760px,100%)}.pipe{min-width:155px}.source{border-color:#0ea5e9}.clean{border-color:var(--green)}.aggregate{border-color:var(--amber)}.target{border-color:var(--brand)}.consumer-row{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;margin-top:12px}.consumer-row span{padding:5px 9px;border-radius:999px;background:var(--panel);border:1px solid var(--border)}.timeline{border-left:4px solid var(--blue);padding-left:18px}.timeline>div{margin:12px 0;background:var(--panel2);border-radius:10px;padding:11px}.timeline p{margin:4px 0}
+.code-wrap{position:relative;margin:14px 0}pre{margin:0;background:var(--code);color:var(--code-text);padding:44px 16px 16px;border-radius:12px;overflow:auto;border:1px solid #33415c;line-height:1.52}pre code{background:transparent;color:inherit;padding:0;font-size:12.5px}.copy-btn{position:absolute;right:9px;top:8px;background:#26354f;color:#fff;border-color:#536581;z-index:2}details{border:1px solid var(--border);border-radius:10px;margin:8px 0;background:var(--panel2)}summary{cursor:pointer;font-weight:800;color:var(--blue);padding:11px}details p{padding:0 12px 12px}.question{background:var(--panel2);border:1px solid var(--border);border-radius:11px;padding:12px;margin:10px 0}.question label{display:block;padding:3px}.result{font-weight:900;margin:12px 0}.exam-top{display:flex;align-items:center;gap:12px}#timer{font-family:Consolas,monospace;font-size:1.2rem;font-weight:900;background:var(--panel2);padding:6px 10px;border-radius:8px}#examForm.locked{opacity:.55;pointer-events:none}.sources li{margin:6px 0}
+#notePanel{position:fixed;right:16px;bottom:16px;width:min(350px,calc(100vw - 32px));max-height:45vh;overflow:auto;background:var(--panel);border:1px solid var(--border);border-radius:13px;padding:13px;box-shadow:var(--shadow);z-index:100;display:none}.note-item{border-bottom:1px solid var(--border);padding:8px 0;font-size:13px}.sparkle{position:fixed;pointer-events:none;z-index:9999;animation:spark .7s forwards}@keyframes spark{to{transform:translateY(-18px) scale(.2);opacity:0}}
+@media(max-width:900px){aside{position:relative;width:100%;max-height:410px}header{left:0;position:sticky}main{margin:0;padding:20px 12px 50px}.flow,.pipeline{min-width:650px}}
+@media print{aside,header,#notePanel,.copy-btn,.complete-label{display:none!important}main{margin:0;padding:0}.tutorial-section{box-shadow:none;break-inside:avoid}}
+</style>
+</head>
+<body>
+<aside>
+<h1>AWS EMR Spark Cluster Manager</h1>
+<p>Data Engineering Specialist Trainer Tutorial</p>
+<input id="search" placeholder="Search tutorial and code...">
+<div class="progress-track"><div id="progressBar"></div></div>
+<div id="progressText">0% prepared</div>
+<nav><a href="#s1" class="nav-link">1. Introduction, Purpose and Learning Outcomes</a>
+<a href="#s2" class="nav-link">2. What Is a Spark Cluster Manager?</a>
+<a href="#s3" class="nav-link">3. Amazon EMR Architecture and Node Types</a>
+<a href="#s4" class="nav-link">4. What Data Engineers Can Perform on EMR</a>
+<a href="#s5" class="nav-link">5. Prerequisites and Cluster Planning</a>
+<a href="#s6" class="nav-link">6. Create an EMR Spark Cluster — Console and CLI</a>
+<a href="#s7" class="nav-link">7. Reference Application and Open Dataset</a>
+<a href="#s8" class="nav-link">8. PySpark Application — Step-by-Step Explanation</a>
+<a href="#s9" class="nav-link">9. Submit, Monitor and Validate the Spark Job</a>
+<a href="#s10" class="nav-link">10. Scaling, Performance and Production Design</a>
+<a href="#s11" class="nav-link">11. Security, Governance and Cost Control</a>
+<a href="#s12" class="nav-link">12. Troubleshooting and Best Practices</a>
+<a href="#s13" class="nav-link">13. Practical Exercises, Interview Q&amp;A, Quiz and Timed Exam</a></nav>
+<p>Double-click selected text to add a personal note.</p>
+</aside>
+
+<header>
+<strong>Spark Cluster Manager → AWS EMR → Real-World PySpark Pipeline</strong>
+<div>
+<button onclick="toggleNotes()">Notes</button>
+<button onclick="toggleTheme()">Theme</button>
+<button onclick="window.print()">Print/PDF</button>
+</div>
+</header>
+
+<main>
+<div class="hero">
+<h1>Amazon EMR Spark Cluster: Complete Data Engineering Tutorial</h1>
+<p>Understand Spark cluster managers, create an EMR on EC2 cluster, process a public NOAA S3 dataset, write production-style outputs and operate the cluster safely.</p>
+<div class="badge-row"><span class="badge">EMR on EC2</span><span class="badge">YARN</span><span class="badge">Spark 3.5.6</span><span class="badge">PySpark</span><span class="badge">S3 Data Lake</span><span class="badge">NOAA Open Data</span><span class="badge">13 Sections</span></div>
+</div>
+<section id="s1" class="tutorial-section">
+    <div class="section-title"><div><span class="eyebrow">Section 1</span><h2>1. Introduction, Purpose and Learning Outcomes</h2></div>
+    <label class="complete-label"><input type="checkbox" class="complete" data-section="s1"> Prepared</label></div>
+    
+<p class="lead">A <strong>Spark cluster manager</strong> allocates CPU and memory resources to Spark applications and launches executors on worker machines. Amazon EMR is the managed AWS platform that provisions and operates big-data infrastructure. On an <strong>EMR on EC2</strong> Spark cluster, <strong>YARN</strong> normally performs the cluster-manager role.</p>
+
+<div class="callout success"><b>Most important distinction</b>
+Amazon EMR is the managed platform. YARN is the Spark cluster manager inside the EMR on EC2 cluster.
+</div>
+
+<div class="grid four">
+<div class="card"><h3>Understand</h3><p>Driver, executor, YARN ResourceManager, NodeManager, primary, core and task nodes.</p></div>
+<div class="card"><h3>Create</h3><p>An AWS EMR Spark cluster through the console and AWS CLI.</p></div>
+<div class="card"><h3>Implement</h3><p>A PySpark weather data-engineering pipeline using an open AWS S3 dataset.</p></div>
+<div class="card"><h3>Operate</h3><p>Submit, monitor, scale, troubleshoot and terminate the cluster safely.</p></div>
+</div>
+
+<h3>Purpose</h3>
+<ul>
+<li>Remove the burden of manually installing Hadoop, Spark, YARN and related services on many EC2 machines.</li>
+<li>Scale batch, SQL, streaming, data-lake and machine-learning workloads.</li>
+<li>Read data directly from Amazon S3 and write reusable Parquet outputs.</li>
+<li>Create transient clusters for scheduled workloads or long-running clusters for continuous processing.</li>
+</ul>
+
+<h3>Reference versions used in this tutorial</h3>
+<table>
+<tr><th>Component</th><th>Training reference</th><th>Production instruction</th></tr>
+<tr><td>Amazon EMR</td><td><code>emr-7.13.0</code></td><td>Use the latest organization-approved release available in your region.</td></tr>
+<tr><td>Apache Spark</td><td>3.5.6 Amazon EMR build</td><td>Validate application compatibility before upgrades.</td></tr>
+<tr><td>PySpark Python</td><td>Python 3.11 default for Spark/PySpark in this release</td><td>Pin dependency versions and test them.</td></tr>
+<tr><td>Dataset region</td><td><code>us-east-1</code></td><td>Use the same region for the lab to reduce cross-region complexity.</td></tr>
+</table>
+
+<div class="memory"><b>Memory aid:</b> EMR provisions → YARN allocates → Spark executes → S3 stores.</div>
+
+    </section>
+<section id="s2" class="tutorial-section">
+    <div class="section-title"><div><span class="eyebrow">Section 2</span><h2>2. What Is a Spark Cluster Manager?</h2></div>
+    <label class="complete-label"><input type="checkbox" class="complete" data-section="s2"> Prepared</label></div>
+    
+<p>When you call <code>spark-submit</code>, Spark needs machines on which to run the driver and executors. The cluster manager is the resource-allocation layer between the Spark application and the available compute infrastructure.</p>
+
+<h3>Main responsibilities</h3>
+<div class="grid">
+<div class="card"><h3>Resource allocation</h3><p>Assigns memory and CPU containers/pods/processes to an application.</p></div>
+<div class="card"><h3>Executor lifecycle</h3><p>Starts, monitors and removes executor processes.</p></div>
+<div class="card"><h3>Multi-tenancy</h3><p>Shares cluster capacity among multiple applications and queues.</p></div>
+<div class="card"><h3>Failure handling</h3><p>Reschedules failed containers and reports application state.</p></div>
+</div>
+
+<h3>Spark cluster-manager options</h3>
+<table>
+<tr><th>Option</th><th>Where it runs</th><th>Best use</th><th>Important note</th></tr>
+<tr><td>Local</td><td>Single computer</td><td>Development and training</td><td><code>local[4]</code> uses four local execution threads.</td></tr>
+<tr><td>Spark Standalone</td><td>Spark-managed worker cluster</td><td>Simple dedicated Spark infrastructure</td><td>Spark provides its own master and workers.</td></tr>
+<tr><td>YARN</td><td>Hadoop ecosystem</td><td>EMR on EC2, Hadoop data platforms</td><td>Typical Spark cluster manager on EMR on EC2.</td></tr>
+<tr><td>Kubernetes</td><td>Kubernetes cluster</td><td>Container-native Spark</td><td>Used for EMR on EKS or self-managed Spark on Kubernetes.</td></tr>
+</table>
+
+<figure class="diagram">
+<figcaption>Diagram 1 — Spark requests resources from a cluster manager</figcaption>
+<div class="flow">
+<div class="box driver">Spark Driver<br><small>DAG, jobs and stages</small></div>
+<div class="arrow">requests executors →</div>
+<div class="box manager">Cluster Manager<br><small>YARN / Kubernetes / Standalone</small></div>
+<div class="arrow">allocates resources →</div>
+<div class="workers">
+<div class="box executor">Executor 1<br><small>tasks + cache</small></div>
+<div class="box executor">Executor 2<br><small>tasks + cache</small></div>
+<div class="box executor">Executor 3<br><small>tasks + cache</small></div>
+</div>
+</div>
+</figure>
+
+<h3>YARN mapping on Amazon EMR</h3>
+<table>
+<tr><th>YARN component</th><th>Role</th><th>Spark relationship</th></tr>
+<tr><td>ResourceManager</td><td>Cluster-wide scheduler</td><td>Accepts the Spark application and allocates containers.</td></tr>
+<tr><td>NodeManager</td><td>Runs on worker nodes</td><td>Launches and monitors containers used by Spark.</td></tr>
+<tr><td>ApplicationMaster</td><td>Coordinates one YARN application</td><td>Negotiates resources for the Spark application.</td></tr>
+<tr><td>Container</td><td>Allocated CPU and memory</td><td>Hosts driver or executor processes depending on deploy mode.</td></tr>
+</table>
+
+<div class="check"><button class="reveal">Check yourself: Is Amazon EMR itself the YARN ResourceManager?</button><div class="answer">No. Amazon EMR is the managed AWS service. It installs and operates applications such as YARN and Spark on the cluster.</div></div>
+
+    </section>
+<section id="s3" class="tutorial-section">
+    <div class="section-title"><div><span class="eyebrow">Section 3</span><h2>3. Amazon EMR Architecture and Node Types</h2></div>
+    <label class="complete-label"><input type="checkbox" class="complete" data-section="s3"> Prepared</label></div>
+    
+<p>Amazon EMR on EC2 creates a managed cluster from EC2 instances. The three logical node types are primary, core and task.</p>
+
+<figure class="diagram">
+<figcaption>Diagram 2 — EMR on EC2 Spark architecture</figcaption>
+<div class="emr-architecture">
+<div class="aws-service">Amazon EMR Control Plane<br><small>provisioning, configuration, scaling, health</small></div>
+<div class="down">↓</div>
+<div class="node primary"><b>Primary node</b><br>YARN ResourceManager<br>HDFS NameNode<br>Spark history/services<br>step coordination</div>
+<div class="down">↓ manages and schedules ↓</div>
+<div class="node-row">
+<div class="node core"><b>Core node 1</b><br>YARN NodeManager<br>HDFS DataNode<br>Spark executors</div>
+<div class="node core"><b>Core node 2</b><br>YARN NodeManager<br>HDFS DataNode<br>Spark executors</div>
+<div class="node task"><b>Task node</b><br>YARN NodeManager<br>Spark executors<br>No HDFS DataNode storage</div>
+</div>
+<div class="s3">Amazon S3 / EMRFS<br><small>durable source, output, logs and data lake</small></div>
+</div>
+</figure>
+
+<table>
+<tr><th>Node</th><th>Main responsibility</th><th>Data-engineering guidance</th></tr>
+<tr><td>Primary</td><td>Coordinates the cluster and runs management daemons.</td><td>Use On-Demand for stability. Production HA can use three primary nodes where supported.</td></tr>
+<tr><td>Core</td><td>Runs compute and HDFS storage.</td><td>Use stable capacity because removing a core node can affect HDFS blocks and application masters.</td></tr>
+<tr><td>Task</td><td>Adds compute without HDFS DataNode storage.</td><td>Good candidate for elastic and Spot capacity for fault-tolerant workloads.</td></tr>
+</table>
+
+<h3>Spark execution inside the cluster</h3>
+<ol class="steps">
+<li>A Spark step is submitted to EMR.</li>
+<li><code>spark-submit</code> submits the application to YARN.</li>
+<li>The driver creates a logical plan and DAG.</li>
+<li>YARN allocates executor containers on core/task nodes.</li>
+<li>Executors read S3 data through EMRFS, process partitions and shuffle when required.</li>
+<li>Executors write Parquet/CSV output back to S3.</li>
+<li>Logs and application status are available through EMR, YARN and Spark interfaces.</li>
+</ol>
+
+<h3>EMR deployment choices</h3>
+<table>
+<tr><th>Deployment</th><th>Infrastructure control</th><th>When to choose</th></tr>
+<tr><td>EMR on EC2</td><td>Highest cluster-level control</td><td>Custom networking, long-running clusters, specific instance types, HDFS or custom software.</td></tr>
+<tr><td>EMR Serverless</td><td>No cluster management</td><td>Job-oriented Spark/Hive when you do not want to plan nodes.</td></tr>
+<tr><td>EMR on EKS</td><td>Kubernetes-native</td><td>Organizations already standardised on EKS.</td></tr>
+</table>
+
+    </section>
+<section id="s4" class="tutorial-section">
+    <div class="section-title"><div><span class="eyebrow">Section 4</span><h2>4. What Data Engineers Can Perform on EMR</h2></div>
+    <label class="complete-label"><input type="checkbox" class="complete" data-section="s4"> Prepared</label></div>
+    
+<p>EMR is not limited to one batch job. It can support multiple data-engineering patterns using Spark, Hive, Trino, Flink, Iceberg, Hudi, Delta and other applications available in the selected EMR release.</p>
+
+<div class="grid three">
+<div class="card"><h3>Batch ETL/ELT</h3><p>Read JSON/CSV/logs from S3, clean, join, aggregate and write Parquet.</p><b>Example:</b> Daily retail sales consolidation.</div>
+<div class="card"><h3>Data-lake tables</h3><p>Build curated Iceberg, Hudi or Delta tables.</p><b>Example:</b> Incremental customer-order lakehouse.</div>
+<div class="card"><h3>SQL analytics</h3><p>Run Spark SQL, Hive or Trino over S3 data.</p><b>Example:</b> Ad-hoc product profitability queries.</div>
+<div class="card"><h3>Streaming</h3><p>Use Spark Structured Streaming or Flink with Kinesis/Kafka connectors.</p><b>Example:</b> Near-real-time payment anomaly features.</div>
+<div class="card"><h3>Backfills</h3><p>Temporarily create large clusters to reprocess historical partitions.</p><b>Example:</b> Rebuild five years of clickstream facts.</div>
+<div class="card"><h3>ML feature engineering</h3><p>Create large feature datasets before model training.</p><b>Example:</b> Customer churn features from usage events.</div>
+<div class="card"><h3>Data quality</h3><p>Profile counts, nulls, duplicates, ranges and schema drift.</p><b>Example:</b> Quarantine invalid sensor measurements.</div>
+<div class="card"><h3>Database movement</h3><p>Use JDBC to read/write supported databases with careful partitioning.</p><b>Example:</b> RDS extraction into S3 Parquet.</div>
+<div class="card"><h3>Interactive development</h3><p>Attach EMR Studio Workspaces and use Jupyter/JupyterLab.</p><b>Example:</b> Explore a new data source before productionising it.</div>
+</div>
+
+<h3>Real-world architecture examples</h3>
+<table>
+<tr><th>Industry</th><th>Sources</th><th>EMR work</th><th>Targets</th></tr>
+<tr><td>Retail</td><td>POS, e-commerce, inventory</td><td>Deduplicate orders, enrich products, calculate daily facts</td><td>S3/Iceberg, Redshift, dashboards</td></tr>
+<tr><td>Banking</td><td>Transactions, account master, fraud events</td><td>Tokenisation, rule features, partitioned aggregates</td><td>Curated lake, ML feature store</td></tr>
+<tr><td>Telecom</td><td>Call-detail records and network logs</td><td>Sessionisation, usage aggregation, anomaly data</td><td>S3 Parquet, Athena, alerts</td></tr>
+<tr><td>Manufacturing</td><td>IoT telemetry, maintenance records</td><td>Time-window features and quality checks</td><td>Lakehouse, predictive-maintenance models</td></tr>
+<tr><td>Climate/insurance</td><td>Weather and claims</td><td>Station summaries and risk features</td><td>Analytics tables and models</td></tr>
+</table>
+
+<div class="callout"><b>Best abstraction:</b> Use Spark DataFrames and Spark SQL for most structured data-engineering workloads. Use RDDs only when low-level custom processing is genuinely necessary.</div>
+
+    </section>
+<section id="s5" class="tutorial-section">
+    <div class="section-title"><div><span class="eyebrow">Section 5</span><h2>5. Prerequisites and Cluster Planning</h2></div>
+    <label class="complete-label"><input type="checkbox" class="complete" data-section="s5"> Prepared</label></div>
+    
+<h3>AWS resources required</h3>
+<ul>
+<li>An AWS account and an IAM identity allowed to use EMR, EC2, S3 and <code>iam:PassRole</code>.</li>
+<li>A project S3 bucket for application code, output and logs.</li>
+<li>A VPC and subnet with S3 access through internet/NAT or an S3 VPC endpoint.</li>
+<li>An EC2 key pair only when SSH access is required.</li>
+<li>An EMR service role and an EC2 instance-profile role.</li>
+</ul>
+
+<h3>Role purpose</h3>
+<table>
+<tr><th>Role</th><th>Used by</th><th>Purpose</th></tr>
+<tr><td>EMR service role</td><td>Amazon EMR service</td><td>Creates and manages EC2, security groups and related resources.</td></tr>
+<tr><td>EC2 instance profile</td><td>Cluster EC2 instances and applications</td><td>Accesses S3 input, code, output, logs and permitted AWS services.</td></tr>
+<tr><td>Runtime role, when configured</td><td>Specific EMR step/user</td><td>Fine-grained per-job or per-user permissions.</td></tr>
+</table>
+
+<div class="callout warning"><b>Current IAM guidance:</b> Default roles simplify a lab, but AWS notes that the old managed policy associated with <code>EMR_EC2_DefaultRole</code> is nearing end of support. Use custom least-privilege roles for production.</div>
+
+<h3>Training cluster design</h3>
+<table>
+<tr><th>Setting</th><th>Lab choice</th><th>Why</th></tr>
+<tr><td>Region</td><td><code>us-east-1</code></td><td>The NOAA public bucket is in that region.</td></tr>
+<tr><td>Release</td><td><code>emr-7.13.0</code></td><td>Reproducible current training reference.</td></tr>
+<tr><td>Applications</td><td>Hadoop, Spark, Hive</td><td>YARN, Spark processing and SQL support.</td></tr>
+<tr><td>Primary</td><td>1 × <code>m5.xlarge</code> On-Demand</td><td>Simple classroom cluster.</td></tr>
+<tr><td>Core</td><td>2 × <code>m5.xlarge</code> On-Demand</td><td>Parallel compute and HDFS capability.</td></tr>
+<tr><td>Task</td><td>None initially</td><td>Add later to demonstrate scaling/Spot.</td></tr>
+<tr><td>Idle termination</td><td>30 minutes</td><td>Reduces accidental cost.</td></tr>
+<tr><td>Durable storage</td><td>S3</td><td>Survives cluster termination.</td></tr>
+</table>
+
+<h3>Environment template</h3>
+<div class="code-wrap"><button class="copy-btn">Copy</button><pre><code data-lang="bash"># Copy to config/env.sh and replace the placeholders.
+export AWS_REGION=&quot;us-east-1&quot;
+export PROJECT_BUCKET=&quot;replace-with-your-unique-s3-bucket&quot;
+export SUBNET_ID=&quot;subnet-xxxxxxxx&quot;
+export KEY_PAIR_NAME=&quot;replace-with-your-ec2-key-pair&quot;
+export EMR_RELEASE=&quot;emr-7.13.0&quot;
+export EMR_SERVICE_ROLE=&quot;EMR_DefaultRole_V2&quot;
+export EMR_EC2_INSTANCE_PROFILE=&quot;EMR_EC2_DefaultRole&quot;
+export PRIMARY_INSTANCE_TYPE=&quot;m5.xlarge&quot;
+export CORE_INSTANCE_TYPE=&quot;m5.xlarge&quot;
+export CORE_INSTANCE_COUNT=&quot;2&quot;
+export IDLE_TIMEOUT_SECONDS=&quot;1800&quot;
+</code></pre></div>
+
+<h3>Network security checklist</h3>
+<ul>
+<li>Never open SSH port 22 to <code>0.0.0.0/0</code>.</li>
+<li>Allow SSH only from your current IP when required.</li>
+<li>Prefer private subnets for production clusters.</li>
+<li>Use S3 gateway endpoints when appropriate.</li>
+<li>Encrypt logs and data in S3.</li>
+<li>Restrict S3 policy resources to required buckets and prefixes.</li>
+</ul>
+
+    </section>
+<section id="s6" class="tutorial-section">
+    <div class="section-title"><div><span class="eyebrow">Section 6</span><h2>6. Create an EMR Spark Cluster — Console and CLI</h2></div>
+    <label class="complete-label"><input type="checkbox" class="complete" data-section="s6"> Prepared</label></div>
+    
+<h3>Console procedure</h3>
+<ol class="steps">
+<li>Open the AWS console and select the intended region.</li>
+<li>Open <b>Amazon EMR → EMR on EC2 → Clusters → Create cluster</b>.</li>
+<li>Enter the cluster name <code>weather-data-engineering-emr</code>.</li>
+<li>Select the approved EMR release; this lab references <code>emr-7.13.0</code>.</li>
+<li>Select Hadoop, Spark and Hive.</li>
+<li>Select <b>Instance groups</b>.</li>
+<li>Choose one primary and two core instances.</li>
+<li>Select the VPC and subnet.</li>
+<li>Configure the EC2 key pair only when SSH is required.</li>
+<li>Set the S3 log URI.</li>
+<li>Enable an idle auto-termination policy.</li>
+<li>Select the EMR service role and EC2 instance profile.</li>
+<li>Add project/environment tags.</li>
+<li>Choose <b>Create cluster</b> and wait for <code>WAITING</code>.</li>
+</ol>
+
+<h3>AWS CLI procedure</h3>
+<p>Copy <code>config/env.example</code> to <code>config/env.sh</code>, replace placeholders, and run the supplied script.</p>
+<div class="code-wrap"><button class="copy-btn">Copy</button><pre><code data-lang="bash">#!/usr/bin/env bash
+set -euo pipefail
+
+source &quot;${1:-config/env.sh}&quot;
+
+if [[ &quot;$PROJECT_BUCKET&quot; == replace-* ]]; then
+  echo &quot;Update config/env.sh before running.&quot;
+  exit 1
+fi
+
+EC2_ATTRIBUTES=&quot;InstanceProfile=${EMR_EC2_INSTANCE_PROFILE},SubnetId=${SUBNET_ID}&quot;
+if [[ -n &quot;${KEY_PAIR_NAME:-}&quot; ]]; then
+  EC2_ATTRIBUTES=&quot;${EC2_ATTRIBUTES},KeyName=${KEY_PAIR_NAME}&quot;
+fi
+
+CLUSTER_ID=$(aws emr create-cluster \
+  --region &quot;$AWS_REGION&quot; \
+  --name &quot;weather-data-engineering-emr&quot; \
+  --release-label &quot;$EMR_RELEASE&quot; \
+  --applications Name=Hadoop Name=Spark Name=Hive \
+  --service-role &quot;$EMR_SERVICE_ROLE&quot; \
+  --ec2-attributes &quot;$EC2_ATTRIBUTES&quot; \
+  --instance-groups \
+    &quot;InstanceGroupType=MASTER,Name=Primary,InstanceType=${PRIMARY_INSTANCE_TYPE},InstanceCount=1,Market=ON_DEMAND&quot; \
+    &quot;InstanceGroupType=CORE,Name=Core,InstanceType=${CORE_INSTANCE_TYPE},InstanceCount=${CORE_INSTANCE_COUNT},Market=ON_DEMAND&quot; \
+  --log-uri &quot;s3://${PROJECT_BUCKET}/emr-logs/&quot; \
+  --auto-termination-policy &quot;IdleTimeout=${IDLE_TIMEOUT_SECONDS}&quot; \
+  --tags Project=WeatherEMRDemo Environment=Training \
+  --query &quot;ClusterId&quot; \
+  --output text)
+
+echo &quot;$CLUSTER_ID&quot; | tee .cluster-id
+echo &quot;Cluster created: $CLUSTER_ID&quot;
+echo &quot;Wait until state is WAITING before submitting the job.&quot;
+</code></pre></div>
+
+<h3>What the command creates</h3>
+<div class="grid">
+<div class="card"><h3>Applications</h3><p>Hadoop, Spark and Hive.</p></div>
+<div class="card"><h3>Instances</h3><p>One primary and two core nodes.</p></div>
+<div class="card"><h3>Logging</h3><p>Cluster and step logs archived under the project S3 bucket.</p></div>
+<div class="card"><h3>Cleanup</h3><p>Idle auto-termination after the configured timeout.</p></div>
+</div>
+
+<div class="callout danger"><b>Cost warning:</b> EMR on EC2 charges include EMR and EC2 usage, with possible additional S3, EBS, transfer and logging costs. Terminate training clusters promptly.</div>
+
+<h3>Validate cluster state</h3>
+<div class="code-wrap"><button class="copy-btn">Copy</button><pre><code data-lang="bash">aws emr describe-cluster \
+  --region us-east-1 \
+  --cluster-id &quot;$(cat .cluster-id)&quot; \
+  --query &quot;Cluster.Status.State&quot; \
+  --output text</code></pre></div>
+
+    </section>
+<section id="s7" class="tutorial-section">
+    <div class="section-title"><div><span class="eyebrow">Section 7</span><h2>7. Reference Application and Open Dataset</h2></div>
+    <label class="complete-label"><input type="checkbox" class="complete" data-section="s7"> Prepared</label></div>
+    
+<h3>Business scenario</h3>
+<p>A climate-risk data-engineering team receives global daily weather observations. Analysts require cleaned Celsius temperatures, precipitation values, station/year summaries and quality metrics in S3.</p>
+
+<h3>Open dataset</h3>
+<p>The reference application reads the <strong>NOAA Global Surface Summary of Day</strong> dataset from the Registry of Open Data on AWS:</p>
+<div class="path">s3://noaa-gsod-pds/</div>
+<p>The lab uses the small historical prefix:</p>
+<div class="path">s3://noaa-gsod-pds/1929/</div>
+
+<table>
+<tr><th>Field</th><th>Meaning</th><th>Transformation</th></tr>
+<tr><td><code>STATION</code></td><td>Weather station identifier</td><td>Used as aggregation key.</td></tr>
+<tr><td><code>DATE</code></td><td>Observation date</td><td>Converted to date and year.</td></tr>
+<tr><td><code>TEMP</code></td><td>Mean Fahrenheit temperature</td><td>Sentinel cleaned and converted to Celsius.</td></tr>
+<tr><td><code>MAX</code>/<code>MIN</code></td><td>Daily extremes</td><td>Converted to Celsius.</td></tr>
+<tr><td><code>PRCP</code></td><td>Precipitation</td><td>Missing sentinel converted to null.</td></tr>
+<tr><td><code>WDSP</code></td><td>Wind speed</td><td>Average calculated by station.</td></tr>
+</table>
+
+<figure class="diagram">
+<figcaption>Diagram 3 — Reference data-engineering pipeline</figcaption>
+<div class="pipeline">
+<div class="pipe source">NOAA Open S3<br><small>raw CSV files</small></div>
+<div class="arrow">→</div>
+<div class="pipe ingest">Spark read<br><small>schema and permissive mode</small></div>
+<div class="arrow">→</div>
+<div class="pipe clean">Clean/standardise<br><small>dates, sentinels, Celsius</small></div>
+<div class="arrow">→</div>
+<div class="pipe aggregate">Aggregate<br><small>station/year KPIs</small></div>
+<div class="arrow">→</div>
+<div class="pipe target">Project S3<br><small>Parquet + CSV + quality</small></div>
+</div>
+<div class="consumer-row">
+<span>Athena</span><span>Glue Catalog</span><span>Redshift Spectrum</span><span>QuickSight</span><span>SageMaker</span>
+</div>
+</figure>
+
+<h3>Outputs</h3>
+<ul>
+<li><code>cleaned_daily/</code> — Parquet partitioned by year.</li>
+<li><code>station_summary/</code> — station/year summary in Parquet.</li>
+<li><code>station_summary_csv/</code> — CSV version for manual review.</li>
+<li><code>quality_metrics/</code> — record-level quality counts.</li>
+</ul>
+
+<div class="callout"><b>Local dataset included:</b> The ZIP contains a trainer-generated schema-compatible miniature CSV for a local smoke test. It is not represented as original NOAA data.</div>
+
+    </section>
+<section id="s8" class="tutorial-section">
+    <div class="section-title"><div><span class="eyebrow">Section 8</span><h2>8. PySpark Application — Step-by-Step Explanation</h2></div>
+    <label class="complete-label"><input type="checkbox" class="complete" data-section="s8"> Prepared</label></div>
+    
+<h3>Complete application</h3>
+<div class="code-wrap"><button class="copy-btn">Copy</button><pre><code data-lang="python">&quot;&quot;&quot;
+NOAA GSOD weather analytics reference application for Amazon EMR.
+
+The default input uses the public NOAA Global Surface Summary of Day
+bucket in the Registry of Open Data on AWS. For a low-cost lab, the
+example uses the 1929 prefix, which is much smaller than modern years.
+
+EMR example:
+  spark-submit weather_emr_pipeline.py \
+    --input s3://noaa-gsod-pds/1929/ \
+    --output s3://YOUR-BUCKET/emr-weather-demo/output/run-001/
+
+Local smoke test:
+  spark-submit weather_emr_pipeline.py \
+    --input file:///absolute/path/sample_weather_gsod_compatible.csv \
+    --output file:///absolute/path/output/
+&quot;&quot;&quot;
+
+from __future__ import annotations
+
+import argparse
+from typing import Optional
+
+from pyspark.sql import DataFrame, SparkSession
+from pyspark.sql import functions as F
+from pyspark.sql.types import DoubleType
+
+
+def parse_args() -&gt; argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description=&quot;Clean and aggregate NOAA GSOD weather data.&quot;
+    )
+    parser.add_argument(
+        &quot;--input&quot;,
+        default=&quot;s3://noaa-gsod-pds/1929/&quot;,
+        help=&quot;Input CSV path or prefix.&quot;,
+    )
+    parser.add_argument(
+        &quot;--output&quot;,
+        required=True,
+        help=&quot;Output root, normally an S3 URI.&quot;,
+    )
+    parser.add_argument(
+        &quot;--year&quot;,
+        type=int,
+        default=None,
+        help=&quot;Optional year filter after parsing DATE.&quot;,
+    )
+    parser.add_argument(
+        &quot;--shuffle-partitions&quot;,
+        type=int,
+        default=24,
+        help=&quot;Spark SQL shuffle partition count for this job.&quot;,
+    )
+    return parser.parse_args()
+
+
+def valid_numeric(column: str, missing_value: float) -&gt; F.Column:
+    &quot;&quot;&quot;Cast a GSOD numeric field and convert its sentinel to NULL.&quot;&quot;&quot;
+    value = F.col(column).cast(DoubleType())
+    return F.when(value == F.lit(missing_value), F.lit(None)).otherwise(value)
+
+
+def fahrenheit_to_celsius(column: F.Column) -&gt; F.Column:
+    return F.round((column - F.lit(32.0)) * F.lit(5.0 / 9.0), 2)
+
+
+def build_clean_daily(raw: DataFrame, year: Optional[int]) -&gt; DataFrame:
+    cleaned = (
+        raw
+        .withColumn(&quot;observation_date&quot;, F.to_date(&quot;DATE&quot;))
+        .withColumn(&quot;year&quot;, F.year(&quot;observation_date&quot;))
+        .withColumn(&quot;temp_f&quot;, valid_numeric(&quot;TEMP&quot;, 9999.9))
+        .withColumn(&quot;max_temp_f&quot;, valid_numeric(&quot;MAX&quot;, 9999.9))
+        .withColumn(&quot;min_temp_f&quot;, valid_numeric(&quot;MIN&quot;, 9999.9))
+        .withColumn(&quot;precipitation_in&quot;, valid_numeric(&quot;PRCP&quot;, 99.99))
+        .withColumn(&quot;wind_speed_knots&quot;, valid_numeric(&quot;WDSP&quot;, 999.9))
+        .withColumn(&quot;temp_c&quot;, fahrenheit_to_celsius(F.col(&quot;temp_f&quot;)))
+        .withColumn(
+            &quot;max_temp_c&quot;,
+            fahrenheit_to_celsius(F.col(&quot;max_temp_f&quot;)),
+        )
+        .withColumn(
+            &quot;min_temp_c&quot;,
+            fahrenheit_to_celsius(F.col(&quot;min_temp_f&quot;)),
+        )
+        .select(
+            F.col(&quot;STATION&quot;).alias(&quot;station_id&quot;),
+            F.trim(F.col(&quot;NAME&quot;)).alias(&quot;station_name&quot;),
+            &quot;observation_date&quot;,
+            &quot;year&quot;,
+            F.col(&quot;LATITUDE&quot;).cast(&quot;double&quot;).alias(&quot;latitude&quot;),
+            F.col(&quot;LONGITUDE&quot;).cast(&quot;double&quot;).alias(&quot;longitude&quot;),
+            &quot;temp_c&quot;,
+            &quot;max_temp_c&quot;,
+            &quot;min_temp_c&quot;,
+            &quot;precipitation_in&quot;,
+            &quot;wind_speed_knots&quot;,
+            F.col(&quot;FRSHTT&quot;).alias(&quot;weather_event_flags&quot;),
+        )
+        .filter(
+            F.col(&quot;station_id&quot;).isNotNull()
+            &amp; F.col(&quot;observation_date&quot;).isNotNull()
+        )
+    )
+
+    if year is not None:
+        cleaned = cleaned.filter(F.col(&quot;year&quot;) == F.lit(year))
+
+    return cleaned
+
+
+def build_station_summary(cleaned: DataFrame) -&gt; DataFrame:
+    return (
+        cleaned
+        .groupBy(&quot;year&quot;, &quot;station_id&quot;, &quot;station_name&quot;)
+        .agg(
+            F.count(&quot;*&quot;).alias(&quot;observation_days&quot;),
+            F.round(F.avg(&quot;temp_c&quot;), 2).alias(&quot;avg_temp_c&quot;),
+            F.round(F.max(&quot;max_temp_c&quot;), 2).alias(&quot;highest_temp_c&quot;),
+            F.round(F.min(&quot;min_temp_c&quot;), 2).alias(&quot;lowest_temp_c&quot;),
+            F.round(F.sum(&quot;precipitation_in&quot;), 2).alias(
+                &quot;total_precipitation_in&quot;
+            ),
+            F.round(F.avg(&quot;wind_speed_knots&quot;), 2).alias(
+                &quot;avg_wind_speed_knots&quot;
+            ),
+        )
+        .orderBy(&quot;year&quot;, F.desc(&quot;avg_temp_c&quot;))
+    )
+
+
+def build_quality_metrics(raw: DataFrame, cleaned: DataFrame) -&gt; DataFrame:
+    raw_count = raw.count()
+    cleaned_count = cleaned.count()
+    metrics = [
+        (&quot;raw_rows&quot;, raw_count),
+        (&quot;cleaned_rows&quot;, cleaned_count),
+        (&quot;rejected_or_unusable_rows&quot;, raw_count - cleaned_count),
+        (
+            &quot;rows_with_missing_mean_temperature&quot;,
+            cleaned.filter(F.col(&quot;temp_c&quot;).isNull()).count(),
+        ),
+        (
+            &quot;rows_with_missing_precipitation&quot;,
+            cleaned.filter(F.col(&quot;precipitation_in&quot;).isNull()).count(),
+        ),
+    ]
+    return cleaned.sparkSession.createDataFrame(
+        metrics,
+        [&quot;metric_name&quot;, &quot;metric_value&quot;],
+    )
+
+
+def main() -&gt; None:
+    args = parse_args()
+
+    spark = (
+        SparkSession.builder
+        .appName(&quot;NOAA-GSOD-Weather-Analytics&quot;)
+        .getOrCreate()
+    )
+    spark.sparkContext.setLogLevel(&quot;WARN&quot;)
+    spark.conf.set(
+        &quot;spark.sql.shuffle.partitions&quot;,
+        str(args.shuffle_partitions),
+    )
+
+    try:
+        raw = (
+            spark.read
+            .option(&quot;header&quot;, True)
+            .option(&quot;mode&quot;, &quot;PERMISSIVE&quot;)
+            .csv(args.input)
+        )
+
+        cleaned = build_clean_daily(raw, args.year).cache()
+        station_summary = build_station_summary(cleaned)
+        quality_metrics = build_quality_metrics(raw, cleaned)
+
+        cleaned.write.mode(&quot;overwrite&quot;).partitionBy(&quot;year&quot;).parquet(
+            f&quot;{args.output.rstrip(&#x27;/&#x27;)}/cleaned_daily&quot;
+        )
+        station_summary.write.mode(&quot;overwrite&quot;).parquet(
+            f&quot;{args.output.rstrip(&#x27;/&#x27;)}/station_summary&quot;
+        )
+        station_summary.write.mode(&quot;overwrite&quot;).option(
+            &quot;header&quot;, True
+        ).csv(f&quot;{args.output.rstrip(&#x27;/&#x27;)}/station_summary_csv&quot;)
+        quality_metrics.write.mode(&quot;overwrite&quot;).option(
+            &quot;header&quot;, True
+        ).csv(f&quot;{args.output.rstrip(&#x27;/&#x27;)}/quality_metrics&quot;)
+
+        print(&quot;Input:&quot;, args.input)
+        print(&quot;Output:&quot;, args.output)
+        print(&quot;Cleaned rows:&quot;, cleaned.count())
+        print(&quot;Station summary preview:&quot;)
+        station_summary.show(20, truncate=False)
+        print(&quot;Quality metrics:&quot;)
+        quality_metrics.show(truncate=False)
+    finally:
+        try:
+            cleaned.unpersist()
+        except UnboundLocalError:
+            pass
+        spark.stop()
+
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre></div>
+
+<h3>How each part works</h3>
+<div class="timeline">
+<div><b>1. Parse arguments</b><p>Allows the same program to use public S3 input, project S3 output or local test files.</p></div>
+<div><b>2. Create SparkSession</b><p>On EMR, Spark uses YARN without setting a local master.</p></div>
+<div><b>3. Read CSV</b><p>Spark reads many S3 objects in parallel.</p></div>
+<div><b>4. Clean data</b><p>Sentinel values become nulls, dates are parsed and Fahrenheit is converted to Celsius.</p></div>
+<div><b>5. Cache</b><p>The cleaned DataFrame is reused by summary and quality actions.</p></div>
+<div><b>6. Aggregate</b><p>Station/year grouping creates observation counts, average temperature, extremes, precipitation and wind summaries.</p></div>
+<div><b>7. Write</b><p>Clean data and aggregates are written to durable S3 prefixes.</p></div>
+<div><b>8. Unpersist and stop</b><p>Cached memory is released and the application ends cleanly.</p></div>
+</div>
+
+<h3>Transformation vs action examples</h3>
+<table>
+<tr><th>Operation</th><th>Type</th><th>Execution impact</th></tr>
+<tr><td><code>withColumn</code>, <code>select</code>, <code>filter</code></td><td>Transformation</td><td>Builds a lazy logical plan.</td></tr>
+<tr><td><code>groupBy().agg()</code></td><td>Transformation with shuffle when executed</td><td>Records move by aggregation keys.</td></tr>
+<tr><td><code>count()</code></td><td>Action</td><td>Triggers a Spark job.</td></tr>
+<tr><td><code>write.parquet()</code></td><td>Action</td><td>Executes lineage and writes S3 objects.</td></tr>
+<tr><td><code>show()</code></td><td>Action</td><td>Returns a limited result for display.</td></tr>
+</table>
+
+<h3>Why Parquet?</h3>
+<ul>
+<li>Columnar storage reduces scan volume for analytical queries.</li>
+<li>Supports schema and efficient compression.</li>
+<li>Works well with Athena, Glue, Redshift Spectrum and Spark.</li>
+<li>Partitioning by year allows partition pruning.</li>
+</ul>
+
+    </section>
+<section id="s9" class="tutorial-section">
+    <div class="section-title"><div><span class="eyebrow">Section 9</span><h2>9. Submit, Monitor and Validate the Spark Job</h2></div>
+    <label class="complete-label"><input type="checkbox" class="complete" data-section="s9"> Prepared</label></div>
+    
+<h3>Upload application and add an EMR step</h3>
+<div class="code-wrap"><button class="copy-btn">Copy</button><pre><code data-lang="bash">#!/usr/bin/env bash
+set -euo pipefail
+
+source &quot;${1:-config/env.sh}&quot;
+CLUSTER_ID=&quot;${CLUSTER_ID:-$(cat .cluster-id)}&quot;
+RUN_ID=&quot;${RUN_ID:-run-$(date +%Y%m%d-%H%M%S)}&quot;
+CODE_URI=&quot;s3://${PROJECT_BUCKET}/emr-weather-demo/code/weather_emr_pipeline.py&quot;
+OUTPUT_URI=&quot;s3://${PROJECT_BUCKET}/emr-weather-demo/output/${RUN_ID}/&quot;
+
+aws s3 cp app/weather_emr_pipeline.py &quot;$CODE_URI&quot; --region &quot;$AWS_REGION&quot;
+
+STEP_ID=$(aws emr add-steps \
+  --region &quot;$AWS_REGION&quot; \
+  --cluster-id &quot;$CLUSTER_ID&quot; \
+  --steps &quot;Type=CUSTOM_JAR,Name=NOAA-Weather-Analytics,ActionOnFailure=CONTINUE,Jar=command-runner.jar,Args=[spark-submit,--deploy-mode,cluster,${CODE_URI},--input,s3://noaa-gsod-pds/1929/,--output,${OUTPUT_URI},--year,1929,--shuffle-partitions,24]&quot; \
+  --query &quot;StepIds[0]&quot; \
+  --output text)
+
+echo &quot;$STEP_ID&quot; | tee .step-id
+echo &quot;$OUTPUT_URI&quot; | tee .output-uri
+echo &quot;Step submitted: $STEP_ID&quot;
+echo &quot;Output: $OUTPUT_URI&quot;
+</code></pre></div>
+
+<div class="callout"><b>Deploy mode:</b> The script uses YARN cluster deploy mode. The driver runs in a YARN container rather than remaining tied to an SSH terminal.</div>
+
+<h3>Console step procedure</h3>
+<ol class="steps">
+<li>Upload <code>weather_emr_pipeline.py</code> to your project S3 bucket.</li>
+<li>Open the cluster details page.</li>
+<li>Open <b>Steps → Add step</b>.</li>
+<li>Select <b>Spark application</b> or use <code>command-runner.jar</code> with <code>spark-submit</code>.</li>
+<li>Choose cluster deploy mode.</li>
+<li>Enter the application S3 URI.</li>
+<li>Pass input, output, year and shuffle-partition arguments.</li>
+<li>Submit and watch Pending → Running → Completed.</li>
+</ol>
+
+<h3>Check step status</h3>
+<div class="code-wrap"><button class="copy-btn">Copy</button><pre><code data-lang="bash">#!/usr/bin/env bash
+set -euo pipefail
+
+source &quot;${1:-config/env.sh}&quot;
+CLUSTER_ID=&quot;${CLUSTER_ID:-$(cat .cluster-id)}&quot;
+STEP_ID=&quot;${STEP_ID:-$(cat .step-id)}&quot;
+
+aws emr describe-step \
+  --region &quot;$AWS_REGION&quot; \
+  --cluster-id &quot;$CLUSTER_ID&quot; \
+  --step-id &quot;$STEP_ID&quot; \
+  --query &quot;Step.Status&quot;
+</code></pre></div>
+
+<h3>Inspect output</h3>
+<div class="code-wrap"><button class="copy-btn">Copy</button><pre><code data-lang="bash">#!/usr/bin/env bash
+set -euo pipefail
+
+source &quot;${1:-config/env.sh}&quot;
+OUTPUT_URI=&quot;${OUTPUT_URI:-$(cat .output-uri)}&quot;
+
+echo &quot;Objects written:&quot;
+aws s3 ls --recursive &quot;$OUTPUT_URI&quot; --region &quot;$AWS_REGION&quot;
+
+echo
+echo &quot;Download station-summary CSV part files:&quot;
+mkdir -p downloaded-output
+aws s3 cp --recursive &quot;${OUTPUT_URI}station_summary_csv/&quot; downloaded-output/
+</code></pre></div>
+
+<h3>Where to monitor</h3>
+<table>
+<tr><th>Interface</th><th>What to inspect</th></tr>
+<tr><td>EMR cluster Steps</td><td>Pending, running, completed or failed status and step logs.</td></tr>
+<tr><td>YARN ResourceManager UI</td><td>Application containers, memory, cores and attempts.</td></tr>
+<tr><td>Spark History/UI</td><td>Jobs, stages, tasks, SQL plans, shuffle and executor metrics.</td></tr>
+<tr><td>S3 log bucket</td><td>Persistent logs after scale-down or termination.</td></tr>
+<tr><td>CloudWatch</td><td>Cluster and custom operational metrics when configured.</td></tr>
+</table>
+
+<h3>Validate output with Spark</h3>
+<div class="code-wrap"><button class="copy-btn">Copy</button><pre><code data-lang="python">summary = spark.read.parquet(
+    &quot;s3://YOUR-BUCKET/emr-weather-demo/output/run-001/station_summary&quot;
+)
+
+summary.orderBy(&quot;year&quot;, &quot;station_id&quot;).show(20, truncate=False)
+summary.printSchema()</code></pre></div>
+
+<h3>Validate with AWS CLI</h3>
+<div class="code-wrap"><button class="copy-btn">Copy</button><pre><code data-lang="bash">aws s3 ls --recursive \
+  s3://YOUR-BUCKET/emr-weather-demo/output/run-001/</code></pre></div>
+
+    </section>
+<section id="s10" class="tutorial-section">
+    <div class="section-title"><div><span class="eyebrow">Section 10</span><h2>10. Scaling, Performance and Production Design</h2></div>
+    <label class="complete-label"><input type="checkbox" class="complete" data-section="s10"> Prepared</label></div>
+    
+<h3>Scale-up choices</h3>
+<table>
+<tr><th>Problem</th><th>Possible response</th><th>Trade-off</th></tr>
+<tr><td>CPU-bound tasks</td><td>Add task nodes or larger compute-optimised instances.</td><td>Higher cost; verify parallelism.</td></tr>
+<tr><td>Memory pressure</td><td>Use memory-optimised nodes or reduce cached/shuffle data.</td><td>Larger nodes are more expensive.</td></tr>
+<tr><td>Long shuffle</td><td>Filter/project earlier, tune partitions, reduce skew.</td><td>Requires workload analysis, not only more machines.</td></tr>
+<tr><td>Uneven tasks</td><td>Investigate skewed keys and partition sizes.</td><td>May require salting or design changes.</td></tr>
+<tr><td>Temporary backfill</td><td>Add Spot task nodes and managed scaling.</td><td>Jobs must tolerate interruptions.</td></tr>
+</table>
+
+<h3>Instance strategy</h3>
+<ul>
+<li>Keep primary nodes stable, normally On-Demand.</li>
+<li>Use reliable core capacity because it can hold HDFS blocks and critical application processes.</li>
+<li>Use task nodes for elastic compute and consider Spot for retry-safe workloads.</li>
+<li>Use instance fleets when multiple instance types and purchasing options improve capacity availability.</li>
+</ul>
+
+<h3>Managed scaling</h3>
+<p>EMR managed scaling can add or remove core/task capacity according to workload demand and configured limits. Test decommissioning behaviour for long-running applications.</p>
+
+<h3>Spark performance checklist</h3>
+<div class="grid">
+<div class="card"><h3>File sizing</h3><p>Avoid millions of tiny files. Compact outputs into useful file sizes.</p></div>
+<div class="card"><h3>Partition pruning</h3><p>Partition data by fields commonly used in filters, but avoid excessive cardinality.</p></div>
+<div class="card"><h3>Projection</h3><p>Select only required columns before expensive operations.</p></div>
+<div class="card"><h3>Shuffle tuning</h3><p>Set shuffle partitions based on data volume and available cores.</p></div>
+<div class="card"><h3>Skew handling</h3><p>Identify dominant keys, salt or use adaptive strategies.</p></div>
+<div class="card"><h3>Storage format</h3><p>Prefer Parquet or a supported open table format for analytics.</p></div>
+</div>
+
+<h3>Transient vs long-running cluster</h3>
+<table>
+<tr><th>Pattern</th><th>Advantages</th><th>Best use</th></tr>
+<tr><td>Transient</td><td>Clean environment, no idle cluster, workflow-specific sizing</td><td>Scheduled batch jobs and backfills</td></tr>
+<tr><td>Long-running</td><td>Fast repeated submissions and interactive access</td><td>Shared development, continuous/streaming workloads</td></tr>
+</table>
+
+<div class="memory"><b>Performance memory aid:</b> Reduce data early → balance partitions → avoid skew → write columnar files → measure in Spark UI.</div>
+
+    </section>
+<section id="s11" class="tutorial-section">
+    <div class="section-title"><div><span class="eyebrow">Section 11</span><h2>11. Security, Governance and Cost Control</h2></div>
+    <label class="complete-label"><input type="checkbox" class="complete" data-section="s11"> Prepared</label></div>
+    
+<h3>Security controls</h3>
+<ul>
+<li>Use least-privilege IAM roles and scoped S3 prefixes.</li>
+<li>Use private subnets and controlled egress in production.</li>
+<li>Use security configurations for encryption and authentication requirements.</li>
+<li>Encrypt S3 buckets, logs and EBS volumes as required.</li>
+<li>Use Lake Formation/Glue governance when appropriate.</li>
+<li>Separate development, test and production accounts or environments.</li>
+<li>Do not put secrets directly in scripts; use approved secret-management mechanisms.</li>
+</ul>
+
+<h3>SSH guidance</h3>
+<div class="callout danger"><b>Never:</b> Allow TCP port 22 from <code>0.0.0.0/0</code>.</div>
+<p>When SSH is necessary, authorise only a trusted IP range. EMR's default primary security group does not need public SSH for jobs submitted as steps.</p>
+
+<h3>Data durability</h3>
+<table>
+<tr><th>Storage</th><th>Durability characteristic</th><th>Guidance</th></tr>
+<tr><td>S3</td><td>Independent of cluster lifecycle</td><td>Use for source, durable output, code and logs.</td></tr>
+<tr><td>HDFS</td><td>Tied to core instances and cluster lifecycle</td><td>Use for temporary/intermediate data unless persistence is intentionally managed.</td></tr>
+<tr><td>Local disk</td><td>Tied to one instance</td><td>Use for shuffle/temp, not durable business data.</td></tr>
+</table>
+
+<h3>Cost components</h3>
+<ul>
+<li>Amazon EMR service charge for cluster instances.</li>
+<li>Amazon EC2 instance usage.</li>
+<li>EBS volumes.</li>
+<li>S3 storage and requests.</li>
+<li>Network transfer, NAT gateway and other connected services.</li>
+<li>CloudWatch and log storage where applicable.</li>
+</ul>
+
+<h3>Cost-control checklist</h3>
+<div class="grid">
+<div class="card"><h3>Auto-terminate</h3><p>Set idle timeout for learning and transient jobs.</p></div>
+<div class="card"><h3>Explicit terminate</h3><p>Terminate after validation instead of waiting.</p></div>
+<div class="card"><h3>Right-size</h3><p>Start small and use job metrics before scaling.</p></div>
+<div class="card"><h3>Spot task nodes</h3><p>Use for retry-safe elastic work.</p></div>
+<div class="card"><h3>Tagging</h3><p>Tag owner, project, environment and cost centre.</p></div>
+<div class="card"><h3>S3 lifecycle</h3><p>Expire or transition logs and temporary output.</p></div>
+</div>
+
+<h3>Terminate cluster</h3>
+{codebox(terminate_code, "bash")}
+
+    </section>
+<section id="s12" class="tutorial-section">
+    <div class="section-title"><div><span class="eyebrow">Section 12</span><h2>12. Troubleshooting and Best Practices</h2></div>
+    <label class="complete-label"><input type="checkbox" class="complete" data-section="s12"> Prepared</label></div>
+    
+<h3>Common failures</h3>
+<table>
+<tr><th>Symptom</th><th>Likely cause</th><th>Resolution</th></tr>
+<tr><td>Cluster terminates during startup</td><td>IAM, subnet, capacity or bootstrap failure</td><td>Read cluster status reason and instance-controller logs.</td></tr>
+<tr><td>AccessDenied reading NOAA bucket</td><td>Instance profile lacks public bucket permissions or S3 route</td><td>Add scoped list/get permissions and verify network access.</td></tr>
+<tr><td>AccessDenied writing project bucket</td><td>Missing put/list/delete permissions</td><td>Update the EC2 instance profile or runtime role.</td></tr>
+<tr><td>Step remains pending</td><td>Cluster not ready or prior step running</td><td>Check cluster state, step concurrency and YARN resources.</td></tr>
+<tr><td>Container killed for memory</td><td>Executor/driver memory pressure</td><td>Inspect YARN/Spark logs, reduce partition size or tune resources.</td></tr>
+<tr><td>One task runs much longer</td><td>Data skew or oversized files</td><td>Inspect task input/shuffle and change partition strategy.</td></tr>
+<tr><td>Too many output files</td><td>Too many output partitions</td><td>Tune partitions or compact downstream; do not blindly coalesce huge data to one file.</td></tr>
+<tr><td>No files in expected output</td><td>Wrong run prefix or failed write</td><td>Check step arguments, logs and S3 URI.</td></tr>
+<tr><td>SSH connection fails</td><td>Port 22 not authorised or node is private</td><td>Use a trusted source rule or approved administration path.</td></tr>
+<tr><td>Unexpected cost</td><td>Cluster left running or oversized</td><td>Terminate, inspect Cost Explorer and enforce policies/tags.</td></tr>
+</table>
+
+<h3>Best practices</h3>
+<div class="grid">
+<div class="card"><h3>Make jobs idempotent</h3><p>Use versioned run paths or controlled overwrite so retries do not corrupt results.</p></div>
+<div class="card"><h3>Separate compute and storage</h3><p>Keep durable data in S3 so clusters can be disposable.</p></div>
+<div class="card"><h3>Pin releases</h3><p>Test and approve EMR/Spark versions before production updates.</p></div>
+<div class="card"><h3>Log every run</h3><p>Capture cluster ID, step ID, code version, input and output.</p></div>
+<div class="card"><h3>Validate before publish</h3><p>Check counts, nulls, duplicates, ranges and schema.</p></div>
+<div class="card"><h3>Use orchestration</h3><p>Coordinate production EMR jobs with approved workflow services.</p></div>
+</div>
+
+<h3>Edge cases to teach</h3>
+<ul>
+<li>The input year can contain many small station files, producing small-file overhead.</li>
+<li>Weather sentinel values must not be treated as real temperatures.</li>
+<li>Schema can evolve; select and cast explicitly.</li>
+<li>Cross-region data reads can increase latency and cost.</li>
+<li>Spot interruption should not destroy durable output or require a full manual restart.</li>
+<li>HDFS data disappears when a transient cluster is terminated.</li>
+</ul>
+
+<h3>Operational runbook</h3>
+<ol class="steps">
+<li>Record cluster ID and step ID.</li>
+<li>Check EMR step status.</li>
+<li>Open failed-step logs.</li>
+<li>Find the first real exception, not only the final wrapper error.</li>
+<li>Classify as permissions, data, code, resources or infrastructure.</li>
+<li>Fix the root cause.</li>
+<li>Write to a new run prefix or use a controlled overwrite.</li>
+<li>Validate output and terminate resources.</li>
+</ol>
+
+    </section>
+<section id="s13" class="tutorial-section">
+    <div class="section-title"><div><span class="eyebrow">Section 13</span><h2>13. Practical Exercises, Interview Q&amp;A, Quiz and Timed Exam</h2></div>
+    <label class="complete-label"><input type="checkbox" class="complete" data-section="s13"> Prepared</label></div>
+    
+<h3>Hands-on exercises</h3>
+<ol>
+<li>Create the training cluster with one primary and two core nodes.</li>
+<li>Run the 1929 dataset job and validate all output prefixes.</li>
+<li>Change the job to calculate the station with the highest precipitation.</li>
+<li>Add a <code>country_or_region</code> enrichment lookup from a small S3 file.</li>
+<li>Write a daily summary partitioned by year and month.</li>
+<li>Add duplicate and out-of-range quality checks.</li>
+<li>Add two Spot task nodes and compare runtime.</li>
+<li>Run the application from EMR Studio.</li>
+<li>Compare cluster deploy mode and client deploy mode log locations.</li>
+<li>Design a transient orchestration flow that creates, runs and terminates automatically.</li>
+</ol>
+
+<h3>Interview questions and answers</h3>
+<details><summary>1. What is a Spark cluster manager?</summary><p>It allocates cluster resources and launches Spark executors. Examples are YARN, Kubernetes and Spark Standalone.</p></details>
+<details><summary>2. Is Amazon EMR a Spark cluster manager?</summary><p>No. It is a managed platform. Spark on EMR on EC2 usually uses YARN as its cluster manager.</p></details>
+<details><summary>3. What does the EMR primary node do?</summary><p>It coordinates cluster services and normally runs management daemons such as YARN ResourceManager and HDFS NameNode.</p></details>
+<details><summary>4. Core node vs task node?</summary><p>Both can run compute. Core nodes also run HDFS DataNode storage; task nodes add compute without HDFS DataNode storage.</p></details>
+<details><summary>5. Why store durable data in S3?</summary><p>S3 is independent of the transient cluster lifecycle, allowing clusters to be terminated and recreated.</p></details>
+<details><summary>6. What is an EMR step?</summary><p>A unit of work submitted to a cluster, such as a Spark application launched through spark-submit.</p></details>
+<details><summary>7. What is cluster deploy mode?</summary><p>The Spark driver runs inside a cluster-managed container, so it is not dependent on the submitting shell session.</p></details>
+<details><summary>8. Why use task nodes for Spot?</summary><p>They add compute without HDFS storage and can suit fault-tolerant retryable work, reducing the impact of interruption.</p></details>
+<details><summary>9. Why can groupBy cause expensive work?</summary><p>Records with the same key must move across the network, creating a shuffle and potential skew.</p></details>
+<details><summary>10. How do you troubleshoot a failed Spark step?</summary><p>Check the step status reason, driver logs, YARN container logs and Spark stages, then identify permissions, data, code or resource problems.</p></details>
+<details><summary>11. Why use Parquet?</summary><p>It is columnar, compressed and schema-aware, reducing analytical scan cost.</p></details>
+<details><summary>12. What is EMRFS?</summary><p>It is the EMR file-system integration that lets Hadoop/Spark access Amazon S3 directly.</p></details>
+<details><summary>13. Transient vs long-running cluster?</summary><p>Transient clusters suit scheduled batch jobs and minimise idle time; long-running clusters suit shared interactive or continuous workloads.</p></details>
+<details><summary>14. What does managed scaling do?</summary><p>It adjusts core/task capacity within configured limits according to workload demand.</p></details>
+<details><summary>15. Why avoid SSH from 0.0.0.0/0?</summary><p>It exposes the primary node to internet-wide connection attempts and is an unsafe security practice.</p></details>
+<details><summary>16. How do you control EMR cost?</summary><p>Right-size, use auto-termination, terminate explicitly, consider Spot task nodes, tag resources and measure jobs.</p></details>
+<details><summary>17. What happens to HDFS when the cluster terminates?</summary><p>Cluster-tied HDFS data is lost; durable outputs should be copied to S3.</p></details>
+<details><summary>18. What causes Spark data skew?</summary><p>A few keys or files create disproportionately large partitions, causing long-running straggler tasks.</p></details>
+<details><summary>19. DataFrame or RDD on EMR?</summary><p>Use DataFrames/Spark SQL for most structured engineering. Use RDDs for special low-level custom processing.</p></details>
+<details><summary>20. How can EMR jobs be orchestrated?</summary><p>Use EMR Steps with approved workflow services such as Step Functions, Airflow/MWAA or scheduled automation.</p></details>
+
+<h3>Practice quiz</h3>
+<form id="practiceQuiz">
+<div class="question"><b>1. Which component is the usual Spark cluster manager on EMR on EC2?</b>
+<label><input type="radio" name="p1" value="a"> Amazon S3</label>
+<label><input type="radio" name="p1" value="b"> YARN</label>
+<label><input type="radio" name="p1" value="c"> Athena</label></div>
+<div class="question"><b>2. Which node adds compute without HDFS DataNode storage?</b>
+<label><input type="radio" name="p2" value="a"> Task</label>
+<label><input type="radio" name="p2" value="b"> Primary</label>
+<label><input type="radio" name="p2" value="c"> Core only</label></div>
+<div class="question"><b>3. Which storage should hold durable output?</b>
+<label><input type="radio" name="p3" value="a"> Executor local disk</label>
+<label><input type="radio" name="p3" value="b"> S3</label>
+<label><input type="radio" name="p3" value="c"> Driver memory</label></div>
+<div class="question"><b>4. Which file format is recommended for analytical output?</b>
+<label><input type="radio" name="p4" value="a"> Parquet</label>
+<label><input type="radio" name="p4" value="b"> Screenshot</label>
+<label><input type="radio" name="p4" value="c"> Plain log only</label></div>
+<div class="question"><b>5. What is the safest SSH source?</b>
+<label><input type="radio" name="p5" value="a"> 0.0.0.0/0</label>
+<label><input type="radio" name="p5" value="b"> Trusted IP/range only</label>
+<label><input type="radio" name="p5" value="c"> Any public address</label></div>
+<button type="button" onclick="gradePractice()">Submit quiz</button>
+<div id="practiceResult" class="result"></div>
+</form>
+
+<h3>Timed formal exam — 10 minutes</h3>
+<div class="exam-top"><button id="startExam" type="button" onclick="startExam()">Start exam</button><span id="timer">10:00</span></div>
+<form id="examForm" class="locked">
+<div class="question"><b>1. What launches Spark executor containers on worker nodes?</b>
+<label><input type="radio" name="e1" value="a"> YARN NodeManager</label>
+<label><input type="radio" name="e1" value="b"> S3 lifecycle</label>
+<label><input type="radio" name="e1" value="c"> IAM user</label></div>
+<div class="question"><b>2. Which node usually runs ResourceManager?</b>
+<label><input type="radio" name="e2" value="a"> Primary</label>
+<label><input type="radio" name="e2" value="b"> Task</label>
+<label><input type="radio" name="e2" value="c"> S3</label></div>
+<div class="question"><b>3. Best candidate for Spot in a basic fault-tolerant design?</b>
+<label><input type="radio" name="e3" value="a"> Primary nodes</label>
+<label><input type="radio" name="e3" value="b"> Task nodes</label>
+<label><input type="radio" name="e3" value="c"> Log bucket</label></div>
+<div class="question"><b>4. What triggers a Spark job?</b>
+<label><input type="radio" name="e4" value="a"> A lazy select only</label>
+<label><input type="radio" name="e4" value="b"> An action such as write or count</label>
+<label><input type="radio" name="e4" value="c"> Creating an IAM role</label></div>
+<div class="question"><b>5. Why use an idle auto-termination policy?</b>
+<label><input type="radio" name="e5" value="a"> Reduce unused cluster cost</label>
+<label><input type="radio" name="e5" value="b"> Increase skew</label>
+<label><input type="radio" name="e5" value="c"> Disable logging</label></div>
+<div class="question"><b>6. Which prefix is used for the open lab input?</b>
+<label><input type="radio" name="e6" value="a"> s3://noaa-gsod-pds/1929/</label>
+<label><input type="radio" name="e6" value="b"> local://driver-only/</label>
+<label><input type="radio" name="e6" value="c"> memory://weather/</label></div>
+<div class="question"><b>7. What is a common cause of one very slow task?</b>
+<label><input type="radio" name="e7" value="a"> Data skew</label>
+<label><input type="radio" name="e7" value="b"> Correct partition pruning</label>
+<label><input type="radio" name="e7" value="c"> Auto-termination after job</label></div>
+<div class="question"><b>8. Which interface shows Spark stages and tasks?</b>
+<label><input type="radio" name="e8" value="a"> Spark UI/History</label>
+<label><input type="radio" name="e8" value="b"> IAM password page</label>
+<label><input type="radio" name="e8" value="c"> Route table only</label></div>
+<div class="question"><b>9. Why is S3 preferred over HDFS for final transient-cluster output?</b>
+<label><input type="radio" name="e9" value="a"> It survives cluster termination</label>
+<label><input type="radio" name="e9" value="b"> It is executor memory</label>
+<label><input type="radio" name="e9" value="c"> It prevents all shuffles</label></div>
+<div class="question"><b>10. Best default API for structured weather analytics?</b>
+<label><input type="radio" name="e10" value="a"> DataFrame/Spark SQL</label>
+<label><input type="radio" name="e10" value="b"> Mutable driver list</label>
+<label><input type="radio" name="e10" value="c"> Screenshot processing</label></div>
+<button type="button" onclick="gradeExam()">Submit exam</button>
+<div id="examResult" class="result"></div>
+</form>
+
+<h3>Glossary and conclusion</h3>
+<div class="grid">
+<div class="card"><h3>Cluster manager</h3><p>Allocates resources to Spark applications.</p></div>
+<div class="card"><h3>EMR step</h3><p>A submitted unit of cluster work.</p></div>
+<div class="card"><h3>EMRFS</h3><p>EMR integration for accessing S3.</p></div>
+<div class="card"><h3>Shuffle</h3><p>Network redistribution of records between partitions.</p></div>
+<div class="card"><h3>Transient cluster</h3><p>A cluster created for a workload and terminated afterward.</p></div>
+<div class="card"><h3>Task node</h3><p>Compute-only EMR node without HDFS DataNode storage.</p></div>
+</div>
+<div class="callout success"><b>Final conclusion:</b> EMR manages infrastructure, YARN manages Spark resources, Spark transforms data, and S3 provides durable data-lake storage.</div>
+
+<h3>Official reference sources</h3>
+<ul class="sources">
+<li><a href="https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-what-is-emr.html">What is Amazon EMR?</a></li>
+<li><a href="https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-master-core-task-nodes.html">EMR primary, core and task nodes</a></li>
+<li><a href="https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-gs.html">Getting started with Amazon EMR</a></li>
+<li><a href="https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-7130-release.html">Amazon EMR 7.13.0 release</a></li>
+<li><a href="https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-spark-submit-step.html">Add a Spark step</a></li>
+<li><a href="https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-auto-termination-policy.html">Auto-termination policies</a></li>
+<li><a href="https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-man-sec-groups.html">EMR managed security groups</a></li>
+<li><a href="https://registry.opendata.aws/noaa-gsod/">NOAA GSOD Registry of Open Data</a></li>
+<li><a href="https://aws.amazon.com/emr/pricing/">Amazon EMR pricing</a></li>
+</ul>
+
+    </section>
+</main>
+
+<div id="notePanel"><h3>My Notes</h3><div id="notesList">No notes yet.</div><button onclick="clearNotes()">Clear notes</button></div>
+
+<script>
+const progressKey="emrTutorialProgressV1",notesKey="emrTutorialNotesV1",themeKey="emrTutorialThemeV1";
+const sectionIds=[...document.querySelectorAll(".tutorial-section")].map(s=>s.id);
+let progress=JSON.parse(localStorage.getItem(progressKey)||"{}");
+let notes=JSON.parse(localStorage.getItem(notesKey)||"[]");
+
+document.querySelectorAll(".complete").forEach(cb=>{
+  cb.checked=!!progress[cb.dataset.section];
+  cb.addEventListener("change",()=>{
+    progress[cb.dataset.section]=cb.checked;
+    localStorage.setItem(progressKey,JSON.stringify(progress));
+    updateProgress();
+  });
+});
+function updateProgress(){
+  const completed=sectionIds.filter(id=>progress[id]).length;
+  const pct=Math.round(completed/sectionIds.length*100);
+  document.getElementById("progressBar").style.width=pct+"%";
+  document.getElementById("progressText").textContent=`${pct}% prepared (${completed}/${sectionIds.length})`;
+}
+function toggleTheme(){
+  document.documentElement.dataset.theme=document.documentElement.dataset.theme==="dark"?"light":"dark";
+  localStorage.setItem(themeKey,document.documentElement.dataset.theme);
+}
+if(localStorage.getItem(themeKey)==="dark") document.documentElement.dataset.theme="dark";
+
+document.querySelectorAll(".copy-btn").forEach(btn=>btn.addEventListener("click",async()=>{
+  await navigator.clipboard.writeText(btn.nextElementSibling.innerText);
+  const old=btn.textContent;btn.textContent="Copied";
+  setTimeout(()=>btn.textContent=old,1000);
+}));
+
+document.getElementById("search").addEventListener("input",e=>{
+  const q=e.target.value.toLowerCase().trim();
+  document.querySelectorAll(".tutorial-section").forEach(s=>{
+    s.style.display=!q||s.innerText.toLowerCase().includes(q)?"block":"none";
+  });
+});
+
+document.querySelectorAll(".reveal").forEach(btn=>btn.addEventListener("click",()=>{
+  btn.nextElementSibling.classList.toggle("show");
+}));
+
+window.addEventListener("scroll",()=>{
+  let current="";
+  document.querySelectorAll(".tutorial-section").forEach(s=>{
+    if(window.scrollY>=s.offsetTop-130) current=s.id;
+  });
+  document.querySelectorAll(".nav-link").forEach(a=>{
+    a.classList.toggle("active",a.getAttribute("href")==="#"+current);
+  });
+});
+
+document.addEventListener("dblclick",()=>{
+  const selected=window.getSelection().toString().trim();
+  if(!selected)return;
+  const note=prompt(`Add a note for:\n"${selected.slice(0,180)}"`);
+  if(note){
+    notes.push({selected,note,time:new Date().toLocaleString()});
+    localStorage.setItem(notesKey,JSON.stringify(notes));
+    renderNotes();document.getElementById("notePanel").style.display="block";
+  }
+});
+function esc(v){return v.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
+function renderNotes(){
+  const list=document.getElementById("notesList");
+  list.innerHTML=notes.length?notes.map(n=>`<div class="note-item"><b>${esc(n.selected)}</b><br>${esc(n.note)}<br><small>${n.time}</small></div>`).join(""):"No notes yet.";
+}
+function toggleNotes(){
+  const p=document.getElementById("notePanel");
+  p.style.display=p.style.display==="block"?"none":"block";renderNotes();
+}
+function clearNotes(){
+  if(confirm("Delete all notes?")){notes=[];localStorage.removeItem(notesKey);renderNotes();}
+}
+
+function gradePractice(){
+  const answers={p1:"b",p2:"a",p3:"b",p4:"a",p5:"b"};
+  let score=0;
+  Object.entries(answers).forEach(([q,a])=>{
+    const selected=document.querySelector(`input[name="${q}"]:checked`);
+    if(selected&&selected.value===a)score++;
+  });
+  const pct=score/5*100;
+  document.getElementById("practiceResult").textContent=(pct>=80?"Excellent 🌟":pct>=60?"Good progress 🙂":"Review and retry 📘")+`: ${score}/5 (${pct}%)`;
+}
+
+let timerId=null,seconds=600,examStarted=false;
+function startExam(){
+  if(examStarted)return;
+  examStarted=true;
+  document.getElementById("examForm").classList.remove("locked");
+  document.getElementById("startExam").disabled=true;
+  timerId=setInterval(()=>{
+    seconds--;
+    const m=String(Math.floor(seconds/60)).padStart(2,"0");
+    const s=String(seconds%60).padStart(2,"0");
+    document.getElementById("timer").textContent=`${m}:${s}`;
+    if(seconds<=0){clearInterval(timerId);gradeExam(true);}
+  },1000);
+}
+function gradeExam(auto=false){
+  const answers={e1:"a",e2:"a",e3:"b",e4:"b",e5:"a",e6:"a",e7:"a",e8:"a",e9:"a",e10:"a"};
+  let score=0;
+  Object.entries(answers).forEach(([q,a])=>{
+    const selected=document.querySelector(`input[name="${q}"]:checked`);
+    if(selected&&selected.value===a)score++;
+  });
+  if(timerId)clearInterval(timerId);
+  const pct=score/10*100;
+  document.getElementById("examResult").textContent=(auto?"Time finished. ":"")+(pct>=80?"Excellent — job-ready understanding 🏆":pct>=60?"Pass — continue practising ✅":"Review the tutorial and retry 🔁")+`: ${score}/10 (${pct}%)`;
+}
+
+document.addEventListener("pointermove",e=>{
+  if(Math.random()>.88){
+    const s=document.createElement("span");s.className="sparkle";s.textContent="✦";
+    s.style.left=e.clientX+"px";s.style.top=e.clientY+"px";
+    document.body.appendChild(s);setTimeout(()=>s.remove(),700);
+  }
+});
+
+updateProgress();renderNotes();
+</script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Retail Pair RDD pipeline",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/src/03_retail_pair_rdd_pipeline.py",
+      "console": "integratedTerminal",
+      "justMyCode": true
+    }
+  ]
+}

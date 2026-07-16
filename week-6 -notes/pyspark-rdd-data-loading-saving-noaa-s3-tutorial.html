@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>RDD Data Loading and Saving — NOAA AWS S3 Weather Pipeline</title>
+<style>
+:root{--accent:#4f46e5;--spark:#e24a33;--green:#0f766e;--bg:#f5f7fb;--surface:#fff;--surface2:#eef2f8;--text:#172033;--muted:#5d6779;--border:#d7deec;--good:#15803d;--bad:#be123c;--warn:#b45309;--shadow:0 12px 34px rgba(30,45,100,.09);--base:16px}
+body.dark{--bg:#0d111b;--surface:#181e2b;--surface2:#222b3b;--text:#edf2fa;--muted:#b5bece;--border:#374257;--good:#4ade80;--bad:#fb7185;--warn:#fbbf24;--shadow:0 12px 34px rgba(0,0,0,.3)}
+*{box-sizing:border-box}html{scroll-behavior:smooth;font-size:var(--base)}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,Segoe UI,Arial,sans-serif;line-height:1.68}a{color:var(--accent)}button,input,textarea{font:inherit}button{border:0;border-radius:10px;background:var(--accent);color:#fff;padding:.7rem .95rem;font-weight:750;cursor:pointer;margin:.2rem}button:hover{filter:brightness(1.08);transform:translateY(-1px)}button.red{background:var(--spark)}button.green{background:var(--green)}button.ghost{background:transparent;color:var(--accent);border:1px solid var(--accent)}
+#readbar{position:fixed;top:0;left:0;height:4px;width:0;background:linear-gradient(90deg,var(--spark),var(--accent),var(--green));z-index:9999}.hero{color:#fff;text-align:center;padding:4.7rem 1.2rem 3.2rem;background:linear-gradient(135deg,#3b0d08,#e24a33 33%,#4f46e5 68%,#0f766e)}.hero h1{font-size:clamp(2.2rem,5vw,4.15rem);line-height:1.08;margin:.2rem auto}.hero p{max-width:1100px;margin:1rem auto;font-size:1.1rem}.pill{display:inline-block;border:1px solid rgba(255,255,255,.5);background:rgba(255,255,255,.13);border-radius:999px;padding:.3rem .65rem;margin:.18rem}
+.layout{max-width:1580px;margin:auto;padding:1rem;display:grid;grid-template-columns:280px minmax(0,1fr) 305px;gap:1rem}nav,aside{position:sticky;top:1rem;align-self:start;max-height:calc(100vh - 2rem);overflow:auto;background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:1rem;box-shadow:var(--shadow)}nav a{display:block;text-decoration:none;color:var(--text);padding:.42rem .5rem;border-radius:8px;font-size:.91rem}nav a:hover,nav a.active{background:var(--surface2);color:var(--accent);font-weight:750}
+main{min-width:0}section{background:var(--surface);border:1px solid var(--border);border-radius:19px;padding:clamp(1.05rem,3vw,2rem);margin-bottom:1rem;box-shadow:var(--shadow);transition:.2s}section:hover{border-color:color-mix(in srgb,var(--accent) 50%,var(--border));transform:translateY(-2px)}h2{color:var(--accent);line-height:1.25;margin-top:0}h3{margin-top:1.5rem;line-height:1.3}.grid2,.grid3,.grid4{display:grid;gap:1rem}.grid2{grid-template-columns:repeat(2,minmax(0,1fr))}.grid3{grid-template-columns:repeat(3,minmax(0,1fr))}.grid4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.card,.note,.good,.warn,.bad,.exercise,.qcard{border:1px solid var(--border);border-radius:13px;padding:1rem;margin:.75rem 0;background:var(--surface2)}.note{border-left:6px solid var(--accent)}.good{border-left:6px solid var(--good)}.warn{border-left:6px solid var(--warn)}.bad{border-left:6px solid var(--bad)}table{width:100%;border-collapse:collapse;margin:1rem 0;display:block;overflow:auto}th,td{border:1px solid var(--border);padding:.72rem;text-align:left;vertical-align:top}th{background:var(--surface2);color:var(--accent)}code{font-family:Consolas,monospace;background:var(--surface2);padding:.1rem .32rem;border-radius:5px}.codewrap{position:relative;margin:1rem 0}pre{background:#101827;color:#e7edf7;padding:1rem;border-radius:13px;overflow:auto;white-space:pre;line-height:1.53}.copy{position:absolute;right:.45rem;top:.45rem}.figure{width:100%;border:1px solid var(--border);border-radius:16px;background:#fff;box-shadow:var(--shadow)}.caption{font-size:.9rem;color:var(--muted);text-align:center}details{border:1px solid var(--border);border-radius:11px;padding:.75rem .9rem;background:var(--surface2);margin:.55rem 0}summary{cursor:pointer;font-weight:750}.tag{display:inline-block;border:1px solid var(--border);background:var(--surface2);border-radius:999px;padding:.18rem .5rem;margin:.12rem;font-size:.8rem}
+.progress{height:17px;background:var(--surface2);border:1px solid var(--border);border-radius:999px;overflow:hidden}.fill{height:100%;width:0;background:linear-gradient(90deg,var(--spark),var(--accent),var(--green))}.check{display:flex;gap:.55rem;padding:.38rem 0;border-bottom:1px dashed var(--border)}textarea,input[type=text]{width:100%;padding:.7rem;border:1px solid var(--border);border-radius:9px;background:var(--surface);color:var(--text)}.option{display:block;border:1px solid var(--border);border-radius:9px;padding:.6rem;margin:.4rem 0;background:var(--surface);cursor:pointer}.timer{display:inline-block;border:2px solid var(--bad);color:var(--bad);border-radius:11px;padding:.45rem .8rem;font-size:1.4rem;font-weight:900}.hidden{display:none!important}.noteitem{border:1px solid var(--border);border-radius:10px;padding:.65rem;margin:.5rem 0;background:var(--surface2)}.modal{position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:10000;display:none;align-items:center;justify-content:center;padding:1rem}.modal.show{display:flex}.modalbox{width:min(620px,100%);background:var(--surface);border-radius:16px;padding:1rem}.float{position:fixed;right:1rem;bottom:1rem;z-index:1000;display:flex;flex-direction:column}.sparkle{position:fixed;width:8px;height:8px;background:#fbbf24;border-radius:50%;pointer-events:none;z-index:99999;animation:spark .7s ease-out forwards}@keyframes spark{to{transform:translateY(-18px) scale(0);opacity:0}}.kpi{font-size:1.65rem;font-weight:900;color:var(--accent)}.small{font-size:.9rem;color:var(--muted)}.certificate{border:8px double var(--accent);border-radius:18px;padding:2rem;text-align:center;background:var(--surface)}
+@media(max-width:1180px){.layout{grid-template-columns:235px minmax(0,1fr)}aside{grid-column:1/-1;position:relative;max-height:none}}@media(max-width:780px){.layout{grid-template-columns:1fr}nav,aside{position:relative;max-height:none}.grid2,.grid3,.grid4{grid-template-columns:1fr}}@media print{nav,aside,.float,#readbar,button,.modal,.sparkle{display:none!important}.layout{display:block}.hero{background:#fff;color:#000;padding:1rem}section{box-shadow:none}}
+</style>
+</head>
+<body>
+<div id="readbar"></div>
+<header class="hero" id="top">
+<h1>Data Loading and Saving Through RDDs</h1>
+<p>Load an open NOAA weather CSV from AWS S3, parse quoted rows correctly, clean missing sentinel values, convert units, build a monthly report and save distributed RDD outputs in VS Code and Databricks legacy edition.</p>
+<div><span class="pill">AWS S3 Open Data</span><span class="pill">NOAA GSOD</span><span class="pill">RDD Transformations</span><span class="pill">VS Code + Databricks</span><span class="pill">Verified Outputs</span></div>
+</header>
+<div class="layout">
+<nav><h3>13-Section Tutorial</h3>
+<a href="#s1">1. Introduction</a><a href="#s2">2. Dataset Selection</a><a href="#s3">3. Architecture</a><a href="#s4">4. VS Code Setup</a><a href="#s5">5. Download and Load</a><a href="#s6">6. Parse and Clean</a><a href="#s7">7. Transformations</a><a href="#s8">8. Report Aggregation</a><a href="#s9">9. Save RDD Output</a><a href="#s10">10. Verified Output</a><a href="#s11">11. Databricks Legacy</a><a href="#s12">12. Practices + Troubleshooting</a><a href="#s13">13. Q&A, Exercises and Exam</a><a href="#certificate">Certificate</a></nav>
+<main>
+<section id="s1" data-title="Introduction">
+<h2>1. Introduction and Learning Outcomes</h2>
+<p><code>SparkContext.textFile()</code> loads text as an RDD of strings. Transformations then create new RDDs lazily, and actions trigger execution. <code>RDD.saveAsTextFile()</code> writes a directory containing partition files.</p>
+<div class="grid4"><div class="card"><h3>Load</h3><p>Public S3 HTTPS → local or DBFS file → raw RDD.</p></div><div class="card"><h3>Clean</h3><p>Parse quoted CSV, handle sentinels and convert units.</p></div><div class="card"><h3>Report</h3><p>Aggregate monthly weather metrics using <code>aggregateByKey</code>.</p></div><div class="card"><h3>Save</h3><p>Write clean and report-ready CSV part files.</p></div></div>
+<h3>Preparation Tracker</h3><div class="progress"><div id="fill" class="fill"></div></div><p id="ptxt"></p><div id="checks"></div><button class="red" onclick="resetProgress()">Reset Progress</button>
+</section>
+
+<section id="s2" data-title="Dataset Selection">
+<h2>2. Dataset Used — NOAA GSOD</h2>
+<table><tr><th>Item</th><th>Value</th></tr><tr><td>Dataset</td><td>NOAA Global Surface Summary of the Day</td></tr><tr><td>Station</td><td>01001099999 — Jan Mayen, Norway</td></tr><tr><td>Period</td><td>2024</td></tr><tr><td>S3 URI</td><td><code>s3://noaa-gsod-pds/2024/01001099999.csv</code></td></tr><tr><td>Public HTTPS URL</td><td><code>https://noaa-gsod-pds.s3.amazonaws.com/2024/01001099999.csv</code></td></tr><tr><td>Size</td><td>About 84 KB</td></tr><tr><td>Rows</td><td>355 observations plus header</td></tr></table>
+<p>The GSOD dataset contains daily temperature, pressure, visibility, wind, precipitation, snow depth and weather-event indicators. The AWS Registry states that the bucket is public and no AWS account is required for unsigned access.</p>
+<div class="note"><b>Why this file?</b> It is small enough for classroom execution but rich enough to demonstrate real cleaning, missing values, weather flags, monthly aggregation and report saving.</div>
+</section>
+
+<section id="s3" data-title="Architecture">
+<h2>3. End-to-End Data Flow</h2>
+<img class="figure" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNTAwIiBoZWlnaHQ9IjUyMCIgdmlld0JveD0iMCAwIDE1MDAgNTIwIj4KPGRlZnM+CjxsaW5lYXJHcmFkaWVudCBpZD0iYmciIHgxPSIwIiB4Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjZWZmNmZmIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjZjVmM2ZmIi8+PC9saW5lYXJHcmFkaWVudD4KPGZpbHRlciBpZD0ic2hhZG93Ij48ZmVEcm9wU2hhZG93IGR4PSIwIiBkeT0iNSIgc3RkRGV2aWF0aW9uPSI2IiBmbG9vZC1vcGFjaXR5PSIuMTYiLz48L2ZpbHRlcj4KPG1hcmtlciBpZD0iYXJyb3ciIG1hcmtlcldpZHRoPSIxMiIgbWFya2VySGVpZ2h0PSIxMiIgcmVmWD0iMTAiIHJlZlk9IjYiIG9yaWVudD0iYXV0byI+PHBhdGggZD0iTTAgMCBMMTIgNiBMMCAxMiB6IiBmaWxsPSIjNGY0NmU1Ii8+PC9tYXJrZXI+CjwvZGVmcz4KPHJlY3Qgd2lkdGg9IjE1MDAiIGhlaWdodD0iNTIwIiByeD0iMjgiIGZpbGw9InVybCgjYmcpIi8+Cjx0ZXh0IHg9Ijc1MCIgeT0iNDgiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJTZWdvZSBVSSxBcmlhbCIgZm9udC1zaXplPSIzMCIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iIzE3MjAzMyI+Tk9BQSBBV1MgUzMg4oaSIFJERCDihpIgQ2xlYW5lZCBhbmQgUmVwb3J0LVJlYWR5IERhdGE8L3RleHQ+CjxnIGZpbHRlcj0idXJsKCNzaGFkb3cpIj4KPHJlY3QgeD0iMzUiIHk9IjE2NSIgd2lkdGg9IjE4NSIgaGVpZ2h0PSIxNzAiIHJ4PSIyMCIgZmlsbD0iI2ZmZiIgc3Ryb2tlPSIjZTI0YTMzIiBzdHJva2Utd2lkdGg9IjQiLz4KPHRleHQgeD0iMTI3IiB5PSIyMTAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJTZWdvZSBVSSxBcmlhbCIgZm9udC1zaXplPSIyMSIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iI2UyNGEzMyI+QVdTIE9wZW4gRGF0YTwvdGV4dD4KPHRleHQgeD0iMTI3IiB5PSIyNDgiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJTZWdvZSBVSSxBcmlhbCIgZm9udC1zaXplPSIxNiI+bm9hYS1nc29kLXBkczwvdGV4dD4KPHRleHQgeD0iMTI3IiB5PSIyNzgiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJTZWdvZSBVSSxBcmlhbCIgZm9udC1zaXplPSIxNSI+UHVibGljIEhUVFBTIENTVjwvdGV4dD4KPC9nPgo8bGluZSB4MT0iMjI1IiB5MT0iMjUwIiB4Mj0iMzAwIiB5Mj0iMjUwIiBzdHJva2U9IiM0ZjQ2ZTUiIHN0cm9rZS13aWR0aD0iNSIgbWFya2VyLWVuZD0idXJsKCNhcnJvdykiLz4KPGcgZmlsdGVyPSJ1cmwoI3NoYWRvdykiPgo8cmVjdCB4PSIzMTUiIHk9IjE0NSIgd2lkdGg9IjE4NSIgaGVpZ2h0PSIyMTAiIHJ4PSIyMCIgZmlsbD0iI2ZmZiIgc3Ryb2tlPSIjMGY3NjZlIiBzdHJva2Utd2lkdGg9IjQiLz4KPHRleHQgeD0iNDA3IiB5PSIxOTIiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJTZWdvZSBVSSxBcmlhbCIgZm9udC1zaXplPSIyMSIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iIzBmNzY2ZSI+TG9jYWwgLyBEQkZTPC90ZXh0Pgo8dGV4dCB4PSI0MDciIHk9IjIzMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IlNlZ29lIFVJLEFyaWFsIiBmb250LXNpemU9IjE2Ij5Eb3dubG9hZCBvbmNlPC90ZXh0Pgo8dGV4dCB4PSI0MDciIHk9IjI2MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IlNlZ29lIFVJLEFyaWFsIiBmb250LXNpemU9IjE2Ij5SZXByb2R1Y2libGUgc25hcHNob3Q8L3RleHQ+Cjx0ZXh0IHg9IjQwNyIgeT0iMjkwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iU2Vnb2UgVUksQXJpYWwiIGZvbnQtc2l6ZT0iMTYiPlVURi04IENTVjwvdGV4dD4KPC9nPgo8bGluZSB4MT0iNTA1IiB5MT0iMjUwIiB4Mj0iNTgwIiB5Mj0iMjUwIiBzdHJva2U9IiM0ZjQ2ZTUiIHN0cm9rZS13aWR0aD0iNSIgbWFya2VyLWVuZD0idXJsKCNhcnJvdykiLz4KPGcgZmlsdGVyPSJ1cmwoI3NoYWRvdykiPgo8cmVjdCB4PSI1OTUiIHk9IjEyNSIgd2lkdGg9IjIwNSIgaGVpZ2h0PSIyNTAiIHJ4PSIyMCIgZmlsbD0iI2ZmZiIgc3Ryb2tlPSIjNGY0NmU1IiBzdHJva2Utd2lkdGg9IjQiLz4KPHRleHQgeD0iNjk3IiB5PSIxNzQiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJTZWdvZSBVSSxBcmlhbCIgZm9udC1zaXplPSIyMSIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iIzRmNDZlNSI+UmF3IFJERDwvdGV4dD4KPHRleHQgeD0iNjk3IiB5PSIyMTIiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJTZWdvZSBVSSxBcmlhbCIgZm9udC1zaXplPSIxNiI+c2MudGV4dEZpbGUoKTwvdGV4dD4KPHRleHQgeD0iNjk3IiB5PSIyNDQiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJTZWdvZSBVSSxBcmlhbCIgZm9udC1zaXplPSIxNiI+UmVtb3ZlIGhlYWRlcjwvdGV4dD4KPHRleHQgeD0iNjk3IiB5PSIyNzYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJTZWdvZSBVSSxBcmlhbCIgZm9udC1zaXplPSIxNiI+bWFwUGFydGl0aW9ucyhjc3YpPC90ZXh0Pgo8dGV4dCB4PSI2OTciIHk9IjMwOCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IlNlZ29lIFVJLEFyaWFsIiBmb250LXNpemU9IjE2Ij5MYXp5IGxpbmVhZ2U8L3RleHQ+CjwvZz4KPGxpbmUgeDE9IjgwNSIgeTE9IjI1MCIgeDI9Ijg4MCIgeTI9IjI1MCIgc3Ryb2tlPSIjNGY0NmU1IiBzdHJva2Utd2lkdGg9IjUiIG1hcmtlci1lbmQ9InVybCgjYXJyb3cpIi8+CjxnIGZpbHRlcj0idXJsKCNzaGFkb3cpIj4KPHJlY3QgeD0iODk1IiB5PSIxMjUiIHdpZHRoPSIyMDUiIGhlaWdodD0iMjUwIiByeD0iMjAiIGZpbGw9IiNmZmYiIHN0cm9rZT0iI2UyNGEzMyIgc3Ryb2tlLXdpZHRoPSI0Ii8+Cjx0ZXh0IHg9Ijk5NyIgeT0iMTc0IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iU2Vnb2UgVUksQXJpYWwiIGZvbnQtc2l6ZT0iMjEiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IiNlMjRhMzMiPkNsZWFuIFJERDwvdGV4dD4KPHRleHQgeD0iOTk3IiB5PSIyMTIiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJTZWdvZSBVSSxBcmlhbCIgZm9udC1zaXplPSIxNiI+U2VudGluZWwg4oaSIE5vbmU8L3RleHQ+Cjx0ZXh0IHg9Ijk5NyIgeT0iMjQ0IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iU2Vnb2UgVUksQXJpYWwiIGZvbnQtc2l6ZT0iMTYiPkZhaHJlbmhlaXQg4oaSIENlbHNpdXM8L3RleHQ+Cjx0ZXh0IHg9Ijk5NyIgeT0iMjc2IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iU2Vnb2UgVUksQXJpYWwiIGZvbnQtc2l6ZT0iMTYiPkluY2hlcyDihpIgbWlsbGltZXRyZXM8L3RleHQ+Cjx0ZXh0IHg9Ijk5NyIgeT0iMzA4IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iU2Vnb2UgVUksQXJpYWwiIGZvbnQtc2l6ZT0iMTYiPmNhY2hlKCk8L3RleHQ+CjwvZz4KPGxpbmUgeDE9IjExMDUiIHkxPSIyNTAiIHgyPSIxMTgwIiB5Mj0iMjUwIiBzdHJva2U9IiM0ZjQ2ZTUiIHN0cm9rZS13aWR0aD0iNSIgbWFya2VyLWVuZD0idXJsKCNhcnJvdykiLz4KPGcgZmlsdGVyPSJ1cmwoI3NoYWRvdykiPgo8cmVjdCB4PSIxMTk1IiB5PSIxMDUiIHdpZHRoPSIyNzAiIGhlaWdodD0iMjkwIiByeD0iMjAiIGZpbGw9IiNmZmYiIHN0cm9rZT0iIzBmNzY2ZSIgc3Ryb2tlLXdpZHRoPSI0Ii8+Cjx0ZXh0IHg9IjEzMzAiIHk9IjE1NSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IlNlZ29lIFVJLEFyaWFsIiBmb250LXNpemU9IjIxIiBmb250LXdlaWdodD0iNzAwIiBmaWxsPSIjMGY3NjZlIj5SZXBvcnQgYW5kIFNhdmU8L3RleHQ+Cjx0ZXh0IHg9IjEzMzAiIHk9IjE5OCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IlNlZ29lIFVJLEFyaWFsIiBmb250LXNpemU9IjE2Ij5hZ2dyZWdhdGVCeUtleShtb250aCk8L3RleHQ+Cjx0ZXh0IHg9IjEzMzAiIHk9IjIzMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IlNlZ29lIFVJLEFyaWFsIiBmb250LXNpemU9IjE2Ij5BdmVyYWdlIHRlbXBlcmF0dXJlPC90ZXh0Pgo8dGV4dCB4PSIxMzMwIiB5PSIyNjIiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJTZWdvZSBVSSxBcmlhbCIgZm9udC1zaXplPSIxNiI+UHJlY2lwaXRhdGlvbiBhbmQgZXZlbnRzPC90ZXh0Pgo8dGV4dCB4PSIxMzMwIiB5PSIyOTQiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJTZWdvZSBVSSxBcmlhbCIgZm9udC1zaXplPSIxNiI+c2F2ZUFzVGV4dEZpbGUoKTwvdGV4dD4KPHRleHQgeD0iMTMzMCIgeT0iMzI2IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iU2Vnb2UgVUksQXJpYWwiIGZvbnQtc2l6ZT0iMTYiPlBhcnQgZmlsZXMgKyBfU1VDQ0VTUzwvdGV4dD4KPC9nPgo8dGV4dCB4PSI3NTAiIHk9IjQ2NSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IlNlZ29lIFVJLEFyaWFsIiBmb250LXNpemU9IjE4IiBmaWxsPSIjNWQ2Nzc5Ij5UaGUgc2FtZSB0cmFuc2Zvcm1hdGlvbiBmdW5jdGlvbnMgcnVuIGluIFZTIENvZGUgYW5kIERhdGFicmlja3MgbGVnYWN5OyBvbmx5IHRoZSBpbnB1dCBhbmQgb3V0cHV0IHBhdGhzIGNoYW5nZS48L3RleHQ+Cjwvc3ZnPg==" alt="NOAA S3 RDD weather pipeline flow">
+<p class="caption">The transformation functions are the same in VS Code and Databricks legacy. Only storage paths change.</p>
+<h3>RDD Lineage</h3>
+<p><code>textFile → filter(header) → mapPartitions(parse) → filter(valid) → cache → map(month,key) → aggregateByKey → mapValues → sortByKey → saveAsTextFile</code></p>
+<table><tr><th>Narrow transformations</th><th>Wide transformations</th><th>Actions</th></tr><tr><td><code>filter</code>, <code>mapPartitions</code>, <code>map</code>, <code>mapValues</code></td><td><code>aggregateByKey</code>, <code>sortByKey</code>, <code>sortBy</code></td><td><code>first</code>, <code>count</code>, <code>collect</code>, <code>saveAsTextFile</code></td></tr></table>
+</section>
+
+<section id="s4" data-title="VS Code Setup">
+<h2>4. VS Code Environment Setup</h2>
+<h3>Prerequisites</h3><ul><li>Python 3.10+</li><li>Java 17+</li><li>VS Code and Microsoft Python extension</li></ul>
+<div class="codewrap"><button class="copy" onclick="copyCode(this)">Copy</button><pre><code>python --version
+java -version
+
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+
+python -m pip install --upgrade pip
+pip install -r requirements.txt</code></pre></div>
+<ol><li>Open the project folder.</li><li>Press <code>Ctrl+Shift+P</code>.</li><li>Select <b>Python: Select Interpreter</b>.</li><li>Choose <code>.venv\Scripts\python.exe</code>.</li><li>Run the pipeline from the integrated terminal or with F5.</li></ol>
+<div class="codewrap"><button class="copy" onclick="copyCode(this)">Copy</button><pre><code>python src\01_download_from_s3.py
+python src\02_inspect_rdd.py
+python src\noaa_weather_rdd_pipeline.py
+
+# Alternative
+spark-submit src\noaa_weather_rdd_pipeline.py</code></pre></div>
+</section>
+
+<section id="s5" data-title="Download and Load">
+<h2>5. Download from AWS S3 and Load as RDD</h2>
+<p><code>textFile()</code> reads Hadoop-supported filesystem paths, but a plain public HTTPS download is the simplest credential-free approach for local Windows training. The code downloads once and then gives Spark a local <code>file:</code> URI.</p>
+<div class="codewrap"><button class="copy" onclick="copyCode(this)">Copy</button><pre><code>S3_URL = (
+    &quot;https://noaa-gsod-pds.s3.amazonaws.com/&quot;
+    &quot;2024/01001099999.csv&quot;
+)
+
+urllib.request.urlretrieve(
+    S3_URL,
+    DOWNLOADED_FILE,
+)
+
+raw_lines = sc.textFile(
+    DOWNLOADED_FILE.resolve().as_uri(),
+    4,
+)
+
+header = raw_lines.first()
+
+data_lines = raw_lines.filter(
+    lambda line: line != header
+)</code></pre></div>
+<h3>Expected Inspection Output</h3>
+<div class="codewrap"><button class="copy" onclick="copyCode(this)">Copy</button><pre><code>Partitions: 4
+Rows including header: 356
+Header: &quot;STATION&quot;,&quot;DATE&quot;,...
+First data row: &quot;01001099999&quot;,&quot;2024-01-01&quot;,...</code></pre></div>
+<div class="warn"><b>Why not <code>line.split(",")</code>?</b> The station name contains a comma inside quotes: <code>"JAN MAYEN NOR NAVY, NO"</code>. Use Python's CSV parser.</div>
+</section>
+
+<section id="s6" data-title="Parse and Clean">
+<h2>6. Parse, Clean and Standardise</h2>
+<h3>Sentinel Handling</h3>
+<table><tr><th>Field</th><th>Missing sentinel</th><th>Clean action</th></tr><tr><td>Temperature</td><td>9999.9</td><td>Reject when required mean temperature is absent.</td></tr><tr><td>Precipitation</td><td>99.99</td><td>Convert to <code>None</code>.</td></tr><tr><td>Gust / snow depth</td><td>999.9</td><td>Convert to <code>None</code>.</td></tr></table>
+<div class="codewrap"><button class="copy" onclick="copyCode(this)">Copy</button><pre><code>def optional_float(value, sentinel):
+    value = value.strip()
+
+    if not value:
+        return None
+
+    number = float(value)
+
+    return None if number &gt;= sentinel else number
+
+
+def parse_partition(lines):
+    reader = csv.reader(lines)
+
+    for values in reader:
+        observation_date = datetime.strptime(
+            values[1].strip(),
+            &quot;%Y-%m-%d&quot;,
+        ).date()
+
+        temperature_f = optional_float(
+            values[6],
+            9999.9,
+        )
+
+        precipitation_in = optional_float(
+            values[24],
+            99.99,
+        )
+
+        yield {
+            &quot;date&quot;: observation_date.isoformat(),
+            &quot;month&quot;: observation_date.strftime(&quot;%Y-%m&quot;),
+            &quot;temperature_c&quot;: (
+                temperature_f - 32.0
+            ) * 5.0 / 9.0,
+            &quot;precipitation_mm&quot;: (
+                None
+                if precipitation_in is None
+                else precipitation_in * 25.4
+            ),
+        }</code></pre></div>
+<h3>Why mapPartitions?</h3><p>It creates one CSV reader per partition, reducing repeated parser initialisation while preserving distributed processing.</p>
+</section>
+
+<section id="s7" data-title="Transformations">
+<h2>7. Step-by-Step RDD Transformations</h2>
+<table><tr><th>Step</th><th>Operation</th><th>Purpose</th></tr><tr><td>1</td><td><code>filter</code></td><td>Remove header.</td></tr><tr><td>2</td><td><code>mapPartitions</code></td><td>Parse quoted CSV and convert values.</td></tr><tr><td>3</td><td><code>filter</code></td><td>Reject required-field errors and count optional gaps.</td></tr><tr><td>4</td><td><code>cache</code></td><td>Reuse clean records for report and saved output.</td></tr><tr><td>5</td><td><code>map</code></td><td>Create <code>(month, record)</code> pairs.</td></tr><tr><td>6</td><td><code>aggregateByKey</code></td><td>Compute several monthly metrics together.</td></tr><tr><td>7</td><td><code>mapValues</code></td><td>Convert accumulators to final KPI dictionaries.</td></tr><tr><td>8</td><td><code>sortByKey</code></td><td>Order the month report.</td></tr></table>
+<div class="codewrap"><button class="copy" onclick="copyCode(this)">Copy</button><pre><code>clean_rdd = (
+    raw_lines
+    .filter(lambda line: line != header)
+    .mapPartitions(parse_partition)
+    .filter(validate_and_count)
+    .cache()
+)
+
+clean_count = clean_rdd.count()</code></pre></div>
+<div class="note"><b>Why materialise once?</b> The quality accumulator is updated inside validation. Caching and then calling <code>count()</code> avoids repeating those side effects during later actions.</div>
+</section>
+
+<section id="s8" data-title="Report Aggregation">
+<h2>8. Build a Report-Ready Monthly RDD</h2>
+<p>The accumulator tuple stores counts, sums, maximum gust and weather-event days. <code>aggregateByKey()</code> uses separate within-partition and cross-partition functions.</p>
+<div class="codewrap"><button class="copy" onclick="copyCode(this)">Copy</button><pre><code>zero = (
+    0,       # observation days
+    0.0,     # temperature sum
+    0,       # temperature count
+    0.0,     # precipitation sum
+    0,       # precipitation count
+    0,       # rainy days
+    None,    # maximum gust
+    0, 0, 0, 0, 0, 0
+)
+
+monthly_report = (
+    clean_rdd
+    .map(lambda row: (row[&quot;month&quot;], row))
+    .aggregateByKey(
+        zero,
+        add_month_value,
+        merge_month_values,
+    )
+    .mapValues(to_report_metrics)
+    .sortByKey()
+)</code></pre></div>
+<h3>Report KPIs</h3><ul><li>Observation days</li><li>Average temperature in Celsius</li><li>Total valid precipitation in millimetres</li><li>Rainy days</li><li>Maximum gust in knots</li><li>Fog, rain, snow, hail, thunder and tornado indicator days</li></ul>
+</section>
+
+<section id="s9" data-title="Save RDD Output">
+<h2>9. Saving Cleaned and Report RDDs</h2>
+<p><code>saveAsTextFile()</code> writes a directory, not one named CSV file. It creates <code>part-*</code> files and <code>_SUCCESS</code>. The target directory must not exist.</p>
+<div class="codewrap"><button class="copy" onclick="copyCode(this)">Copy</button><pre><code>if report_output.exists():
+    shutil.rmtree(report_output)
+
+report_lines = (
+    monthly_report
+    .map(format_report_csv)
+    .coalesce(1)
+    .mapPartitionsWithIndex(
+        lambda index, rows: add_header(
+            index,
+            rows,
+            REPORT_HEADER,
+        )
+    )
+)
+
+report_lines.saveAsTextFile(
+    report_output.resolve().as_uri()
+)</code></pre></div>
+<h3>Generated Local Structure</h3>
+<div class="codewrap"><button class="copy" onclick="copyCode(this)">Copy</button><pre><code>output/generated/monthly_weather_report_rdd/
+├── _SUCCESS
+└── part-00000</code></pre></div>
+<div class="warn"><b>Production warning:</b> <code>coalesce(1)</code> is used only for this tiny classroom report. Keep multiple partitions for large outputs.</div>
+</section>
+
+<section id="s10" data-title="Verified Output">
+<h2>10. Verified Output from the Snapshot</h2>
+<div class="grid4"><div class="card"><div class="kpi">355</div>Source observations</div><div class="card"><div class="kpi">20</div>Missing precipitation</div><div class="card"><div class="kpi">15</div>Missing gust</div><div class="card"><div class="kpi">354</div>Missing snow depth</div></div>
+<table><tr><th>Month</th><th>Days</th><th>Avg °C</th><th>Precip mm</th><th>Rainy days</th><th>Max gust</th><th>Fog days</th><th>Snow days</th></tr><tr><td>2024-01</td><td>31</td><td>-3.21</td><td>43.43</td><td>23</td><td>58.7</td><td>1</td><td>19</td></tr><tr><td>2024-02</td><td>29</td><td>-3.89</td><td>44.45</td><td>17</td><td>55.9</td><td>2</td><td>16</td></tr><tr><td>2024-03</td><td>27</td><td>-2.76</td><td>6.35</td><td>7</td><td>59.2</td><td>5</td><td>10</td></tr><tr><td>2024-04</td><td>30</td><td>-2.46</td><td>9.4</td><td>7</td><td>45.6</td><td>4</td><td>15</td></tr><tr><td>2024-05</td><td>30</td><td>1.14</td><td>42.67</td><td>18</td><td>47.0</td><td>11</td><td>7</td></tr><tr><td>2024-06</td><td>30</td><td>3.49</td><td>35.81</td><td>14</td><td>43.5</td><td>16</td><td>3</td></tr><tr><td>2024-07</td><td>31</td><td>7.02</td><td>44.2</td><td>15</td><td>38.5</td><td>22</td><td>0</td></tr><tr><td>2024-08</td><td>30</td><td>8.52</td><td>96.27</td><td>21</td><td>38.1</td><td>15</td><td>0</td></tr><tr><td>2024-09</td><td>30</td><td>3.73</td><td>152.4</td><td>27</td><td>49.5</td><td>6</td><td>9</td></tr><tr><td>2024-10</td><td>31</td><td>0.4</td><td>146.3</td><td>26</td><td>54.2</td><td>1</td><td>15</td></tr><tr><td>2024-11</td><td>26</td><td>-1.33</td><td>73.66</td><td>18</td><td>65.1</td><td>2</td><td>11</td></tr><tr><td>2024-12</td><td>30</td><td>-2.06</td><td>68.58</td><td>22</td><td>55.7</td><td>0</td><td>17</td></tr></table>
+<div class="good"><b>Warmest:</b> August, 8.52°C.<br><b>Wettest:</b> September, 152.40 mm.<br><b>Highest monthly maximum gust:</b> November, 65.1 knots.</div>
+</section>
+
+<section id="s11" data-title="Databricks Legacy">
+<h2>11. Run the Same Pipeline in Databricks Legacy</h2>
+<div class="warn"><b>Compute requirement:</b> use legacy/classic or dedicated compute. Current Free Edition serverless does not support SparkContext/RDD APIs.</div>
+<h3>Input Path Change</h3>
+<div class="codewrap"><button class="copy" onclick="copyCode(this)">Copy</button><pre><code>LOCAL_FILE = &quot;/tmp/01001099999_2024.csv&quot;
+DBFS_FILE = (
+    &quot;dbfs:/FileStore/rdd_noaa_weather/&quot;
+    &quot;01001099999_2024.csv&quot;
+)
+
+urllib.request.urlretrieve(
+    S3_URL,
+    LOCAL_FILE,
+)
+
+dbutils.fs.cp(
+    f&quot;file:{LOCAL_FILE}&quot;,
+    DBFS_FILE,
+)
+
+raw_lines = sc.textFile(DBFS_FILE, 4)</code></pre></div>
+<h3>Output Path Change</h3>
+<div class="codewrap"><button class="copy" onclick="copyCode(this)">Copy</button><pre><code>REPORT_OUTPUT = (
+    &quot;dbfs:/FileStore/rdd_noaa_weather/&quot;
+    &quot;output/monthly_report&quot;
+)
+
+dbutils.fs.rm(
+    REPORT_OUTPUT,
+    recurse=True,
+)
+
+report_lines.saveAsTextFile(
+    REPORT_OUTPUT
+)
+
+display(
+    dbutils.fs.ls(REPORT_OUTPUT)
+)</code></pre></div>
+<ol><li>Open Workspace.</li><li>Import the supplied DBC archive.</li><li>Attach classic/legacy compute.</li><li>Run all cells from the top.</li><li>Inspect the DBFS output directory.</li></ol>
+</section>
+
+<section id="s12" data-title="Best Practices and Troubleshooting">
+<h2>12. Best Practices, Edge Cases and Troubleshooting</h2>
+<table><tr><th>Problem</th><th>Cause</th><th>Resolution</th></tr><tr><td>S3 download fails</td><td>Network or endpoint restriction</td><td>Use NOAA mirror or bundled snapshot.</td></tr><tr><td>Wrong number of CSV columns</td><td>Used <code>split(",")</code></td><td>Use <code>csv.reader</code>.</td></tr><tr><td><code>FileAlreadyExistsException</code></td><td>Output directory exists</td><td>Delete or version it before saving.</td></tr><tr><td>Accumulator count increases twice</td><td>Lineage executed by multiple actions</td><td>Cache and materialise once.</td></tr><tr><td>RDD unsupported</td><td>Serverless Spark Connect</td><td>Use classic/dedicated compute.</td></tr><tr><td><code>JAVA_GATEWAY_EXITED</code></td><td>Java missing or misconfigured</td><td>Install Java 17+ and verify <code>JAVA_HOME</code>.</td></tr><tr><td>All precipitation appears huge</td><td>Sentinel 99.99 treated as real value</td><td>Convert sentinel to <code>None</code> before unit conversion.</td></tr></table>
+<h3>Best Practices</h3><ul><li>Download public HTTPS data once and preserve a reproducible snapshot.</li><li>Use real CSV parsing for quoted fields.</li><li>Separate required-field rejection from optional missing metrics.</li><li>Use <code>aggregateByKey</code> instead of <code>groupByKey</code> for KPI aggregation.</li><li>Cache only when the RDD is reused.</li><li>Do not force one partition for large datasets.</li><li>Use DataFrames for most new structured production ETL; use RDDs when low-level control is required.</li></ul>
+</section>
+
+<section id="s13" data-title="Q&A Exercises and Exam">
+<h2>13. Interview Q&A, Exercises, Quiz and Timed Exam</h2>
+<div id="qa"></div>
+<div class="exercise"><h3>Exercise 1 — Cold Days</h3><p>Return dates where mean temperature is below −5°C.</p><textarea rows="4"></textarea><button onclick="reveal(1)">Reveal</button><div id="sol1" class="hidden"></div></div>
+<div class="exercise"><h3>Exercise 2 — Weather Events</h3><p>Count snow days by month using <code>reduceByKey</code>.</p><textarea rows="4"></textarea><button onclick="reveal(2)">Reveal</button><div id="sol2" class="hidden"></div></div>
+<div class="exercise"><h3>Exercise 3 — Compressed Output</h3><p>Save the monthly report with Gzip compression.</p><textarea rows="4"></textarea><button onclick="reveal(3)">Reveal</button><div id="sol3" class="hidden"></div></div>
+<h3>Practice Quiz</h3><div id="practice"></div><button onclick="gradePractice()">Submit Practice</button><button class="green" onclick="startPractice()">Reshuffle</button><div id="pres"></div>
+<h3>Formal Exam</h3><button class="red" onclick="startExam()">Start Exam</button><span id="timer" class="timer">15:00</span><div id="exam"></div><button id="esub" class="hidden" onclick="gradeExam(false)">Submit Exam</button><div id="eres"></div>
+</section>
+
+<section id="certificate" data-title="Certificate"><h2>Completion Dashboard</h2><div class="grid3"><div class="card"><div id="xp" class="kpi">0</div>XP</div><div class="card"><div id="best" class="kpi">0%</div>Best Score</div><div class="card"><div id="badge" class="kpi">—</div>Badge</div></div><button onclick="exportData()">Export JSON</button><label class="tag">Import JSON <input style="display:none" type="file" accept="application/json" onchange="importData(event)"></label><h3>Certificate</h3><input id="name" type="text" placeholder="Learner name"><button onclick="certificate()">Generate</button><button class="green" onclick="window.print()">Print / PDF</button><div id="cert"></div></section>
+</main>
+<aside><h3>My Notes</h3><p class="small">Double-click a word or select a short phrase to save a note locally.</p><div id="notes">No notes.</div><button class="red" onclick="clearNotes()">Clear Notes</button><hr><h3>Resume</h3><p id="resume" class="small"></p><button class="ghost" onclick="resumeLast()">Resume Last Section</button></aside>
+</div>
+<div class="float"><button onclick="theme()">◐ Theme</button><button class="green" onclick="font(1)">A+</button><button class="green" onclick="font(-1)">A−</button><button class="red" onclick="location.href='#top'">↑ Top</button></div>
+<div id="modal" class="modal"><div class="modalbox"><h3>Save Note</h3><p>Selected: <b id="selection"></b></p><textarea id="noteText" rows="5"></textarea><button onclick="saveNote()">Save</button><button class="green" onclick="closeModal()">Cancel</button></div></div>
+<script>
+const K="noaa_rdd_tutorial_v1",D={theme:"light",font:100,p:{},notes:[],xp:0,best:0,last:"s1"};let S={...D};try{S={...D,...JSON.parse(localStorage.getItem(K)||"{}")}}catch(e){}function save(){try{localStorage.setItem(K,JSON.stringify(S))}catch(e){}}if(S.theme==="dark")document.body.classList.add("dark");document.documentElement.style.setProperty("--base",S.font+"%");
+const topics=["Dataset selection","Architecture","VS Code setup","Download S3 data","Load raw RDD","Parse quoted CSV","Clean sentinels","Use aggregateByKey","Save clean RDD","Save report RDD","Verify output","Run Databricks legacy","Pass exam"];function progress(){let n=0;checks.innerHTML=topics.map((x,i)=>{if(S.p[i])n++;return `<label class="check"><input type="checkbox" ${S.p[i]?"checked":""} onchange="mark(${i},this.checked)"> ${x}</label>`}).join("");let v=Math.round(n/topics.length*100);fill.style.width=v+"%";ptxt.textContent=`${n}/${topics.length} — ${v}%`}function mark(i,v){if(v&&!S.p[i])S.xp+=5;S.p[i]=v;save();progress();dash()}function resetProgress(){S.p={};save();progress()}progress();function theme(){S.theme=document.body.classList.toggle("dark")?"dark":"light";save()}function font(d){S.font=Math.max(85,Math.min(130,S.font+d*5));document.documentElement.style.setProperty("--base",S.font+"%");save()}function copyCode(b){navigator.clipboard.writeText(b.parentElement.querySelector("code").innerText);b.textContent="Copied";setTimeout(()=>b.textContent="Copy",1000)}
+let selected={};document.addEventListener("dblclick",e=>{if(e.target.closest("button,input,textarea,a,nav,aside,pre,code"))return;let t=window.getSelection().toString().trim();if(!t||t.length>90)return;selected={text:t,section:e.target.closest("section")?.dataset.title||"Tutorial"};selection.textContent=t;noteText.value="";modal.classList.add("show")});function closeModal(){modal.classList.remove("show")}function esc(x){return String(x).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}function saveNote(){let n=noteText.value.trim();if(!n)return;S.notes.push({id:Date.now(),...selected,note:n,time:new Date().toLocaleString()});S.xp+=2;save();closeModal();renderNotes();dash()}function renderNotes(){notes.innerHTML=S.notes.length?S.notes.map(n=>`<div class="noteitem"><b>${esc(n.text)}</b><p>${esc(n.note)}</p><span class="small">${esc(n.section)} · ${esc(n.time)}</span><br><button class="red" onclick="delNote(${n.id})">Delete</button></div>`).join(""):"No notes."}function delNote(id){S.notes=S.notes.filter(n=>n.id!==id);save();renderNotes()}function clearNotes(){S.notes=[];save();renderNotes()}renderNotes();
+const qa=[["Why download the S3 HTTPS file before textFile locally?","It provides a simple credential-free local filesystem path for Spark."],["Why not split CSV by comma?","Quoted station names contain commas."],["What does textFile return?","An RDD of strings, one element per line."],["Why use mapPartitions?","It creates one CSV reader per partition."],["What is a sentinel value?","A special numeric code representing missing data."],["Why convert 99.99 precipitation to None?","It is the GSOD missing-value sentinel, not real rain."],["Why cache the clean RDD?","It is reused for output and monthly reporting."],["Why call count after cache?","To materialise all partitions once."],["Why aggregateByKey?","It computes several metrics per key with map-side aggregation."],["What does saveAsTextFile create?","A directory of part files and a success marker."],["Why remove the output first?","saveAsTextFile does not overwrite existing paths."],["Why is coalesce(1) limited to small output?","It concentrates all data in one task and can bottleneck."],["What changes in Databricks legacy?","Use DBFS paths instead of local paths."],["Can Free Edition serverless run RDD APIs?","No; use classic or dedicated compute."],["RDD versus DataFrame for structured production ETL?","DataFrames are normally preferred because the optimizer sees the schema and expressions."],["What is a wide transformation here?","aggregateByKey and global sorting."],["What does unpersist do?","Releases cached blocks."],["How is Fahrenheit converted to Celsius?","(F − 32) × 5/9."],["How are inches converted to millimetres?","Multiply by 25.4."],["What is the wettest month in the snapshot?","September 2024."]];qa.forEach((x,i)=>document.getElementById("qa").insertAdjacentHTML("beforeend",`<details><summary>${i+1}. ${x[0]}</summary><p>${x[1]}</p></details>`));
+const sols={1:`<pre><code>cold_days = clean_rdd.filter(
+    lambda row: row["temperature_c"] < -5
+).map(lambda row: row["date"])
+
+print(cold_days.collect())</code></pre>`,2:`<pre><code>snow_by_month = clean_rdd.map(
+    lambda row: (row["month"], row["snow_or_ice"])
+).reduceByKey(lambda a, b: a + b)
+
+print(snow_by_month.sortByKey().collect())</code></pre>`,3:`<pre><code>codec = "org.apache.hadoop.io.compress.GzipCodec"
+
+report_lines.saveAsTextFile(
+    output_path,
+    codec
+)</code></pre>`};function reveal(n){let e=document.getElementById("sol"+n);e.innerHTML=sols[n];e.classList.remove("hidden");S.xp+=3;save();dash()}
+const B=[["What does textFile return?","RDD of strings"],["Correct CSV parser?","csv.reader"],["Missing precipitation sentinel?","99.99"],["Missing gust sentinel?","999.9"],["Temperature conversion?","(F-32)*5/9"],["Precipitation conversion?","inches*25.4"],["Monthly key operation?","aggregateByKey"],["Header operation?","first then filter"],["What triggers execution?","Action"],["Why cache?","Reuse without recomputation"],["Output method?","saveAsTextFile"],["Output is what?","Directory of part files"],["Existing output?","Delete or version it"],["Databricks input storage?","Legacy DBFS"],["Free serverless RDD?","Unsupported"],["Narrow parsing operation?","mapPartitions"],["Wide operation?","aggregateByKey"],["Report order operation?","sortByKey"],["Release cache?","unpersist"],["Wettest month?","September"]].map(x=>({q:x[0],a:x[1],o:[x[1],"DataFrame schema","Broadcast variable","Checkpoint"]}));function sh(a){a=[...a];for(let i=a.length-1;i;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}function prep(q){return{...q,o:sh(q.o)}}let P=[],E=[],tid,done=false;function render(list,id,p){document.getElementById(id).innerHTML=list.map((q,i)=>`<div class="qcard"><b>${i+1}. ${q.q}</b>${q.o.map(o=>`<label class="option"><input type="radio" name="${p}${i}" value="${o}"> ${o}</label>`).join("")}<div id="${p}x${i}"></div></div>`).join("")}function score(list,p){let s=0;list.forEach((q,i)=>{let x=document.querySelector(`input[name="${p}${i}"]:checked`),ok=x&&x.value===q.a;if(ok)s++;document.getElementById(`${p}x${i}`).innerHTML=`<div class="${ok?"good":"warn"}">${ok?"Correct":"Incorrect"}. Correct: ${q.a}</div>`});return s}function tone(ok){try{let c=new(window.AudioContext||window.webkitAudioContext)(),o=c.createOscillator(),g=c.createGain();o.frequency.value=ok?660:220;g.gain.value=.05;o.connect(g);g.connect(c.destination);o.start();o.stop(c.currentTime+.15)}catch(e){}}function startPractice(){P=sh(B).slice(0,10).map(prep);render(P,"practice","p");pres.innerHTML=""}function gradePractice(){let s=score(P,"p"),v=Math.round(s/P.length*100);tone(v>=60);pres.innerHTML=`<div class="${v>=60?"good":"warn"}">${v>=90?"🌟 Excellent":v>=60?"🙂 Passed":"📘 Retry"} — ${s}/${P.length} (${v}%)</div>`;S.xp+=s*2;S.best=Math.max(S.best,v);save();dash()}function startExam(){clearInterval(tid);done=false;E=sh(B).slice(0,15).map(prep);render(E,"exam","e");esub.classList.remove("hidden");let sec=900;tid=setInterval(()=>{sec--;timer.textContent=`${Math.floor(sec/60)}:${String(sec%60).padStart(2,"0")}`;if(sec<=0)gradeExam(true)},1000)}function gradeExam(auto){if(done)return;done=true;clearInterval(tid);let s=score(E,"e"),v=Math.round(s/E.length*100);tone(v>=60);eres.innerHTML=`<div class="${v>=60?"good":"bad"}">${auto?"Time expired. ":""}${v>=60?"🏆 PASS":"😟 FAIL"} — ${s}/${E.length} (${v}%)</div>`;S.xp+=s*5;S.best=Math.max(S.best,v);if(v>=60)S.p[12]=true;save();dash();progress()}startPractice();function dash(){xp.textContent=S.xp;best.textContent=S.best+"%";badge.textContent=S.best>=90?"🏆 RDD Pipeline Expert":S.best>=60?"✅ Report Ready":S.xp>=50?"⚡ Learner":"—"}dash();function exportData(){let b=new Blob([JSON.stringify(S,null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="noaa-rdd-progress.json";a.click()}function importData(e){let f=e.target.files[0],r=new FileReader();r.onload=()=>{try{S={...D,...JSON.parse(r.result)};save();location.reload()}catch(x){alert("Invalid file")}};r.readAsText(f)}function certificate(){let n=name.value.trim()||"Spark Learner";cert.innerHTML=`<div class="certificate"><h2>Certificate of Completion</h2><p>This certifies that</p><h1>${esc(n)}</h1><p>completed</p><h2>RDD Data Loading and Saving — NOAA AWS S3</h2><p>Best score: ${S.best}% · XP: ${S.xp}</p><p>${new Date().toLocaleDateString()}</p></div>`}
+const sections=[...document.querySelectorAll("main section")],links=[...document.querySelectorAll("nav a")],obs=new IntersectionObserver(es=>{let e=es.filter(x=>x.isIntersecting).sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];if(!e)return;links.forEach(a=>a.classList.toggle("active",a.getAttribute("href")==="#"+e.target.id));S.last=e.target.id;save();resume.textContent="Last section: "+(e.target.dataset.title||e.target.id)},{rootMargin:"-25% 0 -60% 0",threshold:[0,.2,.5]});sections.forEach(s=>obs.observe(s));resume.textContent="Last section: "+S.last;function resumeLast(){location.href="#"+S.last}window.addEventListener("scroll",()=>{let d=document.documentElement,h=d.scrollHeight-d.clientHeight;readbar.style.width=(h?d.scrollTop/h*100:0)+"%"});let last=0;document.addEventListener("mousemove",e=>{let n=Date.now();if(n-last<60)return;last=n;let s=document.createElement("i");s.className="sparkle";s.style.left=e.clientX+"px";s.style.top=e.clientY+"px";document.body.appendChild(s);setTimeout(()=>s.remove(),700)});modal.addEventListener("click",e=>{if(e.target===modal)closeModal()});
+</script>
+</body></html>
