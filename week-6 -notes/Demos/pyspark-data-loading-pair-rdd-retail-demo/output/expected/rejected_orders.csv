@@ -1,3 +1,0 @@
-order_id,order_date,customer_id,city,category,quantity,unit_price,discount_pct,status,rejection_reason
-1013,2026-07-05,C113,,Fashion,-2,1500.0,0.0,COMPLETED,MISSING_CITY|INVALID_QUANTITY
-1014,2026-07-05,C114,Chennai,Electronics,1,30000.0,120.0,COMPLETED,INVALID_DISCOUNT
