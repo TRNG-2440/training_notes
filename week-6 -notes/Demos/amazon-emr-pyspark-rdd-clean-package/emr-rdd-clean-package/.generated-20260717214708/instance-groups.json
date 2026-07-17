@@ -1,0 +1,38 @@
+[
+    {
+        "InstanceCount":  1,
+        "Name":  "Primary",
+        "InstanceGroupType":  "MASTER",
+        "EbsConfiguration":  {
+                                 "EbsOptimized":  true,
+                                 "EbsBlockDeviceConfigs":  [
+                                                               {
+                                                                   "VolumeSpecification":  {
+                                                                                               "VolumeType":  "gp3",
+                                                                                               "SizeInGB":  32
+                                                                                           },
+                                                                   "VolumesPerInstance":  1
+                                                               }
+                                                           ]
+                             },
+        "InstanceType":  "m5.xlarge"
+    },
+    {
+        "InstanceCount":  1,
+        "Name":  "Core",
+        "InstanceGroupType":  "CORE",
+        "EbsConfiguration":  {
+                                 "EbsOptimized":  true,
+                                 "EbsBlockDeviceConfigs":  [
+                                                               {
+                                                                   "VolumeSpecification":  {
+                                                                                               "VolumeType":  "gp3",
+                                                                                               "SizeInGB":  32
+                                                                                           },
+                                                                   "VolumesPerInstance":  1
+                                                               }
+                                                           ]
+                             },
+        "InstanceType":  "m5.xlarge"
+    }
+]

@@ -1,0 +1,455 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Trainer transition guide from AWS EMR to GCP Dataproc with portable PySpark demo.">
+<title>AWS EMR to GCP Dataproc — Trainer Transition Guide</title>
+<style>
+:root{--bg:#f4f7fb;--panel:#fff;--panel2:#eef3f9;--text:#172033;--muted:#5d6c82;--brand:#5b21b6;--blue:#155eef;--green:#087443;--orange:#c2410c;--red:#b42318;--border:#cbd7e6;--code:#0d1526;--code-text:#eaf1ff;--shadow:0 10px 28px rgba(20,42,78,.10);--header:70px}
+html[data-theme="dark"]{--bg:#0b1220;--panel:#111c2f;--panel2:#18263c;--text:#edf4ff;--muted:#b8c6da;--brand:#c4a2ff;--blue:#79a8ff;--green:#6ee7b7;--orange:#fdba74;--red:#ff9b93;--border:#33465f;--code:#070c15;--shadow:0 12px 28px rgba(0,0,0,.32)}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:88px}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,Segoe UI,Arial,sans-serif;line-height:1.65}a{color:var(--blue);text-underline-offset:3px}code{font-family:Consolas,monospace;background:var(--panel2);color:var(--blue);padding:.08em .3em;border-radius:5px}
+header{position:fixed;top:0;left:300px;right:0;height:var(--header);z-index:50;background:color-mix(in srgb,var(--panel) 95%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 22px}header strong{color:var(--brand)}button{cursor:pointer;border:1px solid var(--border);background:var(--panel);color:var(--text);border-radius:9px;padding:8px 11px;font-weight:750}button:hover{box-shadow:0 5px 14px rgba(0,0,0,.12);transform:translateY(-1px)}
+aside{position:fixed;inset:0 auto 0 0;width:300px;background:linear-gradient(180deg,#2b1558,#12335b);color:#fff;padding:18px 14px;overflow:auto;z-index:60}aside h1{font-size:20px;line-height:1.2;margin:0 0 5px}aside p{font-size:12px;color:#dce7ff}#search{width:100%;border:0;border-radius:9px;padding:10px;margin:9px 0 12px}.nav-link{display:block;color:#edf2ff;text-decoration:none;padding:7px 9px;border-radius:8px;font-size:12.5px}.nav-link:hover,.nav-link.active{background:rgba(255,255,255,.14)}.progress-track{height:8px;background:rgba(255,255,255,.18);border-radius:999px;overflow:hidden}#progressBar{height:100%;width:0;background:linear-gradient(90deg,#34d399,#60a5fa)}#progressText{font-size:12px;color:#dce7ff;margin:5px 0 12px}
+main{margin-left:300px;padding:92px 24px 60px;max-width:1580px}.hero{background:linear-gradient(135deg,#7c2d12,#c2410c 28%,#5b21b6 63%,#155eef);color:#fff;border-radius:20px;padding:34px;box-shadow:var(--shadow);margin-bottom:20px}.hero h1{font-size:clamp(2rem,4vw,3.45rem);line-height:1.05;margin:0 0 12px}.hero p{font-size:1.1rem;max-width:1050px}.badge-row{display:flex;flex-wrap:wrap;gap:7px}.badge{background:rgba(255,255,255,.17);border:1px solid rgba(255,255,255,.25);padding:5px 9px;border-radius:999px;font-size:12px}
+.tutorial-section{background:var(--panel);border:1px solid var(--border);border-radius:18px;padding:clamp(18px,3vw,32px);margin:18px 0;box-shadow:var(--shadow)}.section-title{display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid var(--border);margin-bottom:18px}.section-title h2{margin:0 0 13px;color:var(--brand);font-size:clamp(1.4rem,2.7vw,2rem)}.eyebrow{color:var(--blue);font-weight:850;text-transform:uppercase;letter-spacing:.09em;font-size:.75rem}.complete-label{font-size:13px;color:var(--muted);white-space:nowrap}.complete-label input{width:18px;height:18px;accent-color:var(--green)}
+.lead{font-size:1.16rem;color:var(--muted)}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:13px}.grid.three{grid-template-columns:repeat(auto-fit,minmax(270px,1fr))}.card{background:var(--panel2);border:1px solid var(--border);border-radius:13px;padding:15px}.card h3{margin-top:0;color:var(--blue)}.callout,.memory{background:var(--panel2);border-left:5px solid var(--blue);border-radius:10px;padding:13px 15px;margin:16px 0}.callout.success{border-color:var(--green)}.callout.warning{border-color:var(--orange)}.callout.danger{border-color:var(--red)}.memory{border-color:var(--brand);font-size:1.05rem;font-weight:750}
+table{width:100%;border-collapse:collapse;display:block;overflow:auto;margin:15px 0}th,td{border:1px solid var(--border);padding:9px 10px;text-align:left;vertical-align:top}th{background:var(--panel2);color:var(--brand)}.diagram{background:#fff;border:1px solid var(--border);border-radius:15px;padding:10px;margin:22px 0;overflow:hidden}.diagram svg{display:block;width:100%;height:auto}.diagram figcaption{font-weight:850;color:var(--brand);margin:5px 5px 12px}
+.code-wrap{position:relative;margin:14px 0}pre{margin:0;background:var(--code);color:var(--code-text);padding:44px 16px 16px;border-radius:12px;overflow:auto;border:1px solid #33415c;line-height:1.52}pre code{background:transparent;color:inherit;padding:0;font-size:12.5px}.copy-btn{position:absolute;right:9px;top:8px;background:#26354f;color:#fff;border-color:#536581;z-index:2}details{border:1px solid var(--border);border-radius:10px;margin:8px 0;background:var(--panel2)}summary{cursor:pointer;font-weight:800;color:var(--blue);padding:11px}details p{padding:0 12px 12px}.steps li{margin:7px 0}.path{font-family:Consolas,monospace;background:var(--code);color:var(--code-text);border-radius:10px;padding:12px;overflow:auto}
+.question{background:var(--panel2);border:1px solid var(--border);border-radius:11px;padding:12px;margin:10px 0}.question label{display:block;padding:3px}.result{font-weight:900;margin:12px 0}
+@media(max-width:900px){aside{position:relative;width:100%;max-height:430px}header{left:0;position:sticky}main{margin:0;padding:20px 12px 50px}.section-title{display:block}}@media(max-width:520px){.hero{padding:24px 18px}.tutorial-section{padding:16px}}@media print{aside,header,.copy-btn,.complete-label{display:none!important}main{margin:0;padding:0}.tutorial-section{box-shadow:none;break-inside:avoid}}
+</style>
+</head>
+<body>
+<aside>
+<h1>EMR → Dataproc Trainer Guide</h1>
+<p>Cloud-to-cloud managed Spark comparison</p>
+<input id="search" placeholder="Search topics and commands...">
+<div class="progress-track"><div id="progressBar"></div></div>
+<div id="progressText">0% prepared</div>
+<nav>
+<a href="#s1" class="nav-link">1. Direct answer</a>
+<a href="#s2" class="nav-link">2. What stays the same</a>
+<a href="#s3" class="nav-link">3. Architecture comparison</a>
+<a href="#s4" class="nav-link">4. Terminology map</a>
+<a href="#s5" class="nav-link">5. Submission comparison</a>
+<a href="#s6" class="nav-link">6. Storage and HDFS</a>
+<a href="#s7" class="nav-link">7. IAM and security</a>
+<a href="#s8" class="nav-link">8. When to choose each</a>
+<a href="#s9" class="nav-link">9. Portable real-world demo</a>
+<a href="#s10" class="nav-link">10. Trainer delivery sequence</a>
+<a href="#s11" class="nav-link">11. Hands-on commands</a>
+<a href="#s12" class="nav-link">12. Operations and troubleshooting</a>
+<a href="#s13" class="nav-link">13. Questions and exercises</a>
+</nav>
+</aside>
+
+<header>
+<strong>AWS EMR knowledge → GCP Dataproc confidence</strong>
+<div>
+<button type="button" id="themeBtn">Theme</button>
+<button type="button" onclick="window.print()">Print/PDF</button>
+</div>
+</header>
+
+<main>
+<div class="hero">
+<h1>AWS EMR vs GCP Dataproc — Trainer Transition Notes</h1>
+<p>Use the EMR concepts you already taught as the foundation. Map the same Spark, YARN, driver, executor and object-storage ideas to Google Cloud, then demonstrate one portable PySpark application on both platforms.</p>
+<div class="badge-row"><span class="badge">Trainer bridge</span><span class="badge">Architecture diagrams</span><span class="badge">CLI mapping</span><span class="badge">IAM mapping</span><span class="badge">Portable PySpark</span><span class="badge">Decision matrix</span></div>
+</div>
+
+<section id="s1" class="tutorial-section">
+<div class="section-title"><div><span class="eyebrow">Section 1</span><h2>Is the usage the same?</h2></div><label class="complete-label"><input type="checkbox" class="complete" data-section="s1"> Prepared</label></div>
+<p class="lead"><b>They are in the same service category, but they are not identical products.</b></p>
+<div class="grid three">
+<div class="card"><h3>Same purpose</h3><p>Managed Spark/Hadoop compute for ETL, SQL, batch, streaming, lakehouse preparation and large-scale processing.</p></div>
+<div class="card"><h3>Same Spark ideas</h3><p>Driver, executors, jobs, stages, tasks, partitions, DAGs, YARN, RDDs, DataFrames and Spark SQL.</p></div>
+<div class="card"><h3>Different cloud layer</h3><p>Storage, identity, networking, commands, monitoring, billing and surrounding analytics integrations differ.</p></div>
+</div>
+<div class="memory">Trainer sentence: <b>“Same engine and distributed-computing ideas; different cloud platform and operating model.”</b></div>
+<p>Your AWS tutorial already establishes <b>EMR provisions → YARN allocates → Spark executes → S3 stores</b>. Continue on GCP with <b>Dataproc provisions → YARN allocates → Spark executes → GCS stores</b>.</p>
+</section>
+
+<section id="s2" class="tutorial-section">
+<div class="section-title"><div><span class="eyebrow">Section 2</span><h2>What remains the same?</h2></div><label class="complete-label"><input type="checkbox" class="complete" data-section="s2"> Prepared</label></div>
+<table>
+<tr><th>Layer</th><th>What remains portable</th><th>Trainer emphasis</th></tr>
+<tr><td>Apache Spark</td><td><code>SparkSession</code>, RDD, DataFrame, Spark SQL, streaming APIs</td><td>The application logic is mostly cloud-neutral.</td></tr>
+<tr><td>Execution</td><td>Driver, executor, task, job, stage, partition, DAG</td><td>Do not reteach Spark architecture from zero.</td></tr>
+<tr><td>Resource management</td><td>YARN is common in standard managed cluster mode</td><td>Only the managed cloud control plane changes.</td></tr>
+<tr><td>Performance</td><td>Shuffle, skew, cache, partition sizing, file sizing</td><td>Spark tuning knowledge transfers.</td></tr>
+<tr><td>Data engineering</td><td>Load → validate → transform → aggregate → save → verify</td><td>Business pipeline sequence is unchanged.</td></tr>
+<tr><td>Cost pattern</td><td>Running clusters cost money even when idle</td><td>Delete temporary training clusters.</td></tr>
+</table>
+<div class="callout success"><b>Do not repeat the full Spark theory.</b> Ask learners to identify which part belongs to Spark and which part belongs to the cloud provider.</div>
+</section>
+
+<section id="s3" class="tutorial-section">
+<div class="section-title"><div><span class="eyebrow">Section 3</span><h2>Architecture comparison</h2></div><label class="complete-label"><input type="checkbox" class="complete" data-section="s3"> Prepared</label></div>
+<figure class="diagram"><figcaption>Diagram 1 — Direct managed-cluster comparison</figcaption><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 760" role="img" aria-labelledby="title desc">
+<title id="title">AWS EMR and GCP Dataproc architecture comparison</title>
+<desc id="desc">Both managed services submit Spark jobs to YARN clusters and use cloud object storage for durable data. Node names and cloud control services differ.</desc>
+<defs>
+  <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+    <path d="M0,0 L0,6 L9,3 z" fill="#4f46e5"/>
+  </marker>
+</defs>
+<rect width="1400" height="760" rx="28" fill="#f8fafc"/>
+<text x="700" y="48" text-anchor="middle" font-family="Segoe UI,Arial" font-size="30" font-weight="700" fill="#172033">Managed Spark Cluster Comparison</text>
+
+<rect x="45" y="90" width="625" height="610" rx="24" fill="#fff7ed" stroke="#e24a33" stroke-width="4"/>
+<text x="357" y="132" text-anchor="middle" font-family="Segoe UI,Arial" font-size="26" font-weight="700" fill="#e24a33">AWS EMR on EC2</text>
+<rect x="90" y="165" width="535" height="75" rx="14" fill="#fff" stroke="#e24a33" stroke-width="3"/>
+<text x="357" y="197" text-anchor="middle" font-family="Segoe UI,Arial" font-size="19" font-weight="700">AWS Console / AWS CLI / EMR API</text>
+<text x="357" y="222" text-anchor="middle" font-family="Segoe UI,Arial" font-size="15">create-cluster • add-steps • describe-step</text>
+<line x1="357" y1="242" x2="357" y2="285" stroke="#4f46e5" stroke-width="5" marker-end="url(#arrow)"/>
+<rect x="90" y="295" width="535" height="145" rx="16" fill="#fff" stroke="#6d28d9" stroke-width="3"/>
+<text x="357" y="327" text-anchor="middle" font-family="Segoe UI,Arial" font-size="20" font-weight="700">Managed Cluster</text>
+<text x="183" y="370" text-anchor="middle" font-family="Segoe UI,Arial" font-size="16">Primary node</text>
+<text x="357" y="370" text-anchor="middle" font-family="Segoe UI,Arial" font-size="16">Core nodes</text>
+<text x="532" y="370" text-anchor="middle" font-family="Segoe UI,Arial" font-size="16">Task nodes</text>
+<text x="183" y="405" text-anchor="middle" font-family="Segoe UI,Arial" font-size="14">ResourceManager</text>
+<text x="357" y="405" text-anchor="middle" font-family="Segoe UI,Arial" font-size="14">Executors + HDFS</text>
+<text x="532" y="405" text-anchor="middle" font-family="Segoe UI,Arial" font-size="14">Elastic compute</text>
+<line x1="357" y1="442" x2="357" y2="485" stroke="#4f46e5" stroke-width="5" marker-end="url(#arrow)"/>
+<rect x="90" y="495" width="535" height="120" rx="16" fill="#fff" stroke="#0f766e" stroke-width="3"/>
+<text x="357" y="530" text-anchor="middle" font-family="Segoe UI,Arial" font-size="20" font-weight="700">Amazon S3 through EMRFS</text>
+<text x="357" y="565" text-anchor="middle" font-family="Segoe UI,Arial" font-size="15">s3://input • s3://code • s3://output • s3://logs</text>
+<text x="357" y="594" text-anchor="middle" font-family="Segoe UI,Arial" font-size="14">Durable storage survives cluster termination</text>
+
+<rect x="730" y="90" width="625" height="610" rx="24" fill="#eff6ff" stroke="#4285f4" stroke-width="4"/>
+<text x="1042" y="132" text-anchor="middle" font-family="Segoe UI,Arial" font-size="26" font-weight="700" fill="#2463c5">GCP Dataproc / Managed Spark clusters</text>
+<rect x="775" y="165" width="535" height="75" rx="14" fill="#fff" stroke="#4285f4" stroke-width="3"/>
+<text x="1042" y="197" text-anchor="middle" font-family="Segoe UI,Arial" font-size="19" font-weight="700">Google Cloud Console / gcloud / Dataproc API</text>
+<text x="1042" y="222" text-anchor="middle" font-family="Segoe UI,Arial" font-size="15">clusters create • jobs submit pyspark • jobs describe</text>
+<line x1="1042" y1="242" x2="1042" y2="285" stroke="#4f46e5" stroke-width="5" marker-end="url(#arrow)"/>
+<rect x="775" y="295" width="535" height="145" rx="16" fill="#fff" stroke="#6d28d9" stroke-width="3"/>
+<text x="1042" y="327" text-anchor="middle" font-family="Segoe UI,Arial" font-size="20" font-weight="700">Managed Cluster</text>
+<text x="868" y="370" text-anchor="middle" font-family="Segoe UI,Arial" font-size="16">Primary node</text>
+<text x="1042" y="370" text-anchor="middle" font-family="Segoe UI,Arial" font-size="16">Worker nodes</text>
+<text x="1217" y="370" text-anchor="middle" font-family="Segoe UI,Arial" font-size="16">Secondary workers</text>
+<text x="868" y="405" text-anchor="middle" font-family="Segoe UI,Arial" font-size="14">ResourceManager</text>
+<text x="1042" y="405" text-anchor="middle" font-family="Segoe UI,Arial" font-size="14">Executors + HDFS</text>
+<text x="1217" y="405" text-anchor="middle" font-family="Segoe UI,Arial" font-size="14">Elastic / Spot compute</text>
+<line x1="1042" y1="442" x2="1042" y2="485" stroke="#4f46e5" stroke-width="5" marker-end="url(#arrow)"/>
+<rect x="775" y="495" width="535" height="120" rx="16" fill="#fff" stroke="#0f766e" stroke-width="3"/>
+<text x="1042" y="530" text-anchor="middle" font-family="Segoe UI,Arial" font-size="20" font-weight="700">Cloud Storage through GCS connector</text>
+<text x="1042" y="565" text-anchor="middle" font-family="Segoe UI,Arial" font-size="15">gs://input • gs://code • gs://output • gs://staging</text>
+<text x="1042" y="594" text-anchor="middle" font-family="Segoe UI,Arial" font-size="14">Durable storage survives cluster deletion</text>
+
+<text x="700" y="735" text-anchor="middle" font-family="Segoe UI,Arial" font-size="18" fill="#5d6779">Common layer: Apache Spark + YARN + driver/executor model. Different layer: cloud services, naming, identity, networking, and operational commands.</text>
+</svg></figure>
+<div class="callout warning"><b>Precise equivalence:</b> EMR on EC2 is most directly comparable to a Dataproc/Managed Service for Apache Spark cluster. Do not compare every EMR deployment option to one single Dataproc mode.</div>
+</section>
+
+<section id="s4" class="tutorial-section">
+<div class="section-title"><div><span class="eyebrow">Section 4</span><h2>Terminology mapping</h2></div><label class="complete-label"><input type="checkbox" class="complete" data-section="s4"> Prepared</label></div>
+<table>
+<tr><th>AWS EMR</th><th>GCP Dataproc / Managed Spark</th><th>Meaning</th></tr>
+<tr><td>EMR on EC2</td><td>Managed Spark cluster / Dataproc cluster</td><td>Managed VM-based Spark/Hadoop cluster.</td></tr>
+<tr><td>Primary node</td><td>Primary node</td><td>Coordinates cluster services and normally hosts ResourceManager.</td></tr>
+<tr><td>Core node</td><td>Worker node</td><td>Runs executors and can participate in HDFS storage.</td></tr>
+<tr><td>Task node</td><td>Secondary worker</td><td>Adds elastic compute and is suitable for interruptible capacity.</td></tr>
+<tr><td>EMR release label</td><td>Dataproc image version</td><td>Defines Spark/Hadoop and connector versions.</td></tr>
+<tr><td>EMR step</td><td>Dataproc job</td><td>A submitted unit of work.</td></tr>
+<tr><td>EMRFS</td><td>Cloud Storage connector</td><td>Lets Spark access cloud object storage directly.</td></tr>
+<tr><td>S3 URI</td><td>GCS URI</td><td><code>s3://...</code> versus <code>gs://...</code>.</td></tr>
+<tr><td>Security group</td><td>VPC firewall rule</td><td>Network traffic control.</td></tr>
+<tr><td>EC2 instance profile</td><td>VM workload service account</td><td>Runtime workload identity.</td></tr>
+</table>
+</section>
+
+<section id="s5" class="tutorial-section">
+<div class="section-title"><div><span class="eyebrow">Section 5</span><h2>Job-submission comparison</h2></div><label class="complete-label"><input type="checkbox" class="complete" data-section="s5"> Prepared</label></div>
+<div class="grid">
+<div class="card"><h3>AWS EMR</h3><p>Commonly submit through an EMR step using <code>command-runner.jar</code> and <code>spark-submit</code>.</p><div class="code-wrap"><button class="copy-btn" type="button">Copy</button><pre><code data-lang="bash">aws emr add-steps \
+  --region ap-south-1 \
+  --cluster-id &quot;$CLUSTER_ID&quot; \
+  --steps &quot;Type=CUSTOM_JAR,Name=Portable-Retail-Revenue,\
+ActionOnFailure=CONTINUE,Jar=command-runner.jar,\
+Args=[spark-submit,--deploy-mode,cluster,\
+s3://$BUCKET/portable-demo/code/portable_retail_revenue.py,\
+--input,s3://$BUCKET/portable-demo/input/retail_orders.csv,\
+--output,s3://$BUCKET/portable-demo/output/run-$RUN_ID]&quot;</code></pre></div></div>
+<div class="card"><h3>GCP Dataproc</h3><p>Submit directly with the Dataproc jobs command.</p><div class="code-wrap"><button class="copy-btn" type="button">Copy</button><pre><code data-lang="bash">gcloud dataproc jobs submit pyspark \
+  &quot;gs://${BUCKET}/portable-demo/code/portable_retail_revenue.py&quot; \
+  --cluster=&quot;${CLUSTER}&quot; \
+  --region=&quot;${REGION}&quot; \
+  -- \
+  --input=&quot;gs://${BUCKET}/portable-demo/input/retail_orders.csv&quot; \
+  --output=&quot;gs://${BUCKET}/portable-demo/output/run-${RUN_ID}&quot;</code></pre></div></div>
+</div>
+<div class="memory">GCP memory aid: <b>Everything before <code>--</code> belongs to gcloud. Everything after <code>--</code> belongs to your Python program.</b></div>
+</section>
+
+<section id="s6" class="tutorial-section">
+<div class="section-title"><div><span class="eyebrow">Section 6</span><h2>S3, GCS and HDFS</h2></div><label class="complete-label"><input type="checkbox" class="complete" data-section="s6"> Prepared</label></div>
+<table>
+<tr><th>Question</th><th>AWS EMR answer</th><th>GCP Dataproc answer</th></tr>
+<tr><td>Durable data lake</td><td>Amazon S3</td><td>Cloud Storage</td></tr>
+<tr><td>Connector</td><td>EMRFS</td><td>Cloud Storage connector</td></tr>
+<tr><td>URI</td><td><code>s3://bucket/path</code></td><td><code>gs://bucket/path</code></td></tr>
+<tr><td>Cluster-local distributed storage</td><td>HDFS on core nodes</td><td>HDFS on workers when configured</td></tr>
+<tr><td>Survives cluster deletion</td><td>S3 yes; cluster HDFS no</td><td>GCS yes; cluster HDFS no</td></tr>
+<tr><td>Shuffle/temp</td><td>Local disks and memory</td><td>Local disks and memory</td></tr>
+</table>
+<div class="callout warning"><b>Do not say object storage replaces every HDFS function.</b> It replaces HDFS for durable shared data-lake storage. Spark still uses local memory and disks for cache, spill, shuffle and temporary work.</div>
+</section>
+
+<section id="s7" class="tutorial-section">
+<div class="section-title"><div><span class="eyebrow">Section 7</span><h2>IAM and security comparison</h2></div><label class="complete-label"><input type="checkbox" class="complete" data-section="s7"> Prepared</label></div>
+<figure class="diagram"><figcaption>Diagram 2 — Separate human, service and workload identities</figcaption><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 600" role="img" aria-labelledby="title desc">
+<title id="title">AWS and GCP identity mapping for managed Spark</title>
+<desc id="desc">AWS uses human identities, an EMR service role, and an EC2 instance profile. GCP uses a human principal, a Google-managed service agent, and a VM workload service account.</desc>
+<rect width="1400" height="600" rx="28" fill="#f8fafc"/>
+<text x="700" y="48" text-anchor="middle" font-family="Segoe UI,Arial" font-size="30" font-weight="700" fill="#172033">Identity and Permission Mapping</text>
+
+<rect x="45" y="95" width="625" height="430" rx="24" fill="#fff7ed" stroke="#e24a33" stroke-width="4"/>
+<text x="357" y="138" text-anchor="middle" font-family="Segoe UI,Arial" font-size="24" font-weight="700" fill="#e24a33">AWS</text>
+<rect x="95" y="180" width="525" height="80" rx="14" fill="#fff" stroke="#4f46e5" stroke-width="3"/>
+<text x="357" y="210" text-anchor="middle" font-family="Segoe UI,Arial" font-size="18" font-weight="700">Human / CI role</text>
+<text x="357" y="238" text-anchor="middle" font-family="Segoe UI,Arial" font-size="14">EMR permissions + iam:PassRole</text>
+<rect x="95" y="285" width="245" height="130" rx="14" fill="#fff" stroke="#6d28d9" stroke-width="3"/>
+<text x="217" y="320" text-anchor="middle" font-family="Segoe UI,Arial" font-size="17" font-weight="700">EMR service role</text>
+<text x="217" y="352" text-anchor="middle" font-family="Segoe UI,Arial" font-size="14">Service provisions EC2</text>
+<text x="217" y="380" text-anchor="middle" font-family="Segoe UI,Arial" font-size="14">and manages cluster</text>
+<rect x="375" y="285" width="245" height="130" rx="14" fill="#fff" stroke="#0f766e" stroke-width="3"/>
+<text x="497" y="320" text-anchor="middle" font-family="Segoe UI,Arial" font-size="17" font-weight="700">EC2 instance profile</text>
+<text x="497" y="352" text-anchor="middle" font-family="Segoe UI,Arial" font-size="14">Spark reads/writes S3</text>
+<text x="497" y="380" text-anchor="middle" font-family="Segoe UI,Arial" font-size="14">and calls allowed APIs</text>
+
+<rect x="730" y="95" width="625" height="430" rx="24" fill="#eff6ff" stroke="#4285f4" stroke-width="4"/>
+<text x="1042" y="138" text-anchor="middle" font-family="Segoe UI,Arial" font-size="24" font-weight="700" fill="#2463c5">GCP</text>
+<rect x="780" y="180" width="525" height="80" rx="14" fill="#fff" stroke="#4f46e5" stroke-width="3"/>
+<text x="1042" y="210" text-anchor="middle" font-family="Segoe UI,Arial" font-size="18" font-weight="700">Human / CI principal</text>
+<text x="1042" y="238" text-anchor="middle" font-family="Segoe UI,Arial" font-size="14">Dataproc role + Service Account User</text>
+<rect x="780" y="285" width="245" height="130" rx="14" fill="#fff" stroke="#6d28d9" stroke-width="3"/>
+<text x="902" y="320" text-anchor="middle" font-family="Segoe UI,Arial" font-size="17" font-weight="700">Dataproc service agent</text>
+<text x="902" y="352" text-anchor="middle" font-family="Segoe UI,Arial" font-size="14">Google-managed identity</text>
+<text x="902" y="380" text-anchor="middle" font-family="Segoe UI,Arial" font-size="14">operates service resources</text>
+<rect x="1060" y="285" width="245" height="130" rx="14" fill="#fff" stroke="#0f766e" stroke-width="3"/>
+<text x="1182" y="320" text-anchor="middle" font-family="Segoe UI,Arial" font-size="17" font-weight="700">VM workload service account</text>
+<text x="1182" y="352" text-anchor="middle" font-family="Segoe UI,Arial" font-size="14">Dataproc Worker role</text>
+<text x="1182" y="380" text-anchor="middle" font-family="Segoe UI,Arial" font-size="14">plus GCS permissions</text>
+
+<text x="700" y="565" text-anchor="middle" font-family="Segoe UI,Arial" font-size="18" fill="#5d6779">Do not teach IAM as “one role.” Teach operator identity, managed service identity, and runtime workload identity separately.</text>
+</svg></figure>
+<table>
+<tr><th>Responsibility</th><th>AWS</th><th>GCP</th></tr>
+<tr><td>Human creates/submits</td><td>IAM user/role with EMR permissions and <code>iam:PassRole</code></td><td>User/group/service account with Dataproc role and Service Account User</td></tr>
+<tr><td>Managed service operates resources</td><td>EMR service role</td><td>Dataproc service agent</td></tr>
+<tr><td>Cluster job accesses storage</td><td>EC2 instance profile or runtime role</td><td>VM workload service account</td></tr>
+<tr><td>Read/write data</td><td>S3 bucket/prefix permissions</td><td>Storage Object Viewer/Creator/Admin on bucket</td></tr>
+<tr><td>Network</td><td>VPC, subnet, route, security groups</td><td>VPC, subnet, routes, firewall rules</td></tr>
+</table>
+</section>
+
+<section id="s8" class="tutorial-section">
+<div class="section-title"><div><span class="eyebrow">Section 8</span><h2>When should you choose which one?</h2></div><label class="complete-label"><input type="checkbox" class="complete" data-section="s8"> Prepared</label></div>
+<table>
+<tr><th>Situation</th><th>Prefer AWS EMR</th><th>Prefer GCP Dataproc</th></tr>
+<tr><td>Data location</td><td>Most data already lives in S3.</td><td>Most data already lives in Cloud Storage or BigQuery.</td></tr>
+<tr><td>Analytics ecosystem</td><td>Glue, Athena, Redshift, Lake Formation, Kinesis.</td><td>BigQuery, Pub/Sub, Dataproc Metastore, Vertex AI.</td></tr>
+<tr><td>Cloud operations</td><td>Team knows IAM roles, VPC, EC2 and CloudWatch.</td><td>Team knows service accounts, VPC, Cloud Logging and Monitoring.</td></tr>
+<tr><td>Kubernetes strategy</td><td>Strong EKS standardisation may favour EMR on EKS.</td><td>Strong GKE standardisation may favour Google cluster options.</td></tr>
+<tr><td>Existing contracts/compliance</td><td>AWS-approved account and governance model.</td><td>Google Cloud-approved project and governance model.</td></tr>
+<tr><td>Migration cost</td><td>Moving data to GCP would create egress and redesign work.</td><td>Moving data to AWS would create egress and redesign work.</td></tr>
+</table>
+<div class="callout success"><b>Decision rule:</b> Choose based on data gravity, ecosystem, governance, operations and cost—not because one service uses a different Spark transformation syntax.</div>
+<div class="callout warning"><b>Do not claim one is always cheaper or faster.</b> Results depend on region, machine type, autoscaling, storage access, workload shape, software image and tuning.</div>
+</section>
+
+<section id="s9" class="tutorial-section">
+<div class="section-title"><div><span class="eyebrow">Section 9</span><h2>Portable real-world use case</h2></div><label class="complete-label"><input type="checkbox" class="complete" data-section="s9"> Prepared</label></div>
+<h3>Business problem</h3>
+<p>A retailer stores daily orders in object storage. Management needs total completed revenue by category. Invalid quantities, missing cities and impossible discounts must not enter the report.</p>
+<figure class="diagram"><figcaption>Diagram 3 — One PySpark file, two cloud paths</figcaption><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 560" role="img" aria-labelledby="title desc">
+<title id="title">One portable PySpark job running on AWS EMR and GCP Dataproc</title>
+<desc id="desc">The same Python file receives either S3 or GCS paths, performs Pair RDD aggregation, and writes cloud-specific output.</desc>
+<defs>
+  <marker id="arrow2" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+    <path d="M0,0 L0,6 L9,3 z" fill="#4f46e5"/>
+  </marker>
+</defs>
+<rect width="1400" height="560" rx="28" fill="#f8fafc"/>
+<text x="700" y="48" text-anchor="middle" font-family="Segoe UI,Arial" font-size="30" font-weight="700" fill="#172033">Portable Retail Revenue Pipeline</text>
+
+<rect x="40" y="180" width="210" height="160" rx="18" fill="#fff7ed" stroke="#e24a33" stroke-width="4"/>
+<text x="145" y="220" text-anchor="middle" font-family="Segoe UI,Arial" font-size="20" font-weight="700">AWS Input</text>
+<text x="145" y="260" text-anchor="middle" font-family="Segoe UI,Arial" font-size="15">s3://bucket/input</text>
+<text x="145" y="295" text-anchor="middle" font-family="Segoe UI,Arial" font-size="14">EMRFS connector</text>
+
+<rect x="40" y="370" width="210" height="120" rx="18" fill="#eff6ff" stroke="#4285f4" stroke-width="4"/>
+<text x="145" y="410" text-anchor="middle" font-family="Segoe UI,Arial" font-size="20" font-weight="700">GCP Input</text>
+<text x="145" y="450" text-anchor="middle" font-family="Segoe UI,Arial" font-size="15">gs://bucket/input</text>
+<line x1="255" y1="260" x2="355" y2="260" stroke="#4f46e5" stroke-width="5" marker-end="url(#arrow2)"/>
+<line x1="255" y1="430" x2="355" y2="325" stroke="#4f46e5" stroke-width="5" marker-end="url(#arrow2)"/>
+
+<rect x="370" y="135" width="660" height="300" rx="24" fill="#fff" stroke="#6d28d9" stroke-width="4"/>
+<text x="700" y="175" text-anchor="middle" font-family="Segoe UI,Arial" font-size="24" font-weight="700">Same PySpark File</text>
+<text x="700" y="210" text-anchor="middle" font-family="Segoe UI,Arial" font-size="15">portable_retail_revenue.py</text>
+<rect x="415" y="245" width="150" height="105" rx="14" fill="#eef2ff" stroke="#4f46e5" stroke-width="3"/>
+<text x="490" y="280" text-anchor="middle" font-family="Segoe UI,Arial" font-size="16">textFile</text>
+<text x="490" y="315" text-anchor="middle" font-family="Segoe UI,Arial" font-size="14">load lines</text>
+<rect x="590" y="245" width="150" height="105" rx="14" fill="#ecfdf5" stroke="#0f766e" stroke-width="3"/>
+<text x="665" y="280" text-anchor="middle" font-family="Segoe UI,Arial" font-size="16">validate</text>
+<text x="665" y="315" text-anchor="middle" font-family="Segoe UI,Arial" font-size="14">completed rows</text>
+<rect x="765" y="245" width="150" height="105" rx="14" fill="#fff7ed" stroke="#e24a33" stroke-width="3"/>
+<text x="840" y="280" text-anchor="middle" font-family="Segoe UI,Arial" font-size="16">Pair RDD</text>
+<text x="840" y="315" text-anchor="middle" font-family="Segoe UI,Arial" font-size="14">reduceByKey</text>
+
+<line x1="1035" y1="260" x2="1130" y2="260" stroke="#4f46e5" stroke-width="5" marker-end="url(#arrow2)"/>
+<line x1="1035" y1="325" x2="1130" y2="430" stroke="#4f46e5" stroke-width="5" marker-end="url(#arrow2)"/>
+
+<rect x="1145" y="180" width="210" height="160" rx="18" fill="#fff7ed" stroke="#e24a33" stroke-width="4"/>
+<text x="1250" y="220" text-anchor="middle" font-family="Segoe UI,Arial" font-size="20" font-weight="700">AWS Output</text>
+<text x="1250" y="260" text-anchor="middle" font-family="Segoe UI,Arial" font-size="15">s3://bucket/output</text>
+<text x="1250" y="295" text-anchor="middle" font-family="Segoe UI,Arial" font-size="14">part files + _SUCCESS</text>
+
+<rect x="1145" y="370" width="210" height="120" rx="18" fill="#eff6ff" stroke="#4285f4" stroke-width="4"/>
+<text x="1250" y="410" text-anchor="middle" font-family="Segoe UI,Arial" font-size="20" font-weight="700">GCP Output</text>
+<text x="1250" y="450" text-anchor="middle" font-family="Segoe UI,Arial" font-size="15">gs://bucket/output</text>
+
+<text x="700" y="520" text-anchor="middle" font-family="Segoe UI,Arial" font-size="18" fill="#5d6779">Portability principle: parameterize paths; keep cloud SDK calls outside the Spark business logic.</text>
+</svg></figure>
+<h3>Portable business logic</h3>
+<div class="code-wrap"><button class="copy-btn" type="button">Copy</button><pre><code data-lang="python">report = (
+    raw_lines
+    .filter(lambda line: line.strip() and line != header)
+    .map(parse_csv)
+    .filter(is_valid_completed)
+    .map(to_category_revenue)
+    .reduceByKey(lambda left, right: left + right)
+    .mapValues(lambda value: round(value, 2))
+    .sortBy(lambda item: item[1], ascending=False)
+)
+
+report.saveAsTextFile(output_path)</code></pre></div>
+<h3>Expected report on both clouds</h3>
+<table><tr><th>Category</th><th>Total completed revenue</th></tr><tr><td>Electronics</td><td>104,540.00</td></tr><tr><td>Fashion</td><td>19,340.00</td></tr><tr><td>Grocery</td><td>4,772.00</td></tr></table>
+<div class="memory">Industry pattern: <b>keep cloud SDK/resource creation outside the Spark file; pass storage paths and runtime settings as arguments.</b></div>
+</section>
+
+<section id="s10" class="tutorial-section">
+<div class="section-title"><div><span class="eyebrow">Section 10</span><h2>Trainer delivery sequence after your EMR session</h2></div><label class="complete-label"><input type="checkbox" class="complete" data-section="s10"> Prepared</label></div>
+<ol class="steps">
+<li><b>Recap EMR in five minutes:</b> EMR control plane, primary/core/task nodes, YARN, Spark and S3.</li>
+<li><b>Ask a bridge question:</b> “Which concepts belong to Spark and which belong only to AWS?”</li>
+<li><b>Reveal the mapping table:</b> primary/core/task → primary/worker/secondary worker.</li>
+<li><b>Teach GCP control plane:</b> project, region, APIs, service account, cluster and job.</li>
+<li><b>Change storage vocabulary:</b> <code>s3://</code> → <code>gs://</code>.</li>
+<li><b>Compare identities:</b> service role/instance profile → service agent/workload service account.</li>
+<li><b>Run the same Python file:</b> only input/output URI and submit command change.</li>
+<li><b>Compare monitoring:</b> EMR steps and CloudWatch versus Dataproc jobs and Cloud Logging.</li>
+<li><b>Verify identical business output.</b></li>
+<li><b>Close with a selection exercise:</b> choose a platform for three business scenarios and justify the answer.</li>
+</ol>
+<h3>Suggested timing</h3>
+<table><tr><th>Activity</th><th>Minutes</th></tr><tr><td>EMR recap and bridge</td><td>10</td></tr><tr><td>Architecture and terminology mapping</td><td>20</td></tr><tr><td>Storage and IAM</td><td>20</td></tr><tr><td>Portable code walkthrough</td><td>20</td></tr><tr><td>Dataproc submission and monitoring</td><td>20</td></tr><tr><td>Decision exercise and Q&A</td><td>15</td></tr></table>
+</section>
+
+<section id="s11" class="tutorial-section">
+<div class="section-title"><div><span class="eyebrow">Section 11</span><h2>Hands-on command sequence</h2></div><label class="complete-label"><input type="checkbox" class="complete" data-section="s11"> Prepared</label></div>
+<h3>AWS path</h3>
+<div class="path">s3://AWS_BUCKET/portable-demo/input/retail_orders.csv</div>
+<h3>GCP path</h3>
+<div class="path">gs://GCP_BUCKET/portable-demo/input/retail_orders.csv</div>
+<h3>What the learner changes</h3>
+<table>
+<tr><th>Item</th><th>AWS</th><th>GCP</th></tr>
+<tr><td>Authentication</td><td><code>aws configure</code> or assumed role</td><td><code>gcloud auth login</code> / application credentials</td></tr>
+<tr><td>Project/account selection</td><td>AWS account and region</td><td>GCP project and region</td></tr>
+<tr><td>Upload</td><td><code>aws s3 cp</code></td><td><code>gcloud storage cp</code></td></tr>
+<tr><td>Create cluster</td><td><code>aws emr create-cluster</code></td><td><code>gcloud dataproc clusters create</code></td></tr>
+<tr><td>Submit</td><td><code>aws emr add-steps</code></td><td><code>gcloud dataproc jobs submit pyspark</code></td></tr>
+<tr><td>Inspect output</td><td><code>aws s3 ls/cp</code></td><td><code>gcloud storage ls/cat</code></td></tr>
+<tr><td>Delete cluster</td><td><code>aws emr terminate-clusters</code></td><td><code>gcloud dataproc clusters delete</code></td></tr>
+</table>
+</section>
+
+<section id="s12" class="tutorial-section">
+<div class="section-title"><div><span class="eyebrow">Section 12</span><h2>Operations and troubleshooting comparison</h2></div><label class="complete-label"><input type="checkbox" class="complete" data-section="s12"> Prepared</label></div>
+<table>
+<tr><th>Problem</th><th>AWS check</th><th>GCP check</th></tr>
+<tr><td>Cluster creation permission failure</td><td>Service role, instance profile, PassRole, subnet/SG tags</td><td>Dataproc role, Service Account User, Worker role, APIs and subnet permissions</td></tr>
+<tr><td>Cannot read input</td><td>EC2 role S3 List/Get and network path</td><td>VM service account GCS viewer and network path</td></tr>
+<tr><td>Cannot write output</td><td>S3 Put/Delete/List on output prefix</td><td>Storage Object Creator/Admin on output bucket</td></tr>
+<tr><td>Output already exists</td><td>Use new S3 run prefix</td><td>Use new GCS run prefix</td></tr>
+<tr><td>Job fails</td><td>EMR step, YARN/Spark and S3 logs</td><td>Dataproc job driver output, Cloud Logging and Spark UI</td></tr>
+<tr><td>High cost</td><td>Terminate cluster; inspect EC2/EMR/EBS/NAT</td><td>Delete cluster; inspect Compute Engine/Dataproc/network/storage</td></tr>
+<tr><td>Slow job</td><td colspan="2">Check Spark stages, skew, shuffle, executor memory, partition count and small files.</td></tr>
+</table>
+</section>
+
+<section id="s13" class="tutorial-section">
+<div class="section-title"><div><span class="eyebrow">Section 13</span><h2>Trainer questions, exercises and conclusion</h2></div><label class="complete-label"><input type="checkbox" class="complete" data-section="s13"> Prepared</label></div>
+<h3>Questions to ask during class</h3>
+<ol>
+<li>Is EMR itself the Spark cluster manager?</li>
+<li>Which EMR node most closely maps to a Dataproc worker?</li>
+<li>Which Dataproc node most closely maps to an EMR task node?</li>
+<li>Which parts of the Python code changed between clouds?</li>
+<li>Why should durable data not remain only in HDFS?</li>
+<li>What is the runtime identity on AWS? On GCP?</li>
+<li>Why does the GCP submit command contain <code>--</code>?</li>
+<li>What causes the same Spark performance problems on both clouds?</li>
+<li>Why does data location influence platform selection?</li>
+<li>Why is “one cloud is always cheaper” an unsafe statement?</li>
+</ol>
+<h3>Scenario exercise</h3>
+<table>
+<tr><th>Scenario</th><th>Likely choice</th><th>Reason</th></tr>
+<tr><td>S3 data lake, Glue Catalog, Athena and Redshift</td><td>AWS EMR</td><td>Data gravity and native integrations are already in AWS.</td></tr>
+<tr><td>GCS data lake, BigQuery reporting and Vertex AI</td><td>GCP Dataproc</td><td>Data and consumers are already in Google Cloud.</td></tr>
+<tr><td>Portable batch application serving both business units</td><td>Parameterised Spark code on both</td><td>Keep business logic portable; isolate cloud automation.</td></tr>
+</table>
+<div class="callout success"><b>Final conclusion:</b> EMR and Dataproc solve a similar managed big-data problem. Spark knowledge transfers strongly, but production success depends on learning each cloud's storage, IAM, networking, submission, monitoring and cost model.</div>
+</section>
+</main>
+
+<script>
+const progressKey="emrDataprocTrainerProgressV1",themeKey="emrDataprocTrainerThemeV1";
+const sections=[...document.querySelectorAll(".tutorial-section")];
+let progress={};try{progress=JSON.parse(localStorage.getItem(progressKey)||"{}")}catch(e){}
+document.querySelectorAll(".complete").forEach(cb=>{
+  cb.checked=!!progress[cb.dataset.section];
+  cb.addEventListener("change",()=>{
+    progress[cb.dataset.section]=cb.checked;
+    localStorage.setItem(progressKey,JSON.stringify(progress));
+    updateProgress();
+  });
+});
+function updateProgress(){
+  const completed=sections.filter(s=>progress[s.id]).length;
+  const pct=Math.round(completed/sections.length*100);
+  document.getElementById("progressBar").style.width=pct+"%";
+  document.getElementById("progressText").textContent=`${pct}% prepared (${completed}/${sections.length})`;
+}
+document.getElementById("themeBtn").addEventListener("click",()=>{
+  document.documentElement.dataset.theme=document.documentElement.dataset.theme==="dark"?"light":"dark";
+  localStorage.setItem(themeKey,document.documentElement.dataset.theme);
+});
+if(localStorage.getItem(themeKey)==="dark")document.documentElement.dataset.theme="dark";
+document.querySelectorAll(".copy-btn").forEach(btn=>btn.addEventListener("click",async()=>{
+  await navigator.clipboard.writeText(btn.nextElementSibling.innerText);
+  const old=btn.textContent;btn.textContent="Copied";
+  setTimeout(()=>btn.textContent=old,1000);
+}));
+document.getElementById("search").addEventListener("input",event=>{
+  const q=event.target.value.toLowerCase().trim();
+  sections.forEach(section=>{
+    section.style.display=!q||section.innerText.toLowerCase().includes(q)?"block":"none";
+  });
+});
+window.addEventListener("scroll",()=>{
+  let current="";
+  sections.forEach(section=>{if(window.scrollY>=section.offsetTop-130)current=section.id;});
+  document.querySelectorAll(".nav-link").forEach(link=>{
+    link.classList.toggle("active",link.getAttribute("href")==="#"+current);
+  });
+});
+updateProgress();
+</script>
+</body>
+</html>

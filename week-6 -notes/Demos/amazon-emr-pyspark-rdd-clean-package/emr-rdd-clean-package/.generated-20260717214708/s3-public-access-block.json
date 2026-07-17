@@ -1,0 +1,6 @@
+{
+    "IgnorePublicAcls":  true,
+    "BlockPublicAcls":  true,
+    "BlockPublicPolicy":  true,
+    "RestrictPublicBuckets":  true
+}

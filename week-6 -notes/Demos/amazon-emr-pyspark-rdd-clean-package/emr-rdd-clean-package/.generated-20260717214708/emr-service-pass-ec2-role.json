@@ -1,0 +1,16 @@
+{
+    "Version":  "2012-10-17",
+    "Statement":  [
+                      {
+                          "Effect":  "Allow",
+                          "Sid":  "PassCustomEMREC2Role",
+                          "Resource":  "arn:aws:iam::314993330933:role/geetha-emr-rdd-20260717214708-ec2-role",
+                          "Condition":  {
+                                            "StringEquals":  {
+                                                                 "iam:PassedToService":  "ec2.amazonaws.com"
+                                                             }
+                                        },
+                          "Action":  "iam:PassRole"
+                      }
+                  ]
+}

@@ -1,0 +1,18 @@
+[
+    {
+        "Args":  [
+                     "spark-submit",
+                     "--deploy-mode",
+                     "cluster",
+                     "s3://geetha-emr-rdd-314993330933-20260717214708/rdd-demo/scripts/06_rdd_aws_loading_saving_demo.py",
+                     "--input",
+                     "s3://geetha-emr-rdd-314993330933-20260717214708/rdd-demo/input/retail_orders.csv",
+                     "--output",
+                     "s3://geetha-emr-rdd-314993330933-20260717214708/rdd-demo/output/run-20260717-215938"
+                 ],
+        "ActionOnFailure":  "CONTINUE",
+        "Jar":  "command-runner.jar",
+        "Name":  "RDD loading and saving Spark job",
+        "Type":  "CUSTOM_JAR"
+    }
+]
