@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Complete classroom-style Spark SQL tutorial with PySpark code, diagrams, exercises, quizzes, timed exam, notes and progress tracking.">
+<title>Spark SQL — Complete Classroom Tutorial</title>
+<style>
+:root{--accent:#4f46e5;--accent2:#0f766e;--accent3:#7c3aed;--bg:#f4f7fb;--card:#fff;--text:#172033;--muted:#5f6f85;--line:#cbd5e1;--soft:#eef2ff;--soft2:#ecfdf5;--code:#0b1220;--codeText:#e5edf8;--success:#15803d;--warning:#b45309;--danger:#b91c1c;--shadow:0 12px 32px rgba(15,23,42,.10);--fontSize:16px}
+[data-theme="dark"]{--bg:#0b1220;--card:#111a2b;--text:#e7edf7;--muted:#b7c3d4;--line:#334155;--soft:#18233a;--soft2:#102b29;--code:#020617;--codeText:#e5edf8;--shadow:0 12px 32px rgba(0,0,0,.35)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,Segoe UI,Arial,sans-serif;line-height:1.72;font-size:var(--fontSize)}a{color:var(--accent)}button,input,textarea,select{font:inherit}.top-progress{position:fixed;left:0;top:0;width:0;height:5px;background:linear-gradient(90deg,var(--accent),var(--accent2),var(--accent3));z-index:9999}.hero{background:radial-gradient(circle at 10% 10%,rgba(255,255,255,.17),transparent 24%),linear-gradient(135deg,#312e81,#4f46e5 50%,#0f766e);color:white;padding:52px 20px 44px;text-align:center}.hero h1{font-size:clamp(32px,5vw,58px);line-height:1.08;margin:0 0 12px}.hero p{max-width:1000px;margin:10px auto;font-size:clamp(16px,2vw,20px)}.badge{display:inline-block;padding:5px 11px;border-radius:999px;background:var(--soft);color:var(--accent);font-size:13px;font-weight:700;margin:4px}.hero .badge{background:rgba(255,255,255,.18);color:#fff;border:1px solid rgba(255,255,255,.25)}.layout{max-width:1580px;margin:auto;display:grid;grid-template-columns:320px minmax(0,1fr);gap:24px;padding:24px}.sidebar{position:sticky;top:12px;height:calc(100vh - 24px);overflow:auto;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:18px;box-shadow:var(--shadow)}.sidebar h3{margin:10px 0;color:var(--accent)}.toc a{display:block;text-decoration:none;color:var(--text);padding:7px 9px;border-radius:9px;font-size:14px}.toc a:hover,.toc a.active{background:var(--soft);color:var(--accent)}.sidebar-tools{border-top:1px solid var(--line);margin-top:14px;padding-top:12px}.small{font-size:13px;color:var(--muted)}.progress-shell{height:17px;border-radius:999px;background:var(--soft);border:1px solid var(--line);overflow:hidden}.progress-fill{height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:.25s}.track-item{display:flex;gap:7px;align-items:flex-start;margin:6px 0;font-size:13px}.main{min-width:0}section{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:28px;margin-bottom:24px;box-shadow:var(--shadow);transition:transform .18s,box-shadow .18s}section:hover{transform:translateY(-2px);box-shadow:0 16px 38px rgba(15,23,42,.13)}h2{margin-top:0;color:var(--accent);border-left:7px solid var(--accent);padding-left:13px;line-height:1.25}h3{color:var(--accent2);margin-top:28px}h4{color:var(--accent3)}.section-check{float:right;font-size:13px;color:var(--muted);font-weight:500;border:1px solid var(--line);border-radius:999px;padding:4px 9px}.objectives,.grid2,.grid3{display:grid;gap:14px}.objectives{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}.grid2{grid-template-columns:repeat(2,minmax(0,1fr))}.grid3{grid-template-columns:repeat(3,minmax(0,1fr))}.mini-card{background:var(--soft);border:1px solid var(--line);padding:15px;border-radius:15px}.callout{border-left:6px solid var(--accent);background:var(--soft);padding:15px 17px;border-radius:14px;margin:16px 0}.callout strong:first-child{display:inline-block;margin-right:5px}.key{border-color:var(--accent)}.remember{border-color:var(--success);background:rgba(21,128,61,.10)}.warning{border-color:var(--warning);background:rgba(180,83,9,.10)}.danger{border-color:var(--danger);background:rgba(185,28,28,.10)}.memory{border-color:var(--accent3);background:rgba(124,58,237,.10)}.check-yourself{background:var(--soft2);border:1px solid var(--line);padding:13px;border-radius:14px;margin:15px 0}.reveal{display:none;margin-top:10px;padding:10px;border-radius:10px;background:var(--card);border:1px solid var(--line)}button{border:0;border-radius:10px;padding:10px 14px;background:var(--accent);color:white;cursor:pointer;font-weight:700;margin:4px}button:hover{filter:brightness(1.08)}button.secondary{background:var(--accent2)}button.alt{background:var(--accent3)}button.ghost{background:transparent;color:var(--accent);border:1px solid var(--accent)}button.warn-btn{background:var(--warning)}button.danger-btn{background:var(--danger)}button:disabled{opacity:.5;cursor:not-allowed}.table-wrap{overflow:auto;border-radius:14px;border:1px solid var(--line);margin:14px 0}table{border-collapse:collapse;width:100%;min-width:680px}th,td{border-bottom:1px solid var(--line);border-right:1px solid var(--line);padding:11px;vertical-align:top;text-align:left}th{background:var(--soft);color:var(--accent)}tr:last-child td{border-bottom:0}th:last-child,td:last-child{border-right:0}.diagram-card{border:1px solid var(--line);background:linear-gradient(180deg,var(--card),var(--soft));border-radius:18px;padding:18px;margin:18px 0}.flow{display:flex;align-items:stretch;justify-content:center;gap:10px;flex-wrap:wrap;margin:18px 0}.node{min-width:145px;max-width:220px;border:2px solid var(--accent);border-radius:14px;background:var(--card);padding:12px;text-align:center}.node.green{border-color:var(--accent2)}.node.purple{border-color:var(--accent3)}.node.orange{border-color:var(--warning)}.arrow{display:flex;align-items:center;font-size:27px;color:var(--accent);font-weight:900}.stack{display:flex;flex-direction:column;gap:8px}.diagram-caption{font-size:14px;color:var(--muted);border-top:1px dashed var(--line);padding-top:12px}.code-panel{margin:18px 0;border:1px solid #26334a;border-radius:15px;overflow:hidden;background:var(--code)}.code-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 12px;background:#172033;color:#dce8f7;font-size:13px}.code-actions{display:flex;gap:5px}.code-actions button{padding:6px 9px;font-size:12px;margin:0}.code-panel pre{margin:0;padding:18px;overflow:auto;color:var(--codeText);background:var(--code);line-height:1.55;tab-size:4}.code-panel code{font-family:Consolas,"Courier New",monospace;white-space:pre}.output{border-left:5px solid var(--accent2);background:var(--soft2);padding:12px;border-radius:12px;margin:10px 0;font-family:Consolas,monospace;white-space:pre-wrap;overflow:auto}.line-explain{counter-reset:line}.line-explain li{margin:7px 0}.lab{border:2px dashed var(--accent2);padding:17px;border-radius:16px;background:var(--soft2);margin:16px 0}.step{display:flex;gap:12px;margin:12px 0}.step-num{flex:0 0 34px;width:34px;height:34px;border-radius:50%;background:var(--accent);color:white;display:grid;place-items:center;font-weight:800}.pill{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:4px 9px;margin:3px;font-size:12px;background:var(--card)}.interview-item{border:1px solid var(--line);border-radius:13px;margin:9px 0;overflow:hidden}.interview-q{padding:12px;background:var(--soft);font-weight:750;cursor:pointer}.interview-a{display:none;padding:13px}.tag{font-size:11px;border-radius:999px;padding:3px 8px;color:white;margin-right:8px}.tag.Beginner{background:var(--success)}.tag.Intermediate{background:var(--warning)}.tag.Advanced{background:var(--danger)}.flash-zone{border:1px solid var(--line);padding:16px;border-radius:17px;background:var(--soft)}.flashcard{min-height:190px;border:2px dashed var(--accent);border-radius:17px;background:var(--card);display:flex;align-items:center;justify-content:center;text-align:center;padding:23px;font-size:20px;cursor:pointer;white-space:pre-line}.flash-meta{text-align:center;color:var(--muted);margin:8px}.exercise,.quiz-q{background:var(--soft);border:1px solid var(--line);border-radius:15px;padding:15px;margin:13px 0}.feedback{display:none;margin-top:9px;padding:9px;border-radius:9px;background:var(--card);border:1px solid var(--line)}.match-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.match-item{padding:11px;border:1px solid var(--line);border-radius:11px;background:var(--card);cursor:pointer}.match-item.selected{outline:3px solid var(--accent)}.match-item.matched{opacity:.55;background:rgba(21,128,61,.12)}.order-list{list-style:none;padding:0}.order-item{padding:11px;border:1px solid var(--line);border-radius:11px;background:var(--card);margin:7px 0;display:flex;justify-content:space-between;gap:8px;align-items:center}.option{display:block;padding:10px;border:1px solid var(--line);border-radius:10px;background:var(--card);margin:8px 0}.option.correct,.quiz-q.correct{border-color:var(--success);background:rgba(21,128,61,.10)}.option.wrong,.quiz-q.wrong{border-color:var(--danger);background:rgba(185,28,28,.10)}.confidence{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:8px;color:var(--muted);font-size:13px}.explanation{display:none;padding:10px;margin-top:8px;background:var(--card);border:1px solid var(--line);border-radius:10px}.result{display:none;border:2px solid var(--accent);border-radius:17px;padding:18px;margin:16px 0;background:var(--soft);text-align:center}.big-emoji{font-size:48px}.timer{font-size:27px;font-weight:900;color:var(--accent);padding:8px 13px;border:2px solid var(--accent);border-radius:12px;display:inline-block}.timer.final{color:var(--danger);border-color:var(--danger);animation:pulse .9s infinite}@keyframes pulse{50%{transform:scale(1.04)}}.hidden{display:none!important}.wrong-only .quiz-q:not(.wrong){display:none}.glossary{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}.gloss-item{border:1px solid var(--line);border-radius:13px;padding:13px;background:var(--soft)}.gloss{border-bottom:1px dotted var(--accent);cursor:help}.notes-panel{position:fixed;right:18px;bottom:18px;width:min(390px,calc(100vw - 36px));max-height:55vh;overflow:auto;z-index:900;background:var(--card);border:1px solid var(--line);border-radius:17px;box-shadow:var(--shadow);padding:13px}.notes-panel.collapsed .notes-body{display:none}.note-entry{border:1px solid var(--line);border-radius:11px;padding:9px;margin:8px 0;background:var(--soft)}.note-word{background:#fde68a;color:#3f2d00;border-bottom:3px solid #f59e0b;border-radius:3px;cursor:pointer}.modal-backdrop{position:fixed;inset:0;background:rgba(2,6,23,.65);display:none;place-items:center;z-index:10000;padding:18px}.modal{background:var(--card);color:var(--text);width:min(520px,100%);border-radius:18px;padding:20px;border:1px solid var(--line)}textarea{width:100%;min-height:130px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--text);padding:11px}.floating-controls{position:fixed;left:17px;bottom:17px;display:flex;flex-direction:column;z-index:800}.spark{position:fixed;width:7px;height:7px;border-radius:50%;background:#fbbf24;pointer-events:none;z-index:9998;animation:spark .65s forwards}@keyframes spark{to{opacity:0;transform:translateY(-18px) scale(.1)}}.certificate{border:9px double var(--accent);padding:28px;text-align:center;border-radius:19px;background:var(--card)}.certificate h3{font-size:32px}.source-list li{margin:8px 0}.kbd{font-family:Consolas,monospace;border:1px solid var(--line);border-bottom-width:3px;padding:2px 6px;border-radius:5px;background:var(--soft)}@media(max-width:1050px){.layout{grid-template-columns:1fr}.sidebar{position:relative;height:auto}.grid3{grid-template-columns:1fr 1fr}}@media(max-width:700px){section{padding:19px}.grid2,.grid3,.match-grid{grid-template-columns:1fr}.arrow{transform:rotate(90deg)}.section-check{float:none;display:block;width:max-content;margin-top:8px}.notes-panel{max-height:45vh}.hero{padding-top:42px}}@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;animation:none!important;transition:none!important}}@media print{.sidebar,.floating-controls,.notes-panel,.top-progress,button,.section-check,.modal-backdrop{display:none!important}.layout{display:block;padding:0}.hero{color:#111;background:white;border-bottom:2px solid #111}body{background:white;color:black}section{box-shadow:none;break-inside:avoid}.interview-a,.reveal,.explanation{display:block!important}.code-panel{break-inside:avoid}}
+</style>
+</head>
+<body data-theme="light">
+<div class="top-progress" id="scrollProgress"></div>
+<header class="hero" id="top">
+  <h1>Spark SQL</h1>
+  <p>A complete classroom tutorial for querying, transforming, joining, optimizing, and publishing structured data with SQL and PySpark DataFrames.</p>
+  <div><span class="badge">Single HTML File</span><span class="badge">Visible Code + Output</span><span class="badge">Retail Case Study</span><span class="badge">Quiz + Timed Exam</span><span class="badge">Notes + Tracker</span></div>
+</header>
+<div class="layout">
+<aside class="sidebar" aria-label="Tutorial navigation">
+  <h3>Contents</h3>
+  <nav class="toc" id="toc">
+    <a href="#s1">1. Title Page</a><a href="#s2">2. Introduction</a><a href="#s3">3. Beginner Explanation</a><a href="#s4">4. Technical Architecture</a><a href="#s5">5. Simple Example</a><a href="#s6">6. Industry Case Study</a><a href="#s7">7. Code & Practical Labs</a><a href="#s8">8. Comparison</a><a href="#s9">9. Best Practices</a><a href="#s10">10. Edge Cases</a><a href="#s11">11. Troubleshooting</a><a href="#s12">12. Interview Q&A</a><a href="#s13">13. Active Exercises</a><a href="#s14">14. Practice Quiz</a><a href="#s15">15. Formal Exam</a><a href="#s16">16. Glossary</a><a href="#s17">17. Summary & Certificate</a>
+  </nav>
+  <div class="sidebar-tools" id="learningTools">
+    <h3>Preparation Tracker</h3>
+    <div class="progress-shell"><div id="prepFill" class="progress-fill"></div></div>
+    <p id="prepText" class="small">0 / 17 prepared</p>
+    <div id="prepList"></div>
+    <button class="ghost" onclick="resetProgress()">Reset progress</button>
+    <p class="small">Double-click a word in lesson text to attach your own note.</p>
+  </div>
+  <div class="sidebar-tools">
+    <h3>Local Lab Data</h3>
+    <button class="secondary" onclick="downloadCSV('sales')">Download sales.csv</button>
+    <button class="secondary" onclick="downloadCSV('products')">Download products.csv</button>
+  </div>
+</aside>
+<main class="main" id="tutorialMain">
+
+<section id="s1" data-track="Title Page">
+<h2>1. Title Page</h2>
+<p><strong>One-line definition:</strong> Spark SQL is the Apache Spark module used to process structured data through SQL statements, DataFrames, Datasets, tables, views, and optimized distributed execution.</p>
+<div class="objectives">
+ <div class="mini-card"><strong>Objective 1</strong><br>Explain Spark SQL architecture and execution in plain and technical language.</div>
+ <div class="mini-card"><strong>Objective 2</strong><br>Create DataFrames and query them through both PySpark APIs and SQL.</div>
+ <div class="mini-card"><strong>Objective 3</strong><br>Read CSV/JSON/Parquet/JDBC data, clean it, join it, and write curated output.</div>
+ <div class="mini-card"><strong>Objective 4</strong><br>Use aggregations, windows, null handling, functions, views, tables, and catalogs.</div>
+ <div class="mini-card"><strong>Objective 5</strong><br>Inspect plans and apply practical optimization techniques safely.</div>
+</div>
+<div class="callout key"><strong>Before you start:</strong> Know the meaning of row, column, table, file, and basic SELECT/WHERE/GROUP BY. Reading time: about 2–3 hours. Lab time: about 2 hours.</div>
+<div class="callout remember"><strong>After this tutorial:</strong> You will be able to build a local retail-sales Spark SQL pipeline and explain its design in an interview.</div>
+</section>
+
+<section id="s2" data-track="Introduction">
+<h2>2. Introduction</h2>
+<p>Organizations store business data in many places: CSV exports, JSON events, Parquet files in data lakes, Hive tables, and relational databases. Analysts want SQL because it is readable and familiar. Data engineers need distributed processing because a single computer may not have enough memory or CPU to handle the volume. Spark SQL connects these needs: it accepts table-style operations, builds an optimized plan, and executes the work across Spark resources.</p>
+<p>Spark SQL is not a separate database server that owns all your data. It is a processing module inside Spark. It can read data from storage, represent it as a <span class="gloss" title="A distributed table-like collection with named columns">DataFrame</span>, run SQL or DataFrame transformations, and then return or write the result. The source may be a local file during learning, HDFS in Hadoop, object storage in cloud platforms, or a database reached through JDBC.</p>
+<p>Why does this matter? Without Spark SQL, teams may write low-level record-by-record code, manually control data types, and miss major optimization opportunities. With Spark SQL, they express <em>what</em> result is required. Spark analyzes the request, prunes unused columns, pushes eligible filters toward the source, chooses physical operators, schedules tasks, and can adapt selected decisions using runtime information.</p>
+<div class="grid2">
+ <div class="mini-card"><h3>Without Spark SQL</h3><p>More manual parsing, more low-level transformations, harder query planning, and separate approaches for SQL users and Python developers.</p></div>
+ <div class="mini-card"><h3>With Spark SQL</h3><p>One optimized engine for SQL and DataFrame APIs, common schemas, reusable views, many data sources, and distributed execution.</p></div>
+</div>
+<div class="callout memory"><strong>MEMORY HOOK:</strong> Spark SQL is a translator plus a factory manager: you state the report you need, it translates the request into a work plan, then distributes production.</div>
+<div class="check-yourself"><strong>Check yourself:</strong> Is Spark SQL itself a traditional database that permanently owns every table? <button class="ghost" onclick="toggleReveal(this)">Reveal</button><div class="reveal">No. Spark SQL is a processing engine. It can work with catalogs and persisted tables, but it commonly reads data from external storage and databases.</div></div>
+</section>
+
+<section id="s3" data-track="Beginner Explanation">
+<h2>3. Beginner-Friendly Explanation</h2>
+<h3>Daily-life analogy: a supermarket reporting office</h3>
+<p>Imagine a supermarket chain with 500 stores. Each store sends a daily sales file. The head office wants answers: “What is total revenue by city?”, “Which category grew fastest?”, and “Which products have no matching master record?” One employee cannot open every file and calculate everything manually before the morning meeting.</p>
+<p>The reporting manager writes the requirement. A planning team checks column names and types, decides which files and columns are needed, and creates an efficient work plan. Many workers process different groups of files at the same time. Their partial totals are combined into the final report.</p>
+<div class="table-wrap"><table><thead><tr><th>Supermarket analogy</th><th>Spark SQL component</th><th>Meaning</th></tr></thead><tbody>
+<tr><td>Reporting manager</td><td>Your Python/SQL program</td><td>States the business question.</td></tr>
+<tr><td>Front office</td><td>SparkSession</td><td>Entry point that accepts requests and accesses data/catalogs.</td></tr>
+<tr><td>Requirement checker</td><td>Parser + Analyzer</td><td>Understands syntax and resolves tables, columns, functions, and types.</td></tr>
+<tr><td>Planning team</td><td>Catalyst optimizer</td><td>Improves the logical plan and selects execution alternatives.</td></tr>
+<tr><td>Work allocation</td><td>Physical plan + scheduler</td><td>Chooses scans, joins, aggregations, exchanges, stages, and tasks.</td></tr>
+<tr><td>Store-file teams</td><td>Executors</td><td>Process partitions in parallel.</td></tr>
+<tr><td>Final report</td><td>Action/output</td><td>show(), count(), collect(), or written files/tables.</td></tr>
+</tbody></table></div>
+<h3>Five-step beginner breakdown</h3>
+<div class="step"><div class="step-num">1</div><div><strong>Load:</strong> Spark reads a file/table and creates a DataFrame with columns and types.</div></div>
+<div class="step"><div class="step-num">2</div><div><strong>Describe:</strong> You write SQL or chain DataFrame transformations such as filter, select, join, and groupBy.</div></div>
+<div class="step"><div class="step-num">3</div><div><strong>Plan:</strong> Spark records the operations and optimizes the complete request before execution.</div></div>
+<div class="step"><div class="step-num">4</div><div><strong>Execute:</strong> Executors process partitions. Wide operations such as joins and grouping may redistribute data through a shuffle.</div></div>
+<div class="step"><div class="step-num">5</div><div><strong>Deliver:</strong> Spark displays a small result, returns a value, or writes output to files, tables, or databases.</div></div>
+<div class="callout warning"><strong>Where the analogy breaks:</strong> Workers in an office use human judgment. Spark follows a deterministic plan, obeys data types and SQL semantics, and can retry lost tasks using lineage and scheduler information.</div>
+<div class="callout remember"><strong>Remember it as:</strong> <b>L-D-P-E-D</b> — Load, Describe, Plan, Execute, Deliver.</div>
+</section>
+
+<section id="s4" data-track="Technical Architecture">
+<h2>4. Technical Explanation and Architecture</h2>
+<p><strong>Technical definition:</strong> Spark SQL is a distributed query and structured-data subsystem built on Spark. It represents operations as relational query plans, resolves them against schemas and catalogs, optimizes them, selects physical operators, and runs the resulting tasks through Spark's execution engine.</p>
+<h3>Core terms</h3>
+<div class="table-wrap"><table><thead><tr><th>Term</th><th>Definition</th><th>Why it matters</th></tr></thead><tbody>
+<tr><td>SparkSession</td><td>Unified entry point for DataFrame, SQL, catalog, and data-source operations.</td><td>Your application needs a session to communicate configuration and create/query structured data.</td></tr>
+<tr><td>DataFrame</td><td>A distributed collection of rows arranged into named columns.</td><td>It provides relational operations and a schema that Spark can optimize.</td></tr>
+<tr><td>Dataset</td><td>A distributed typed collection in Scala/Java; a DataFrame is a Dataset of Row in those APIs.</td><td>It combines relational optimization with language-level typing where supported.</td></tr>
+<tr><td>Schema</td><td>Column names, data types, nested structure, and nullability metadata.</td><td>Analysis, parsing, function selection, and safe output depend on correct types.</td></tr>
+<tr><td>Logical plan</td><td>A tree of relational operations describing what result is required.</td><td>It separates business intent from the final execution strategy.</td></tr>
+<tr><td>Physical plan</td><td>Executable operators such as scans, hash joins, sorts, exchanges, and aggregations.</td><td>It shows how Spark intends to produce the result.</td></tr>
+<tr><td>Catalog</td><td>Metadata layer for databases, tables, views, columns, functions, and namespaces.</td><td>The analyzer uses it to resolve names and validate a query.</td></tr>
+<tr><td>Shuffle / Exchange</td><td>Redistribution of data across partitions and executors.</td><td>It enables grouping and large joins but costs network, disk, and serialization time.</td></tr>
+</tbody></table></div>
+<div class="diagram-card">
+<h3>Diagram: Spark SQL query journey</h3>
+<div class="flow">
+ <div class="node">CSV / JSON / Parquet / JDBC / Tables<br><small>Input sources</small></div><div class="arrow">→</div>
+ <div class="node purple">SparkSession<br><small>API entry point</small></div><div class="arrow">→</div>
+ <div class="stack"><div class="node">Parser<br><small>SQL text → syntax tree</small></div><div class="node">Analyzer + Catalog<br><small>Resolve names and types</small></div></div><div class="arrow">→</div>
+ <div class="node orange">Optimized Logical Plan<br><small>Rewrite and simplify</small></div><div class="arrow">→</div>
+ <div class="node green">Physical Planning<br><small>Scans, joins, aggregation, exchange</small></div><div class="arrow">→</div>
+ <div class="stack"><div class="node green">Executor 1</div><div class="node green">Executor 2</div><div class="node green">Executor 3</div></div>
+</div>
+<p class="diagram-caption"><strong>How to read:</strong> The source is not processed immediately for every transformation. Spark builds and resolves a logical plan, optimizes it, picks physical operators, and executes tasks only when an action or output requires results.</p>
+</div>
+<h3>Plan stages explained</h3>
+<ol>
+<li><strong>Parsing:</strong> SQL text is checked for grammar and converted into an unresolved plan.</li>
+<li><strong>Analysis:</strong> Table names, aliases, columns, functions, and data types are resolved against DataFrames and catalogs. Missing or ambiguous names fail here.</li>
+<li><strong>Logical optimization:</strong> Rules can simplify expressions, push filters, prune columns, and reorder or rewrite selected relational operations.</li>
+<li><strong>Physical planning:</strong> Spark chooses concrete operators and join strategies. Statistics and hints may influence the choice.</li>
+<li><strong>Execution:</strong> The Spark scheduler turns physical work into stages and tasks. Executors process partitions; exchanges mark data redistribution boundaries.</li>
+<li><strong>Runtime adaptation:</strong> When enabled and applicable, Adaptive Query Execution can use runtime statistics to adjust selected physical decisions.</li>
+</ol>
+<div class="callout memory"><strong>Mnemonic:</strong> <b>P-A-O-P-E</b> — Parse, Analyze, Optimize, Plan physically, Execute.</div>
+<div class="check-yourself"><strong>Check yourself:</strong> Why can SQL and DataFrame code achieve similar performance? <button class="ghost" onclick="toggleReveal(this)">Reveal</button><div class="reveal">Both are converted into Spark SQL logical and physical plans and use the same underlying execution engine. Performance depends on the resulting plan, data layout, configuration, and workload.</div></div>
+</section>
+
+<section id="s5" data-track="Simple Example">
+<h2>5. Simple Example — DataFrame to SQL</h2>
+<p>This minimal example creates four sales rows in memory, gives the DataFrame a temporary SQL name, and calculates revenue by city.</p>
+<div class="code-panel"><div class="code-head"><span>Python — minimal_spark_sql.py</span><div class="code-actions"><button onclick="copyCode(this)">Copy</button></div></div><pre><code>from pyspark.sql import SparkSession
+
+# Create or reuse a SparkSession.
+spark = SparkSession.builder \
+    .appName("SparkSQLSimpleExample") \
+    .master("local[*]") \
+    .getOrCreate()
+
+# Each tuple is one row: sale_id, city, amount.
+data = [
+    (1, "Coimbatore", 1200.0),
+    (2, "Chennai", 850.0),
+    (3, "Coimbatore", 600.0),
+    (4, "Chennai", 1050.0)
+]
+
+# Create a DataFrame with named columns.
+sales_df = spark.createDataFrame(data, ["sale_id", "city", "amount"])
+
+# Register a session-scoped temporary view.
+sales_df.createOrReplaceTempView("sales")
+
+# spark.sql returns another DataFrame.
+city_totals = spark.sql("""
+    SELECT city,
+           ROUND(SUM(amount), 2) AS total_revenue
+    FROM sales
+    GROUP BY city
+    ORDER BY total_revenue DESC
+""")
+
+city_totals.show()
+spark.stop()</code></pre></div>
+<div class="output">+----------+-------------+
+|city      |total_revenue|
++----------+-------------+
+|Chennai   |1900.0       |
+|Coimbatore|1800.0       |
++----------+-------------+</div>
+<h3>True line-by-line explanation</h3>
+<ol class="line-explain">
+<li><code>SparkSession</code> is imported because it is the structured-data entry point.</li>
+<li><code>builder</code> configures the application. <code>local[*]</code> uses available local CPU cores for a learning environment.</li>
+<li>The Python list exists on the driver only at first. <code>createDataFrame</code> converts it into a distributed DataFrame with a schema.</li>
+<li><code>createOrReplaceTempView("sales")</code> adds a session-scoped SQL name. It does not duplicate the rows into a database.</li>
+<li><code>spark.sql(...)</code> parses the query and returns a DataFrame. The transformation remains lazy until <code>show()</code>.</li>
+<li><code>SUM(amount)</code> aggregates rows by city. Grouping normally requires matching city values to be brought together.</li>
+<li><code>ORDER BY</code> sorts the final grouped rows. Global sorting can require data movement.</li>
+<li><code>show()</code> is the action that requests output. Spark executes enough of the plan to display the rows.</li>
+</ol>
+<div class="callout key"><strong>Final result:</strong> Chennai revenue is 850 + 1050 = 1900. Coimbatore revenue is 1200 + 600 = 1800. The SQL returns one row per city because GROUP BY collapses each city group.</div>
+</section>
+
+<section id="s6" data-track="Industry Case Study">
+<h2>6. Real-Time Industry Example — Retail Sales Lakehouse Pipeline</h2>
+<p>A retail company receives daily point-of-sale sales files from stores. A product master comes from a central database. The data engineering team must reject invalid rows, enrich each sale with category information, calculate city/category revenue, rank products, and publish Parquet output for dashboards.</p>
+<p>The challenge is not only writing SELECT statements. Production processing needs explicit schemas, duplicate handling, null validation, controlled joins, date parsing, partitioned output, plan inspection, and safe monitoring. The same pipeline may run on local files during development and on distributed storage in production.</p>
+<div class="diagram-card">
+<h3>Retail workflow</h3>
+<div class="flow">
+ <div class="node">Store CSV<br><small>sales.csv</small></div><div class="arrow">→</div>
+ <div class="node purple">Bronze DataFrame<br><small>Explicit schema + raw audit columns</small></div><div class="arrow">→</div>
+ <div class="node orange">Silver Cleaning<br><small>Types, nulls, duplicates, valid amount</small></div><div class="arrow">→</div>
+ <div class="node green">Join Product Master<br><small>Broadcast small dimension</small></div><div class="arrow">→</div>
+ <div class="stack"><div class="node green">Gold city_daily_sales</div><div class="node green">Gold product_rank</div><div class="node green">Data-quality rejects</div></div>
+</div>
+<p class="diagram-caption">Bronze preserves the ingest shape, Silver creates trusted row-level data, and Gold produces business-ready aggregates. The exact layer names are conventions; the important idea is separating raw, validated, and consumption-ready responsibilities.</p>
+</div>
+<h3>Business requirements</h3>
+<ul>
+<li>Accept only rows with a valid sale ID, product ID, positive quantity, non-negative unit price, and parseable sale date.</li>
+<li>Remove duplicate sale IDs using a deterministic rule.</li>
+<li>Join sales to the product master and identify unmatched products.</li>
+<li>Calculate <code>revenue = quantity × unit_price</code>.</li>
+<li>Produce revenue by sale date, city, and category.</li>
+<li>Rank products by revenue inside each category.</li>
+<li>Write Parquet output partitioned by sale date, without creating thousands of tiny files.</li>
+</ul>
+<div class="callout remember"><strong>Remember it as:</strong> <b>V-E-A-P</b> — Validate, Enrich, Aggregate, Publish.</div>
+</section>
+
+<section id="s7" data-track="Code and Practical Labs">
+<h2>7. Code Examples and Practical Labs</h2>
+<div class="callout warning"><strong>Code display:</strong> Every Python, SQL, terminal, HDFS, and spark-submit example below is expanded and visible by default. Use the Copy button in each code panel.</div>
+
+<h3>Lab 1 — Local setup</h3>
+<div class="code-panel"><div class="code-head"><span>Terminal / PowerShell</span><div class="code-actions"><button onclick="copyCode(this)">Copy</button></div></div><pre><code># Create a virtual environment
+python -m venv .venv
+
+# Windows PowerShell
+.venv\Scripts\Activate.ps1
+
+# macOS / Linux
+# source .venv/bin/activate
+
+# Install PySpark
+python -m pip install --upgrade pip
+pip install pyspark
+
+# Verify
+python -c "import pyspark; print(pyspark.__version__)"</code></pre></div>
+<p><strong>Why:</strong> The virtual environment keeps project dependencies isolated. Java must also be available because classic PySpark uses the JVM-based Spark engine.</p>
+
+<h3>Lab 2 — Create sample files</h3>
+<p>Use the download buttons in the left panel, or save the following data manually.</p>
+<div class="code-panel"><div class="code-head"><span>sales.csv</span><div class="code-actions"><button onclick="copyCode(this)">Copy</button></div></div><pre><code>sale_id,sale_ts,store_id,city,product_id,quantity,unit_price,payment_mode
+S001,2026-07-01 09:15:00,ST01,Coimbatore,P101,2,450.00,UPI
+S002,2026-07-01 10:10:00,ST02,Chennai,P102,1,1200.00,CARD
+S003,2026-07-01 11:30:00,ST01,Coimbatore,P103,3,80.00,CASH
+S004,2026-07-02 12:05:00,ST03,Bengaluru,P101,1,450.00,UPI
+S005,2026-07-02 13:00:00,ST02,Chennai,P104,2,700.00,CARD
+S006,2026-07-02 14:20:00,ST01,Coimbatore,P999,1,300.00,UPI
+S007,2026-07-03 09:45:00,ST03,Bengaluru,P102,2,1200.00,CARD
+S008,2026-07-03 10:30:00,ST02,Chennai,P103,5,80.00,CASH
+S008,2026-07-03 10:31:00,ST02,Chennai,P103,5,80.00,CASH
+S009,bad-date,ST01,Coimbatore,P104,1,700.00,UPI
+S010,2026-07-03 16:00:00,ST01,Coimbatore,P101,-1,450.00,CASH</code></pre></div>
+<div class="code-panel"><div class="code-head"><span>products.csv</span><div class="code-actions"><button onclick="copyCode(this)">Copy</button></div></div><pre><code>product_id,product_name,category
+P101,Wireless Keyboard,Electronics
+P102,Office Chair,Furniture
+P103,Notebook,Stationery
+P104,Table Lamp,Furniture</code></pre></div>
+
+<h3>Lab 3 — Production-style schema and ingestion</h3>
+<div class="code-panel"><div class="code-head"><span>01_ingest.py</span><div class="code-actions"><button onclick="copyCode(this)">Copy</button></div></div><pre><code>from pyspark.sql import SparkSession
+from pyspark.sql.types import (
+    StructType, StructField, StringType,
+    IntegerType, DecimalType
+)
+
+spark = (
+    SparkSession.builder
+    .appName("RetailSparkSQL")
+    .master("local[*]")
+    .config("spark.sql.session.timeZone", "Asia/Kolkata")
+    .getOrCreate()
+)
+
+sales_schema = StructType([
+    StructField("sale_id", StringType(), False),
+    StructField("sale_ts", StringType(), True),
+    StructField("store_id", StringType(), True),
+    StructField("city", StringType(), True),
+    StructField("product_id", StringType(), True),
+    StructField("quantity", IntegerType(), True),
+    StructField("unit_price", DecimalType(12, 2), True),
+    StructField("payment_mode", StringType(), True),
+])
+
+sales_raw = (
+    spark.read
+    .option("header", True)
+    .option("mode", "PERMISSIVE")
+    .schema(sales_schema)
+    .csv("data/sales.csv")
+)
+
+sales_raw.printSchema()
+sales_raw.show(truncate=False)</code></pre></div>
+<p><strong>What this does and why:</strong></p>
+<ul>
+<li>The explicit schema protects numeric fields and avoids a full schema-inference pass.</li>
+<li><code>DecimalType</code> is used for money instead of binary floating point.</li>
+<li>The timestamp is initially read as text so the cleaning layer can identify invalid dates explicitly.</li>
+<li><code>PERMISSIVE</code> prevents one malformed field from automatically terminating the complete ingest, but you must still validate and quarantine bad rows.</li>
+</ul>
+<div class="callout danger"><strong>What not to do:</strong> Do not assume <code>inferSchema=True</code> has chosen the exact production types you need. A small sample or changing source can produce unstable types.</div>
+
+<h3>Lab 4 — Clean and validate with DataFrame functions</h3>
+<div class="code-panel"><div class="code-head"><span>02_clean.py</span><div class="code-actions"><button onclick="copyCode(this)">Copy</button></div></div><pre><code>from pyspark.sql import functions as F
+from pyspark.sql.window import Window
+
+parsed = (
+    sales_raw
+    .withColumn("sale_timestamp", F.to_timestamp("sale_ts", "yyyy-MM-dd HH:mm:ss"))
+    .withColumn("sale_date", F.to_date("sale_timestamp"))
+    .withColumn("city", F.initcap(F.trim("city")))
+    .withColumn("payment_mode", F.upper(F.trim("payment_mode")))
+    .withColumn("revenue", F.col("quantity") * F.col("unit_price"))
+)
+
+# Build a readable reason instead of silently discarding invalid rows.
+validated = parsed.withColumn(
+    "reject_reason",
+    F.when(F.col("sale_id").isNull(), "MISSING_SALE_ID")
+     .when(F.col("sale_timestamp").isNull(), "INVALID_TIMESTAMP")
+     .when(F.col("product_id").isNull(), "MISSING_PRODUCT")
+     .when(F.col("quantity").isNull() | (F.col("quantity") <= 0), "INVALID_QUANTITY")
+     .when(F.col("unit_price").isNull() | (F.col("unit_price") < 0), "INVALID_PRICE")
+)
+
+rejected = validated.filter(F.col("reject_reason").isNotNull())
+valid_candidates = validated.filter(F.col("reject_reason").isNull())
+
+# Deterministic deduplication: keep the latest timestamp for each sale_id.
+dedup_window = Window.partitionBy("sale_id").orderBy(F.col("sale_timestamp").desc())
+clean_sales = (
+    valid_candidates
+    .withColumn("row_num", F.row_number().over(dedup_window))
+    .filter(F.col("row_num") == 1)
+    .drop("row_num", "reject_reason", "sale_ts")
+)
+
+clean_sales.show(truncate=False)
+rejected.select("sale_id", "reject_reason").show(truncate=False)</code></pre></div>
+<p><strong>Breakdown:</strong> Parsing creates typed time columns. Standardization prevents “chennai” and “Chennai ” from becoming separate groups. Reject reasons make quality failures observable. The window rule removes duplicate S008 deterministically rather than relying on an arbitrary row.</p>
+
+<h3>Lab 5 — SQL view, aggregation, and HAVING</h3>
+<div class="code-panel"><div class="code-head"><span>PySpark + SQL</span><div class="code-actions"><button onclick="copyCode(this)">Copy</button></div></div><pre><code>clean_sales.createOrReplaceTempView("clean_sales")
+
+city_daily = spark.sql("""
+SELECT
+    sale_date,
+    city,
+    COUNT(*)                    AS transaction_count,
+    SUM(quantity)               AS units_sold,
+    ROUND(SUM(revenue), 2)      AS total_revenue,
+    ROUND(AVG(revenue), 2)      AS average_transaction_value
+FROM clean_sales
+GROUP BY sale_date, city
+HAVING SUM(revenue) >= 500
+ORDER BY sale_date, total_revenue DESC
+""")
+
+city_daily.show(truncate=False)</code></pre></div>
+<div class="output">Expected pattern:
++----------+----------+-----------------+----------+-------------+-------------------------+
+|sale_date |city      |transaction_count|units_sold|total_revenue|average_transaction_value|
++----------+----------+-----------------+----------+-------------+-------------------------+
+|2026-07-01|Coimbatore|2                |5         |1140.00      |570.00                   |
+|2026-07-01|Chennai   |1                |1         |1200.00      |1200.00                  |
+...</div>
+<p><strong>Why HAVING:</strong> WHERE filters input rows before grouping. HAVING filters the grouped results after SUM has been calculated.</p>
+
+<h3>Lab 6 — Join fact and dimension data</h3>
+<div class="code-panel"><div class="code-head"><span>Join with product master</span><div class="code-actions"><button onclick="copyCode(this)">Copy</button></div></div><pre><code>products = (
+    spark.read
+    .option("header", True)
+    .option("inferSchema", False)
+    .csv("data/products.csv")
+)
+
+# The product master is small in this demo, so broadcasting is reasonable.
+enriched = clean_sales.join(
+    F.broadcast(products),
+    on="product_id",
+    how="left"
+)
+
+unmatched_products = enriched.filter(F.col("product_name").isNull())
+trusted_sales = enriched.filter(F.col("product_name").isNotNull())
+
+trusted_sales.select(
+    "sale_id", "city", "product_name", "category", "revenue"
+).show(truncate=False)
+
+unmatched_products.select("sale_id", "product_id").show()</code></pre></div>
+<p><strong>Why left join:</strong> An inner join would silently remove P999. A left join preserves the sale so the data-quality problem can be measured and fixed.</p>
+<div class="callout warning"><strong>Broadcast caution:</strong> Broadcast only when the small side is genuinely small enough for executor memory. Do not force it for a large relation merely because the code is convenient.</div>
+
+<h3>Lab 7 — Window functions: rank and running total</h3>
+<div class="code-panel"><div class="code-head"><span>Window analytics</span><div class="code-actions"><button onclick="copyCode(this)">Copy</button></div></div><pre><code>product_revenue = (
+    trusted_sales
+    .groupBy("category", "product_id", "product_name")
+    .agg(F.sum("revenue").alias("product_revenue"))
+)
+
+rank_window = Window.partitionBy("category").orderBy(
+    F.col("product_revenue").desc()
+)
+
+ranked_products = product_revenue.withColumn(
+    "category_rank",
+    F.dense_rank().over(rank_window)
+)
+
+running_window = (
+    Window.partitionBy("city")
+    .orderBy("sale_date")
+    .rowsBetween(Window.unboundedPreceding, Window.currentRow)
+)
+
+daily_city = (
+    trusted_sales
+    .groupBy("sale_date", "city")
+    .agg(F.sum("revenue").alias("daily_revenue"))
+    .withColumn("running_revenue", F.sum("daily_revenue").over(running_window))
+)
+
+ranked_products.show(truncate=False)
+daily_city.show(truncate=False)</code></pre></div>
+<p><strong>Why a window:</strong> Ranking needs a relationship among rows inside each category, but the output must retain one row per product. A running total must retain every date while carrying earlier values forward.</p>
+
+<h3>Lab 8 — Common Spark SQL functions</h3>
+<div class="table-wrap"><table><thead><tr><th>Category</th><th>PySpark functions</th><th>SQL equivalents/examples</th></tr></thead><tbody>
+<tr><td>String</td><td>trim, upper, lower, initcap, concat_ws, split, regexp_extract, regexp_replace</td><td>UPPER(city), CONCAT_WS('-', store_id, sale_id)</td></tr>
+<tr><td>Date/time</td><td>current_date, current_timestamp, to_date, to_timestamp, date_add, datediff, year, month</td><td>DATE_ADD(sale_date, 7), YEAR(sale_date)</td></tr>
+<tr><td>Null</td><td>coalesce, when, na.fill, na.drop</td><td>COALESCE(category, 'Unknown'), CASE WHEN ... END</td></tr>
+<tr><td>Collection</td><td>split, explode, array, map, collect_list, collect_set</td><td>EXPLODE(SPLIT(tags, ','))</td></tr>
+<tr><td>Aggregation</td><td>sum, avg, count, countDistinct, min, max, approx_count_distinct</td><td>SUM(revenue), COUNT(DISTINCT customer_id)</td></tr>
+</tbody></table></div>
+<div class="code-panel"><div class="code-head"><span>Function examples</span><div class="code-actions"><button onclick="copyCode(this)">Copy</button></div></div><pre><code>function_demo = (
+    trusted_sales
+    .withColumn("store_sale_key", F.concat_ws("-", "store_id", "sale_id"))
+    .withColumn("sale_year", F.year("sale_date"))
+    .withColumn("sale_month", F.month("sale_date"))
+    .withColumn("price_band",
+        F.when(F.col("unit_price") >= 1000, "Premium")
+         .when(F.col("unit_price") >= 500, "Standard")
+         .otherwise("Budget")
+    )
+    .withColumn("safe_category", F.coalesce("category", F.lit("Unknown")))
+)
+
+function_demo.select(
+    "store_sale_key", "sale_year", "sale_month", "price_band", "safe_category"
+).show(truncate=False)</code></pre></div>
+
+<h3>Lab 9 — Write Parquet and use partition pruning</h3>
+<div class="code-panel"><div class="code-head"><span>Parquet output</span><div class="code-actions"><button onclick="copyCode(this)">Copy</button></div></div><pre><code>output_path = "output/gold_sales"
+
+(
+    trusted_sales
+    .repartition("sale_date")
+    .write
+    .mode("overwrite")
+    .partitionBy("sale_date")
+    .parquet(output_path)
+)
+
+# Filtering on the partition column lets Spark skip unrelated directories.
+selected_day = (
+    spark.read.parquet(output_path)
+    .filter(F.col("sale_date") == F.lit("2026-07-02"))
+)
+
+selected_day.explain("formatted")
+selected_day.show(truncate=False)</code></pre></div>
+<p><strong>Why Parquet:</strong> It is columnar, stores schema, supports compression, and allows engines to skip unnecessary columns. <strong>Why partition carefully:</strong> A useful partition column helps pruning; a very high-cardinality column can create too many directories and small files.</p>
+
+<h3>Lab 10 — Databases, tables, and views</h3>
+<div class="code-panel"><div class="code-head"><span>Hive-compatible catalog example</span><div class="code-actions"><button onclick="copyCode(this)">Copy</button></div></div><pre><code># Use enableHiveSupport() when your environment is configured for Hive catalog support.
+spark = (
+    SparkSession.builder
+    .appName("RetailCatalogDemo")
+    .enableHiveSupport()
+    .getOrCreate()
+)
+
+spark.sql("CREATE DATABASE IF NOT EXISTS retail")
+spark.sql("USE retail")
+
+trusted_sales.write.mode("overwrite").saveAsTable("silver_sales")
+
+spark.sql("""
+CREATE OR REPLACE VIEW city_sales_view AS
+SELECT sale_date, city, SUM(revenue) AS total_revenue
+FROM silver_sales
+GROUP BY sale_date, city
+""")
+
+spark.sql("SHOW TABLES").show(truncate=False)
+spark.sql("SELECT * FROM city_sales_view").show()</code></pre></div>
+<div class="callout warning"><strong>Environment difference:</strong> Managed platforms may use their own metastore/catalog. Local Spark without Hive support cannot be assumed to persist the same way. Confirm the catalog implementation and warehouse location.</div>
+
+<h3>Lab 11 — JDBC read with parallelism</h3>
+<div class="code-panel"><div class="code-head"><span>JDBC example</span><div class="code-actions"><button onclick="copyCode(this)">Copy</button></div></div><pre><code>jdbc_url = "jdbc:mysql://localhost:3306/retail"
+
+customers = (
+    spark.read
+    .format("jdbc")
+    .option("url", jdbc_url)
+    .option("dbtable", "customers")
+    .option("user", "retail_user")
+    .option("password", "${READ_FROM_SECRET_MANAGER}")
+    .option("driver", "com.mysql.cj.jdbc.Driver")
+    .option("partitionColumn", "customer_id")
+    .option("lowerBound", 1)
+    .option("upperBound", 1000000)
+    .option("numPartitions", 8)
+    .option("fetchsize", 10000)
+    .load()
+)</code></pre></div>
+<p><strong>Why partitionColumn:</strong> Without partitioning, one JDBC connection may perform the complete read. With safe partitioning, Spark can open several bounded reads in parallel. <strong>Risk:</strong> Too many partitions can overload the operational database.</p>
+
+<h3>Lab 12 — Explain, cache, and join strategy</h3>
+<div class="code-panel"><div class="code-head"><span>Plan inspection and caching</span><div class="code-actions"><button onclick="copyCode(this)">Copy</button></div></div><pre><code># Inspect the plan before changing performance settings.
+trusted_sales.explain("formatted")
+
+# Cache only because the same expensive result is reused below.
+trusted_sales.cache()
+trusted_sales.count()  # Materialize the cache.
+
+report_1 = trusted_sales.groupBy("city").agg(F.sum("revenue"))
+report_2 = trusted_sales.groupBy("category").agg(F.avg("revenue"))
+
+report_1.show()
+report_2.show()
+
+trusted_sales.unpersist()</code></pre></div>
+<p><strong>What to inspect in an explain plan:</strong> file scans, pushed filters, partition filters, projections, exchanges, join types, sorts, aggregations, and adaptive plan markers. Do not optimize from guesswork; compare plans and measured execution.</p>
+
+<h3>Lab 13 — Complete application and spark-submit</h3>
+<div class="code-panel"><div class="code-head"><span>spark-submit command</span><div class="code-actions"><button onclick="copyCode(this)">Copy</button></div></div><pre><code># Local run
+spark-submit --master local[*] retail_spark_sql.py
+
+# YARN client mode example
+spark-submit \
+  --master yarn \
+  --deploy-mode client \
+  --name RetailSparkSQL \
+  --conf spark.sql.adaptive.enabled=true \
+  --conf spark.sql.shuffle.partitions=200 \
+  retail_spark_sql.py
+
+# YARN cluster mode example
+spark-submit \
+  --master yarn \
+  --deploy-mode cluster \
+  --name RetailSparkSQL \
+  retail_spark_sql.py</code></pre></div>
+<p><strong>Client vs cluster:</strong> In client mode, the driver runs where you launch the command. In cluster mode, the cluster manager launches the driver inside the cluster. Log location and network access differ.</p>
+
+<h3>Lab 14 — Useful HDFS commands</h3>
+<div class="code-panel"><div class="code-head"><span>HDFS</span><div class="code-actions"><button onclick="copyCode(this)">Copy</button></div></div><pre><code># Create input folders
+hdfs dfs -mkdir -p /data/retail/sales
+hdfs dfs -mkdir -p /data/retail/products
+
+# Upload local files
+hdfs dfs -put -f data/sales.csv /data/retail/sales/
+hdfs dfs -put -f data/products.csv /data/retail/products/
+
+# Inspect
+hdfs dfs -ls -h /data/retail/sales
+hdfs dfs -cat /data/retail/sales/sales.csv | head
+
+# Read from PySpark using an HDFS path
+# spark.read.option("header", True).csv("hdfs:///data/retail/sales/")
+
+# Inspect output
+hdfs dfs -ls -R /data/retail/output/gold_sales | head -50</code></pre></div>
+</section>
+
+<section id="s8" data-track="Comparison">
+<h2>8. Comparison Table</h2>
+<div class="table-wrap"><table><thead><tr><th>Aspect</th><th>Spark SQL / DataFrame</th><th>RDD</th><th>Traditional database SQL</th><th>Hive SQL</th></tr></thead><tbody>
+<tr><td>Primary model</td><td>Structured rows and relational expressions</td><td>Distributed objects/records</td><td>Tables managed by a database engine</td><td>SQL over warehouse/lake data</td></tr>
+<tr><td>Schema awareness</td><td>Yes</td><td>Not inherently</td><td>Yes</td><td>Yes</td></tr>
+<tr><td>Optimization</td><td>Catalyst planning and Spark execution optimizations</td><td>Developer controls lower-level transformations</td><td>Database-specific optimizer</td><td>Engine-specific optimizer; may run on Tez/Spark/other engines</td></tr>
+<tr><td>Best fit</td><td>Distributed ETL, analytics, lakehouse processing, mixed Python/SQL pipelines</td><td>Low-level/custom transformations not naturally relational</td><td>Transactional workloads and indexed interactive queries</td><td>Warehouse-style SQL on Hadoop/lake storage</td></tr>
+<tr><td>Data ownership</td><td>Often reads external files/tables</td><td>Often reads external data</td><td>Usually database-managed</td><td>Often metastore + distributed files</td></tr>
+<tr><td>Python experience</td><td>High-level PySpark DataFrame API</td><td>Python function serialization can be significant</td><td>Typically DB connector/ORM</td><td>JDBC/CLI or engine integration</td></tr>
+</tbody></table></div>
+<div class="callout key"><strong>When to pick what:</strong> Use DataFrames/Spark SQL for most structured Spark workloads. Use RDDs when the logic is genuinely not representable with structured APIs. Use an operational database for low-latency transactions and indexed point queries. Use Hive where its warehouse ecosystem and governance fit the platform; Spark can also query Hive-compatible metadata in configured environments.</div>
+</section>
+
+<section id="s9" data-track="Best Practices">
+<h2>9. Best Practices</h2>
+<h3>Do these</h3>
+<div class="grid2">
+<div class="mini-card"><strong>Define schemas.</strong><br><b>Why:</b> predictable types, faster CSV startup, controlled nullability, and earlier contract failures.</div>
+<div class="mini-card"><strong>Select needed columns early.</strong><br><b>Why:</b> enables column pruning and reduces memory, network, and serialization work.</div>
+<div class="mini-card"><strong>Filter early.</strong><br><b>Why:</b> reduces downstream rows and may enable partition pruning or predicate pushdown.</div>
+<div class="mini-card"><strong>Prefer built-in functions.</strong><br><b>Why:</b> Spark understands their semantics and can optimize them.</div>
+<div class="mini-card"><strong>Inspect explain plans and Spark UI.</strong><br><b>Why:</b> performance problems are visible in scans, exchanges, spills, skew, and stragglers.</div>
+<div class="mini-card"><strong>Use deterministic deduplication.</strong><br><b>Why:</b> dropDuplicates without a business rule may keep an arbitrary record.</div>
+<div class="mini-card"><strong>Control output file sizes.</strong><br><b>Why:</b> too many tiny files increase listing, scheduling, and metadata overhead.</div>
+<div class="mini-card"><strong>Validate joins.</strong><br><b>Why:</b> duplicate keys can multiply rows; inner joins can hide unmatched records.</div>
+</div>
+<h3>Common mistakes to avoid</h3>
+<ul>
+<li><strong>Calling collect() on large results:</strong> it sends all rows to driver memory and can crash the application.</li>
+<li><strong>Caching everything:</strong> executor memory is finite; unnecessary cache can create eviction and disk spills.</li>
+<li><strong>Using Python UDFs for built-in work:</strong> this can hide logic from Catalyst and add Python/JVM transfer overhead.</li>
+<li><strong>Forcing a broadcast without size evidence:</strong> executors may run out of memory.</li>
+<li><strong>Partitioning output by a unique ID:</strong> this can create one directory/file group per ID.</li>
+<li><strong>Comparing with NULL using =:</strong> use <code>IS NULL</code>, <code>isNull()</code>, or null-safe equality when appropriate.</li>
+<li><strong>Ignoring time zone configuration:</strong> timestamps may shift or compare incorrectly across environments.</li>
+</ul>
+<div class="callout memory"><strong>Best-practice mnemonic:</strong> <b>S-F-B-E-M</b> — Schema, Filter, Built-ins, Explain, Measure.</div>
+</section>
+
+<section id="s10" data-track="Edge Cases">
+<h2>10. Edge Cases and Gotchas</h2>
+<div class="table-wrap"><table><thead><tr><th>Gotcha</th><th>Why it surprises people</th><th>Safe response</th></tr></thead><tbody>
+<tr><td>NULL is not equal to NULL in normal SQL equality</td><td>SQL uses unknown in three-valued logic.</td><td>Use IS NULL or null-safe equality (<code>eqNullSafe</code> / <code>&lt;=&gt;</code>) for the intended semantics.</td></tr>
+<tr><td>Duplicate dimension keys multiply fact rows</td><td>A many-to-many join can inflate revenue totals.</td><td>Assert uniqueness or deduplicate the dimension with a deterministic rule before joining.</td></tr>
+<tr><td>Data skew</td><td>One hot key creates one huge partition and a very slow task.</td><td>Measure key distribution; consider AQE skew handling, salting, pre-aggregation, or business-specific splitting.</td></tr>
+<tr><td>Small files</td><td>Thousands of files create scheduling and metadata overhead.</td><td>Compact output, tune repartition/coalesce carefully, and monitor target file size.</td></tr>
+<tr><td>Decimal overflow / precision loss</td><td>Financial math can exceed declared precision or be corrupted by floats.</td><td>Use appropriate DecimalType precision/scale and test rounding/overflow behavior.</td></tr>
+<tr><td>Case sensitivity differences</td><td>Column resolution can differ by configuration and source.</td><td>Standardize names and avoid columns that differ only by case.</td></tr>
+<tr><td>Timestamp and daylight-saving behavior</td><td>Stored instants and displayed local times are different concepts.</td><td>Set session time zone explicitly and define source timestamp semantics.</td></tr>
+<tr><td>Overwrite on partitioned data</td><td>An overwrite can replace more data than intended depending on mode/configuration.</td><td>Understand static vs dynamic partition overwrite and test in a non-production path.</td></tr>
+<tr><td>Nondeterministic first/last</td><td>Without ordering, distributed row arrival order is not guaranteed.</td><td>Use a window with explicit ordering and tie breakers.</td></tr>
+<tr><td>Schema evolution</td><td>Files written at different times may have different columns/types.</td><td>Manage contracts, compatible evolution, and merge behavior deliberately.</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="s11" data-track="Troubleshooting">
+<h2>11. Troubleshooting and Common Errors</h2>
+<div class="table-wrap"><table><thead><tr><th>Symptom / error</th><th>Meaning and cause</th><th>Exact fix</th></tr></thead><tbody>
+<tr><td><code>JAVA_GATEWAY_EXITED</code> or gateway exited before sending port</td><td>PySpark could not start/connect to the JVM. Java may be missing, incompatible, or misconfigured.</td><td>Run <code>java -version</code>, set JAVA_HOME correctly, use a Spark-supported Java version for your installed release, restart the shell, and retry.</td></tr>
+<tr><td><code>AnalysisException: TABLE_OR_VIEW_NOT_FOUND</code></td><td>The table/view name is not visible in the current catalog/session/database.</td><td>Run <code>SHOW DATABASES</code>, <code>SHOW TABLES</code>, check <code>spark.catalog.currentDatabase()</code>, and create the temp view in the same session.</td></tr>
+<tr><td><code>UNRESOLVED_COLUMN</code></td><td>Column name is misspelled, aliased away, nested differently, or ambiguous after a join.</td><td>Run <code>printSchema()</code>, qualify columns with DataFrame aliases, and rename duplicate columns.</td></tr>
+<tr><td><code>AMBIGUOUS_REFERENCE</code></td><td>Both joined sides contain the referenced column name.</td><td>Alias both DataFrames and select <code>left.col</code>/<code>right.col</code>, or join using a common column-name list where appropriate.</td></tr>
+<tr><td><code>FileNotFoundException</code> after overwrite</td><td>Files changed while a DataFrame still references old paths, or another process modified the directory.</td><td>Re-read after overwrite, avoid reading and overwriting the same path in one unsafe step, and use atomic/staged publishing patterns.</td></tr>
+<tr><td>Task is stuck while most tasks finish</td><td>Likely skew, oversized partition, slow source, or spill-heavy task.</td><td>Inspect Spark UI task durations and input sizes; examine hot keys; change partitioning or skew strategy based on evidence.</td></tr>
+<tr><td><code>OutOfMemoryError</code> on driver</td><td>Large collect/toPandas, large local list, or huge query plan/result metadata.</td><td>Avoid collect/toPandas; use limit/write; reduce driver-side objects; increase memory only after removing the cause.</td></tr>
+<tr><td><code>OutOfMemoryError</code> on executor during broadcast</td><td>Broadcast side is larger than expected or multiple broadcasts compete for memory.</td><td>Remove forced broadcast, improve statistics, reduce selected columns, or use a shuffle join.</td></tr>
+<tr><td>CSV numbers become null</td><td>Values do not match the declared type or formatting.</td><td>Profile raw text, define decimal/date formats, capture corrupt records, and quarantine invalid rows.</td></tr>
+<tr><td><code>ClassNotFoundException</code> for JDBC driver</td><td>The database JDBC JAR is not on Spark's classpath.</td><td>Use <code>--jars path/to/driver.jar</code> or <code>--packages group:artifact:version</code> where internet/repositories are available.</td></tr>
+<tr><td>Too many output files</td><td>Too many partitions reach the writer or partitionBy has high cardinality.</td><td>Review partition count, use repartition/coalesce intentionally, choose a sensible partition column, and compact files.</td></tr>
+<tr><td>Query result changes between runs</td><td>There is no deterministic ordering/tie breaker, or nondeterministic functions are used.</td><td>Add ORDER BY for displayed results and stable tie-breaker columns for window/dedup rules.</td></tr>
+</tbody></table></div>
+<div class="callout key"><strong>Debugging order:</strong> Reproduce on a small sample → print schema → count at boundaries → inspect nulls/duplicates → explain the plan → inspect Spark UI → change one variable → measure again.</div>
+</section>
+
+<section id="s12" data-track="Interview Q&A">
+<h2>12. Interview Questions and Answers</h2>
+<p>Click a question to reveal the spoken-style answer. Use flashcard mode below for revision and spaced repetition.</p>
+<div id="interviewList"></div>
+<h3>Flashcard revision</h3>
+<div class="flash-zone">
+ <div class="flash-meta" id="dueCount">Due today: 0</div>
+ <div class="flashcard" id="flashcard" onclick="flipFlashcard()" tabindex="0" role="button" aria-label="Interview flashcard"></div>
+ <div class="flash-meta" id="flashPos"></div>
+ <div style="text-align:center"><button class="ghost" onclick="prevFlash()">Previous</button><button class="ghost" onclick="flipFlashcard()">Flip</button><button class="ghost" onclick="nextFlash()">Next</button><button class="secondary" onclick="shuffleFlash()">Shuffle</button></div>
+ <div id="ratingButtons" style="text-align:center;display:none"><span class="small">Rate recall:</span><button class="danger-btn" onclick="rateFlash(0)">Again</button><button class="warn-btn" onclick="rateFlash(1)">Hard</button><button class="secondary" onclick="rateFlash(2)">Good</button><button class="alt" onclick="rateFlash(3)">Easy</button></div>
+ <div style="text-align:center"><button class="ghost" onclick="showDueOnly()">Study due today</button><button class="ghost" onclick="resetFlashSchedule()">Reset schedule</button></div>
+</div>
+</section>
+
+<section id="s13" data-track="Active Exercises">
+<h2>13. Active Practice Exercises</h2>
+<h3>A. Fill in the blank</h3>
+<div class="exercise" data-answer="SparkSession"><p>1. The main entry point for modern Spark SQL applications is <input id="fill1" aria-label="Fill answer 1">.</p><button onclick="checkFill('fill1','SparkSession',this)">Check</button><button class="ghost" onclick="revealFill('fill1','SparkSession',this)">Reveal</button><div class="feedback">SparkSession creates DataFrames, runs SQL, and accesses catalogs/data sources.</div></div>
+<div class="exercise" data-answer="createOrReplaceTempView"><p>2. To query a DataFrame named <code>sales_df</code> using SQL, call <code>sales_df.<input id="fill2" aria-label="Fill answer 2">('sales')</code>.</p><button onclick="checkFill('fill2','createOrReplaceTempView',this)">Check</button><button class="ghost" onclick="revealFill('fill2','createOrReplaceTempView',this)">Reveal</button><div class="feedback">This creates or replaces a session-scoped temporary view.</div></div>
+<div class="exercise" data-answer="isNull"><p>3. Complete the null check: <code>F.col('category').<input id="fill3" aria-label="Fill answer 3">()</code>.</p><button onclick="checkFill('fill3','isNull',this)">Check</button><button class="ghost" onclick="revealFill('fill3','isNull',this)">Reveal</button><div class="feedback">isNull() produces a Spark column expression that tests nullness.</div></div>
+
+<h3>B. Click-to-match</h3>
+<p>Select one term and then its matching definition.</p>
+<div class="match-grid" id="matchGrid">
+ <div><div class="match-item" data-key="1">Catalyst</div><div class="match-item" data-key="2">Shuffle</div><div class="match-item" data-key="3">DataFrame</div><div class="match-item" data-key="4">Partition pruning</div></div>
+ <div><div class="match-item" data-key="3">Distributed rows with named columns</div><div class="match-item" data-key="1">Query analysis and optimization framework</div><div class="match-item" data-key="4">Skipping unrelated directory partitions</div><div class="match-item" data-key="2">Network redistribution of data</div></div>
+</div>
+<p id="matchFeedback" class="small"></p>
+
+<h3>C. Put the workflow in order</h3>
+<p>Arrange the Spark SQL query journey. Use ▲ and ▼.</p>
+<ul class="order-list" id="orderList">
+ <li class="order-item" data-order="4"><span>Choose physical operators</span><span><button onclick="moveOrder(this,-1)">▲</button><button onclick="moveOrder(this,1)">▼</button></span></li>
+ <li class="order-item" data-order="1"><span>Parse SQL / build unresolved plan</span><span><button onclick="moveOrder(this,-1)">▲</button><button onclick="moveOrder(this,1)">▼</button></span></li>
+ <li class="order-item" data-order="5"><span>Execute tasks on partitions</span><span><button onclick="moveOrder(this,-1)">▲</button><button onclick="moveOrder(this,1)">▼</button></span></li>
+ <li class="order-item" data-order="2"><span>Resolve columns, tables, functions and types</span><span><button onclick="moveOrder(this,-1)">▲</button><button onclick="moveOrder(this,1)">▼</button></span></li>
+ <li class="order-item" data-order="3"><span>Optimize the logical plan</span><span><button onclick="moveOrder(this,-1)">▲</button><button onclick="moveOrder(this,1)">▼</button></span></li>
+</ul>
+<button onclick="checkOrder()">Check order</button><button class="ghost" onclick="revealOrder()">Reveal order</button><p id="orderFeedback" class="small"></p>
+</section>
+
+<section id="s14" data-track="Practice Quiz">
+<h2>14. Interactive MCQ Practice Quiz</h2>
+<p>15 randomized questions. Tag each answer as Sure or Unsure. Answers are revealed only after submission.</p>
+<div id="practiceResult" class="result"></div>
+<div id="practiceQuestions"></div>
+<div id="practiceActions"></div>
+</section>
+
+<section id="s15" data-track="Formal Exam">
+<h2>15. Formal MCQ Exam</h2>
+<p><strong>Rules:</strong> 15 questions × 1 mark. Pass mark: 60%. No negative marking. Questions remain locked until Start Test. Timer: 15 minutes.</p>
+<div><button id="startExamBtn" onclick="startExam()">Start Test</button> <span id="examTimer" class="timer">15:00</span></div>
+<div id="examResult" class="result"></div>
+<div id="examQuestions" class="hidden"></div>
+<div id="examActions"></div>
+<div id="weakArea"></div>
+</section>
+
+<section id="s16" data-track="Glossary">
+<h2>16. Glossary</h2>
+<div class="glossary">
+<div class="gloss-item"><strong>Action</strong><br>An operation that requires a result and triggers execution, such as show, count, collect, or write.</div>
+<div class="gloss-item"><strong>Adaptive Query Execution (AQE)</strong><br>Runtime optimization that can revise selected physical decisions using observed statistics.</div>
+<div class="gloss-item"><strong>Broadcast join</strong><br>A join where a small relation is distributed to executors to avoid shuffling the large relation.</div>
+<div class="gloss-item"><strong>Catalog</strong><br>Metadata service for databases, tables, views, columns, functions, and namespaces.</div>
+<div class="gloss-item"><strong>Catalyst</strong><br>Spark SQL framework for analysis and query-plan optimization.</div>
+<div class="gloss-item"><strong>Column pruning</strong><br>Skipping columns not required by the query.</div>
+<div class="gloss-item"><strong>DataFrame</strong><br>A distributed table-like collection of rows with named columns.</div>
+<div class="gloss-item"><strong>Executor</strong><br>A worker process that runs tasks and stores cached/shuffle data for an application.</div>
+<div class="gloss-item"><strong>Exchange</strong><br>A physical-plan boundary representing data redistribution, commonly a shuffle.</div>
+<div class="gloss-item"><strong>Lazy evaluation</strong><br>Recording transformations as a plan and postponing execution until an action requires a result.</div>
+<div class="gloss-item"><strong>Logical plan</strong><br>Relational description of the required result, independent of exact execution operators.</div>
+<div class="gloss-item"><strong>Parquet</strong><br>A schema-aware columnar file format widely used for analytical data.</div>
+<div class="gloss-item"><strong>Partition</strong><br>A slice of distributed data processed by one task at a time.</div>
+<div class="gloss-item"><strong>Partition pruning</strong><br>Skipping storage partitions that cannot match a filter.</div>
+<div class="gloss-item"><strong>Physical plan</strong><br>Concrete executable operators chosen to produce a query result.</div>
+<div class="gloss-item"><strong>Predicate pushdown</strong><br>Applying supported filters inside or close to the data source to reduce rows read.</div>
+<div class="gloss-item"><strong>Schema</strong><br>Column names, types, nested structure, and nullability metadata.</div>
+<div class="gloss-item"><strong>Shuffle</strong><br>Redistribution of rows across partitions, typically over the network.</div>
+<div class="gloss-item"><strong>Skew</strong><br>Uneven key distribution that creates disproportionately large partitions.</div>
+<div class="gloss-item"><strong>Temporary view</strong><br>A session-scoped SQL name backed by a DataFrame or query.</div>
+<div class="gloss-item"><strong>Window function</strong><br>An analytic function over related rows that preserves row-level output.</div>
+</div>
+</section>
+
+<section id="s17" data-track="Summary and Certificate">
+<h2>17. Summary, What Next, and Certificate</h2>
+<h3>Key takeaways</h3>
+<ul>
+<li>Spark SQL gives SQL and DataFrame users one distributed structured-data engine.</li>
+<li>SparkSession is the entry point; DataFrames carry rows plus schema.</li>
+<li>SQL/DataFrame transformations are lazy and become query plans.</li>
+<li>Parsing, analysis, optimization, physical planning, and execution form the query journey.</li>
+<li>Joins and grouping often cause shuffle; filters and projections can reduce work.</li>
+<li>Parquet, explicit schemas, built-in functions, explain plans, and measured tuning are core production practices.</li>
+<li>Data quality, join cardinality, skew, null semantics, time zones, and output file layout must be designed—not guessed.</li>
+</ul>
+<h3>Quick revision cheat list</h3>
+<div class="grid2">
+<div class="mini-card"><b>SparkSession</b> → entry point</div><div class="mini-card"><b>DataFrame</b> → distributed named columns</div>
+<div class="mini-card"><b>Temp view</b> → DataFrame queried by SQL</div><div class="mini-card"><b>Catalyst</b> → analyze and optimize plans</div>
+<div class="mini-card"><b>Explain</b> → inspect plan</div><div class="mini-card"><b>Shuffle</b> → redistribute rows</div>
+<div class="mini-card"><b>Broadcast</b> → send small side to executors</div><div class="mini-card"><b>Window</b> → analytics without collapsing rows</div>
+<div class="mini-card"><b>Parquet</b> → columnar analytics format</div><div class="mini-card"><b>collect</b> → dangerous for large results</div>
+</div>
+<h3>What to learn next</h3>
+<div class="flow"><div class="node">SQL fundamentals</div><div class="arrow">→</div><div class="node purple">Spark SQL</div><div class="arrow">→</div><div class="node green">Advanced joins + windows</div><div class="arrow">→</div><div class="node orange">Performance tuning + AQE</div><div class="arrow">→</div><div class="node">Delta/Iceberg/Hudi + lakehouse</div></div>
+<h3>Completion certificate</h3>
+<div class="certificate">
+<p>ITTechGenie Classroom Learning</p>
+<h3>Certificate of Completion</h3>
+<p>This certifies that</p>
+<input id="learnerName" placeholder="Enter learner name" style="padding:10px;border:1px solid var(--line);border-radius:9px;max-width:350px;width:100%">
+<p>has completed the <strong>Spark SQL</strong> classroom tutorial.</p>
+<p id="certificateStatus" class="small">Complete all sections and pass the formal exam to unlock.</p>
+<button id="printCertBtn" disabled onclick="printCertificate()">Print Certificate</button>
+</div>
+<h3>Official references</h3>
+<ul class="source-list">
+<li><a href="https://spark.apache.org/docs/latest/sql-programming-guide.html" target="_blank" rel="noopener">Spark SQL, DataFrames and Datasets Guide</a></li>
+<li><a href="https://spark.apache.org/docs/latest/sql-getting-started.html" target="_blank" rel="noopener">Spark SQL Getting Started</a></li>
+<li><a href="https://spark.apache.org/docs/latest/sql-data-sources.html" target="_blank" rel="noopener">Spark SQL Data Sources</a></li>
+<li><a href="https://spark.apache.org/docs/latest/sql-performance-tuning.html" target="_blank" rel="noopener">Spark SQL Performance Tuning</a></li>
+<li><a href="https://spark.apache.org/docs/latest/sql-ref.html" target="_blank" rel="noopener">Spark SQL Reference</a></li>
+<li><a href="https://spark.apache.org/docs/latest/sql-ref-syntax-qry-explain.html" target="_blank" rel="noopener">EXPLAIN Statement</a></li>
+<li><a href="https://spark.apache.org/docs/latest/sql-data-sources-jdbc.html" target="_blank" rel="noopener">JDBC Data Source</a></li>
+</ul>
+<p class="small">Examples are designed to be broadly compatible with modern PySpark releases. Always check the documentation matching the Spark version installed in your environment.</p>
+</section>
+</main>
+</div>
+
+<div class="floating-controls" aria-label="Display controls">
+<button class="ghost" onclick="toggleTheme()" title="Toggle theme">◐ Theme</button>
+<button class="ghost" onclick="changeFont(1)" title="Increase font size">A+</button>
+<button class="ghost" onclick="changeFont(-1)" title="Decrease font size">A−</button>
+<button class="ghost" onclick="window.print()" title="Print tutorial">Print</button>
+</div>
+
+<div class="notes-panel" id="notesPanel">
+<div style="display:flex;justify-content:space-between;align-items:center"><strong>My Word Notes</strong><button class="ghost" onclick="toggleNotesPanel()">Hide/Show</button></div>
+<div class="notes-body"><p class="small">Double-click a lesson word. Notes stay in this browser.</p><div id="notesList"></div><button class="danger-btn" onclick="clearNotes()">Clear all notes</button></div>
+</div>
+
+<div class="modal-backdrop" id="noteModal" role="dialog" aria-modal="true" aria-labelledby="noteTitle">
+<div class="modal"><h3 id="noteTitle">Quick note</h3><p id="noteMeta" class="small"></p><textarea id="noteText" placeholder="Type your preparation note..."></textarea><div style="text-align:right"><button class="ghost" onclick="closeNoteModal()">Cancel</button><button class="danger-btn" id="deleteNoteBtn" onclick="deleteCurrentNote()">Delete</button><button onclick="saveCurrentNote()">Save note</button></div></div>
+</div>
+
+<script>
+const QUESTION_BANK = [{"id": 1, "topic": "Foundations", "q": "What is Spark SQL primarily designed for?", "o": ["Structured data processing", "Image editing", "Operating-system scheduling", "Network routing"], "a": "Structured data processing", "e": "Spark SQL is Spark's module for working with structured and semi-structured data through SQL, DataFrames, and related APIs."}, {"id": 2, "topic": "Foundations", "q": "Which object is normally the entry point for DataFrame and SQL operations in modern PySpark?", "o": ["SparkSession", "SparkWorker", "SQLCursor", "DataNode"], "a": "SparkSession", "e": "SparkSession provides access to DataFrame creation, data sources, catalog operations, and spark.sql()."}, {"id": 3, "topic": "DataFrames", "q": "A PySpark DataFrame is best described as what?", "o": ["A distributed table with named columns", "A Python list stored only on the driver", "A single CSV file", "A database server"], "a": "A distributed table with named columns", "e": "A DataFrame represents distributed rows organized into named columns and processed in parallel."}, {"id": 4, "topic": "Schema", "q": "Why is an explicit schema preferred for production CSV ingestion?", "o": ["It avoids an extra inference pass and enforces expected types", "It turns CSV into JSON", "It removes all null values", "It guarantees one output partition"], "a": "It avoids an extra inference pass and enforces expected types", "e": "Explicit schemas improve predictability and avoid the additional scan required by inferSchema."}, {"id": 5, "topic": "Views", "q": "Which method makes a DataFrame queryable by spark.sql() within the current SparkSession?", "o": ["createOrReplaceTempView", "collect", "persistToSQL", "registerExecutor"], "a": "createOrReplaceTempView", "e": "A temporary view gives the DataFrame a session-scoped SQL name without copying its data."}, {"id": 6, "topic": "Views", "q": "Where must a global temporary view be referenced by default?", "o": ["The global_temp database", "The default database", "The system database", "The temp database"], "a": "The global_temp database", "e": "Global temporary views are application-scoped and are referenced with the reserved global_temp namespace."}, {"id": 7, "topic": "Execution", "q": "What does lazy evaluation mean in Spark SQL?", "o": ["Transformations build a plan and execution starts when an action needs a result", "Spark sleeps between queries", "SQL statements cannot run immediately", "Data is always cached automatically"], "a": "Transformations build a plan and execution starts when an action needs a result", "e": "Spark delays execution so it can optimize the full logical plan before running tasks."}, {"id": 8, "topic": "Execution", "q": "Which command is most useful for inspecting a DataFrame execution plan?", "o": ["df.explain()", "df.collect()", "df.countByKey()", "df.compile()"], "a": "df.explain()", "e": "explain displays logical and physical planning information, helping diagnose scans, exchanges, and join strategies."}, {"id": 9, "topic": "Optimization", "q": "What is the Catalyst optimizer responsible for?", "o": ["Analyzing and optimizing query plans", "Allocating HDFS blocks", "Managing Linux users", "Creating Kafka topics"], "a": "Analyzing and optimizing query plans", "e": "Catalyst applies analysis and optimization rules to transform a logical query into an efficient executable plan."}, {"id": 10, "topic": "Joins", "q": "Which join returns every row from the left DataFrame and matching rows from the right?", "o": ["Left outer join", "Inner join", "Left anti join", "Cross join"], "a": "Left outer join", "e": "A left outer join preserves all left-side rows and fills unmatched right-side columns with null."}, {"id": 11, "topic": "Joins", "q": "Which join is useful for finding customer IDs that have no matching order?", "o": ["Left anti join", "Full outer join", "Cross join", "Right outer join"], "a": "Left anti join", "e": "A left anti join returns only left-side rows for which no match exists on the right."}, {"id": 12, "topic": "Joins", "q": "When is a broadcast join most appropriate?", "o": ["When one side is small enough to send to executors", "When both sides are extremely large", "When no join condition exists", "Only when reading XML"], "a": "When one side is small enough to send to executors", "e": "Broadcasting a small dimension table can avoid a large shuffle of both inputs."}, {"id": 13, "topic": "Aggregation", "q": "What usually causes a shuffle in groupBy aggregation?", "o": ["Rows with the same grouping key must be brought together", "Spark converts all columns to strings", "The driver writes a screenshot", "A view becomes permanent"], "a": "Rows with the same grouping key must be brought together", "e": "Grouping requires records with the same key to meet in the same partition, which normally requires network redistribution."}, {"id": 14, "topic": "Nulls", "q": "What is the SQL result of comparing a value with NULL using =?", "o": ["Unknown rather than true", "Always true", "Always zero", "A syntax error in every case"], "a": "Unknown rather than true", "e": "SQL uses three-valued logic. Use IS NULL or IS NOT NULL to test nullness."}, {"id": 15, "topic": "Nulls", "q": "Which function is commonly used to return the first non-null expression?", "o": ["coalesce", "explode", "rank", "collect_list"], "a": "coalesce", "e": "SQL coalesce evaluates expressions from left to right and returns the first non-null value."}, {"id": 16, "topic": "Windows", "q": "What distinguishes a window function from a groupBy aggregation?", "o": ["It can calculate across related rows while keeping each input row", "It always removes duplicate rows", "It can only be used on strings", "It runs only on the driver"], "a": "It can calculate across related rows while keeping each input row", "e": "Window functions calculate ranks, running totals, and other analytics without collapsing all rows into one row per group."}, {"id": 17, "topic": "Windows", "q": "Which function assigns consecutive row numbers within each window partition?", "o": ["row_number", "dense_rank_sum", "sequence_id", "partition_number"], "a": "row_number", "e": "row_number assigns 1, 2, 3, and so forth according to the window ordering."}, {"id": 18, "topic": "Data Sources", "q": "Which format is columnar and normally preferred for Spark analytics storage?", "o": ["Parquet", "Plain text", "BMP", "INI"], "a": "Parquet", "e": "Parquet stores data by column, preserves schema, and supports pruning and compression, making it well suited to analytical workloads."}, {"id": 19, "topic": "Data Sources", "q": "What does partitionBy('sale_date') do during a file write?", "o": ["Creates directory partitions based on sale_date values", "Sorts every file globally", "Creates a database index", "Broadcasts the DataFrame"], "a": "Creates directory partitions based on sale_date values", "e": "Partitioned writes organize files into directories such as sale_date=2026-07-01, enabling partition pruning when filters use that column."}, {"id": 20, "topic": "Data Sources", "q": "Which Spark SQL source is used to read tables from relational databases?", "o": ["JDBC", "SMTP", "SSHFS", "DNS"], "a": "JDBC", "e": "Spark's JDBC data source reads and writes relational database tables through a JDBC driver."}, {"id": 21, "topic": "Performance", "q": "Why should select('*') be avoided when only three columns are needed?", "o": ["Reading unnecessary columns increases I/O and processing", "Spark SQL forbids the asterisk", "It changes integers to doubles", "It disables SQL syntax"], "a": "Reading unnecessary columns increases I/O and processing", "e": "Column pruning is most effective when the query requests only necessary columns."}, {"id": 22, "topic": "Performance", "q": "What is predicate pushdown?", "o": ["Sending supported filters closer to the data source", "Moving all data to the driver", "Converting SQL to Python loops", "Disabling partition filters"], "a": "Sending supported filters closer to the data source", "e": "Predicate pushdown reduces data read by letting the source apply eligible filters before Spark processes the rows."}, {"id": 23, "topic": "Performance", "q": "When should cache() be used?", "o": ["When the same expensive DataFrame is reused and memory cost is justified", "On every DataFrame automatically", "Only before reading data", "To permanently save a table"], "a": "When the same expensive DataFrame is reused and memory cost is justified", "e": "Caching can speed repeated reuse, but unnecessary caching consumes executor memory and may cause eviction or spills."}, {"id": 24, "topic": "Performance", "q": "What can Adaptive Query Execution change while a query is running?", "o": ["Parts of the physical plan using runtime statistics", "The source-code language", "The HDFS replication factor", "The SQL table names"], "a": "Parts of the physical plan using runtime statistics", "e": "AQE can adapt partition coalescing and join choices based on statistics observed during execution."}, {"id": 25, "topic": "UDFs", "q": "Why are built-in Spark SQL functions generally preferred over Python UDFs?", "o": ["Built-ins are visible to the optimizer and avoid much Python serialization overhead", "Built-ins run only on one row", "Python UDFs cannot return values", "Built-ins require no SparkSession"], "a": "Built-ins are visible to the optimizer and avoid much Python serialization overhead", "e": "Built-in expressions integrate with Spark planning and execution, while Python UDFs can create optimization and serialization barriers."}, {"id": 26, "topic": "Tables", "q": "What is the main difference between a temporary view and a persisted table?", "o": ["A temporary view is session/application metadata while a table can persist through a catalog and storage", "A table cannot have columns", "A temporary view always writes Parquet files", "There is no difference"], "a": "A temporary view is session/application metadata while a table can persist through a catalog and storage", "e": "Views reference a query or DataFrame for a limited scope; persisted tables have catalog metadata and stored data beyond the immediate view lifetime."}, {"id": 27, "topic": "Actions", "q": "Which operation brings all result rows to the driver and may cause driver memory problems?", "o": ["collect", "filter", "select", "withColumn"], "a": "collect", "e": "collect materializes the complete result in driver memory. Use show, take, limit, or write for large data."}, {"id": 28, "topic": "SQL", "q": "What does spark.sql('SELECT ...') return in PySpark?", "o": ["A DataFrame", "A Python dictionary", "An RDD only", "A database connection"], "a": "A DataFrame", "e": "Programmatic SQL queries return a DataFrame, so SQL and DataFrame APIs can be mixed in one pipeline."}, {"id": 29, "topic": "Schema", "q": "What happens when a non-numeric CSV value is read using an IntegerType field in permissive mode?", "o": ["The malformed field may become null and the row is retained depending on options", "Spark always converts it to zero", "The entire cluster shuts down", "The value becomes a date"], "a": "The malformed field may become null and the row is retained depending on options", "e": "CSV parse behavior depends on mode and options; production pipelines should validate malformed records and avoid silently accepting bad data."}, {"id": 30, "topic": "Architecture", "q": "What role does the catalog play during SQL analysis?", "o": ["It resolves databases, tables, columns, functions, and metadata", "It executes every task itself", "It stores executor logs only", "It replaces the cluster manager"], "a": "It resolves databases, tables, columns, functions, and metadata", "e": "The analyzer uses catalog metadata to resolve names and verify types before optimization and execution."}];
+const FLASHCARDS = [{"tag": "Beginner", "q": "What is Spark SQL?", "a": "Spark SQL is Apache Spark's module for structured data processing. It lets us work with tables using SQL queries, DataFrames, and Datasets while Spark distributes the work across a cluster."}, {"tag": "Beginner", "q": "What is a DataFrame?", "a": "A DataFrame is a distributed collection of rows organized into named columns. It looks like a database table but is processed in parallel by Spark."}, {"tag": "Beginner", "q": "What is SparkSession?", "a": "SparkSession is the main entry point for modern Spark SQL applications. We use it to create DataFrames, read and write data, execute SQL, and access the catalog."}, {"tag": "Beginner", "q": "Why create a temporary view?", "a": "A temporary view gives a DataFrame a SQL name for the current SparkSession. It does not copy the data; it lets spark.sql() query the DataFrame using familiar SQL syntax."}, {"tag": "Beginner", "q": "What is a schema?", "a": "A schema describes column names, data types, and nullability. A correct schema prevents ambiguous parsing and makes transformations predictable."}, {"tag": "Beginner", "q": "What is lazy evaluation?", "a": "Spark records transformations as a logical plan and waits until an action requires a result. This delay lets the optimizer examine and improve the complete plan."}, {"tag": "Intermediate", "q": "Explain Catalyst optimizer.", "a": "Catalyst is Spark SQL's extensible query optimization framework. It analyzes unresolved plans, applies logical optimization rules, compares physical alternatives, and selects an executable plan."}, {"tag": "Intermediate", "q": "What is predicate pushdown?", "a": "Predicate pushdown sends eligible filters to the underlying data source. It reduces the rows read into Spark, which lowers I/O and processing cost."}, {"tag": "Intermediate", "q": "What is column pruning?", "a": "Column pruning means reading and carrying only the columns needed by the query. Columnar sources such as Parquet benefit greatly because unused columns can be skipped."}, {"tag": "Intermediate", "q": "Temporary view vs global temporary view?", "a": "A temporary view belongs to one SparkSession. A global temporary view lives for the Spark application and is accessed through the global_temp database."}, {"tag": "Intermediate", "q": "Why use window functions?", "a": "Window functions compute values across related rows while retaining row-level detail. They are ideal for ranking, running totals, moving averages, and previous-versus-current comparisons."}, {"tag": "Intermediate", "q": "What is a broadcast join?", "a": "Spark sends a small relation to each executor so the large relation does not need a full shuffle. It is valuable for joining a large fact table with a small dimension table."}, {"tag": "Advanced", "q": "Logical plan vs physical plan?", "a": "The logical plan describes what result is required through relational operators. The physical plan describes how Spark will execute it, including scan types, exchanges, join algorithms, and aggregations."}, {"tag": "Advanced", "q": "What is Adaptive Query Execution?", "a": "AQE uses runtime statistics to revise portions of the physical plan after execution begins. It can coalesce shuffle partitions, handle skew, and change join strategies when runtime sizes differ from estimates."}, {"tag": "Advanced", "q": "Why can Python UDFs reduce performance?", "a": "Python UDFs may require serialization between the JVM and Python process and hide expression semantics from Catalyst. Built-in SQL functions are normally more optimizable and execute in Spark's native engine."}, {"tag": "Advanced", "q": "How do you diagnose a slow Spark SQL query?", "a": "Inspect df.explain('formatted'), Spark UI stages, scan size, shuffle exchanges, skewed tasks, join choices, partition counts, spills, and input file sizes. Then change one factor at a time and measure again."}, {"tag": "Advanced", "q": "What is data skew?", "a": "Data skew occurs when a few keys own a disproportionate number of rows. Those keys create oversized partitions and long-running straggler tasks even when most tasks finish quickly."}, {"tag": "Advanced", "q": "How should JDBC reads be parallelized safely?", "a": "Use a suitable numeric/date partitionColumn with lowerBound, upperBound, and numPartitions, or predicates. Also limit concurrent connections so Spark does not overload the source database."}];
+const STORAGE_PREFIX = 'spark_sql_tut_v1_';
+let storageOK = false;
+try{const k=STORAGE_PREFIX+'test';localStorage.setItem(k,'1');storageOK=localStorage.getItem(k)==='1';localStorage.removeItem(k)}catch(e){storageOK=false}
+
+function safeGet(key,fallback){if(!storageOK)return fallback;try{const v=localStorage.getItem(STORAGE_PREFIX+key);return v===null?fallback:JSON.parse(v)}catch(e){return fallback}}
+function safeSet(key,val){if(!storageOK)return;try{localStorage.setItem(STORAGE_PREFIX+key,JSON.stringify(val))}catch(e){}}
+function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function escapeHTML(s){return String(s).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
+function toggleReveal(btn){const r=btn.nextElementSibling;r.style.display=r.style.display==='block'?'none':'block'}
+function copyCode(btn){const code=btn.closest('.code-panel').querySelector('code').innerText;navigator.clipboard?.writeText(code).then(()=>{const old=btn.textContent;btn.textContent='Copied';setTimeout(()=>btn.textContent=old,1200)}).catch(()=>{const ta=document.createElement('textarea');ta.value=code;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove()})}
+function toggleTheme(){const next=document.body.dataset.theme==='dark'?'light':'dark';document.body.dataset.theme=next;safeSet('theme',next)}
+function changeFont(delta){let v=parseInt(getComputedStyle(document.documentElement).getPropertyValue('--fontSize'))||16;v=Math.min(21,Math.max(13,v+delta));document.documentElement.style.setProperty('--fontSize',v+'px');safeSet('font',v)}
+
+// Scroll progress and TOC highlighting
+window.addEventListener('scroll',()=>{const h=document.documentElement.scrollHeight-innerHeight;document.getElementById('scrollProgress').style.width=(h>0?(scrollY/h*100):0)+'%';let current='';document.querySelectorAll('main section').forEach(s=>{if(s.getBoundingClientRect().top<160)current=s.id});document.querySelectorAll('.toc a').forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+current))},{passive:true});
+
+// Progress tracker
+const trackedSections=[...document.querySelectorAll('section[data-track]')];
+function initProgress(){if(!storageOK){document.getElementById('learningTools').classList.add('hidden');document.getElementById('notesPanel').classList.add('hidden');return}const state=safeGet('progress',{});const list=document.getElementById('prepList');trackedSections.forEach((s,i)=>{const label=s.dataset.track;const id='prep_'+s.id;const wrap=document.createElement('label');wrap.className='track-item';wrap.innerHTML=`<input type="checkbox" id="${id}" ${state[s.id]?'checked':''}> <span>${i+1}. ${escapeHTML(label)}</span>`;list.appendChild(wrap);const header=s.querySelector('h2');const hlabel=document.createElement('label');hlabel.className='section-check';hlabel.innerHTML=`<input type="checkbox" ${state[s.id]?'checked':''}> Mark prepared`;header.appendChild(hlabel);const inputs=[wrap.querySelector('input'),hlabel.querySelector('input')];inputs.forEach(inp=>inp.addEventListener('change',()=>{inputs.forEach(x=>x.checked=inp.checked);const st=safeGet('progress',{});st[s.id]=inp.checked;safeSet('progress',st);updateProgress()}))});updateProgress()}
+function updateProgress(){if(!storageOK)return;const st=safeGet('progress',{});const done=trackedSections.filter(s=>st[s.id]).length;document.getElementById('prepFill').style.width=(done/trackedSections.length*100)+'%';document.getElementById('prepText').textContent=`${done} / ${trackedSections.length} prepared`;updateCertificate()}
+function resetProgress(){if(!storageOK)return;safeSet('progress',{});document.querySelectorAll('#prepList input,.section-check input').forEach(i=>i.checked=false);updateProgress()}
+
+// Word notes
+let notes=safeGet('notes',[]), currentNoteKey=null, currentWord='', currentSection='';
+function noteKey(section,word){return section+'::'+word.toLowerCase()}
+function eligibleTarget(node){if(!node||!node.closest)return false;if(node.closest('button,input,textarea,select,label,a,pre,code,.quiz-q,.exercise,.flash-zone,.notes-panel,.modal-backdrop'))return false;const sec=node.closest('main section');return !!sec && !['s14','s15'].includes(sec.id)}
+document.getElementById('tutorialMain').addEventListener('dblclick',e=>{if(!storageOK||!eligibleTarget(e.target))return;const sel=window.getSelection();const word=sel?sel.toString().trim():'';if(!/^[A-Za-z][A-Za-z0-9_-]{1,50}$/.test(word))return;const sec=e.target.closest('section');openNoteModal(word,sec.id,sec.dataset.track)});
+document.getElementById('tutorialMain').addEventListener('click',e=>{const n=e.target.closest('.note-word');if(!n)return;const [secId,lower]=n.dataset.key.split('::');const found=notes.find(x=>x.key===n.dataset.key);if(found)openNoteModal(found.word,secId,found.section)});
+function openNoteModal(word,secId,secName){currentWord=word;currentSection=secName;currentNoteKey=noteKey(secId,word);const existing=notes.find(n=>n.key===currentNoteKey);document.getElementById('noteTitle').textContent=`Note for “${word}”`;document.getElementById('noteMeta').textContent=`Section: ${secName}`;document.getElementById('noteText').value=existing?existing.text:'';document.getElementById('deleteNoteBtn').style.display=existing?'inline-block':'none';document.getElementById('noteModal').style.display='grid';setTimeout(()=>document.getElementById('noteText').focus(),30)}
+function closeNoteModal(){document.getElementById('noteModal').style.display='none';window.getSelection()?.removeAllRanges()}
+function saveCurrentNote(){const text=document.getElementById('noteText').value.trim();if(!text)return;const idx=notes.findIndex(n=>n.key===currentNoteKey);const obj={key:currentNoteKey,word:currentWord,section:currentSection,text,ts:new Date().toLocaleString()};if(idx>=0)notes[idx]=obj;else notes.push(obj);safeSet('notes',notes);closeNoteModal();renderNotes();applyNoteHighlights()}
+function deleteCurrentNote(){notes=notes.filter(n=>n.key!==currentNoteKey);safeSet('notes',notes);closeNoteModal();renderNotes();removeNoteHighlights();applyNoteHighlights()}
+function clearNotes(){notes=[];safeSet('notes',notes);renderNotes();removeNoteHighlights()}
+function toggleNotesPanel(){document.getElementById('notesPanel').classList.toggle('collapsed')}
+function renderNotes(){const box=document.getElementById('notesList');if(!notes.length){box.innerHTML='<p class="small">No notes yet.</p>';return}box.innerHTML=notes.map((n,i)=>`<div class="note-entry"><strong>${escapeHTML(n.word)}</strong> <span class="small">— ${escapeHTML(n.section)}</span><p>${escapeHTML(n.text)}</p><span class="small">${escapeHTML(n.ts)}</span><button class="ghost" onclick="editNoteByIndex(${i})">Edit</button><button class="danger-btn" onclick="deleteNoteByIndex(${i})">Delete</button></div>`).join('')}
+function editNoteByIndex(i){const n=notes[i];const secId=n.key.split('::')[0];openNoteModal(n.word,secId,n.section)}
+function deleteNoteByIndex(i){notes.splice(i,1);safeSet('notes',notes);renderNotes();removeNoteHighlights();applyNoteHighlights()}
+function removeNoteHighlights(){document.querySelectorAll('.note-word').forEach(sp=>sp.replaceWith(document.createTextNode(sp.textContent)))}
+function applyNoteHighlights(){if(!storageOK||!notes.length)return;removeNoteHighlights();const bySection={};notes.forEach(n=>{const sec=n.key.split('::')[0];(bySection[sec]??=[]).push(n)});Object.entries(bySection).forEach(([secId,arr])=>{const root=document.getElementById(secId);if(!root)return;const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,{acceptNode(node){const p=node.parentElement;if(!p||p.closest('script,style,pre,code,button,input,textarea,select,label,a,.quiz-q,.exercise,.flash-zone,.section-check,.note-word'))return NodeFilter.FILTER_REJECT;return NodeFilter.FILTER_ACCEPT}});const nodes=[];while(walker.nextNode())nodes.push(walker.currentNode);nodes.forEach(node=>{let text=node.nodeValue;let parts=[{text,match:null}];arr.forEach(n=>{const next=[];parts.forEach(part=>{if(part.match){next.push(part);return}const re=new RegExp(`\\b(${n.word})\\b`,'gi');let last=0,m;while((m=re.exec(part.text))){if(m.index>last)next.push({text:part.text.slice(last,m.index),match:null});next.push({text:m[0],match:n});last=m.index+m[0].length}if(last<part.text.length)next.push({text:part.text.slice(last),match:null})});parts=next});if(parts.some(p=>p.match)){const frag=document.createDocumentFragment();parts.forEach(p=>{if(p.match){const sp=document.createElement('span');sp.className='note-word';sp.dataset.key=p.match.key;sp.title=p.match.text;sp.textContent=p.text;frag.appendChild(sp)}else frag.appendChild(document.createTextNode(p.text))});node.replaceWith(frag)}})})}
+
+// Interview and flashcards
+let flashOrder=FLASHCARDS.map((_,i)=>i), flashPos=0, flashFlipped=false, dueMode=false;
+function renderInterviews(){document.getElementById('interviewList').innerHTML=FLASHCARDS.map((c,i)=>`<div class="interview-item"><div class="interview-q" onclick="toggleInterview(this)"><span class="tag ${c.tag}">${c.tag}</span>${i+1}. ${escapeHTML(c.q)}</div><div class="interview-a">${escapeHTML(c.a)}</div></div>`).join('')}
+function toggleInterview(el){const a=el.nextElementSibling;a.style.display=a.style.display==='block'?'none':'block'}
+function flashSchedule(){return safeGet('flashSchedule',{})}
+function updateDue(){const sch=flashSchedule();const today=new Date().setHours(0,0,0,0);const due=FLASHCARDS.filter((_,i)=>!sch[i]||new Date(sch[i].due).setHours(0,0,0,0)<=today).length;document.getElementById('dueCount').textContent=`Due today: ${due} / ${FLASHCARDS.length}`}
+function renderFlash(){if(!flashOrder.length){flashOrder=FLASHCARDS.map((_,i)=>i);dueMode=false}const idx=flashOrder[flashPos];const c=FLASHCARDS[idx];document.getElementById('flashcard').textContent=flashFlipped?c.a:`[${c.tag}]\n${c.q}`;document.getElementById('flashPos').textContent=`Card ${flashPos+1} / ${flashOrder.length}`;document.getElementById('ratingButtons').style.display=flashFlipped&&storageOK?'block':'none';updateDue()}
+function flipFlashcard(){flashFlipped=!flashFlipped;renderFlash()}
+function nextFlash(){flashPos=(flashPos+1)%flashOrder.length;flashFlipped=false;renderFlash()}
+function prevFlash(){flashPos=(flashPos-1+flashOrder.length)%flashOrder.length;flashFlipped=false;renderFlash()}
+function shuffleFlash(){flashOrder=shuffle(flashOrder);flashPos=0;flashFlipped=false;renderFlash()}
+function rateFlash(rating){if(!storageOK)return;const idx=flashOrder[flashPos];const sch=flashSchedule();const old=sch[idx]||{ease:2.5,interval:0};let days=rating===0?0:rating===1?1:rating===2?Math.max(2,Math.round(old.interval*old.ease)||2):Math.max(4,Math.round((old.interval||2)*(old.ease+.15)));let ease=Math.max(1.3,old.ease+(rating===0?-.2:rating===1?-.1:rating===3?.15:0));const due=new Date();due.setDate(due.getDate()+days);sch[idx]={ease,interval:days,due:due.toISOString()};safeSet('flashSchedule',sch);nextFlash()}
+function showDueOnly(){const sch=flashSchedule();const today=new Date().setHours(0,0,0,0);flashOrder=FLASHCARDS.map((_,i)=>i).filter(i=>!sch[i]||new Date(sch[i].due).setHours(0,0,0,0)<=today);if(!flashOrder.length){alert('No cards are due today.');flashOrder=FLASHCARDS.map((_,i)=>i)}flashPos=0;flashFlipped=false;dueMode=true;renderFlash()}
+function resetFlashSchedule(){safeSet('flashSchedule',{});flashOrder=FLASHCARDS.map((_,i)=>i);flashPos=0;flashFlipped=false;renderFlash()}
+
+// Active exercises
+function checkFill(id,answer,btn){const inp=document.getElementById(id);const fb=btn.parentElement.querySelector('.feedback');const ok=inp.value.trim().toLowerCase()===answer.toLowerCase();fb.style.display='block';fb.style.borderColor=ok?'var(--success)':'var(--danger)';fb.innerHTML=(ok?'✅ Correct. ':'❌ Try again. ')+fb.textContent}
+function revealFill(id,answer,btn){document.getElementById(id).value=answer;const fb=btn.parentElement.querySelector('.feedback');fb.style.display='block'}
+let selectedMatch=null;document.getElementById('matchGrid').addEventListener('click',e=>{const item=e.target.closest('.match-item');if(!item||item.classList.contains('matched'))return;if(!selectedMatch){selectedMatch=item;item.classList.add('selected');return}if(selectedMatch===item){item.classList.remove('selected');selectedMatch=null;return}if(selectedMatch.parentElement===item.parentElement){selectedMatch.classList.remove('selected');selectedMatch=item;item.classList.add('selected');return}const ok=selectedMatch.dataset.key===item.dataset.key;document.getElementById('matchFeedback').textContent=ok?'✅ Correct pair.':'❌ Not a match. Try again.';if(ok){selectedMatch.classList.add('matched');item.classList.add('matched')}selectedMatch.classList.remove('selected');selectedMatch=null});
+function moveOrder(btn,dir){const li=btn.closest('li'),list=li.parentElement;if(dir<0&&li.previousElementSibling)list.insertBefore(li,li.previousElementSibling);if(dir>0&&li.nextElementSibling)list.insertBefore(li.nextElementSibling,li)}
+function checkOrder(){const vals=[...document.querySelectorAll('#orderList li')].map(li=>+li.dataset.order);const ok=vals.every((v,i)=>v===i+1);document.getElementById('orderFeedback').textContent=ok?'✅ Correct: Parse → Analyze → Optimize → Physical plan → Execute.':'❌ The order is not correct yet.'}
+function revealOrder(){const list=document.getElementById('orderList');[...list.children].sort((a,b)=>a.dataset.order-b.dataset.order).forEach(x=>list.appendChild(x));checkOrder()}
+
+// Quiz and exam
+let practiceSet=[], examSet=[], examStarted=false, examSubmitted=false, timerHandle=null, secondsLeft=900, missedExam=[];
+function chooseAttemptSets(){const all=shuffle(QUESTION_BANK);practiceSet=all.slice(0,15);examSet=all.slice(15,30)}
+function shuffledQuestion(q){return {...q,o:shuffle(q.o)}}
+function renderQuestion(q,index,prefix,confidence){const qq=shuffledQuestion(q);return `<div class="quiz-q" data-id="${q.id}" data-answer="${escapeHTML(q.a)}" data-topic="${escapeHTML(q.topic)}"><p><strong>${index+1}. ${escapeHTML(q.q)}</strong> <span class="pill">${escapeHTML(q.topic)}</span></p>${qq.o.map((o,j)=>`<label class="option"><input type="radio" name="${prefix}_${q.id}" value="${escapeHTML(o)}"> ${escapeHTML(o)}</label>`).join('')}${confidence?`<div class="confidence">Confidence: <label><input type="radio" name="conf_${prefix}_${q.id}" value="Sure"> Sure</label><label><input type="radio" name="conf_${prefix}_${q.id}" value="Unsure"> Unsure</label></div>`:''}<div class="explanation"><strong>Correct answer:</strong> ${escapeHTML(q.a)}<br>${escapeHTML(q.e)}</div></div>`}
+function renderPractice(reuse=false){if(!reuse)chooseAttemptSets();document.getElementById('practiceQuestions').classList.remove('wrong-only');document.getElementById('practiceQuestions').innerHTML=shuffle(practiceSet).map((q,i)=>renderQuestion(q,i,'p',true)).join('');document.getElementById('practiceActions').innerHTML='<button onclick="submitPractice()">Submit Practice Quiz</button>';document.getElementById('practiceResult').style.display='none'}
+function tier(p){if(p===100)return['🤩🎉','Perfect! Flawless run.'];if(p>=90)return['😄','Excellent — interview-ready!'];if(p>=75)return['🙂','Well done — solid grasp.'];if(p>=60)return['😌','Good — revise the misses.'];return['💪😤','Needs focus — review and retry.']}
+function playSound(p){try{const ctx=new (window.AudioContext||window.webkitAudioContext)();const osc=ctx.createOscillator(),gain=ctx.createGain();osc.connect(gain);gain.connect(ctx.destination);osc.frequency.value=p>=60?660:220;gain.gain.setValueAtTime(.0001,ctx.currentTime);gain.gain.exponentialRampToValueAtTime(.15,ctx.currentTime+.03);gain.gain.exponentialRampToValueAtTime(.0001,ctx.currentTime+.45);osc.start();osc.stop(ctx.currentTime+.46)}catch(e){}}
+function submitPractice(){const box=document.getElementById('practiceQuestions');let correct=0,shaky=0,priority=0;box.querySelectorAll('.quiz-q').forEach(qel=>{const q=QUESTION_BANK.find(x=>x.id==qel.dataset.id);const chosen=qel.querySelector('input[type=radio]:checked')?.value;const conf=qel.querySelector('input[name^=conf_]:checked')?.value;const ok=chosen===q.a;if(ok)correct++;if(ok&&conf==='Unsure')shaky++;if(!ok&&conf==='Sure')priority++;qel.classList.add(ok?'correct':'wrong');qel.querySelectorAll('.option').forEach(o=>{const v=o.querySelector('input').value;if(v===q.a)o.classList.add('correct');else if(o.querySelector('input').checked)o.classList.add('wrong')});qel.querySelector('.explanation').style.display='block';qel.querySelectorAll('input').forEach(i=>i.disabled=true)});const pct=Math.round(correct/15*100),[emoji,msg]=tier(pct);const r=document.getElementById('practiceResult');r.style.display='block';r.innerHTML=`<div class="big-emoji">${emoji}</div><h3>${correct} / 15 (${pct}%)</h3><p>${msg}</p><p>Shaky correct answers: ${shaky}. Wrong but marked Sure: ${priority}.</p>`;document.getElementById('practiceActions').innerHTML='<button onclick="retryPractice()">Retry and reshuffle</button><button class="ghost" onclick="toggleWrongOnly()">Review wrong answers only</button>';playSound(pct);awardXP(correct*3,'practice')}
+function retryPractice(){if(!examStarted){renderPractice(false)}else{renderPractice(true)}}
+function toggleWrongOnly(){document.getElementById('practiceQuestions').classList.toggle('wrong-only')}
+function startExam(){if(examStarted&&!examSubmitted)return;examStarted=true;examSubmitted=false;missedExam=[];document.getElementById('startExamBtn').disabled=true;document.getElementById('examQuestions').classList.remove('hidden');document.getElementById('examQuestions').innerHTML=shuffle(examSet).map((q,i)=>renderQuestion(q,i,'e',false)).join('');document.getElementById('examActions').innerHTML='<button onclick="submitExam(false)">Submit Formal Exam</button>';document.getElementById('examResult').style.display='none';document.getElementById('weakArea').innerHTML='';secondsLeft=900;updateTimer();clearInterval(timerHandle);timerHandle=setInterval(()=>{secondsLeft--;updateTimer();if(secondsLeft<=0){clearInterval(timerHandle);submitExam(true)}},1000)}
+function updateTimer(){const m=String(Math.floor(secondsLeft/60)).padStart(2,'0'),s=String(secondsLeft%60).padStart(2,'0');const el=document.getElementById('examTimer');el.textContent=`${m}:${s}`;el.classList.toggle('final',secondsLeft<=60)}
+function submitExam(auto){if(examSubmitted)return;examSubmitted=true;clearInterval(timerHandle);let correct=0;const topics={};document.querySelectorAll('#examQuestions .quiz-q').forEach(qel=>{const q=QUESTION_BANK.find(x=>x.id==qel.dataset.id),chosen=qel.querySelector('input[type=radio]:checked')?.value,ok=chosen===q.a;topics[q.topic]??={c:0,t:0};topics[q.topic].t++;if(ok){correct++;topics[q.topic].c++}else missedExam.push(q);qel.classList.add(ok?'correct':'wrong');qel.querySelectorAll('.option').forEach(o=>{const v=o.querySelector('input').value;if(v===q.a)o.classList.add('correct');else if(o.querySelector('input').checked)o.classList.add('wrong')});const exp=qel.querySelector('.explanation');exp.style.display='block';exp.innerHTML=`<strong>Your answer:</strong> ${escapeHTML(chosen||'Not answered')}<br><strong>Correct answer:</strong> ${escapeHTML(q.a)}<br>${escapeHTML(q.e)}`;qel.querySelectorAll('input').forEach(i=>i.disabled=true)});const pct=Math.round(correct/15*100),[emoji,msg]=tier(pct),pass=pct>=60;const breakdown=Object.entries(topics).map(([t,v])=>`<span class="pill">${escapeHTML(t)}: ${v.c}/${v.t}</span>`).join('');const r=document.getElementById('examResult');r.style.display='block';r.innerHTML=`<div class="big-emoji">${emoji}</div><h3>${correct} / 15 marks — ${pct}%</h3><p><strong>${pass?'PASS':'FAIL'}</strong> — ${msg}${auto?' Timer reached zero and the exam was auto-submitted.':''}</p><div>${breakdown}</div>`;document.getElementById('examActions').innerHTML='<button onclick="restartExam()">Restart Exam</button>';if(missedExam.length)document.getElementById('weakArea').innerHTML='<button class="secondary" onclick="buildWeakQuiz()">Practice my weak areas</button><div id="weakQuiz"></div>';playSound(pct);safeSet('examBest',Math.max(safeGet('examBest',0),pct));safeSet('examPassed',pass||safeGet('examPassed',false));awardXP(correct*5,'exam');updateCertificate()}
+function restartExam(){clearInterval(timerHandle);examStarted=false;examSubmitted=false;chooseAttemptSets();renderPractice(true);document.getElementById('examQuestions').classList.add('hidden');document.getElementById('examQuestions').innerHTML='';document.getElementById('examActions').innerHTML='';document.getElementById('examResult').style.display='none';document.getElementById('weakArea').innerHTML='';document.getElementById('startExamBtn').disabled=false;secondsLeft=900;updateTimer()}
+function buildWeakQuiz(){const set=shuffle(missedExam).slice(0,Math.min(5,missedExam.length));const box=document.getElementById('weakQuiz');box.innerHTML='<h3>Weak-area mini quiz</h3>'+set.map((q,i)=>renderQuestion(q,i,'w',false)).join('')+'<button onclick="submitWeak()">Check weak-area quiz</button>'}
+function submitWeak(){const box=document.getElementById('weakQuiz');let c=0,t=0;box.querySelectorAll('.quiz-q').forEach(qel=>{t++;const q=QUESTION_BANK.find(x=>x.id==qel.dataset.id),v=qel.querySelector('input:checked')?.value,ok=v===q.a;if(ok)c++;qel.classList.add(ok?'correct':'wrong');qel.querySelector('.explanation').style.display='block'});box.insertAdjacentHTML('afterbegin',`<div class="result" style="display:block"><h3>${c}/${t}</h3><p>Review every explanation and retry the formal exam when ready.</p></div>`)}
+function awardXP(points,kind){if(!storageOK)return;const key=kind+'Awarded';if(safeGet(key,false))return;safeSet(key,true);safeSet('xp',safeGet('xp',0)+points)}
+
+// Certificate
+function updateCertificate(){const st=safeGet('progress',{}),done=trackedSections.filter(s=>st[s.id]).length,passed=safeGet('examPassed',false),btn=document.getElementById('printCertBtn'),status=document.getElementById('certificateStatus');const unlocked=done===trackedSections.length&&passed;btn.disabled=!unlocked;status.textContent=unlocked?`Unlocked. XP: ${safeGet('xp',0)}. Best exam: ${safeGet('examBest',0)}%.`:`Complete all ${trackedSections.length} sections and pass the formal exam to unlock.`}
+function printCertificate(){const name=document.getElementById('learnerName').value.trim();if(!name){alert('Enter the learner name first.');return}window.print()}
+
+// CSV downloads
+const salesCSV=`sale_id,sale_ts,store_id,city,product_id,quantity,unit_price,payment_mode\nS001,2026-07-01 09:15:00,ST01,Coimbatore,P101,2,450.00,UPI\nS002,2026-07-01 10:10:00,ST02,Chennai,P102,1,1200.00,CARD\nS003,2026-07-01 11:30:00,ST01,Coimbatore,P103,3,80.00,CASH\nS004,2026-07-02 12:05:00,ST03,Bengaluru,P101,1,450.00,UPI\nS005,2026-07-02 13:00:00,ST02,Chennai,P104,2,700.00,CARD\nS006,2026-07-02 14:20:00,ST01,Coimbatore,P999,1,300.00,UPI\nS007,2026-07-03 09:45:00,ST03,Bengaluru,P102,2,1200.00,CARD\nS008,2026-07-03 10:30:00,ST02,Chennai,P103,5,80.00,CASH\nS008,2026-07-03 10:31:00,ST02,Chennai,P103,5,80.00,CASH\nS009,bad-date,ST01,Coimbatore,P104,1,700.00,UPI\nS010,2026-07-03 16:00:00,ST01,Coimbatore,P101,-1,450.00,CASH`;
+const productsCSV=`product_id,product_name,category\nP101,Wireless Keyboard,Electronics\nP102,Office Chair,Furniture\nP103,Notebook,Stationery\nP104,Table Lamp,Furniture`;
+function downloadCSV(which){const text=which==='sales'?salesCSV:productsCSV;const blob=new Blob([text],{type:'text/csv'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=which+'.csv';a.click();URL.revokeObjectURL(url)}
+
+// Sparkle trail
+if(!matchMedia('(prefers-reduced-motion: reduce)').matches){let last=0;document.addEventListener('pointermove',e=>{const now=performance.now();if(now-last<55)return;last=now;const sp=document.createElement('i');sp.className='spark';sp.style.left=e.clientX+'px';sp.style.top=e.clientY+'px';document.body.appendChild(sp);setTimeout(()=>sp.remove(),700)},{passive:true})}
+
+// Keyboard for flashcard
+ document.getElementById('flashcard').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();flipFlashcard()}});
+
+// Initialize
+(function init(){const theme=safeGet('theme','light');document.body.dataset.theme=theme;const font=safeGet('font',16);document.documentElement.style.setProperty('--fontSize',font+'px');initProgress();renderNotes();renderInterviews();renderFlash();renderPractice(false);updateTimer();setTimeout(applyNoteHighlights,50)})();
+</script>
+</body>
+</html>

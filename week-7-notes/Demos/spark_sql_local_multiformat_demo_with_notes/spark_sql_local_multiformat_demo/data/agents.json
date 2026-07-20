@@ -1,0 +1,7 @@
+[
+    {"agent_id": "A101", "agent_name": "Ananya", "team": "Identity Support", "location": "Chennai"},
+    {"agent_id": "A102", "agent_name": "Karthik", "team": "Billing Support", "location": "Bengaluru"},
+    {"agent_id": "A103", "agent_name": "Meera", "team": "Order Support", "location": "Hyderabad"},
+    {"agent_id": "A104", "agent_name": "Vikram", "team": "Returns Support", "location": "Pune"},
+    {"agent_id": "A105", "agent_name": "Divya", "team": "Account Support", "location": "Chennai"}
+]
