@@ -1,0 +1,8 @@
+file_name,row_count,column_count,size_bytes,primary_business_key
+customers.csv,6000,15,903426,customer_id
+products.csv,1200,12,123510,product_id
+orders.csv,25000,16,3807426,order_id
+order_items.csv,62053,7,3394270,order_item_id
+payments.csv,25000,7,2168896,payment_id
+shipments.csv,20000,8,1594705,shipment_id
+returns.csv,3000,7,212095,return_id

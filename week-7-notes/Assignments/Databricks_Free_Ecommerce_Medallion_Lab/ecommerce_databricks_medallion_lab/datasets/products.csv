@@ -1,0 +1,1201 @@
+product_id,product_name,category,subcategory,brand,unit_price,cost_price,stock_quantity,supplier_id,product_rating,created_date,is_active
+P00001,UrbanCo Snacks Model 1,Grocery,Snacks,UrbanCo,1194.00,914.75,528,S0042,3.2,2022-11-16,false
+P00002,Nova Outdoor Model 2,Sports,Outdoor,Nova,22560.00,12160.62,125,S0097,4.0,2024-02-04,true
+P00003,HomeCraft Staples Model 3,Grocery,Staples,HomeCraft,884.00,463.28,603,S0066,4.3,2022-07-08,1
+P00004,Pixel Audio Model 4,Electronics,Audio,Pixel,22353.00,17117.19,781,S0046,4.3,2022-01-04,Y
+P00005,Nova Children Model 5,Books,Children,Nova,833.00,587.03,271,S0023,4.1,2025-01-12,1
+P00006,GlowCare Fiction Model 6,Books,Fiction,GlowCare,3835.00,3114.81,201,S0037,2.9,2023-12-29,0
+P00007,Zenith Hair Care Model 7,Beauty,Hair Care,Zenith,4628.00,2682.66,127,S0049,3.2,2023-09-13,N
+P00008,Zenith Skin Care Model 8,Beauty,Skin Care,Zenith,1716.00,1049.64,983,S0030,3.9,2021-09-27,true
+P00009,UrbanCo Household Model 9,Grocery,Household,UrbanCo,1619.00,1301.13,232,S0060,4.9,2021-12-10,false
+P00010,UrbanCo Audio Model 10,Electronics,Audio,UrbanCo,39606.00,22681.35,973,S0025,4.0,2024-07-05,No
+P00011,UrbanCo Women Model 11,Fashion,Women,UrbanCo,37873.00,30971.33,598,S0038,4.1,2022-07-09,0
+P00012,HomeCraft Outdoor Model 12,Sports,Outdoor,HomeCraft,69172.00,35352.21,466,S0035,4.7,2025-01-30,0
+P00013,Apex Business Model 13,Books,Business,Apex,3995.00,1819.16,817,S0008,4.9,2022-02-06,Yes
+P00014,HomeCraft Laptops Model 14,Electronics,Laptops,HomeCraft,66670.00,50428.62,29,S0075,3.1,2023-11-05,0
+P00015,Nova Bags Model 15,Fashion,Bags,Nova,37726.00,17040.56,878,S0084,3.5,2023-01-14,true
+P00016,Orbit Fiction Model 16,Books,Fiction,Orbit,146.00,107.86,572,S0057,4.4,2025-12-21,N
+P00017,Apex Household Model 17,Grocery,Household,Apex,1197.00,947.74,896,S0002,3.8,2025-11-06,1
+P00018,Orbit Personal Care Model 18,Beauty,Personal Care,Orbit,1789.00,949.18,338,S0019,3.4,2021-06-04,Yes
+P00019,Orbit Technology Model 19,Books,Technology,Orbit,3133.00,2262.91,424,S0005,4.0,2024-12-19,0
+P00020,UrbanCo Appliances Model 20,Home,Appliances,UrbanCo,22574.00,17303.98,200,S0060,4.2,2023-11-11,true
+P00021,HomeCraft Appliances Model 21,Home,Appliances,HomeCraft,17204.00,14059.05,388,S0069,3.6,2025-03-29,true
+P00022,PrimeFit Men Model 22,Fashion,Men,PrimeFit,50527.00,40315.90,384,S0049,4.9,2021-05-05,1
+P00023,Pixel Kitchen Model 23,Home,Kitchen,Pixel,70370.00,55411.66,676,S0034,4.2,2022-11-14,Yes
+P00024,BookNest Technology Model 24,Books,Technology,BookNest,4419.00,2929.56,975,S0035,2.8,2024-09-21,No
+P00025,Orbit Cameras Model 25,Electronics,Cameras,Orbit,35908.00,16294.82,685,S0044,4.5,2025-04-10,false
+P00026,Apex Fiction Model 26,Books,Fiction,Apex,675.00,387.86,861,S0024,4.4,2023-04-30,N
+P00027,HomeCraft Bedding Model 27,Home,Bedding,HomeCraft,51458.00,24906.33,80,S0059,4.1,2022-07-30,0
+P00028,Apex Kitchen Model 28,Home,Kitchen,Apex,68258.00,43178.93,359,S0045,4.1,2024-04-24,true
+P00029,Zenith Footwear Model 29,Fashion,Footwear,Zenith,67156.00,33375.77,19,S0004,3.0,2022-10-03,0
+P00030,Zenith Bedding Model 30,Home,Bedding,Zenith,23744.00,16923.74,112,S0082,2.8,2024-01-13,false
+P00031,GreenLeaf Fitness Model 31,Sports,Fitness,GreenLeaf,50906.00,29948.62,207,S0077,3.0,2025-01-29,Y
+P00032,GreenLeaf Cameras Model 32,Electronics,Cameras,GreenLeaf,45413.00,27680.71,883,S0003,4.0,2023-09-27,true
+P00033,GreenLeaf Education Model 33,Books,Education,GreenLeaf,1558.00,1163.80,63,S0020,3.3,2023-06-10,1
+P00034,UrbanCo Cycling Model 34,Sports,Cycling,UrbanCo,19712.00,14187.78,83,S0050,3.8,2022-04-06,N
+P00035,Swift Organic Model 35,Grocery,Organic,Swift,1208.00,737.37,480,S0046,2.9,2022-09-29,Yes
+P00036,Zenith Outdoor Model 36,Sports,Outdoor,Zenith,51434.00,24927.15,774,S0074,3.2,2021-06-06,0
+P00037,PrimeFit Fitness Model 37,Sports,Fitness,PrimeFit,22155.00,12213.00,704,S0048,3.3,2025-09-15,Yes
+P00038,BookNest Cycling Model 38,Sports,Cycling,BookNest,74331.00,40786.89,908,S0023,3.7,2024-05-29,Yes
+P00039,Orbit Business Model 39,Books,Business,Orbit,1101.00,672.06,155,S0021,4.6,2022-10-25,No
+P00040,Orbit Women Model 40,Fashion,Women,Orbit,16526.00,9410.15,90,S0054,4.1,2022-04-11,Y
+P00041,Nova Laptops Model 41,Electronics,Laptops,Nova,19871.00,11224.69,588,S0064,4.9,2021-04-02,1
+P00042,Nova Decor Model 42,Home,Decor,Nova,68879.00,47264.03,807,S0071,2.7,2024-10-31,false
+P00043,Nova Footwear Model 43,Fashion,Footwear, nova ,13291.00,6932.89,579,S0040,4.4,2022-11-28,false
+P00044,PrimeFit Outdoor Model 44,Sports,Outdoor,PrimeFit,4115.00,2542.32,855,S0028,3.7,2021-04-28,Yes
+P00045,Zenith Outdoor Model 45,Sports,Outdoor,Zenith,52704.00,25552.13,907,S0015,4.9,2021-10-18,false
+P00046,GlowCare Staples Model 46,Grocery,Staples,GlowCare,93.00,62.05,347,S0022,4.6,2024-12-29,false
+P00047,GreenLeaf Staples Model 47,Grocery,Staples,GreenLeaf,4794.00,3283.11,465,S0096,3.1,2024-11-16,N
+P00048,PrimeFit Skin Care Model 48,Beauty,Skin Care,PrimeFit,2317.00,1490.13,64,S0038,3.3,2023-10-22,0
+P00049,PrimeFit Bags Model 49,Fashion,Bags,PrimeFit,61894.00,29487.82,213,S0068,3.4,2022-12-23,Yes
+P00050,Orbit Education Model 50,Books,Education,Orbit,4164.00,2622.68,366,S0056,3.3,2022-07-16,Yes
+P00051,Zenith Skin Care Model 51,Beauty,Skin Care,Zenith,3298.00,2246.60,616,S0020,2.9,2021-05-04,N
+P00052,HomeCraft Education Model 52,Books,Education,HomeCraft,421.00,252.17,991,S0005,4.3,2023-09-20,1
+P00053,HomeCraft Business Model 53,Books,Business,HomeCraft,1722.00,1313.73,958,S0090,4.9,2021-10-25,N
+P00054,GlowCare Staples Model 54,Grocery,Staples,GlowCare,3435.00,2220.43,524,S0093,4.5,2022-11-17,No
+P00055,UrbanCo Hair Care Model 55,Beauty,Hair Care,UrbanCo,1489.00,859.45,656,S0095,2.6,2022-09-21,0
+P00056,GreenLeaf Audio Model 56,Electronics,Audio,GreenLeaf,5613.00,3248.97,463,S0056,2.6,2022-11-26,0
+P00057,GreenLeaf Fiction Model 57,Books,Fiction,GreenLeaf,4926.00,3999.88,648,S0047,3.8,2024-01-15,false
+P00058,BookNest Decor Model 58,Home,Decor,BookNest,68345.00,35500.36,596,S0085,4.3,2024-09-24,0
+P00059,Apex Fiction Model 59,Books,Fiction,Apex,FREE,1971.97,53,S0049,4.4,2023-10-04,Y
+P00060,GreenLeaf Laptops Model 60,Electronics,Laptops,GreenLeaf,9691.00,4435.31,790,S0046,2.9,2025-07-26,1
+P00061,GlowCare Kitchen Model 61,Home,Kitchen,GlowCare,48395.00,36692.65,135,S0037,2.7,2025-02-04,false
+P00062,HomeCraft Audio Model 62,Electronics,Audio,HomeCraft,68815.00,43098.05,91,S0037,3.6,2021-06-08,No
+P00063,UrbanCo Women Model 63,Fashion,Women,UrbanCo,43782.00,32862.07,209,S0023,3.8,2023-03-13,0
+P00064,BookNest Watches Model 64,Fashion,Watches,BookNest,59206.00,41204.93,72,S0078,4.8,2024-12-12,0
+P00065,Orbit Men Model 65,Fashion,Men,Orbit,56193.00,29724.53,454,S0055,4.4,2021-05-03,N
+P00066,Pixel Outdoor Model 66,Sports,Outdoor,Pixel,44782.00,21264.39,468,S0032,2.8,2023-10-17,0
+P00067,Orbit Technology Model 67,Books,Technology,Orbit,2563.00,1636.78,-5,S0088,4.5,2025-09-03,1
+P00068,PrimeFit Fitness Model 68,Sports,Fitness,PrimeFit,10386.00,5906.04,762,S0051,3.5,2024-06-06,Yes
+P00069,Orbit Mobiles Model 69,Electronics,Mobiles,Orbit,20103.00,13907.89,850,S0059,4.7,2021-11-14,N
+P00070,Nova Snacks Model 70,Grocery,Snacks,Nova,1053.00,855.68,60,S0013,3.8,2022-02-13,1
+P00071,HomeCraft Bags Model 71,,Bags,HomeCraft,12136.00,8565.60,990,S0076,4.6,2023-01-29,false
+P00072,Zenith Fiction Model 72,Books,Fiction,Zenith,4460.00,3263.12,545,S0098,2.7,2021-12-27,N
+P00073,Swift Accessories Model 73,Electronics,Accessories,Swift,1605.00,913.73,96,S0062,4.9,2023-07-18,No
+P00074,Orbit Audio Model 74,Electronics,Audio,Orbit,46716.00,24314.18,73,S0045,3.9,2021-07-06,false
+P00075,Zenith Household Model 75,Grocery,Household,Zenith,2307.00,1501.94,486,S0016,3.8,2022-04-04,1
+P00076,Swift Mobiles Model 76,Electronics,Mobiles,Swift,3603.00,1938.35,728,S0052,3.3,2022-03-17,No
+P00077,HomeCraft Outdoor Model 77,Sports,Outdoor,HomeCraft,10814.00,6738.33,835,S0075,4.8,2021-06-30,Yes
+P00078,GlowCare Outdoor Model 78,Sports,Outdoor,GlowCare,13166.00,9157.54,867,S0006,4.9,2023-07-07,Yes
+P00079,Swift Skin Care Model 79,Beauty,Skin Care,Swift,3208.00,2236.54,323,S0090,2.5,2022-06-21,0
+P00080,Apex Staples Model 80,Grocery,Staples,Apex,3427.00,2552.86,421,S0079,3.5,2024-09-18,Yes
+P00081,Swift Yoga Model 81,Sports,Yoga,Swift,29940.00,22876.75,941,S0014,2.8,2025-02-16,No
+P00082,HomeCraft Audio Model 82,Electronics,Audio,HomeCraft,57368.00,34298.39,37,S0006,3.0,2023-04-03,N
+P00083,Apex Technology Model 83,Books,Technology,Apex,-250.00,2699.69,667,S0006,4.6,2021-04-16,0
+P00084,Zenith Appliances Model 84,Home,Appliances,Zenith,34628.00,23880.77,10,S0028,4.1,2024-05-25,No
+P00085,PrimeFit Skin Care Model 85,Beauty,Skin Care,PrimeFit,3898.00,1798.17,968,S0037,3.0,2025-03-23,No
+P00086,PrimeFit Education Model 86,Books,Education, primefit ,3049.00,2050.24,515,S0056,3.3,2025-04-17,true
+P00087,GreenLeaf Household Model 87,Grocery,Household,GreenLeaf,1144.00,555.79,192,S0086,3.6,2024-03-14,Yes
+P00088,GlowCare Women Model 88,Fashion,Women,GlowCare,4383.00,2201.32,911,S0065,4.6,2022-04-09,0
+P00089,GreenLeaf Watches Model 89,Fashion,Watches,GreenLeaf,67832.00,51497.72,382,S0097,4.9,2021-04-26,Yes
+P00090,GlowCare Footwear Model 90,Fashion,Footwear,GlowCare,64781.00,35822.94,782,S0046,3.2,2022-03-31,N
+P00091,Pixel Fragrance Model 91,Beauty,Fragrance,Pixel,4259.00,2881.10,565,S0072,4.6,2022-05-17,0
+P00092,HomeCraft Cameras Model 92,Electronics,Cameras,HomeCraft,53244.00,24497.43,402,S0090,3.9,2021-10-04,Yes
+P00093,HomeCraft Footwear Model 93,Fashion,Footwear,HomeCraft,43101.00,32522.10,561,S0029,3.7,2021-01-01,1
+P00094,BookNest Accessories Model 94,Electronics,Accessories,BookNest,3557.00,1933.84,667,S0076,3.5,2021-04-29,N
+P00095,PrimeFit Children Model 95,Books,Children,PrimeFit,2623.00,2082.63,854,S0051,4.5,2021-07-09,No
+P00096,UrbanCo Snacks Model 96,Grocery,Snacks,UrbanCo,4331.00,2386.90,995,S0074,3.2,2022-01-02,No
+P00097,PrimeFit Personal Care Model 97,Beauty,Personal Care,PrimeFit,2553.00,1449.56,400,S0077,4.3,2021-10-23,0
+P00098,UrbanCo Makeup Model 98,Beauty,Makeup,UrbanCo,4555.00,3383.07,507,S0046,3.5,2021-02-13,1
+P00099,Apex Watches Model 99,Fashion,Watches,Apex,17053.00,10664.86,905,S0026,4.1,2022-12-25,true
+P00100,HomeCraft Outdoor Model 100,Sports,Outdoor,HomeCraft,57169.00,32043.34,236,S0072,4.8,2023-11-04,1
+P00101,Apex Audio Model 101,Electronics,Audio,Apex,14092.00,7277.47,251,S0098,6.5,2025-12-06,Yes
+P00102,Zenith Yoga Model 102,Sports,Yoga,Zenith,19024.00,12047.33,775,S0076,2.5,2023-12-28,Yes
+P00103,Apex Men Model 103,Fashion,Men,Apex,65213.00,48752.86,580,S0058,4.3,2022-06-23,Yes
+P00104,Nova Fitness Model 104,Sports,Fitness,Nova,17056.00,12962.57,190,S0021,3.8,2022-09-18,true
+P00105,UrbanCo Team Sports Model 105,Sports,Team Sports,UrbanCo,42301.00,31189.10,692,S0036,3.2,2024-07-21,false
+P00106,BookNest Team Sports Model 106,Sports,Team Sports,BookNest,47203.00,28803.78,473,S0019,2.9,2023-07-18,0
+P00107,BookNest Staples Model 107,Grocery,Staples,BookNest,2995.00,1887.73,942,S0083,3.1,2022-01-27,Y
+P00108,Apex Organic Model 108,Grocery,Organic,Apex,1202.00,962.22,56,S0070,4.7,2025-06-03,No
+P00109,GreenLeaf Cycling Model 109,Sports,Cycling,GreenLeaf,9069.00,5459.77,many,S0001,4.0,2023-02-16,Yes
+P00110,Swift Audio Model 110,Electronics,Audio,Swift,58636.00,29624.69,882,S0013,3.6,2025-07-25,N
+P00111,GreenLeaf Staples Model 111,Grocery,Staples,GreenLeaf,4646.00,2106.24,315,S0072,2.9,2021-09-10,Y
+P00112,BookNest Skin Care Model 112,Beauty,Skin Care,BookNest,468.00,220.94,14,S0040,3.0,2022-06-25,false
+P00113,HomeCraft Bedding Model 113,Home,Bedding,HomeCraft,58714.00,46685.32,481,S0016,4.4,2022-12-20,Yes
+P00114,BookNest Fitness Model 114,Sports,Fitness,BookNest,13635.00,9989.85,66,S0013,4.6,2024-07-09,false
+P00115,Nova Kitchen Model 115,Home,Kitchen,Nova,44234.00,36056.40,373,S0027,3.8,2024-10-09,true
+P00116,BookNest Watches Model 116,Fashion,Watches,BookNest,25638.00,16738.12,141,S0016,4.1,2022-10-21,1
+P00117,Nova Furniture Model 117,Home,Furniture,Nova,19980.00,15384.19,146,S0054,4.5,2025-12-15,false
+P00118,GlowCare Fragrance Model 118,Beauty,Fragrance,GlowCare,FREE,2418.77,532,S0037,3.4,2023-12-05,N
+P00119,Swift Bags Model 119,Fashion,Bags,Swift,65661.00,32819.55,851,S0065,4.4,2025-06-03,Y
+P00120,GlowCare Makeup Model 120,Beauty,Makeup,GlowCare,2540.00,1324.09,473,S0072,3.7,2021-07-21,Yes
+P00121,Orbit Men Model 121,Fashion,Men,Orbit,44141.00,34393.86,467,S0042,4.7,2025-06-23,No
+P00122,BookNest Outdoor Model 122,Sports,Outdoor,BookNest,71846.00,49056.05,263,S0028,4.4,2023-04-25,1
+P00123,BookNest Snacks Model 123,Grocery,Snacks,BookNest,4624.00,2700.36,619,S0005,4.1,2023-08-13,1
+P00124,GreenLeaf Outdoor Model 124,Sports,Outdoor,GreenLeaf,33042.00,26392.81,970,S0092,2.6,2022-09-17,1
+P00125,HomeCraft Women Model 125,Fashion,Women,HomeCraft,70428.00,31879.57,579,S0009,4.9,2024-03-29,Yes
+P00126,Nova Children Model 126,Books,Children,Nova,1079.00,824.25,738,S0003,2.7,2023-12-09,N
+P00127,GreenLeaf Footwear Model 127,Fashion,Footwear,GreenLeaf,25732.00,12270.03,751,S0056,3.9,2022-06-16,Yes
+P00128,GlowCare Decor Model 128,Home,Decor,GlowCare,59268.00,27880.58,574,S0017,4.3,2024-12-10,Y
+P00129,GreenLeaf Fiction Model 129,Books,Fiction, greenleaf ,4955.00,3352.73,739,S0097,4.5,2021-09-06,false
+P00130,PrimeFit Kitchen Model 130,Home,Kitchen,PrimeFit,22679.00,12872.28,488,S0001,4.7,2022-04-26,No
+P00131,Apex Education Model 131,Books,Education,Apex,375.00,264.54,67,S0068,3.2,2023-08-28,Yes
+P00132,GlowCare Organic Model 132,Grocery,Organic,GlowCare,2640.00,1726.30,504,S0055,3.0,2023-06-12,false
+P00133,Orbit Cameras Model 133,Electronics,Cameras,Orbit,9113.00,4414.74,716,S0065,3.4,2024-10-31,N
+P00134,GlowCare Fiction Model 134,Books,Fiction,GlowCare,2278.00,1719.19,-5,S0062,3.5,2022-07-01,N
+P00135,Apex Staples Model 135,Grocery,Staples,Apex,3100.00,2504.65,546,S0095,2.7,2021-02-03,Yes
+P00136,PrimeFit Yoga Model 136,Sports,Yoga,PrimeFit,53329.00,25088.24,971,S0009,3.6,2023-02-05,Y
+P00137,Nova Snacks Model 137,Grocery,Snacks,Nova,4288.00,5145.60,206,S0070,4.2,2022-03-28,0
+P00138,UrbanCo Footwear Model 138,Fashion,Footwear,UrbanCo,75844.00,34842.56,651,S0057,2.7,2022-06-20,0
+P00139,Swift Cycling Model 139,Sports,Cycling,Swift,25605.00,17010.27,204,S0055,3.3,2022-05-30,Yes
+P00140,UrbanCo Fiction Model 140,Books,Fiction,UrbanCo,354.00,262.73,784,S0024,4.3,2023-12-15,Y
+P00141,UrbanCo Furniture Model 141,Home,Furniture,UrbanCo,40750.00,25755.46,76,S0082,4.4,2022-10-01,true
+P00142,Swift Team Sports Model 142,,Team Sports,Swift,50568.00,26175.16,492,S0007,2.6,2022-10-25,true
+P00143,Nova Bedding Model 143,Home,Bedding,Nova,2754.00,1383.05,660,S0095,3.4,2024-06-14,false
+P00144,BookNest Outdoor Model 144,Sports,Outdoor,BookNest,46400.00,36569.31,510,S0050,3.2,2024-09-13,0
+P00145,Nova Education Model 145,Books,Education,Nova,2173.00,1657.42,481,S0058,3.2,2023-05-22,No
+P00146,PrimeFit Hair Care Model 146,Beauty,Hair Care,PrimeFit,3616.00,2760.36,827,S0025,3.7,2021-03-13,No
+P00147,PrimeFit Men Model 147,Fashion,Men,PrimeFit,33599.00,17254.25,181,S0097,4.7,2021-05-10,N
+P00148,Apex Personal Care Model 148,Beauty,Personal Care,Apex,266.00,127.63,383,S0039,3.1,2023-01-21,true
+P00149,GlowCare Furniture Model 149,Home,Furniture,GlowCare,55583.00,35865.72,957,S0017,4.7,2022-12-05,0
+P00150,Pixel Men Model 150,Fashion,Men,Pixel,26009.00,18658.64,931,S0007,4.4,2025-01-15,0
+P00151,Orbit Decor Model 151,Home,Decor,Orbit,48333.00,23778.56,45,S0067,5.0,2023-08-04,N
+P00152,GlowCare Appliances Model 152,Home,Appliances,GlowCare,35995.00,28814.48,240,S0037,4.3,2022-06-04,Y
+P00153,UrbanCo Men Model 153,Fashion,Men,UrbanCo,73868.00,40570.25,502,S0037,4.6,2022-08-30,Yes
+P00154,HomeCraft Technology Model 154,Books,Technology,HomeCraft,2994.00,2047.19,634,S0080,4.9,2021-10-02,0
+P00155,Zenith Laptops Model 155,Electronics,Laptops,Zenith,71978.00,47017.32,221,S0065,4.2,2024-07-31,Yes
+P00156,Nova Education Model 156,Books,Education,Nova,3358.00,1571.52,916,S0030,4.3,2024-05-30,true
+P00157,GreenLeaf Skin Care Model 157,Beauty,Skin Care,GreenLeaf,3053.00,1376.00,658,S0088,2.5,2021-11-17,N
+P00158,PrimeFit Team Sports Model 158,Sports,Team Sports,PrimeFit,25775.00,20942.89,873,S0054,4.3,2023-06-01,N
+P00159,GlowCare Education Model 159,Books,Education,GlowCare,835.00,455.55,51,S0098,4.4,2022-09-01,No
+P00160,HomeCraft Audio Model 160,Electronics,Audio,HomeCraft,65318.00,52748.69,2,S0032,3.4,2022-08-29,true
+P00161,GlowCare Household Model 161,Grocery,Household,GlowCare,2051.00,969.77,484,S0088,2.9,2022-08-31,Y
+P00162,Zenith Kitchen Model 162,Home,Kitchen,Zenith,34167.00,19048.63,846,S0056,3.6,2023-01-09,true
+P00163,Pixel Snacks Model 163,Grocery,Snacks,Pixel,2795.00,1443.18,418,S0009,4.2,2025-12-21,0
+P00164,GreenLeaf Makeup Model 164,Beauty,Makeup,GreenLeaf,2168.00,1182.32,948,S0002,3.5,2023-06-10,N
+P00165,Nova Bedding Model 165,Home,Bedding,Nova,76851.00,51793.58,660,S0044,2.9,2022-04-01,N
+P00166,Swift Beverages Model 166,Grocery,Beverages,Swift,-250.00,1409.51,853,S0019,3.0,2022-05-04,Y
+P00167,HomeCraft Fiction Model 167,Books,Fiction,HomeCraft,3781.00,2628.86,395,S0062,2.7,2021-07-13,false
+P00168,HomeCraft Fragrance Model 168,Beauty,Fragrance,HomeCraft,1100.00,767.74,979,S0033,4.8,2021-03-15,true
+P00169,GlowCare Laptops Model 169,Electronics,Laptops,GlowCare,2913.00,1388.62,899,S0082,3.6,2025-10-13,false
+P00170,BookNest Fitness Model 170,Sports,Fitness,BookNest,52885.00,42954.04,820,S0001,4.3,2022-01-22,Yes
+P00171,BookNest Audio Model 171,Electronics,Audio,BookNest,16199.00,9802.78,583,S0052,3.6,2023-12-25,true
+P00172,Nova Organic Model 172,Grocery,Organic, nova ,1040.00,717.36,10,S0003,3.1,2025-08-29,false
+P00173,Pixel Organic Model 173,Grocery,Organic,Pixel,2758.00,2066.66,428,S0004,2.8,2022-03-04,true
+P00174,UrbanCo Team Sports Model 174,Sports,Team Sports,UrbanCo,42930.00,21989.47,552,S0075,4.8,2022-08-07,1
+P00175,PrimeFit Footwear Model 175,Fashion,Footwear,PrimeFit,68868.00,47256.52,389,S0007,4.7,2021-07-27,1
+P00176,BookNest Business Model 176,Books,Business,BookNest,4520.00,3482.85,878,S0098,3.9,2022-06-04,1
+P00177,Apex Organic Model 177,Grocery,Organic,Apex,FREE,2648.00,321,S0012,3.0,2021-09-15,N
+P00178,Swift Laptops Model 178,Electronics,Laptops,Swift,47005.00,37089.01,940,S0089,3.3,2025-12-03,Yes
+P00179,HomeCraft Children Model 179,Books,Children,HomeCraft,3511.00,2626.94,353,S0087,4.2,2024-07-04,true
+P00180,GreenLeaf Kitchen Model 180,Home,Kitchen,GreenLeaf,65117.00,31875.69,967,S0011,3.7,2025-08-10,Yes
+P00181,PrimeFit Laptops Model 181,Electronics,Laptops,PrimeFit,15947.00,12844.45,561,S0052,3.8,2024-07-23,1
+P00182,PrimeFit Organic Model 182,Grocery,Organic,PrimeFit,2494.00,1703.11,702,S0012,3.7,2024-05-24,true
+P00183,GlowCare Snacks Model 183,Grocery,Snacks,GlowCare,4808.00,3292.05,410,S0014,4.0,2022-03-28,true
+P00184,GreenLeaf Outdoor Model 184,Sports,Outdoor,GreenLeaf,41296.00,21792.88,483,S0047,2.8,2024-01-06,true
+P00185,PrimeFit Technology Model 185,Books,Technology,PrimeFit,1002.00,722.19,813,S0001,2.5,2022-01-24,Y
+P00186,GreenLeaf Mobiles Model 186,Electronics,Mobiles,GreenLeaf,37353.00,28780.15,239,S0009,3.2,2022-07-27,true
+P00187,Pixel Organic Model 187,Grocery,Organic,Pixel,2799.00,1413.45,598,S0035,3.8,2025-01-07,0
+P00188,Pixel Household Model 188,Grocery,Household,Pixel,130.00,97.35,107,S0018,2.7,2023-05-27,No
+P00189,Apex Business Model 189,Books,Business,Apex,3002.00,2270.65,720,S0090,2.8,2025-09-19,Yes
+P00190,Pixel Snacks Model 190,Grocery,Snacks,Pixel,4994.00,3519.16,948,S0070,3.5,2024-09-12,No
+P00191,Swift Household Model 191,Grocery,Household,Swift,1158.00,640.78,147,S0034,3.4,2021-03-16,false
+P00192,Pixel Mobiles Model 192,Electronics,Mobiles,Pixel,54630.00,37457.31,541,S0012,3.5,2024-10-12,false
+P00193,Nova Watches Model 193,Fashion,Watches,Nova,39379.00,31688.72,332,S0091,3.8,2025-12-23,Y
+P00194,Pixel Skin Care Model 194,Beauty,Skin Care,Pixel,1184.00,879.10,678,S0040,5.0,2023-12-21,No
+P00195,Zenith Cycling Model 195,Sports,Cycling,Zenith,37454.00,30008.25,771,S0095,5.0,2021-07-27,No
+P00196,Zenith Snacks Model 196,Grocery,Snacks,Zenith,3013.00,2010.41,726,S0046,4.9,2021-09-29,N
+P00197,Zenith Cycling Model 197,Sports,Cycling,Zenith,35871.00,17083.67,243,S0026,3.1,2024-11-21,false
+P00198,Orbit Fitness Model 198,Sports,Fitness,Orbit,40045.00,19987.35,607,S0037,4.5,2025-08-30,0
+P00199,Nova Furniture Model 199,Home,Furniture,Nova,75249.00,34930.99,766,S0056,4.4,2022-09-27,false
+P00200,Swift Technology Model 200,Books,Technology,Swift,4661.00,2098.20,463,S0040,2.8,2025-01-19,Yes
+P00201,BookNest Children Model 201,Books,Children,BookNest,2708.00,1822.70,-5,S0050,3.4,2025-12-09,true
+P00202,Zenith Furniture Model 202,Home,Furniture,Zenith,59064.00,36689.15,124,S0018,6.5,2021-12-05,Yes
+P00203,UrbanCo Watches Model 203,Fashion,Watches,UrbanCo,65243.00,44715.37,61,S0009,2.5,2024-09-21,true
+P00204,Apex Beverages Model 204,Grocery,Beverages,Apex,4266.00,2444.65,713,S0053,3.2,2024-02-11,Y
+P00205,GreenLeaf Decor Model 205,Home,Decor,GreenLeaf,35862.00,25978.13,111,S0094,3.3,2025-07-02,0
+P00206,Nova Men Model 206,Fashion,Men,Nova,27639.00,18891.75,822,S0076,3.4,2025-06-24,Yes
+P00207,HomeCraft Yoga Model 207,Sports,Yoga,HomeCraft,66596.00,49229.47,212,S0046,4.1,2021-01-18,No
+P00208,Swift Beverages Model 208,Grocery,Beverages,Swift,4996.00,2736.42,683,S0080,4.2,2021-12-09,false
+P00209,Swift Cycling Model 209,Sports,Cycling,Swift,7367.00,4652.00,349,S0016,4.7,2021-12-25,1
+P00210,BookNest Audio Model 210,Electronics,Audio,BookNest,329.00,215.77,798,S0044,4.3,2021-06-28,Yes
+BADP211,PrimeFit Outdoor Model 211,Sports,Outdoor,PrimeFit,74651.00,43047.90,487,S0008,3.7,2022-12-16,Y
+P00212,Orbit Outdoor Model 212,Sports,Outdoor,Orbit,71035.00,43753.19,81,S0093,4.6,2025-04-22,false
+P00213,BookNest Cameras Model 213,,Cameras,BookNest,41591.00,30132.10,539,S0017,3.4,2021-03-22,Yes
+P00214,PrimeFit Outdoor Model 214,Sports,Outdoor,PrimeFit,7631.00,4872.23,0,S0067,3.8,2021-06-11,Y
+P00215,Pixel Team Sports Model 215,Sports,Team Sports, pixel ,23197.00,11192.23,279,S0012,4.7,2023-08-27,1
+P00216,Apex Fiction Model 216,Books,Fiction,Apex,570.00,320.52,137,S0010,3.5,2024-07-30,false
+P00217,BookNest Watches Model 217,Fashion,Watches,BookNest,10872.00,6881.39,668,S0100,4.5,2025-07-18,Y
+P00218,GreenLeaf Audio Model 218,Electronics,Audio,GreenLeaf,60202.00,48503.90,many,S0028,4.9,2025-07-22,1
+P00219,BookNest Fragrance Model 219,Beauty,Fragrance,BookNest,3785.00,2619.74,471,S0051,4.4,2025-08-13,1
+P00220,PrimeFit Laptops Model 220,Electronics,Laptops,PrimeFit,62290.00,49652.11,462,S0053,3.3,2024-12-01,No
+P00221,UrbanCo Business Model 221,Books,Business,UrbanCo,3121.00,2160.99,195,S0095,4.7,2023-01-09,Yes
+P00222,Zenith Cycling Model 222,Sports,Cycling,Zenith,14987.00,9207.87,573,S0095,4.3,2024-06-15,1
+P00223,Apex Men Model 223,Fashion,Men,Apex,61656.00,43565.72,296,S0094,3.2,2024-06-04,Yes
+P00224,Orbit Business Model 224,Books,Business,Orbit,2693.00,1884.45,720,S0058,4.6,2023-12-16,N
+P00225,Swift Snacks Model 225,Grocery,Snacks,Swift,4548.00,2369.73,21,S0082,4.7,2022-09-12,N
+P00226,HomeCraft Furniture Model 226,Home,Furniture,HomeCraft,43614.00,29122.87,288,S0048,3.4,2024-01-27,Y
+P00227,Pixel Household Model 227,Grocery,Household,Pixel,4126.00,2095.17,823,S0007,4.3,2021-07-15,Yes
+P00228,Orbit Kitchen Model 228,Home,Kitchen,Orbit,23683.00,17917.75,627,S0044,4.7,2025-08-08,true
+P00229,Nova Hair Care Model 229,Beauty,Hair Care,Nova,3724.00,2807.90,551,S0027,3.5,2021-10-20,Yes
+P00230,PrimeFit Appliances Model 230,Home,Appliances,PrimeFit,37950.00,30966.35,748,S0076,4.6,2021-10-27,No
+P00231,HomeCraft Watches Model 231,Fashion,Watches,HomeCraft,40306.00,29084.23,917,S0061,3.5,2022-10-03,Y
+P00232,Apex Business Model 232,Books,Business,Apex,4811.00,2611.04,901,S0073,3.8,2025-07-27,true
+P00233,GreenLeaf Mobiles Model 233,Electronics,Mobiles,GreenLeaf,49870.00,31592.29,637,S0096,3.3,2021-02-21,1
+P00234,HomeCraft Bags Model 234,Fashion,Bags,HomeCraft,52000.00,25987.56,819,S0042,3.5,2024-10-15,true
+P00235,GreenLeaf Audio Model 235,Electronics,Audio,GreenLeaf,12799.00,8470.76,193,S0047,4.0,2024-05-29,true
+P00236,Orbit Business Model 236,Books,Business,Orbit,FREE,2262.46,359,S0082,4.7,2023-08-21,No
+P00237,GlowCare Decor Model 237,Home,Decor,GlowCare,70868.00,45344.24,893,S0015,4.2,2023-12-07,true
+P00238,PrimeFit Laptops Model 238,Electronics,Laptops,PrimeFit,52632.00,39409.42,980,S0049,2.7,2023-09-20,true
+P00239,UrbanCo Laptops Model 239,Electronics,Laptops,UrbanCo,45934.00,26257.10,328,S0019,4.3,2022-03-06,true
+P00240,BookNest Cameras Model 240,Electronics,Cameras,BookNest,62098.00,40116.81,686,S0056,4.6,2021-09-13,N
+P00241,PrimeFit Footwear Model 241,Fashion,Footwear,PrimeFit,36183.00,19026.09,902,S0024,4.4,2024-07-02,true
+P00242,HomeCraft Fragrance Model 242,Beauty,Fragrance,HomeCraft,4996.00,3898.53,918,S0028,4.8,2022-05-28,Y
+P00243,Nova Bedding Model 243,Home,Bedding,Nova,36039.00,26134.83,910,S0090,4.8,2025-11-09,0
+P00244,GreenLeaf Household Model 244,Grocery,Household,GreenLeaf,3640.00,2806.40,220,S0021,4.2,2022-03-09,Yes
+P00245,UrbanCo Hair Care Model 245,Beauty,Hair Care,UrbanCo,4861.00,3014.60,119,S0046,4.1,2025-08-08,1
+P00246,Pixel Yoga Model 246,Sports,Yoga,Pixel,381.00,295.93,967,S0001,2.6,2024-04-11,0
+P00247,PrimeFit Mobiles Model 247,Electronics,Mobiles,PrimeFit,34167.00,25645.91,474,S0089,4.1,2025-04-27,false
+P00248,GlowCare Men Model 248,Fashion,Men,GlowCare,7695.00,5532.16,517,S0018,5.0,2025-03-20,Y
+P00249,GreenLeaf Footwear Model 249,Fashion,Footwear,GreenLeaf,-250.00,7597.51,874,S0008,4.5,2025-07-20,false
+P00250,Pixel Mobiles Model 250,Electronics,Mobiles,Pixel,6851.00,5410.02,884,S0088,4.6,2025-04-27,No
+P00251,HomeCraft Bags Model 251,Fashion,Bags,HomeCraft,16771.00,13306.35,493,S0009,3.5,2022-09-19,true
+P00252,UrbanCo Skin Care Model 252,Beauty,Skin Care,UrbanCo,232.00,186.86,301,S0069,3.1,2023-06-09,N
+P00253,PrimeFit Outdoor Model 253,Sports,Outdoor,PrimeFit,79994.00,54421.20,342,S0029,2.7,2022-02-11,Y
+P00254,Nova Bedding Model 254,Home,Bedding,Nova,156.00,75.34,284,S0017,2.6,2024-07-23,1
+P00255,GreenLeaf Accessories Model 255,Electronics,Accessories,GreenLeaf,46762.00,21222.94,542,S0072,4.6,2024-11-11,No
+P00256,UrbanCo Outdoor Model 256,Sports,Outdoor,UrbanCo,39818.00,26675.80,219,S0007,2.9,2024-10-25,1
+P00257,Orbit Education Model 257,Books,Education,Orbit,1006.00,805.14,530,S0078,4.7,2024-12-28,N
+P00258,Pixel Accessories Model 258,Electronics,Accessories, pixel ,29546.00,23608.87,769,S0034,4.1,2025-03-04,0
+P00259,Pixel Watches Model 259,Fashion,Watches,Pixel,49376.00,26668.46,810,S0033,4.5,2024-01-21,Yes
+P00260,Apex Children Model 260,Books,Children,Apex,2474.00,1575.89,520,S0038,3.0,2024-02-01,false
+P00261,PrimeFit Fragrance Model 261,Beauty,Fragrance,PrimeFit,1523.00,1130.11,381,S0050,2.9,2024-04-14,true
+P00262,Zenith Fiction Model 262,Books,Fiction,Zenith,4819.00,2259.53,425,S0031,2.6,2024-12-13,No
+P00263,Nova Men Model 263,Fashion,Men,Nova,10647.00,5583.89,331,S0048,3.8,2021-06-01,No
+P00264,UrbanCo Mobiles Model 264,Electronics,Mobiles,UrbanCo,13430.00,10862.20,817,S0052,4.2,2022-08-06,Yes
+P00265,PrimeFit Cycling Model 265,Sports,Cycling,PrimeFit,42167.00,25787.35,973,S0002,3.5,2023-01-10,No
+P00266,HomeCraft Beverages Model 266,Grocery,Beverages,HomeCraft,2481.00,1551.98,394,S0049,3.0,2023-10-23,false
+P00267,BookNest Cameras Model 267,Electronics,Cameras,BookNest,5381.00,3214.89,108,S0015,4.7,2025-11-04,Y
+P00268,Pixel Men Model 268,Fashion,Men,Pixel,75644.00,39851.41,-5,S0014,3.6,2025-10-01,Y
+P00269,BookNest Audio Model 269,Electronics,Audio,BookNest,41316.00,31205.68,158,S0078,4.5,2023-11-28,1
+P00270,Orbit Makeup Model 270,Beauty,Makeup,Orbit,2131.00,1441.55,564,S0048,3.2,2022-06-14,Yes
+P00271,Nova Men Model 271,Fashion,Men,Nova,28511.00,19578.52,704,S0038,3.3,2023-03-06,Yes
+P00272,Zenith Education Model 272,Books,Education,Zenith,4631.00,2339.38,983,S0023,2.7,2024-12-13,false
+P00273,Pixel Hair Care Model 273,Beauty,Hair Care,Pixel,292.00,139.70,214,S0002,4.3,2021-07-02,0
+P00274,GreenLeaf Technology Model 274,Books,Technology,GreenLeaf,1313.00,1575.60,82,S0085,4.6,2024-07-26,Y
+P00275,Nova Staples Model 275,Grocery,Staples,Nova,4788.00,3484.07,394,S0047,4.2,2021-08-31,1
+P00276,GlowCare Technology Model 276,Books,Technology,GlowCare,1522.00,950.13,206,S0034,3.1,2021-07-19,N
+P00277,Zenith Education Model 277,Books,Education,Zenith,4321.00,2349.37,708,S0097,4.8,2022-05-07,1
+P00278,HomeCraft Business Model 278,Books,Business,HomeCraft,2392.00,1755.96,242,S0003,4.2,2023-09-19,false
+P00279,Zenith Fitness Model 279,Sports,Fitness,Zenith,23576.00,12079.88,49,S0072,3.7,2025-05-13,N
+P00280,GlowCare Staples Model 280,Grocery,Staples,GlowCare,2708.00,1602.26,189,S0046,4.3,2021-01-13,0
+P00281,Orbit Accessories Model 281,Electronics,Accessories,Orbit,13484.00,8372.23,795,S0024,4.5,2021-07-12,N
+P00282,Zenith Snacks Model 282,Grocery,Snacks,Zenith,995.00,729.11,729,S0001,3.2,2023-02-10,1
+P00283,Zenith Education Model 283,Books,Education,Zenith,1309.00,831.04,75,S0069,3.8,2025-08-10,N
+P00284,BookNest Furniture Model 284,,Furniture,BookNest,34171.00,24894.69,271,S0003,2.9,2021-04-01,N
+P00285,GreenLeaf Women Model 285,Fashion,Women,GreenLeaf,37952.00,29339.27,482,S0002,4.3,2022-06-22,0
+P00286,GlowCare Staples Model 286,Grocery,Staples,GlowCare,608.00,301.89,967,S0046,3.9,2022-12-15,0
+P00287,GreenLeaf Business Model 287,Books,Business,GreenLeaf,809.00,623.83,28,S0028,3.9,2021-02-01,N
+P00288,GlowCare Cycling Model 288,Sports,Cycling,GlowCare,75063.00,54292.96,783,S0035,3.2,2025-09-28,0
+P00289,Nova Furniture Model 289,Home,Furniture,Nova,59149.00,42975.36,269,S0076,3.9,2023-07-27,false
+P00290,BookNest Bags Model 290,Fashion,Bags,BookNest,10894.00,6583.77,495,S0066,3.2,2021-11-12,N
+P00291,BookNest Education Model 291,Books,Education,BookNest,831.00,399.93,557,S0003,4.2,2024-12-09,No
+P00292,Swift Fiction Model 292,Books,Fiction,Swift,4960.00,2948.50,53,S0035,4.3,2025-12-21,false
+P00293,Orbit Hair Care Model 293,Beauty,Hair Care,Orbit,4357.00,2452.30,49,S0095,3.2,2021-05-21,true
+P00294,Nova Yoga Model 294,Sports,Yoga,Nova,28891.00,19026.27,995,S0077,3.8,2023-06-25,0
+P00295,Pixel Skin Care Model 295,Beauty,Skin Care,Pixel,FREE,2368.88,614,S0091,3.1,2023-05-28,0
+P00296,Swift Furniture Model 296,Home,Furniture,Swift,42595.00,24614.90,271,S0008,4.4,2023-05-26,1
+P00297,Apex Makeup Model 297,Beauty,Makeup,Apex,4910.00,2853.06,124,S0041,3.8,2023-07-24,N
+P00298,Swift Women Model 298,Fashion,Women,Swift,51586.00,30241.06,330,S0062,4.7,2025-10-30,true
+P00299,BookNest Footwear Model 299,Fashion,Footwear,BookNest,75744.00,57226.56,155,S0098,3.6,2022-05-19,N
+P00300,Nova Fragrance Model 300,Beauty,Fragrance,Nova,285.00,196.44,688,S0090,3.3,2024-11-03,N
+P00301,GreenLeaf Men Model 301,Fashion,Men, greenleaf ,54478.00,24756.13,320,S0012,4.4,2023-01-07,0
+P00302,GlowCare Cycling Model 302,Sports,Cycling,GlowCare,49970.00,36220.43,618,S0051,4.5,2025-11-19,N
+P00303,Pixel Household Model 303,Grocery,Household,Pixel,2953.00,1555.95,170,S0019,6.5,2023-11-07,0
+P00304,BookNest Makeup Model 304,Beauty,Makeup,BookNest,3899.00,3043.38,328,S0054,3.0,2022-05-29,0
+P00305,UrbanCo Beverages Model 305,Grocery,Beverages,UrbanCo,413.00,294.02,601,S0073,2.6,2024-02-08,false
+P00306,UrbanCo Bedding Model 306,Home,Bedding,UrbanCo,4114.00,3043.38,308,S0066,4.3,2021-03-04,1
+P00307,GreenLeaf Cameras Model 307,Electronics,Cameras,GreenLeaf,64932.00,50982.94,739,S0033,3.0,2022-03-12,0
+P00308,Orbit Makeup Model 308,Beauty,Makeup,Orbit,4586.00,3346.44,820,S0014,4.6,2022-12-19,1
+P00309,PrimeFit Audio Model 309,Electronics,Audio,PrimeFit,67976.00,42859.63,166,S0059,4.1,2024-08-06,0
+P00310,UrbanCo Fiction Model 310,Books,Fiction,UrbanCo,4324.00,3096.94,287,S0005,2.7,2022-01-18,N
+P00311,Zenith Men Model 311,Fashion,Men,Zenith,71508.00,49930.06,266,S0033,4.0,2025-11-27,0
+P00312,HomeCraft Team Sports Model 312,Sports,Team Sports,HomeCraft,1559.00,1031.53,446,S0058,3.9,2025-08-05,false
+P00313,Zenith Organic Model 313,Grocery,Organic,Zenith,4808.00,2612.11,123,S0054,4.2,2023-02-24,true
+P00314,HomeCraft Yoga Model 314,Sports,Yoga,HomeCraft,77802.00,60822.36,22,S0056,3.2,2024-10-23,Y
+P00315,Pixel Men Model 315,Fashion,Men,Pixel,68842.00,45051.33,476,S0036,2.8,2024-10-24,No
+P00316,GlowCare Footwear Model 316,Fashion,Footwear,GlowCare,44880.00,25952.59,33,S0072,2.7,2023-01-28,false
+P00317,Apex Business Model 317,Books,Business,Apex,1650.00,853.18,633,S0082,4.2,2022-03-14,true
+P00318,Orbit Laptops Model 318,Electronics,Laptops,Orbit,54895.00,44814.46,257,S0099,4.0,2022-10-28,true
+P00319,Orbit Skin Care Model 319,Beauty,Skin Care,Orbit,3955.00,2747.69,892,S0091,3.9,2025-07-12,No
+P00320,BookNest Men Model 320,Fashion,Men,BookNest,46583.00,34145.99,644,S0009,4.1,2023-06-03,No
+P00321,GreenLeaf Accessories Model 321,Electronics,Accessories,GreenLeaf,25438.00,19681.01,260,S0091,2.8,2025-10-13,Y
+P00322,Nova Team Sports Model 322,Sports,Team Sports,Nova,17103.00,12569.20,670,S0090,3.1,2021-05-24,0
+P00323,HomeCraft Team Sports Model 323,Sports,Team Sports,HomeCraft,75529.00,49650.88,68,S0095,4.1,2023-09-20,N
+P00324,BookNest Fiction Model 324,Books,Fiction,BookNest,2111.00,1558.58,866,S0085,4.1,2021-03-27,Yes
+P00325,PrimeFit Accessories Model 325,Electronics,Accessories,PrimeFit,16990.00,12546.02,142,S0028,3.9,2025-05-01,0
+P00326,GreenLeaf Skin Care Model 326,Beauty,Skin Care,GreenLeaf,2485.00,1406.19,759,S0026,2.9,2025-03-12,true
+P00327,Zenith Team Sports Model 327,Sports,Team Sports,Zenith,17805.00,8961.54,many,S0039,3.6,2023-03-09,1
+P00328,GreenLeaf Accessories Model 328,Electronics,Accessories,GreenLeaf,77423.00,59495.97,726,S0056,4.5,2022-08-19,1
+P00329,Orbit Fitness Model 329,Sports,Fitness,Orbit,31822.00,19168.86,147,S0035,2.9,2022-03-29,N
+P00330,PrimeFit Mobiles Model 330,Electronics,Mobiles,PrimeFit,57359.00,32058.70,826,S0029,4.3,2025-07-05,true
+P00331,PrimeFit Yoga Model 331,Sports,Yoga,PrimeFit,73010.00,37167.08,654,S0048,3.2,2023-09-03,Yes
+P00332,HomeCraft Fragrance Model 332,Beauty,Fragrance,HomeCraft,-250.00,2379.38,434,S0077,2.6,2024-05-13,false
+P00333,UrbanCo Furniture Model 333,Home,Furniture,UrbanCo,27038.00,20476.88,178,S0014,3.0,2022-12-12,false
+P00334,Pixel Fitness Model 334,Sports,Fitness,Pixel,70474.00,51217.45,786,S0086,3.0,2021-12-05,true
+P00335,GlowCare Audio Model 335,Electronics,Audio,GlowCare,15712.00,10957.08,-5,S0006,5.0,2021-02-13,0
+P00336,GreenLeaf Audio Model 336,Electronics,Audio,GreenLeaf,16909.00,10659.44,246,S0051,4.9,2021-09-27,false
+P00337,UrbanCo Fitness Model 337,Sports,Fitness,UrbanCo,12330.00,8716.91,810,S0083,4.8,2022-07-17,true
+P00338,GlowCare Mobiles Model 338,Electronics,Mobiles,GlowCare,66981.00,39389.48,252,S0034,3.0,2023-07-16,Yes
+P00339,GreenLeaf Audio Model 339,Electronics,Audio,GreenLeaf,14099.00,8348.59,624,S0021,3.5,2022-01-16,true
+P00340,PrimeFit Decor Model 340,Home,Decor,PrimeFit,30517.00,22599.36,989,S0066,4.8,2025-05-21,0
+P00341,PrimeFit Snacks Model 341,Grocery,Snacks,PrimeFit,3466.00,1945.20,517,S0056,3.6,2023-08-05,0
+P00342,Orbit Household Model 342,Grocery,Household,Orbit,3064.00,2439.93,635,S0064,3.6,2021-01-19,0
+P00343,Zenith Laptops Model 343,Electronics,Laptops,Zenith,70333.00,49436.39,904,S0016,4.4,2024-12-28,Y
+P00344,Apex Team Sports Model 344,Sports,Team Sports, apex ,79369.00,51879.13,344,S0046,3.1,2022-02-20,No
+P00345,BookNest Yoga Model 345,Sports,Yoga,BookNest,26023.00,17084.86,612,S0031,4.1,2021-10-11,true
+P00346,Apex Decor Model 346,Home,Decor,Apex,25886.00,13813.05,926,S0026,4.1,2021-12-22,0
+P00347,Pixel Education Model 347,Books,Education,Pixel,3342.00,2621.68,278,S0022,4.5,2021-06-02,true
+P00348,Swift Yoga Model 348,Sports,Yoga,Swift,7357.00,5079.05,563,S0012,3.1,2025-12-08,Yes
+P00349,GlowCare Men Model 349,Fashion,Men,GlowCare,33234.00,25065.04,997,S0030,4.6,2025-02-24,No
+P00350,Pixel Team Sports Model 350,Sports,Team Sports,Pixel,73664.00,44043.06,251,S0015,4.3,2025-09-11,0
+P00351,PrimeFit Footwear Model 351,Fashion,Footwear,PrimeFit,65226.00,43136.46,79,S0071,4.0,2023-08-27,Yes
+P00352,BookNest Outdoor Model 352,Sports,Outdoor,BookNest,15842.00,10262.98,470,S0044,4.7,2025-01-15,true
+P00353,Swift Cameras Model 353,Electronics,Cameras,Swift,45984.00,22295.63,475,S0001,4.2,2022-10-31,No
+P00354,BookNest Cycling Model 354,Sports,Cycling,BookNest,FREE,39581.96,209,S0068,3.8,2022-03-15,false
+P00355,Orbit Skin Care Model 355,,Skin Care,Orbit,1214.00,865.51,790,S0021,5.0,2025-09-20,true
+P00356,PrimeFit Fitness Model 356,Sports,Fitness,PrimeFit,8532.00,6434.15,931,S0009,3.7,2025-10-23,false
+P00357,Zenith Hair Care Model 357,Beauty,Hair Care,Zenith,4500.00,2073.73,186,S0031,3.7,2021-03-10,Y
+P00358,HomeCraft Education Model 358,Books,Education,HomeCraft,2453.00,1784.37,144,S0005,2.6,2023-02-25,0
+P00359,PrimeFit Decor Model 359,Home,Decor,PrimeFit,49590.00,38663.58,348,S0010,2.9,2021-09-15,1
+P00360,UrbanCo Yoga Model 360,Sports,Yoga,UrbanCo,13267.00,8943.33,199,S0097,2.5,2023-04-22,1
+P00361,HomeCraft Hair Care Model 361,Beauty,Hair Care,HomeCraft,3033.00,1513.49,563,S0053,3.3,2021-10-09,N
+P00362,Orbit Cameras Model 362,Electronics,Cameras,Orbit,70907.00,51564.62,504,S0060,4.1,2025-04-03,Yes
+P00363,BookNest Hair Care Model 363,Beauty,Hair Care,BookNest,4922.00,3767.40,791,S0009,2.6,2025-03-31,Yes
+P00364,Zenith Cycling Model 364,Sports,Cycling,Zenith,2849.00,1927.83,911,S0002,3.9,2024-05-17,No
+P00365,Nova Business Model 365,Books,Business,Nova,4249.00,2189.92,378,S0068,4.4,2022-12-22,true
+P00366,Apex Children Model 366,Books,Children,Apex,4323.00,2153.07,151,S0003,3.1,2025-08-05,Yes
+P00367,PrimeFit Women Model 367,Fashion,Women,PrimeFit,68665.00,48996.41,100,S0081,2.5,2023-07-30,Yes
+P00368,HomeCraft Men Model 368,Fashion,Men,HomeCraft,20865.00,13953.74,705,S0030,3.7,2025-06-16,false
+P00369,HomeCraft Men Model 369,Fashion,Men,HomeCraft,3943.00,2510.08,569,S0071,4.5,2021-11-10,true
+P00370,Pixel Footwear Model 370,Fashion,Footwear,Pixel,21628.00,10701.15,332,S0009,4.4,2024-02-09,1
+P00371,PrimeFit Watches Model 371,Fashion,Watches,PrimeFit,73464.00,45834.24,611,S0095,2.6,2021-08-21,1
+P00372,PrimeFit Laptops Model 372,Electronics,Laptops,PrimeFit,33181.00,15460.89,120,S0008,3.4,2023-03-05,No
+P00373,Swift Hair Care Model 373,Beauty,Hair Care,Swift,117.00,60.02,187,S0029,3.8,2021-04-05,Y
+P00374,Nova Hair Care Model 374,Beauty,Hair Care,Nova,726.00,532.86,343,S0026,3.0,2021-10-08,0
+P00375,GlowCare Makeup Model 375,Beauty,Makeup,GlowCare,1238.00,897.61,63,S0059,4.6,2024-04-25,false
+P00376,Apex Education Model 376,Books,Education,Apex,1035.00,826.44,969,S0044,3.3,2025-07-26,1
+P00377,UrbanCo Audio Model 377,Electronics,Audio,UrbanCo,26250.00,15879.90,362,S0031,3.7,2025-03-10,1
+P00378,Pixel Bedding Model 378,Home,Bedding,Pixel,45066.00,29505.47,305,S0071,3.2,2022-06-23,false
+P00379,HomeCraft Kitchen Model 379,Home,Kitchen,HomeCraft,74832.00,50114.58,863,S0061,3.3,2022-07-27,Yes
+P00380,Pixel Bags Model 380,Fashion,Bags,Pixel,71928.00,48792.84,184,S0017,4.6,2025-07-09,false
+P00381,Apex Education Model 381,Books,Education,Apex,3658.00,2756.36,236,S0090,3.4,2022-11-12,No
+P00382,PrimeFit Organic Model 382,Grocery,Organic,PrimeFit,2936.00,1854.23,944,S0062,3.7,2022-08-04,Yes
+P00383,Zenith Fiction Model 383,Books,Fiction,Zenith,3231.00,1458.04,464,S0082,4.0,2022-05-24,true
+P00384,HomeCraft Fitness Model 384,Sports,Fitness,HomeCraft,63296.00,38478.42,452,S0023,2.6,2024-01-14,0
+P00385,Orbit Women Model 385,Fashion,Women,Orbit,48629.00,25674.24,507,S0073,5.0,2022-03-05,Y
+P00386,Apex Makeup Model 386,Beauty,Makeup,Apex,4266.00,1970.76,754,S0046,3.4,2024-05-30,0
+P00387,Pixel Watches Model 387,Fashion,Watches, pixel ,31362.00,19123.63,917,S0033,3.4,2022-01-31,N
+P00388,GlowCare Women Model 388,Fashion,Women,GlowCare,291.00,187.31,339,S0015,3.0,2025-05-19,1
+P00389,GlowCare Team Sports Model 389,Sports,Team Sports,GlowCare,45043.00,26455.33,484,S0079,4.6,2025-01-06,Y
+P00390,PrimeFit Snacks Model 390,Grocery,Snacks,PrimeFit,4479.00,3357.63,949,S0001,3.3,2023-01-08,Y
+P00391,Swift Kitchen Model 391,Home,Kitchen,Swift,40208.00,27848.61,25,S0073,4.8,2022-07-21,Yes
+P00392,Pixel Children Model 392,Books,Children,Pixel,3137.00,2290.50,862,S0062,4.9,2023-09-21,N
+P00393,UrbanCo Laptops Model 393,Electronics,Laptops,UrbanCo,64899.00,38059.11,228,S0088,4.1,2022-03-31,No
+P00394,Pixel Household Model 394,Grocery,Household,Pixel,4687.00,2384.54,45,S0042,4.1,2021-04-29,1
+P00395,GreenLeaf Snacks Model 395,Grocery,Snacks,GreenLeaf,4495.00,2770.61,227,S0064,4.1,2025-07-04,Y
+P00396,Pixel Beverages Model 396,Grocery,Beverages,Pixel,3237.00,1833.39,971,S0079,4.9,2021-05-03,Yes
+P00397,Nova Staples Model 397,Grocery,Staples,Nova,4981.00,3275.47,967,S0036,3.5,2021-04-30,true
+P00398,Apex Fitness Model 398,Sports,Fitness,Apex,40744.00,29423.37,181,S0027,4.5,2023-05-30,No
+P00399,GlowCare Education Model 399,Books,Education,GlowCare,3172.00,2253.36,868,S0031,3.0,2024-03-11,0
+P00400,Swift Organic Model 400,Grocery,Organic,Swift,3629.00,1834.63,186,S0067,3.9,2022-10-17,Y
+P00401,GlowCare Kitchen Model 401,Home,Kitchen,GlowCare,74981.00,44795.85,124,S0054,4.5,2023-08-01,0
+P00402,GlowCare Children Model 402,Books,Children,GlowCare,952.00,710.74,-5,S0060,4.7,2023-07-27,false
+P00403,HomeCraft Team Sports Model 403,Sports,Team Sports,HomeCraft,23969.00,16925.41,250,S0054,3.5,2021-01-17,true
+P00404,Orbit Business Model 404,Books,Business,Orbit,3182.00,1612.43,970,S0014,6.5,2024-10-12,true
+P00405,HomeCraft Education Model 405,Books,Education,HomeCraft,218.00,114.57,218,S0044,2.6,2021-01-21,Yes
+P00406,Pixel Furniture Model 406,Home,Furniture,Pixel,78833.00,39602.20,350,S0062,3.3,2024-10-10,1
+P00407,Pixel Kitchen Model 407,Home,Kitchen,Pixel,50306.00,29040.24,449,S0079,5.0,2025-01-17,true
+P00408,UrbanCo Cycling Model 408,Sports,Cycling,UrbanCo,15621.00,9144.44,208,S0053,2.5,2023-08-21,false
+P00409,Zenith Women Model 409,Fashion,Women,Zenith,74361.00,56233.19,89,S0020,4.8,2023-05-21,1
+P00410,UrbanCo Organic Model 410,Grocery,Organic,UrbanCo,2740.00,1356.38,424,S0076,4.1,2025-05-05,No
+P00411,GlowCare Watches Model 411,Fashion,Watches,GlowCare,64070.00,76884.00,253,S0027,5.0,2025-06-01,Y
+P00412,HomeCraft Women Model 412,Fashion,Women,HomeCraft,33515.00,21048.34,601,S0026,5.0,2021-07-24,0
+P00413,GlowCare Beverages Model 413,Grocery,Beverages,GlowCare,FREE,1525.64,72,S0044,3.3,2025-07-26,false
+P00414,Swift Education Model 414,Books,Education,Swift,2931.00,1466.22,538,S0041,3.9,2022-03-04,Y
+P00415,Pixel Team Sports Model 415,Sports,Team Sports,Pixel,-250.00,27031.18,212,S0095,2.8,2022-10-27,false
+P00416,Nova Makeup Model 416,Beauty,Makeup,Nova,454.00,314.19,246,S0070,4.2,2024-02-02,N
+P00417,HomeCraft Yoga Model 417,Sports,Yoga,HomeCraft,5873.00,4534.54,398,S0033,2.7,2022-10-08,true
+P00418,BookNest Household Model 418,Grocery,Household,BookNest,4705.00,2399.91,150,S0043,3.5,2022-09-17,0
+P00419,Orbit Makeup Model 419,Beauty,Makeup,Orbit,4376.00,3575.22,747,S0086,4.8,2025-09-29,Y
+P00420,Zenith Bedding Model 420,Home,Bedding,Zenith,13256.00,8452.52,655,S0057,2.5,2023-02-10,true
+P00421,Apex Fiction Model 421,Books,Fiction,Apex,2326.00,1124.21,469,S0057,4.7,2021-04-03,false
+BADP422,Apex Skin Care Model 422,Beauty,Skin Care,Apex,2761.00,1488.45,968,S0090,2.6,2023-06-15,false
+P00423,BookNest Education Model 423,Books,Education,BookNest,3497.00,2745.52,523,S0083,3.4,2022-07-19,No
+P00424,Nova Furniture Model 424,Home,Furniture,Nova,11834.00,6635.80,547,S0073,3.5,2021-01-17,1
+P00425,GreenLeaf Accessories Model 425,Electronics,Accessories,GreenLeaf,8337.00,3783.00,978,S0071,2.9,2023-01-04,N
+P00426,Swift Appliances Model 426,,Appliances,Swift,66859.00,50506.53,83,S0002,3.8,2024-02-03,0
+P00427,BookNest Personal Care Model 427,Beauty,Personal Care,BookNest,4719.00,3863.11,896,S0052,3.3,2025-07-03,Yes
+P00428,GlowCare Watches Model 428,Fashion,Watches,GlowCare,1597.00,819.15,388,S0057,4.5,2024-06-24,Yes
+P00429,HomeCraft Bags Model 429,Fashion,Bags,HomeCraft,53856.00,41550.34,620,S0086,3.5,2024-12-03,true
+P00430,Swift Footwear Model 430,Fashion,Footwear, swift ,29640.00,13785.19,283,S0018,4.5,2024-05-06,false
+P00431,UrbanCo Mobiles Model 431,Electronics,Mobiles,UrbanCo,12691.00,5947.06,358,S0022,2.7,2024-05-22,No
+P00432,GlowCare Outdoor Model 432,Sports,Outdoor,GlowCare,25436.00,19427.21,810,S0009,3.4,2022-10-31,N
+P00433,UrbanCo Organic Model 433,Grocery,Organic,UrbanCo,2915.00,1325.22,519,S0094,3.2,2023-06-22,false
+P00434,Pixel Bags Model 434,Fashion,Bags,Pixel,43779.00,30788.93,84,S0077,5.0,2025-01-10,1
+P00435,Apex Yoga Model 435,Sports,Yoga,Apex,34920.00,18088.27,896,S0063,3.1,2022-09-15,Y
+P00436,Pixel Technology Model 436,Books,Technology,Pixel,2930.00,2127.30,many,S0006,4.0,2023-07-06,N
+P00437,Zenith Staples Model 437,Grocery,Staples,Zenith,3447.00,2250.94,688,S0097,3.8,2025-07-03,Yes
+P00438,Pixel Personal Care Model 438,Beauty,Personal Care,Pixel,3278.00,2234.46,653,S0011,4.7,2023-10-10,No
+P00439,PrimeFit Fitness Model 439,Sports,Fitness,PrimeFit,23482.00,19233.37,509,S0062,4.6,2023-09-05,0
+P00440,PrimeFit Staples Model 440,Grocery,Staples,PrimeFit,3915.00,1836.31,434,S0081,4.0,2024-01-16,0
+P00441,Orbit Kitchen Model 441,Home,Kitchen,Orbit,30855.00,16638.46,407,S0011,3.7,2021-02-15,false
+P00442,GlowCare Footwear Model 442,Fashion,Footwear,GlowCare,36336.00,20908.01,765,S0018,2.6,2025-04-08,N
+P00443,Pixel Laptops Model 443,Electronics,Laptops,Pixel,73066.00,43169.59,112,S0001,4.7,2024-06-28,true
+P00444,Pixel Staples Model 444,Grocery,Staples,Pixel,3857.00,1989.75,957,S0017,3.1,2024-08-22,No
+P00445,Apex Kitchen Model 445,Home,Kitchen,Apex,52781.00,28903.16,875,S0069,4.3,2024-08-12,0
+P00446,Swift Technology Model 446,Books,Technology,Swift,4387.00,3563.70,827,S0046,4.1,2021-08-30,No
+P00447,GreenLeaf Fiction Model 447,Books,Fiction,GreenLeaf,3464.00,2561.15,633,S0081,3.8,2021-10-30,0
+P00448,HomeCraft Mobiles Model 448,Electronics,Mobiles,HomeCraft,40209.00,28368.98,142,S0073,3.2,2023-05-21,No
+P00449,Pixel Bags Model 449,Fashion,Bags,Pixel,76309.00,39970.67,958,S0072,4.9,2023-04-02,true
+P00450,GlowCare Watches Model 450,Fashion,Watches,GlowCare,50915.00,39517.67,527,S0059,2.5,2023-07-24,1
+P00451,GreenLeaf Team Sports Model 451,Sports,Team Sports,GreenLeaf,3336.00,2693.85,289,S0033,3.8,2024-02-22,false
+P00452,UrbanCo Hair Care Model 452,Beauty,Hair Care,UrbanCo,4858.00,2969.10,405,S0030,3.4,2025-06-04,0
+P00453,Apex Kitchen Model 453,Home,Kitchen,Apex,54579.00,44534.92,350,S0020,2.6,2022-11-22,1
+P00454,Pixel Watches Model 454,Fashion,Watches,Pixel,42793.00,25254.81,85,S0071,4.0,2025-02-07,true
+P00455,UrbanCo Hair Care Model 455,Beauty,Hair Care,UrbanCo,545.00,383.73,270,S0053,2.6,2021-08-15,Y
+P00456,Nova Personal Care Model 456,Beauty,Personal Care,Nova,107.00,66.66,935,S0089,4.3,2025-09-11,Y
+P00457,HomeCraft Staples Model 457,Grocery,Staples,HomeCraft,4075.00,2768.02,707,S0029,4.9,2024-03-19,1
+P00458,Zenith Personal Care Model 458,Beauty,Personal Care,Zenith,221.00,125.68,369,S0082,2.7,2023-06-11,N
+P00459,Zenith Personal Care Model 459,Beauty,Personal Care,Zenith,4619.00,3385.42,912,S0096,4.9,2021-10-20,true
+P00460,GlowCare Watches Model 460,Fashion,Watches,GlowCare,75358.00,54383.77,716,S0008,3.4,2021-12-16,0
+P00461,BookNest Cycling Model 461,Sports,Cycling,BookNest,8563.00,5029.26,642,S0036,2.8,2021-05-26,Y
+P00462,Zenith Fragrance Model 462,Beauty,Fragrance,Zenith,3955.00,3140.18,616,S0022,4.4,2021-03-01,Yes
+P00463,Swift Fragrance Model 463,Beauty,Fragrance,Swift,4161.00,2040.62,800,S0024,3.0,2024-02-23,No
+P00464,Nova Bags Model 464,Fashion,Bags,Nova,41925.00,24786.28,135,S0010,4.6,2021-01-21,Y
+P00465,Pixel Personal Care Model 465,Beauty,Personal Care,Pixel,2452.00,1701.00,627,S0039,3.8,2024-02-12,false
+P00466,Apex Mobiles Model 466,Electronics,Mobiles,Apex,24386.00,11030.42,748,S0010,2.7,2022-01-03,true
+P00467,Swift Bags Model 467,Fashion,Bags,Swift,69960.00,38620.52,557,S0077,2.8,2025-10-23,true
+P00468,Apex Technology Model 468,Books,Technology,Apex,4327.00,3251.48,985,S0035,4.2,2025-04-24,N
+P00469,UrbanCo Appliances Model 469,Home,Appliances,UrbanCo,48141.00,34824.34,-5,S0071,3.7,2022-07-26,Y
+P00470,HomeCraft Fragrance Model 470,Beauty,Fragrance,HomeCraft,473.00,264.55,871,S0036,3.0,2025-11-18,Yes
+P00471,GreenLeaf Women Model 471,Fashion,Women,GreenLeaf,56979.00,45074.35,346,S0065,4.7,2025-12-21,N
+P00472,GlowCare Organic Model 472,Grocery,Organic,GlowCare,FREE,587.66,39,S0093,4.5,2023-03-23,No
+P00473,HomeCraft Household Model 473,Grocery,Household, homecraft ,2801.00,1962.53,557,S0092,3.9,2025-04-26,Yes
+P00474,BookNest Children Model 474,Books,Children,BookNest,1544.00,864.49,188,S0063,4.6,2022-05-22,No
+P00475,HomeCraft Kitchen Model 475,Home,Kitchen,HomeCraft,8873.00,6766.93,420,S0085,3.0,2024-12-08,Y
+P00476,UrbanCo Kitchen Model 476,Home,Kitchen,UrbanCo,10366.00,5972.33,486,S0099,4.7,2025-11-27,No
+P00477,Nova Bedding Model 477,Home,Bedding,Nova,76288.00,41070.45,387,S0007,4.3,2025-08-09,Yes
+P00478,HomeCraft Women Model 478,Fashion,Women,HomeCraft,17224.00,12672.32,979,S0040,3.3,2025-09-30,Yes
+P00479,GlowCare Staples Model 479,Grocery,Staples,GlowCare,2115.00,1490.97,675,S0056,3.1,2021-02-14,Y
+P00480,HomeCraft Snacks Model 480,Grocery,Snacks,HomeCraft,2846.00,1725.59,899,S0064,2.7,2021-11-18,true
+P00481,Orbit Household Model 481,Grocery,Household,Orbit,659.00,524.82,848,S0018,4.8,2022-07-09,1
+P00482,BookNest Watches Model 482,Fashion,Watches,BookNest,49492.00,38413.09,784,S0090,4.2,2022-09-04,Y
+P00483,GreenLeaf Mobiles Model 483,Electronics,Mobiles,GreenLeaf,11594.00,6498.15,407,S0086,4.1,2023-06-04,Y
+P00484,Zenith Makeup Model 484,Beauty,Makeup,Zenith,240.00,126.81,690,S0071,5.0,2025-01-15,false
+P00485,Zenith Outdoor Model 485,Sports,Outdoor,Zenith,65275.00,37830.96,827,S0089,3.4,2024-03-19,Yes
+P00486,BookNest Cameras Model 486,Electronics,Cameras,BookNest,74385.00,54476.07,761,S0037,4.4,2025-03-27,false
+P00487,Nova Audio Model 487,Electronics,Audio,Nova,9810.00,5927.02,501,S0033,3.1,2023-05-21,N
+P00488,Pixel Staples Model 488,Grocery,Staples,Pixel,1730.00,1284.48,298,S0011,4.1,2024-02-16,Y
+P00489,Pixel Footwear Model 489,Fashion,Footwear,Pixel,16237.00,9187.64,322,S0053,3.0,2022-01-21,No
+P00490,Zenith Mobiles Model 490,Electronics,Mobiles,Zenith,68024.00,37777.00,791,S0028,4.7,2023-08-22,0
+P00491,BookNest Fitness Model 491,Sports,Fitness,BookNest,58594.00,45975.17,468,S0016,4.0,2023-03-12,0
+P00492,PrimeFit Organic Model 492,Grocery,Organic,PrimeFit,2872.00,1816.86,70,S0027,4.9,2023-02-22,Y
+P00493,BookNest Women Model 493,Fashion,Women,BookNest,76374.00,48031.13,754,S0020,3.6,2024-08-03,0
+P00494,UrbanCo Skin Care Model 494,Beauty,Skin Care,UrbanCo,167.00,112.53,62,S0086,2.7,2025-12-03,Yes
+P00495,Zenith Bags Model 495,Fashion,Bags,Zenith,69133.00,34791.49,662,S0092,3.2,2022-10-27,true
+P00496,Pixel Cameras Model 496,Electronics,Cameras,Pixel,3042.00,2458.21,601,S0096,3.3,2021-08-22,false
+P00497,Apex Fitness Model 497,,Fitness,Apex,31277.00,17761.66,193,S0008,4.9,2023-05-04,1
+P00498,UrbanCo Beverages Model 498,Grocery,Beverages,UrbanCo,-250.00,396.58,433,S0100,4.0,2021-07-07,1
+P00499,UrbanCo Women Model 499,Fashion,Women,UrbanCo,26255.00,13572.39,846,S0016,3.7,2024-11-02,0
+P00500,Orbit Laptops Model 500,Electronics,Laptops,Orbit,5100.00,4000.04,500,S0064,2.6,2022-10-01,1
+P00501,Swift Watches Model 501,Fashion,Watches,Swift,52809.00,39498.31,751,S0022,2.8,2021-04-07,Yes
+P00502,Nova Watches Model 502,Fashion,Watches,Nova,42175.00,28574.03,786,S0095,4.2,2021-05-31,0
+P00503,Nova Men Model 503,Fashion,Men,Nova,69975.00,54261.15,130,S0025,3.6,2022-10-23,false
+P00504,Swift Laptops Model 504,Electronics,Laptops,Swift,77713.00,40843.24,947,S0062,2.6,2025-03-27,true
+P00505,UrbanCo Staples Model 505,Grocery,Staples,UrbanCo,430.00,220.05,67,S0013,6.5,2021-08-13,N
+P00506,BookNest Footwear Model 506,Fashion,Footwear,BookNest,76780.00,51065.38,618,S0084,2.8,2024-07-26,0
+P00507,Zenith Hair Care Model 507,Beauty,Hair Care,Zenith,3354.00,2358.86,409,S0044,3.2,2023-08-23,true
+P00508,Nova Bedding Model 508,Home,Bedding,Nova,48334.00,25096.81,511,S0063,5.0,2022-03-10,1
+P00509,Pixel Women Model 509,Fashion,Women,Pixel,51089.00,39592.83,260,S0036,3.1,2023-06-14,1
+P00510,Orbit Business Model 510,Books,Business,Orbit,3963.00,3028.34,660,S0100,4.0,2023-03-02,No
+P00511,HomeCraft Accessories Model 511,Electronics,Accessories,HomeCraft,54131.00,30579.73,587,S0010,3.9,2022-03-26,true
+P00512,Zenith Beverages Model 512,Grocery,Beverages,Zenith,2440.00,1718.01,301,S0039,4.5,2025-03-02,Yes
+P00513,UrbanCo Men Model 513,Fashion,Men,UrbanCo,72405.00,40152.59,165,S0077,2.9,2022-11-25,true
+P00514,Zenith Appliances Model 514,Home,Appliances,Zenith,39042.00,29025.99,338,S0076,4.6,2023-12-23,Y
+P00515,GlowCare Cycling Model 515,Sports,Cycling,GlowCare,7249.00,4277.81,408,S0016,3.9,2022-05-12,1
+P00516,GlowCare Cameras Model 516,Electronics,Cameras, glowcare ,59601.00,37331.84,876,S0001,4.0,2022-02-10,1
+P00517,HomeCraft Personal Care Model 517,Beauty,Personal Care,HomeCraft,3081.00,1795.89,999,S0014,4.4,2024-09-15,false
+P00518,GreenLeaf Team Sports Model 518,Sports,Team Sports,GreenLeaf,56911.00,29354.13,972,S0040,3.3,2025-03-30,false
+P00519,Apex Yoga Model 519,Sports,Yoga,Apex,46704.00,27929.29,736,S0100,4.9,2023-03-17,Y
+P00520,UrbanCo Men Model 520,Fashion,Men,UrbanCo,10366.00,7418.93,317,S0097,3.2,2023-01-20,1
+P00521,Pixel Accessories Model 521,Electronics,Accessories,Pixel,56691.00,36659.94,588,S0021,3.1,2024-09-08,N
+P00522,HomeCraft Outdoor Model 522,Sports,Outdoor,HomeCraft,60619.00,48998.64,793,S0008,4.9,2021-09-16,No
+P00523,Nova Furniture Model 523,Home,Furniture,Nova,57697.00,30947.26,237,S0096,4.9,2021-01-20,true
+P00524,HomeCraft Appliances Model 524,Home,Appliances,HomeCraft,55852.00,28054.02,532,S0039,4.5,2022-02-11,false
+P00525,Apex Children Model 525,Books,Children,Apex,4967.00,2512.60,560,S0075,4.6,2021-08-10,Yes
+P00526,BookNest Skin Care Model 526,Beauty,Skin Care,BookNest,3308.00,2701.67,523,S0053,3.0,2023-10-25,Y
+P00527,Apex Fitness Model 527,Sports,Fitness,Apex,50464.00,36069.87,571,S0098,3.2,2024-10-10,Yes
+P00528,Nova Snacks Model 528,Grocery,Snacks,Nova,3003.00,1875.04,838,S0047,3.7,2022-06-14,Y
+P00529,HomeCraft Children Model 529,Books,Children,HomeCraft,3844.00,2104.59,372,S0080,2.7,2025-10-11,N
+P00530,Swift Accessories Model 530,Electronics,Accessories,Swift,56644.00,45988.01,859,S0017,2.7,2021-10-03,1
+P00531,Apex Accessories Model 531,Electronics,Accessories,Apex,FREE,27446.75,919,S0014,3.7,2021-11-16,Y
+P00532,PrimeFit Children Model 532,Books,Children,PrimeFit,2601.00,1779.85,494,S0078,4.7,2023-04-13,true
+P00533,Zenith Cameras Model 533,Electronics,Cameras,Zenith,77352.00,36833.42,589,S0077,4.4,2024-05-03,Yes
+P00534,UrbanCo Footwear Model 534,Fashion,Footwear,UrbanCo,53025.00,24423.82,702,S0092,2.6,2021-08-28,Yes
+P00535,GreenLeaf Men Model 535,Fashion,Men,GreenLeaf,77446.00,55084.73,996,S0095,4.7,2023-12-12,0
+P00536,Swift Fiction Model 536,Books,Fiction,Swift,4415.00,2063.14,-5,S0012,4.3,2023-07-19,No
+P00537,Zenith Appliances Model 537,Home,Appliances,Zenith,45973.00,21047.35,874,S0091,4.8,2024-03-16,1
+P00538,UrbanCo Cameras Model 538,Electronics,Cameras,UrbanCo,35750.00,16573.28,152,S0030,3.3,2023-05-26,1
+P00539,BookNest Team Sports Model 539,Sports,Team Sports,BookNest,25294.00,11470.48,414,S0005,3.0,2024-11-10,false
+P00540,Orbit Children Model 540,Books,Children,Orbit,618.00,440.74,453,S0053,2.8,2022-01-04,Y
+P00541,GlowCare Decor Model 541,Home,Decor,GlowCare,66855.00,46819.98,161,S0004,3.1,2023-09-05,false
+P00542,Zenith Skin Care Model 542,Beauty,Skin Care,Zenith,4244.00,2026.12,367,S0001,3.9,2025-11-16,N
+P00543,BookNest Skin Care Model 543,Beauty,Skin Care,BookNest,2064.00,1287.82,690,S0099,3.7,2024-12-06,true
+P00544,HomeCraft Beverages Model 544,Grocery,Beverages,HomeCraft,3386.00,2691.35,919,S0013,4.0,2025-04-27,Y
+P00545,HomeCraft Appliances Model 545,Home,Appliances,HomeCraft,48262.00,30778.54,many,S0058,4.1,2022-11-19,true
+P00546,GreenLeaf Mobiles Model 546,Electronics,Mobiles,GreenLeaf,51709.00,27837.12,755,S0089,3.5,2025-01-12,false
+P00547,GlowCare Bags Model 547,Fashion,Bags,GlowCare,6678.00,4285.24,374,S0077,3.8,2022-07-11,0
+P00548,Orbit Staples Model 548,Grocery,Staples,Orbit,760.00,912.00,648,S0052,4.8,2024-02-13,false
+P00549,Apex Fragrance Model 549,Beauty,Fragrance,Apex,1286.00,829.20,838,S0060,3.7,2024-05-08,Yes
+P00550,BookNest Decor Model 550,Home,Decor,BookNest,25316.00,14392.44,680,S0062,3.7,2022-06-20,0
+P00551,Zenith Bedding Model 551,Home,Bedding,Zenith,5199.00,4189.30,151,S0066,3.4,2025-07-14,0
+P00552,Pixel Hair Care Model 552,Beauty,Hair Care,Pixel,3045.00,2250.72,644,S0002,4.7,2023-09-17,Y
+P00553,Swift Team Sports Model 553,Sports,Team Sports,Swift,45163.00,34747.56,559,S0053,3.0,2025-01-07,0
+P00554,Pixel Cycling Model 554,Sports,Cycling,Pixel,21518.00,15433.75,110,S0071,4.9,2023-12-08,0
+P00555,Pixel Cycling Model 555,Sports,Cycling,Pixel,36814.00,24648.56,264,S0055,4.3,2022-07-19,No
+P00556,GlowCare Personal Care Model 556,Beauty,Personal Care,GlowCare,1896.00,1295.37,658,S0028,3.8,2025-08-04,1
+P00557,Nova Bedding Model 557,Home,Bedding,Nova,45511.00,34123.78,120,S0017,2.6,2024-03-08,No
+P00558,Apex Education Model 558,Books,Education,Apex,4915.00,2682.78,97,S0012,3.5,2023-09-22,true
+P00559,BookNest Fitness Model 559,Sports,Fitness, booknest ,79376.00,50031.89,42,S0012,4.5,2024-08-28,N
+P00560,Swift Hair Care Model 560,Beauty,Hair Care,Swift,2686.00,1649.69,254,S0033,4.8,2023-10-06,No
+P00561,Pixel Technology Model 561,Books,Technology,Pixel,836.00,481.39,461,S0098,4.9,2021-11-26,N
+P00562,PrimeFit Appliances Model 562,Home,Appliances,PrimeFit,17206.00,9640.80,541,S0092,4.9,2024-12-25,No
+P00563,BookNest Personal Care Model 563,Beauty,Personal Care,BookNest,2616.00,1855.13,491,S0030,4.5,2023-09-20,Yes
+P00564,UrbanCo Beverages Model 564,Grocery,Beverages,UrbanCo,3183.00,2607.87,428,S0048,3.9,2022-12-13,Y
+P00565,HomeCraft Bags Model 565,Fashion,Bags,HomeCraft,36722.00,17422.76,72,S0031,3.3,2024-10-01,Yes
+P00566,PrimeFit Bags Model 566,Fashion,Bags,PrimeFit,75535.00,58502.60,6,S0026,4.1,2025-10-20,1
+P00567,PrimeFit Business Model 567,Books,Business,PrimeFit,183.00,123.79,845,S0088,2.6,2025-11-28,false
+P00568,Nova Beverages Model 568,,Beverages,Nova,3332.00,1807.02,63,S0035,4.3,2022-04-10,0
+P00569,GlowCare Men Model 569,Fashion,Men,GlowCare,26712.00,13931.04,675,S0040,4.9,2023-05-01,0
+P00570,PrimeFit Fragrance Model 570,Beauty,Fragrance,PrimeFit,83.00,39.44,141,S0068,3.3,2023-09-03,N
+P00571,Pixel Yoga Model 571,Sports,Yoga,Pixel,24488.00,14481.75,214,S0088,2.9,2021-03-01,Y
+P00572,GreenLeaf Outdoor Model 572,Sports,Outdoor,GreenLeaf,78886.00,56332.65,477,S0054,2.8,2021-08-15,1
+P00573,HomeCraft Outdoor Model 573,Sports,Outdoor,HomeCraft,29201.00,23175.12,883,S0074,4.8,2025-11-28,No
+P00574,Pixel Hair Care Model 574,Beauty,Hair Care,Pixel,3654.00,2028.71,883,S0055,2.8,2023-01-25,false
+P00575,Pixel Footwear Model 575,Fashion,Footwear,Pixel,19722.00,15763.75,198,S0095,2.6,2025-12-22,Yes
+P00576,Swift Cameras Model 576,Electronics,Cameras,Swift,16288.00,12316.95,768,S0098,4.6,2022-07-05,0
+P00577,Zenith Household Model 577,Grocery,Household,Zenith,96.00,56.64,683,S0020,3.7,2021-12-25,No
+P00578,GreenLeaf Bedding Model 578,Home,Bedding,GreenLeaf,16546.00,8709.84,644,S0052,4.7,2024-04-18,0
+P00579,Orbit Laptops Model 579,Electronics,Laptops,Orbit,1950.00,1337.85,856,S0014,3.0,2023-04-15,false
+P00580,GlowCare Hair Care Model 580,Beauty,Hair Care,GlowCare,1313.00,780.52,800,S0082,3.4,2024-02-21,Y
+P00581,Nova Bedding Model 581,Home,Bedding,Nova,-250.00,26315.82,424,S0014,2.6,2023-09-23,true
+P00582,Apex Hair Care Model 582,Beauty,Hair Care,Apex,2340.00,1651.82,254,S0004,2.7,2025-04-29,Y
+P00583,UrbanCo Bags Model 583,Fashion,Bags,UrbanCo,68419.00,53844.61,709,S0016,4.0,2024-10-29,Yes
+P00584,HomeCraft Hair Care Model 584,Beauty,Hair Care,HomeCraft,978.00,607.09,260,S0077,3.3,2024-03-21,No
+P00585,Zenith Fiction Model 585,Books,Fiction,Zenith,754.00,598.33,519,S0020,4.5,2021-02-12,Y
+P00586,GlowCare Household Model 586,Grocery,Household,GlowCare,4876.00,3755.37,93,S0091,3.3,2021-11-17,1
+P00587,Zenith Fragrance Model 587,Beauty,Fragrance,Zenith,4107.00,3301.05,593,S0088,4.2,2022-05-26,0
+P00588,Zenith Children Model 588,Books,Children,Zenith,4619.00,2086.73,621,S0084,3.0,2021-12-31,true
+P00589,Zenith Yoga Model 589,Sports,Yoga,Zenith,66730.00,48296.60,966,S0028,3.0,2023-03-12,Yes
+P00590,UrbanCo Hair Care Model 590,Beauty,Hair Care,UrbanCo,FREE,1563.28,571,S0076,4.7,2023-01-08,false
+P00591,GlowCare Fragrance Model 591,Beauty,Fragrance,GlowCare,4710.00,3500.20,718,S0090,4.6,2024-05-08,N
+P00592,UrbanCo Decor Model 592,Home,Decor,UrbanCo,77532.00,52155.65,657,S0025,3.4,2021-02-25,0
+P00593,PrimeFit Bedding Model 593,Home,Bedding,PrimeFit,14994.00,11470.86,824,S0100,4.7,2022-06-01,No
+P00594,Orbit Technology Model 594,Books,Technology,Orbit,4674.00,3353.34,749,S0048,4.4,2022-09-30,1
+P00595,PrimeFit Education Model 595,Books,Education,PrimeFit,2924.00,1586.37,817,S0078,3.3,2022-12-08,1
+P00596,PrimeFit Technology Model 596,Books,Technology,PrimeFit,107.00,69.71,374,S0039,4.9,2024-09-23,Y
+P00597,Orbit Education Model 597,Books,Education,Orbit,3756.00,2240.34,745,S0098,2.7,2021-04-12,N
+P00598,Nova Fitness Model 598,Sports,Fitness,Nova,306.00,239.48,715,S0098,3.1,2023-05-25,false
+P00599,HomeCraft Snacks Model 599,Grocery,Snacks,HomeCraft,3397.00,2279.00,881,S0020,3.3,2022-11-22,1
+P00600,Apex Watches Model 600,Fashion,Watches,Apex,39969.00,27542.36,558,S0089,4.2,2024-10-09,N
+P00601,Zenith Bedding Model 601,Home,Bedding,Zenith,65763.00,47390.21,687,S0078,3.4,2021-09-22,No
+P00602,GreenLeaf Technology Model 602,Books,Technology, greenleaf ,146.00,85.38,130,S0004,4.2,2025-04-10,0
+P00603,Apex Bedding Model 603,Home,Bedding,Apex,40557.00,24744.22,-5,S0059,2.6,2024-08-07,Yes
+P00604,GlowCare Education Model 604,Books,Education,GlowCare,4725.00,3104.81,226,S0072,2.6,2022-09-27,Yes
+P00605,Orbit Men Model 605,Fashion,Men,Orbit,34428.00,24951.49,996,S0009,2.5,2023-12-02,0
+P00606,Orbit Footwear Model 606,Fashion,Footwear,Orbit,3541.00,2228.75,323,S0067,6.5,2021-08-22,true
+P00607,GreenLeaf Education Model 607,Books,Education,GreenLeaf,1748.00,916.93,863,S0077,5.0,2021-03-31,0
+P00608,GreenLeaf Women Model 608,Fashion,Women,GreenLeaf,46789.00,25871.08,795,S0081,3.9,2024-03-27,Yes
+P00609,Pixel Outdoor Model 609,Sports,Outdoor,Pixel,17234.00,11265.75,928,S0072,3.0,2022-05-06,true
+P00610,GlowCare Cycling Model 610,Sports,Cycling,GlowCare,24164.00,13191.90,663,S0053,4.5,2024-01-15,Y
+P00611,Orbit Household Model 611,Grocery,Household,Orbit,299.00,242.88,900,S0046,2.6,2025-06-26,1
+P00612,UrbanCo Hair Care Model 612,Beauty,Hair Care,UrbanCo,3942.00,2060.27,727,S0057,4.5,2022-06-26,N
+P00613,HomeCraft Business Model 613,Books,Business,HomeCraft,1569.00,743.00,522,S0072,3.2,2023-08-03,1
+P00614,Orbit Hair Care Model 614,Beauty,Hair Care,Orbit,451.00,253.77,629,S0098,3.1,2021-04-21,Y
+P00615,Pixel Hair Care Model 615,Beauty,Hair Care,Pixel,1064.00,856.20,303,S0087,2.9,2023-02-21,false
+P00616,Swift Bags Model 616,Fashion,Bags,Swift,27838.00,13077.22,252,S0064,4.9,2022-02-04,Y
+P00617,BookNest Mobiles Model 617,Electronics,Mobiles,BookNest,41697.00,27529.41,270,S0091,4.3,2022-10-14,false
+P00618,GreenLeaf Fitness Model 618,Sports,Fitness,GreenLeaf,51207.00,25899.31,523,S0025,4.2,2021-10-22,No
+P00619,BookNest Staples Model 619,Grocery,Staples,BookNest,4303.00,2397.98,531,S0079,4.7,2023-11-15,N
+P00620,UrbanCo Furniture Model 620,Home,Furniture,UrbanCo,26278.00,17954.25,910,S0073,3.2,2025-09-29,Yes
+P00621,Nova Laptops Model 621,Electronics,Laptops,Nova,72043.00,46902.10,793,S0088,2.9,2021-05-22,true
+P00622,Zenith Appliances Model 622,Home,Appliances,Zenith,8550.00,6860.20,711,S0010,3.0,2023-12-20,0
+P00623,GreenLeaf Business Model 623,Books,Business,GreenLeaf,3388.00,1654.42,909,S0036,3.2,2025-07-18,1
+P00624,GlowCare Technology Model 624,Books,Technology,GlowCare,2810.00,1369.88,791,S0089,3.6,2024-01-26,Yes
+P00625,HomeCraft Decor Model 625,Home,Decor,HomeCraft,44981.00,34769.94,243,S0085,3.1,2024-09-27,No
+P00626,Swift Fiction Model 626,Books,Fiction,Swift,2984.00,2044.03,189,S0092,4.3,2025-12-21,false
+P00627,Pixel Business Model 627,Books,Business,Pixel,3408.00,1910.21,408,S0030,3.4,2024-12-04,No
+P00628,Nova Laptops Model 628,Electronics,Laptops,Nova,68587.00,47684.09,110,S0069,4.4,2021-08-02,N
+P00629,Orbit Personal Care Model 629,Beauty,Personal Care,Orbit,4571.00,2074.06,545,S0079,4.4,2021-01-21,false
+P00630,PrimeFit Outdoor Model 630,Sports,Outdoor,PrimeFit,50167.00,26377.96,656,S0041,4.7,2021-12-17,Y
+P00631,HomeCraft Watches Model 631,Fashion,Watches,HomeCraft,27003.00,12799.02,31,S0098,3.6,2025-03-07,0
+P00632,PrimeFit Women Model 632,Fashion,Women,PrimeFit,622.00,340.28,215,S0015,4.0,2022-07-18,1
+BADP633,GreenLeaf Beverages Model 633,Grocery,Beverages,GreenLeaf,244.00,161.23,583,S0019,4.0,2023-04-19,true
+P00634,GreenLeaf Staples Model 634,Grocery,Staples,GreenLeaf,273.00,127.93,221,S0017,4.6,2025-06-04,true
+P00635,Swift Accessories Model 635,Electronics,Accessories,Swift,68653.00,51232.06,856,S0074,2.5,2024-01-28,1
+P00636,Orbit Cameras Model 636,Electronics,Cameras,Orbit,77131.00,56230.15,62,S0058,3.7,2024-01-12,Yes
+P00637,Swift Household Model 637,Grocery,Household,Swift,1959.00,1447.93,346,S0004,5.0,2022-10-30,true
+P00638,BookNest Team Sports Model 638,Sports,Team Sports,BookNest,9806.00,7679.39,765,S0019,3.3,2025-12-23,Yes
+P00639,HomeCraft Yoga Model 639,,Yoga,HomeCraft,35922.00,17611.64,493,S0005,4.7,2025-09-14,1
+P00640,BookNest Bedding Model 640,Home,Bedding,BookNest,24193.00,17652.26,341,S0048,3.8,2025-02-03,No
+P00641,Swift Beverages Model 641,Grocery,Beverages,Swift,2579.00,1620.75,819,S0064,3.8,2024-01-22,Y
+P00642,Orbit Household Model 642,Grocery,Household,Orbit,2926.00,2346.63,944,S0053,3.3,2022-09-11,1
+P00643,GreenLeaf Household Model 643,Grocery,Household,GreenLeaf,4382.00,3346.43,565,S0050,5.0,2024-11-11,true
+P00644,GreenLeaf Kitchen Model 644,Home,Kitchen,GreenLeaf,8551.00,4153.98,659,S0036,4.3,2023-01-30,0
+P00645,Swift Team Sports Model 645,Sports,Team Sports, swift ,1873.00,1074.87,186,S0039,2.7,2023-07-10,Y
+P00646,PrimeFit Personal Care Model 646,Beauty,Personal Care,PrimeFit,1531.00,1237.22,63,S0067,2.8,2024-06-19,false
+P00647,Swift Fitness Model 647,Sports,Fitness,Swift,71045.00,50778.79,55,S0069,2.8,2021-05-05,0
+P00648,Orbit Makeup Model 648,Beauty,Makeup,Orbit,3864.00,2347.99,800,S0049,3.8,2022-01-25,1
+P00649,GlowCare Household Model 649,Grocery,Household,GlowCare,FREE,3068.34,40,S0045,3.8,2023-05-22,0
+P00650,Swift Household Model 650,Grocery,Household,Swift,3554.00,1612.33,327,S0029,3.3,2025-04-02,1
+P00651,Pixel Accessories Model 651,Electronics,Accessories,Pixel,54007.00,33438.80,322,S0021,2.6,2024-01-24,1
+P00652,Zenith Kitchen Model 652,Home,Kitchen,Zenith,78798.00,41478.35,289,S0082,3.3,2021-08-05,true
+P00653,Nova Outdoor Model 653,Sports,Outdoor,Nova,26314.00,13117.64,72,S0001,4.8,2024-04-19,1
+P00654,Pixel Bags Model 654,Fashion,Bags,Pixel,66852.00,31306.88,many,S0070,3.1,2021-02-02,Y
+P00655,GlowCare Snacks Model 655,Grocery,Snacks,GlowCare,147.00,67.05,886,S0061,4.2,2023-03-03,Y
+P00656,HomeCraft Organic Model 656,Grocery,Organic,HomeCraft,3510.00,2594.23,20,S0067,5.0,2025-01-16,true
+P00657,Swift Appliances Model 657,Home,Appliances,Swift,58594.00,46418.28,571,S0076,3.4,2022-10-01,Yes
+P00658,PrimeFit Skin Care Model 658,Beauty,Skin Care,PrimeFit,4670.00,3481.57,64,S0012,3.9,2022-11-06,1
+P00659,HomeCraft Men Model 659,Fashion,Men,HomeCraft,23480.00,13859.44,689,S0071,4.8,2025-02-14,false
+P00660,BookNest Footwear Model 660,Fashion,Footwear,BookNest,59797.00,32308.77,665,S0080,4.7,2025-05-13,No
+P00661,Orbit Laptops Model 661,Electronics,Laptops,Orbit,29970.00,21787.56,91,S0032,2.5,2024-04-12,Yes
+P00662,Swift Kitchen Model 662,Home,Kitchen,Swift,69374.00,49798.29,53,S0034,3.2,2024-02-27,Y
+P00663,Nova Cycling Model 663,Sports,Cycling,Nova,7025.00,3619.28,737,S0052,3.0,2021-05-14,false
+P00664,Apex Fragrance Model 664,Beauty,Fragrance,Apex,-250.00,2193.69,878,S0020,3.3,2023-11-09,Yes
+P00665,HomeCraft Accessories Model 665,Electronics,Accessories,HomeCraft,32760.00,24714.29,106,S0062,3.0,2022-07-08,false
+P00666,BookNest Business Model 666,Books,Business,BookNest,2411.00,1291.91,231,S0068,4.6,2021-01-31,Y
+P00667,Apex Technology Model 667,Books,Technology,Apex,80.00,58.62,2,S0095,4.4,2023-10-26,N
+P00668,PrimeFit Fitness Model 668,Sports,Fitness,PrimeFit,25087.00,17466.51,107,S0024,2.7,2024-07-11,true
+P00669,GlowCare Decor Model 669,Home,Decor,GlowCare,73733.00,49448.36,203,S0085,3.5,2025-04-29,Y
+P00670,Swift Watches Model 670,Fashion,Watches,Swift,73020.00,41082.37,-5,S0071,2.5,2025-02-25,true
+P00671,HomeCraft Audio Model 671,Electronics,Audio,HomeCraft,64596.00,43013.42,798,S0031,3.7,2021-01-21,1
+P00672,Zenith Organic Model 672,Grocery,Organic,Zenith,4512.00,2579.06,73,S0016,4.3,2021-09-12,0
+P00673,Zenith Education Model 673,Books,Education,Zenith,1879.00,1098.39,108,S0064,4.6,2024-02-20,true
+P00674,HomeCraft Cameras Model 674,Electronics,Cameras,HomeCraft,6325.00,3178.49,802,S0095,4.2,2024-06-11,N
+P00675,GreenLeaf Men Model 675,Fashion,Men,GreenLeaf,62328.00,44562.46,297,S0082,4.3,2024-10-13,true
+P00676,GreenLeaf Women Model 676,Fashion,Women,GreenLeaf,79296.00,38415.16,54,S0065,5.0,2025-01-24,N
+P00677,Orbit Children Model 677,Books,Children,Orbit,1045.00,823.21,736,S0028,4.0,2023-08-27,N
+P00678,Nova Cameras Model 678,Electronics,Cameras,Nova,67471.00,40625.98,762,S0092,3.6,2022-01-27,No
+P00679,GlowCare Cycling Model 679,Sports,Cycling,GlowCare,46216.00,27543.65,250,S0009,4.2,2023-10-13,true
+P00680,GlowCare Appliances Model 680,Home,Appliances,GlowCare,51774.00,33722.49,138,S0014,4.6,2022-11-21,false
+P00681,Pixel Business Model 681,Books,Business,Pixel,2592.00,1503.68,921,S0008,2.9,2024-03-18,false
+P00682,Zenith Watches Model 682,Fashion,Watches,Zenith,25804.00,15643.62,273,S0010,3.9,2025-04-25,1
+P00683,HomeCraft Cycling Model 683,Sports,Cycling,HomeCraft,38608.00,25614.05,302,S0003,4.9,2025-10-28,0
+P00684,Orbit Makeup Model 684,Beauty,Makeup,Orbit,4415.00,3104.68,211,S0060,2.6,2024-09-28,1
+P00685,GlowCare Audio Model 685,Electronics,Audio,GlowCare,74736.00,89683.20,612,S0048,4.5,2024-09-06,0
+P00686,HomeCraft Audio Model 686,Electronics,Audio,HomeCraft,78181.00,63620.36,290,S0066,2.9,2021-12-28,false
+P00687,PrimeFit Women Model 687,Fashion,Women,PrimeFit,10144.00,6732.88,342,S0041,4.5,2021-03-23,true
+P00688,Pixel Personal Care Model 688,Beauty,Personal Care, pixel ,4255.00,3222.01,962,S0010,3.7,2023-11-29,1
+P00689,Apex Household Model 689,Grocery,Household,Apex,1883.00,1289.19,617,S0049,3.1,2021-07-12,false
+P00690,UrbanCo Furniture Model 690,Home,Furniture,UrbanCo,23758.00,11849.86,290,S0070,4.0,2025-09-09,No
+P00691,BookNest Technology Model 691,Books,Technology,BookNest,2721.00,2178.05,260,S0063,4.6,2024-10-28,Yes
+P00692,Apex Business Model 692,Books,Business,Apex,1223.00,644.78,43,S0007,3.6,2022-09-26,N
+P00693,GlowCare Decor Model 693,Home,Decor,GlowCare,2160.00,1609.80,715,S0051,4.6,2022-08-22,Y
+P00694,PrimeFit Audio Model 694,Electronics,Audio,PrimeFit,16538.00,10880.63,337,S0088,4.8,2025-11-16,false
+P00695,Swift Cycling Model 695,Sports,Cycling,Swift,78474.00,52865.85,951,S0052,4.1,2022-09-09,N
+P00696,BookNest Men Model 696,Fashion,Men,BookNest,42983.00,27873.20,448,S0017,3.7,2024-09-13,N
+P00697,BookNest Kitchen Model 697,Home,Kitchen,BookNest,57897.00,29982.47,157,S0045,4.2,2022-08-03,Y
+P00698,GlowCare Men Model 698,Fashion,Men,GlowCare,33740.00,27381.39,910,S0097,2.5,2023-02-08,1
+P00699,PrimeFit Outdoor Model 699,Sports,Outdoor,PrimeFit,52924.00,26094.82,441,S0003,4.2,2022-09-29,Y
+P00700,BookNest Skin Care Model 700,Beauty,Skin Care,BookNest,4459.00,2934.20,236,S0083,4.9,2022-12-15,0
+P00701,Apex Education Model 701,Books,Education,Apex,2124.00,992.71,754,S0033,4.2,2025-03-31,false
+P00702,Swift Hair Care Model 702,Beauty,Hair Care,Swift,4050.00,2377.10,273,S0072,3.8,2022-12-22,1
+P00703,BookNest Kitchen Model 703,Home,Kitchen,BookNest,72168.00,41448.02,629,S0001,2.9,2025-04-01,No
+P00704,Pixel Bedding Model 704,Home,Bedding,Pixel,70133.00,49909.82,370,S0031,3.3,2021-05-22,Yes
+P00705,Zenith Decor Model 705,Home,Decor,Zenith,69944.00,38413.87,836,S0036,3.5,2022-11-20,No
+P00706,UrbanCo Audio Model 706,Electronics,Audio,UrbanCo,32218.00,18459.31,808,S0065,4.1,2025-07-29,1
+P00707,Pixel Cycling Model 707,Sports,Cycling,Pixel,40144.00,28029.31,590,S0070,6.5,2023-01-22,Yes
+P00708,BookNest Team Sports Model 708,Sports,Team Sports,BookNest,FREE,2496.42,321,S0057,3.6,2022-04-06,true
+P00709,HomeCraft Footwear Model 709,Fashion,Footwear,HomeCraft,28406.00,19442.07,212,S0079,3.5,2021-11-02,true
+P00710,Apex Makeup Model 710,,Makeup,Apex,3340.00,2359.27,634,S0023,5.0,2021-09-11,1
+P00711,Nova Audio Model 711,Electronics,Audio,Nova,7125.00,4392.92,366,S0046,4.1,2025-02-13,No
+P00712,GreenLeaf Yoga Model 712,Sports,Yoga,GreenLeaf,872.00,574.30,648,S0046,3.6,2021-06-18,No
+P00713,Pixel Skin Care Model 713,Beauty,Skin Care,Pixel,4905.00,2502.47,532,S0018,4.7,2025-11-02,No
+P00714,GreenLeaf Watches Model 714,Fashion,Watches,GreenLeaf,28458.00,20856.28,855,S0099,3.7,2025-07-01,false
+P00715,Swift Outdoor Model 715,Sports,Outdoor,Swift,4718.00,3844.16,532,S0017,3.1,2024-10-23,N
+P00716,UrbanCo Fiction Model 716,Books,Fiction,UrbanCo,124.00,84.94,690,S0012,2.5,2021-01-01,Yes
+P00717,Swift Mobiles Model 717,Electronics,Mobiles,Swift,47376.00,31558.57,634,S0064,2.5,2024-03-05,0
+P00718,Swift Accessories Model 718,Electronics,Accessories,Swift,48779.00,38792.38,664,S0017,4.9,2023-11-09,false
+P00719,BookNest Yoga Model 719,Sports,Yoga,BookNest,46671.00,28154.44,849,S0043,2.8,2025-03-05,Yes
+P00720,Pixel Audio Model 720,Electronics,Audio,Pixel,39590.00,32018.00,241,S0027,2.8,2021-06-15,true
+P00721,Apex Personal Care Model 721,Beauty,Personal Care,Apex,1624.00,1176.95,102,S0044,3.9,2023-03-02,Yes
+P00722,Nova Education Model 722,Books,Education,Nova,3460.00,2013.34,605,S0073,3.0,2023-07-04,Yes
+P00723,BookNest Skin Care Model 723,Beauty,Skin Care,BookNest,286.00,189.80,920,S0005,4.3,2022-04-03,false
+P00724,Apex Makeup Model 724,Beauty,Makeup,Apex,2681.00,2134.38,976,S0047,3.1,2025-06-05,true
+P00725,HomeCraft Skin Care Model 725,Beauty,Skin Care,HomeCraft,3063.00,1702.49,932,S0100,2.8,2022-09-27,N
+P00726,GlowCare Hair Care Model 726,Beauty,Hair Care,GlowCare,3965.00,2473.29,370,S0090,4.3,2021-08-21,No
+P00727,BookNest Fiction Model 727,Books,Fiction,BookNest,3076.00,1966.67,757,S0010,4.8,2021-07-25,false
+P00728,Zenith Team Sports Model 728,Sports,Team Sports,Zenith,66899.00,52978.50,666,S0061,4.9,2024-12-07,No
+P00729,Nova Business Model 729,Books,Business,Nova,1995.00,937.00,561,S0050,3.6,2022-07-16,1
+P00730,GreenLeaf Fragrance Model 730,Beauty,Fragrance,GreenLeaf,1520.00,1082.50,771,S0034,4.3,2024-01-14,1
+P00731,BookNest Outdoor Model 731,Sports,Outdoor, booknest ,59285.00,44841.34,470,S0048,4.5,2025-05-19,false
+P00732,Orbit Household Model 732,Grocery,Household,Orbit,1201.00,761.77,824,S0012,4.1,2023-06-29,0
+P00733,Pixel Beverages Model 733,Grocery,Beverages,Pixel,3205.00,1641.73,751,S0089,4.0,2023-09-04,1
+P00734,UrbanCo Organic Model 734,Grocery,Organic,UrbanCo,460.00,371.46,51,S0050,3.1,2022-12-08,N
+P00735,Swift Personal Care Model 735,Beauty,Personal Care,Swift,4558.00,3671.40,942,S0076,4.9,2025-12-24,N
+P00736,Pixel Kitchen Model 736,Home,Kitchen,Pixel,44641.00,25198.09,635,S0075,4.1,2021-11-28,No
+P00737,GlowCare Fiction Model 737,Books,Fiction,GlowCare,211.00,113.57,-5,S0069,3.8,2025-03-16,Y
+P00738,GlowCare Beverages Model 738,Grocery,Beverages,GlowCare,292.00,199.87,811,S0078,3.3,2022-04-17,1
+P00739,Apex Accessories Model 739,Electronics,Accessories,Apex,16332.00,9514.88,185,S0031,2.6,2025-04-02,N
+P00740,Apex Bags Model 740,Fashion,Bags,Apex,11692.00,5604.98,868,S0096,3.1,2025-01-19,N
+P00741,GlowCare Bedding Model 741,Home,Bedding,GlowCare,49998.00,33902.34,497,S0001,3.8,2022-12-21,1
+P00742,Orbit Appliances Model 742,Home,Appliances,Orbit,67249.00,35526.89,288,S0009,3.0,2021-10-13,Yes
+P00743,BookNest Personal Care Model 743,Beauty,Personal Care,BookNest,1538.00,947.72,186,S0100,4.5,2024-12-07,No
+P00744,BookNest Education Model 744,Books,Education,BookNest,1717.00,872.95,929,S0087,3.2,2024-04-07,Y
+P00745,Apex Business Model 745,Books,Business,Apex,4750.00,3459.72,614,S0044,4.8,2023-06-30,Yes
+P00746,Swift Staples Model 746,Grocery,Staples,Swift,2410.00,1967.37,636,S0014,3.7,2021-04-12,1
+P00747,GlowCare Accessories Model 747,Electronics,Accessories,GlowCare,-250.00,40707.10,211,S0027,3.8,2022-05-31,N
+P00748,GlowCare Technology Model 748,Books,Technology,GlowCare,1024.00,545.84,257,S0079,3.1,2021-08-24,No
+P00749,Pixel Laptops Model 749,Electronics,Laptops,Pixel,33044.00,26768.00,702,S0059,3.2,2023-08-10,true
+P00750,BookNest Beverages Model 750,Grocery,Beverages,BookNest,1871.00,1063.84,807,S0091,4.8,2021-09-14,true
+P00751,Swift Organic Model 751,Grocery,Organic,Swift,4410.00,3256.05,937,S0023,2.6,2025-07-12,N
+P00752,HomeCraft Cycling Model 752,Sports,Cycling,HomeCraft,12413.00,10100.96,772,S0083,3.7,2024-08-31,Yes
+P00753,Nova Laptops Model 753,Electronics,Laptops,Nova,52256.00,26195.05,23,S0068,4.2,2023-06-19,Yes
+P00754,GreenLeaf Outdoor Model 754,Sports,Outdoor,GreenLeaf,45016.00,22677.12,633,S0087,4.6,2021-03-04,Y
+P00755,BookNest Kitchen Model 755,Home,Kitchen,BookNest,11997.00,7220.22,518,S0061,4.4,2025-03-18,1
+P00756,Swift Team Sports Model 756,Sports,Team Sports,Swift,25502.00,15474.32,111,S0060,4.5,2023-07-16,N
+P00757,HomeCraft Bags Model 757,Fashion,Bags,HomeCraft,67805.00,45670.69,309,S0087,4.4,2021-12-30,0
+P00758,Nova Accessories Model 758,Electronics,Accessories,Nova,44717.00,34779.15,99,S0002,4.1,2022-02-17,1
+P00759,Swift Business Model 759,Books,Business,Swift,3366.00,2343.44,2,S0058,3.0,2025-10-13,N
+P00760,GreenLeaf Snacks Model 760,Grocery,Snacks,GreenLeaf,4813.00,3733.03,364,S0078,4.2,2025-07-23,true
+P00761,BookNest Snacks Model 761,Grocery,Snacks,BookNest,1328.00,698.50,193,S0003,3.7,2021-07-07,true
+P00762,Zenith Laptops Model 762,Electronics,Laptops,Zenith,66020.00,48740.79,739,S0087,3.6,2025-11-12,Yes
+P00763,Swift Snacks Model 763,Grocery,Snacks,Swift,3794.00,1718.62,many,S0029,4.2,2025-04-02,true
+P00764,Apex Personal Care Model 764,Beauty,Personal Care,Apex,4375.00,2349.53,927,S0047,2.9,2024-12-17,No
+P00765,GlowCare Mobiles Model 765,Electronics,Mobiles,GlowCare,9009.00,6628.50,200,S0047,4.9,2021-12-28,true
+P00766,Zenith Cycling Model 766,Sports,Cycling,Zenith,1553.00,1230.30,956,S0024,4.3,2025-02-16,1
+P00767,GreenLeaf Men Model 767,Fashion,Men,GreenLeaf,FREE,12868.55,994,S0081,4.5,2023-10-14,No
+P00768,Pixel Furniture Model 768,Home,Furniture,Pixel,50431.00,24005.38,643,S0097,4.0,2024-10-15,Y
+P00769,PrimeFit Household Model 769,Grocery,Household,PrimeFit,3493.00,2282.15,873,S0004,3.7,2024-05-14,No
+P00770,GreenLeaf Fitness Model 770,Sports,Fitness,GreenLeaf,61616.00,39632.78,652,S0076,4.9,2021-02-28,N
+P00771,PrimeFit Skin Care Model 771,Beauty,Skin Care,PrimeFit,1143.00,837.03,986,S0028,4.7,2024-08-02,Yes
+P00772,Swift Staples Model 772,Grocery,Staples,Swift,2260.00,1087.53,816,S0038,4.8,2025-08-16,Yes
+P00773,UrbanCo Organic Model 773,Grocery,Organic,UrbanCo,3982.00,2388.83,998,S0091,4.0,2025-05-10,Yes
+P00774,Apex Children Model 774,Books,Children, apex ,651.00,412.90,785,S0024,4.8,2022-08-16,Yes
+P00775,BookNest Audio Model 775,Electronics,Audio,BookNest,51300.00,27840.34,436,S0097,4.0,2024-07-25,N
+P00776,UrbanCo Furniture Model 776,Home,Furniture,UrbanCo,39346.00,19621.43,616,S0094,3.5,2021-07-28,Y
+P00777,Orbit Kitchen Model 777,Home,Kitchen,Orbit,67455.00,55241.11,723,S0081,4.9,2023-07-31,No
+P00778,UrbanCo Audio Model 778,Electronics,Audio,UrbanCo,76048.00,37605.90,986,S0013,2.6,2024-01-14,0
+P00779,BookNest Yoga Model 779,Sports,Yoga,BookNest,76912.00,35655.55,248,S0029,3.8,2025-03-07,No
+P00780,BookNest Household Model 780,Grocery,Household,BookNest,4403.00,3177.82,726,S0038,4.2,2025-03-20,Y
+P00781,Swift Mobiles Model 781,,Mobiles,Swift,18619.00,8435.64,695,S0070,3.7,2024-02-01,Yes
+P00782,Apex Watches Model 782,Fashion,Watches,Apex,11065.00,7518.15,527,S0096,5.0,2021-02-10,Yes
+P00783,Orbit Beverages Model 783,Grocery,Beverages,Orbit,1899.00,870.51,926,S0025,3.6,2023-12-04,Y
+P00784,Swift Yoga Model 784,Sports,Yoga,Swift,25017.00,12797.20,485,S0055,3.3,2023-07-20,No
+P00785,PrimeFit Women Model 785,Fashion,Women,PrimeFit,741.00,578.51,429,S0081,3.2,2022-01-05,Yes
+P00786,GreenLeaf Staples Model 786,Grocery,Staples,GreenLeaf,1827.00,1096.79,329,S0078,3.5,2022-05-10,N
+P00787,BookNest Hair Care Model 787,Beauty,Hair Care,BookNest,940.00,534.49,147,S0099,4.1,2025-12-07,Y
+P00788,Pixel Hair Care Model 788,Beauty,Hair Care,Pixel,159.00,121.50,434,S0058,3.9,2024-01-12,N
+P00789,Apex Hair Care Model 789,Beauty,Hair Care,Apex,3755.00,2482.47,178,S0006,4.8,2021-08-11,true
+P00790,HomeCraft Accessories Model 790,Electronics,Accessories,HomeCraft,18380.00,10214.87,509,S0024,4.0,2021-06-05,true
+P00791,Orbit Furniture Model 791,Home,Furniture,Orbit,10265.00,5562.41,761,S0064,3.1,2025-10-14,0
+P00792,Pixel Bags Model 792,Fashion,Bags,Pixel,77041.00,41735.73,555,S0046,4.9,2023-06-01,Yes
+P00793,GreenLeaf Accessories Model 793,Electronics,Accessories,GreenLeaf,38772.00,26540.51,289,S0052,3.3,2023-10-23,N
+P00794,GlowCare Laptops Model 794,Electronics,Laptops,GlowCare,53584.00,41455.76,569,S0094,3.1,2025-06-26,true
+P00795,GreenLeaf Makeup Model 795,Beauty,Makeup,GreenLeaf,4813.00,3491.27,638,S0025,3.2,2022-06-21,0
+P00796,GlowCare Personal Care Model 796,Beauty,Personal Care,GlowCare,4041.00,2217.62,194,S0058,4.4,2022-08-13,0
+P00797,GreenLeaf Business Model 797,Books,Business,GreenLeaf,212.00,140.29,495,S0060,3.7,2021-02-21,true
+P00798,GlowCare Organic Model 798,Grocery,Organic,GlowCare,3893.00,1942.61,863,S0036,4.3,2021-10-05,No
+P00799,BookNest Fitness Model 799,Sports,Fitness,BookNest,50857.00,24577.26,934,S0062,3.4,2024-06-14,1
+P00800,Apex Education Model 800,Books,Education,Apex,3914.00,2058.06,381,S0094,4.2,2021-08-31,true
+P00801,HomeCraft Business Model 801,Books,Business,HomeCraft,1089.00,861.29,569,S0082,2.8,2023-06-19,false
+P00802,HomeCraft Bags Model 802,Fashion,Bags,HomeCraft,58394.00,34627.57,417,S0100,3.7,2023-10-18,N
+P00803,Pixel Makeup Model 803,Beauty,Makeup,Pixel,2512.00,1445.76,914,S0036,2.9,2025-04-04,N
+P00804,Swift Cameras Model 804,Electronics,Cameras,Swift,245.00,125.25,-5,S0070,4.3,2023-04-18,Y
+P00805,BookNest Footwear Model 805,Fashion,Footwear,BookNest,11464.00,9270.82,172,S0045,4.2,2021-05-14,No
+P00806,Pixel Bedding Model 806,Home,Bedding,Pixel,21138.00,15241.52,628,S0011,3.5,2025-07-17,0
+P00807,Swift Personal Care Model 807,Beauty,Personal Care,Swift,2318.00,1205.55,835,S0085,4.4,2023-07-26,true
+P00808,Orbit Mobiles Model 808,Electronics,Mobiles,Orbit,33434.00,20594.34,833,S0095,6.5,2022-04-30,Yes
+P00809,BookNest Cameras Model 809,Electronics,Cameras,BookNest,7725.00,3490.31,525,S0018,4.3,2023-01-20,1
+P00810,UrbanCo Cycling Model 810,Sports,Cycling,UrbanCo,26953.00,20282.06,825,S0027,4.1,2025-09-22,Yes
+P00811,Nova Personal Care Model 811,Beauty,Personal Care,Nova,2347.00,1313.35,643,S0009,3.9,2021-11-03,true
+P00812,PrimeFit Kitchen Model 812,Home,Kitchen,PrimeFit,51064.00,40604.81,23,S0067,4.9,2024-04-30,No
+P00813,UrbanCo Women Model 813,Fashion,Women,UrbanCo,54969.00,43717.43,472,S0022,4.3,2022-04-11,N
+P00814,GlowCare Makeup Model 814,Beauty,Makeup,GlowCare,2809.00,1658.25,744,S0045,2.8,2025-05-20,Y
+P00815,HomeCraft Kitchen Model 815,Home,Kitchen,HomeCraft,22414.00,15769.17,144,S0022,3.1,2022-02-22,1
+P00816,BookNest Mobiles Model 816,Electronics,Mobiles,BookNest,1016.00,523.33,705,S0075,3.8,2022-08-28,Y
+P00817,Swift Skin Care Model 817,Beauty,Skin Care, swift ,741.00,572.94,493,S0019,4.8,2024-07-06,N
+P00818,PrimeFit Yoga Model 818,Sports,Yoga,PrimeFit,41966.00,21891.06,421,S0032,4.7,2025-04-24,N
+P00819,HomeCraft Men Model 819,Fashion,Men,HomeCraft,73439.00,58028.66,519,S0012,2.9,2021-04-03,Y
+P00820,Apex Cameras Model 820,Electronics,Cameras,Apex,38767.00,24205.39,181,S0081,3.3,2022-08-08,N
+P00821,GlowCare Household Model 821,Grocery,Household,GlowCare,301.00,185.53,890,S0046,4.2,2024-06-27,N
+P00822,PrimeFit Beverages Model 822,Grocery,Beverages,PrimeFit,534.00,640.80,672,S0081,4.2,2023-02-14,No
+P00823,GlowCare Snacks Model 823,Grocery,Snacks,GlowCare,4454.00,2987.39,998,S0026,3.4,2025-07-16,N
+P00824,Apex Kitchen Model 824,Home,Kitchen,Apex,44892.00,21305.80,996,S0054,4.3,2022-11-27,Y
+P00825,Swift Laptops Model 825,Electronics,Laptops,Swift,21677.00,16004.65,952,S0085,3.5,2021-12-23,Yes
+P00826,GreenLeaf Makeup Model 826,Beauty,Makeup,GreenLeaf,FREE,2932.24,888,S0099,4.3,2025-01-08,true
+P00827,HomeCraft Skin Care Model 827,Beauty,Skin Care,HomeCraft,2097.00,958.20,953,S0084,3.1,2021-03-17,N
+P00828,PrimeFit Makeup Model 828,Beauty,Makeup,PrimeFit,4143.00,2685.45,745,S0036,3.1,2022-06-05,Y
+P00829,HomeCraft Technology Model 829,Books,Technology,HomeCraft,1171.00,708.64,473,S0060,3.0,2023-02-20,true
+P00830,GlowCare Organic Model 830,Grocery,Organic,GlowCare,-250.00,2129.81,679,S0026,2.7,2022-04-01,Yes
+P00831,PrimeFit Fragrance Model 831,Beauty,Fragrance,PrimeFit,162.00,131.41,604,S0003,4.7,2021-01-25,Y
+P00832,Apex Education Model 832,Books,Education,Apex,3380.00,2584.83,873,S0001,2.8,2025-05-26,true
+P00833,Nova Business Model 833,Books,Business,Nova,447.00,339.72,614,S0065,4.9,2025-08-03,No
+P00834,Pixel Audio Model 834,Electronics,Audio,Pixel,17760.00,13173.73,266,S0081,3.0,2021-08-12,N
+P00835,UrbanCo Business Model 835,Books,Business,UrbanCo,1662.00,840.42,776,S0005,4.7,2021-12-27,No
+P00836,Swift Snacks Model 836,Grocery,Snacks,Swift,1875.00,900.40,762,S0007,4.5,2021-02-20,1
+P00837,BookNest Yoga Model 837,Sports,Yoga,BookNest,4464.00,3093.25,302,S0027,4.4,2025-11-21,1
+P00838,PrimeFit Footwear Model 838,Fashion,Footwear,PrimeFit,41747.00,30940.73,894,S0049,3.1,2021-04-30,Y
+P00839,UrbanCo Education Model 839,Books,Education,UrbanCo,2505.00,2052.58,566,S0043,4.3,2024-10-12,1
+P00840,PrimeFit Audio Model 840,Electronics,Audio,PrimeFit,64540.00,52524.49,849,S0100,2.6,2022-09-01,0
+P00841,Pixel Cycling Model 841,Sports,Cycling,Pixel,29419.00,19398.14,371,S0078,4.1,2023-12-04,1
+P00842,UrbanCo Cameras Model 842,Electronics,Cameras,UrbanCo,6902.00,5078.90,497,S0031,2.8,2023-01-20,false
+P00843,Swift Cycling Model 843,Sports,Cycling,Swift,45904.00,25013.75,460,S0016,3.7,2024-04-28,0
+BADP844,Pixel Watches Model 844,Fashion,Watches,Pixel,12122.00,7565.96,357,S0083,3.1,2025-03-28,N
+P00845,PrimeFit Decor Model 845,Home,Decor,PrimeFit,21748.00,10915.28,152,S0065,2.9,2022-06-11,false
+P00846,Orbit Personal Care Model 846,Beauty,Personal Care,Orbit,2945.00,2277.08,634,S0048,4.8,2022-06-22,false
+P00847,Pixel Cameras Model 847,Electronics,Cameras,Pixel,68092.00,35638.54,115,S0001,4.1,2023-09-06,true
+P00848,PrimeFit Fitness Model 848,Sports,Fitness,PrimeFit,39525.00,31393.70,830,S0052,4.4,2022-02-12,1
+P00849,BookNest Accessories Model 849,Electronics,Accessories,BookNest,26964.00,17577.16,15,S0040,3.0,2021-03-21,false
+P00850,Orbit Team Sports Model 850,Sports,Team Sports,Orbit,11541.00,9002.48,903,S0050,3.8,2025-07-14,0
+P00851,Zenith Accessories Model 851,Electronics,Accessories,Zenith,701.00,500.93,805,S0045,4.5,2023-07-08,true
+P00852,BookNest Fiction Model 852,,Fiction,BookNest,4693.00,2119.52,837,S0034,4.7,2022-11-17,0
+P00853,Swift Business Model 853,Books,Business,Swift,2320.00,1311.88,561,S0044,2.6,2025-05-26,Yes
+P00854,Zenith Beverages Model 854,Grocery,Beverages,Zenith,390.00,186.11,274,S0039,2.8,2024-01-05,false
+P00855,Nova Organic Model 855,Grocery,Organic,Nova,548.00,395.05,793,S0021,4.8,2025-07-17,No
+P00856,Zenith Decor Model 856,Home,Decor,Zenith,25027.00,19021.07,344,S0049,4.3,2021-12-10,true
+P00857,Apex Cycling Model 857,Sports,Cycling,Apex,26744.00,19506.64,715,S0073,2.7,2023-10-06,No
+P00858,Nova Bags Model 858,Fashion,Bags,Nova,41416.00,19163.31,137,S0098,3.4,2023-08-26,Y
+P00859,BookNest Education Model 859,Books,Education,BookNest,3456.00,2545.00,419,S0087,2.7,2023-11-22,1
+P00860,UrbanCo Education Model 860,Books,Education, urbanco ,76.00,51.47,66,S0034,3.3,2023-01-16,0
+P00861,BookNest Mobiles Model 861,Electronics,Mobiles,BookNest,37259.00,18422.24,383,S0067,4.0,2023-04-29,false
+P00862,Orbit Fragrance Model 862,Beauty,Fragrance,Orbit,662.00,412.98,763,S0100,3.5,2024-12-12,true
+P00863,Nova Laptops Model 863,Electronics,Laptops,Nova,65708.00,49677.56,931,S0035,3.5,2021-02-10,0
+P00864,BookNest Outdoor Model 864,Sports,Outdoor,BookNest,3826.00,2264.95,931,S0088,3.2,2023-06-14,Y
+P00865,GlowCare Organic Model 865,Grocery,Organic,GlowCare,3632.00,2087.03,653,S0067,4.0,2021-01-13,Yes
+P00866,Swift Men Model 866,Fashion,Men,Swift,20978.00,17201.58,57,S0077,2.8,2022-10-06,true
+P00867,Pixel Accessories Model 867,Electronics,Accessories,Pixel,26587.00,12113.30,452,S0090,3.3,2021-02-04,Yes
+P00868,BookNest Children Model 868,Books,Children,BookNest,2968.00,1468.00,379,S0062,3.6,2021-03-17,true
+P00869,Pixel Kitchen Model 869,Home,Kitchen,Pixel,6974.00,3891.65,184,S0090,4.8,2022-03-24,Yes
+P00870,Swift Team Sports Model 870,Sports,Team Sports,Swift,47858.00,27470.10,44,S0020,4.6,2023-03-19,1
+P00871,Apex Household Model 871,Grocery,Household,Apex,3162.00,1828.72,-5,S0015,3.8,2023-12-07,true
+P00872,Swift Laptops Model 872,Electronics,Laptops,Swift,70620.00,41468.63,many,S0025,4.2,2024-08-12,true
+P00873,Orbit Cycling Model 873,Sports,Cycling,Orbit,29417.00,20107.93,131,S0017,3.4,2023-08-09,No
+P00874,UrbanCo Yoga Model 874,Sports,Yoga,UrbanCo,16360.00,12778.37,664,S0078,3.6,2024-12-18,No
+P00875,BookNest Children Model 875,Books,Children,BookNest,1677.00,1276.96,970,S0030,4.9,2022-01-18,N
+P00876,GreenLeaf Beverages Model 876,Grocery,Beverages,GreenLeaf,2474.00,1412.00,383,S0098,2.8,2025-09-19,true
+P00877,Nova Watches Model 877,Fashion,Watches,Nova,10439.00,5698.41,348,S0016,4.4,2022-02-04,0
+P00878,GlowCare Yoga Model 878,Sports,Yoga,GlowCare,67677.00,50830.95,440,S0059,3.5,2024-03-23,Y
+P00879,HomeCraft Snacks Model 879,Grocery,Snacks,HomeCraft,4460.00,2274.38,748,S0086,2.9,2025-09-26,Yes
+P00880,Zenith Accessories Model 880,Electronics,Accessories,Zenith,75401.00,55860.79,699,S0031,3.6,2024-10-26,1
+P00881,Zenith Technology Model 881,Books,Technology,Zenith,3859.00,2939.37,902,S0018,3.5,2023-01-12,0
+P00882,HomeCraft Bedding Model 882,Home,Bedding,HomeCraft,71016.00,50358.00,595,S0005,4.0,2025-06-17,0
+P00883,Zenith Fitness Model 883,Sports,Fitness,Zenith,64348.00,50577.88,209,S0069,2.7,2024-01-06,Y
+P00884,Pixel Appliances Model 884,Home,Appliances,Pixel,31978.00,25685.50,856,S0002,4.5,2025-04-09,1
+P00885,Orbit Beverages Model 885,Grocery,Beverages,Orbit,FREE,2734.78,696,S0044,3.4,2024-03-15,true
+P00886,PrimeFit Outdoor Model 886,Sports,Outdoor,PrimeFit,28140.00,14105.79,437,S0065,4.3,2021-08-31,Y
+P00887,UrbanCo Women Model 887,Fashion,Women,UrbanCo,36193.00,23893.49,764,S0055,2.8,2023-11-23,Yes
+P00888,Swift Laptops Model 888,Electronics,Laptops,Swift,2826.00,2231.35,748,S0027,4.2,2022-06-10,N
+P00889,HomeCraft Laptops Model 889,Electronics,Laptops,HomeCraft,77662.00,56855.99,843,S0098,4.9,2021-09-19,1
+P00890,Pixel Women Model 890,Fashion,Women,Pixel,72718.00,35577.98,448,S0082,2.9,2025-12-20,No
+P00891,Orbit Fragrance Model 891,Beauty,Fragrance,Orbit,1022.00,766.77,900,S0040,4.6,2024-09-28,No
+P00892,UrbanCo Staples Model 892,Grocery,Staples,UrbanCo,4079.00,2911.39,835,S0082,2.7,2024-01-08,true
+P00893,Pixel Hair Care Model 893,Beauty,Hair Care,Pixel,2079.00,1659.44,270,S0066,3.3,2024-09-21,No
+P00894,Nova Fitness Model 894,Sports,Fitness,Nova,44431.00,24449.00,126,S0028,4.8,2025-02-10,Y
+P00895,Nova Team Sports Model 895,Sports,Team Sports,Nova,41300.00,24376.79,405,S0089,4.4,2023-06-13,Y
+P00896,Apex Education Model 896,Books,Education,Apex,4881.00,3308.31,731,S0071,3.3,2024-02-01,No
+P00897,BookNest Mobiles Model 897,Electronics,Mobiles,BookNest,44065.00,21183.27,777,S0004,2.8,2024-07-06,No
+P00898,UrbanCo Cameras Model 898,Electronics,Cameras,UrbanCo,25975.00,17708.31,742,S0037,4.0,2024-06-10,N
+P00899,Zenith Education Model 899,Books,Education,Zenith,1029.00,542.24,427,S0010,3.2,2022-07-28,N
+P00900,Nova Education Model 900,Books,Education,Nova,2139.00,1456.88,573,S0076,4.5,2021-11-20,Yes
+P00901,GlowCare Team Sports Model 901,Sports,Team Sports,GlowCare,17668.00,8619.71,656,S0038,2.8,2021-07-18,Y
+P00902,Zenith Business Model 902,Books,Business,Zenith,2590.00,1473.36,596,S0048,3.6,2022-07-05,Y
+P00903,Swift Beverages Model 903,Grocery,Beverages, swift ,4651.00,2840.67,351,S0004,3.5,2021-12-16,No
+P00904,Zenith Team Sports Model 904,Sports,Team Sports,Zenith,63452.00,49721.09,714,S0049,3.3,2025-09-13,Yes
+P00905,BookNest Cycling Model 905,Sports,Cycling,BookNest,59446.00,41767.42,362,S0014,4.9,2023-09-15,N
+P00906,Zenith Watches Model 906,Fashion,Watches,Zenith,35252.00,25789.55,799,S0061,3.2,2022-02-20,true
+P00907,HomeCraft Cameras Model 907,Electronics,Cameras,HomeCraft,22380.00,10788.95,821,S0031,4.5,2024-03-10,Yes
+P00908,BookNest Organic Model 908,Grocery,Organic,BookNest,2194.00,1176.98,276,S0017,2.9,2023-09-29,No
+P00909,HomeCraft Personal Care Model 909,Beauty,Personal Care,HomeCraft,2197.00,1583.69,724,S0099,6.5,2021-03-06,0
+P00910,GlowCare Fitness Model 910,Sports,Fitness,GlowCare,50635.00,28979.02,504,S0020,3.2,2024-09-23,No
+P00911,BookNest Education Model 911,Books,Education,BookNest,999.00,733.25,283,S0003,3.3,2021-09-26,No
+P00912,Swift Yoga Model 912,Sports,Yoga,Swift,44602.00,32165.81,204,S0088,3.8,2022-11-30,Yes
+P00913,Apex Bags Model 913,Fashion,Bags,Apex,-250.00,32148.57,592,S0007,3.2,2024-05-07,N
+P00914,Orbit Outdoor Model 914,Sports,Outdoor,Orbit,71819.00,49660.30,50,S0051,3.8,2025-06-30,Yes
+P00915,Nova Outdoor Model 915,Sports,Outdoor,Nova,51679.00,40779.63,433,S0062,3.7,2022-08-18,Y
+P00916,PrimeFit Furniture Model 916,Home,Furniture,PrimeFit,51086.00,36323.73,106,S0070,4.5,2025-10-07,Y
+P00917,Apex Audio Model 917,Electronics,Audio,Apex,36204.00,19035.06,680,S0015,3.4,2024-05-23,N
+P00918,Zenith Men Model 918,Fashion,Men,Zenith,66568.00,48670.08,375,S0041,4.1,2023-07-07,Yes
+P00919,Pixel Cameras Model 919,Electronics,Cameras,Pixel,10416.00,6205.14,360,S0069,5.0,2022-02-19,false
+P00920,UrbanCo Yoga Model 920,Sports,Yoga,UrbanCo,45668.00,34102.09,482,S0050,2.6,2024-03-30,false
+P00921,Apex Beverages Model 921,Grocery,Beverages,Apex,2856.00,2098.39,185,S0009,3.8,2023-02-23,false
+P00922,GlowCare Footwear Model 922,Fashion,Footwear,GlowCare,36574.00,19946.48,335,S0035,3.0,2023-09-29,No
+P00923,Nova Skin Care Model 923,,Skin Care,Nova,3229.00,1549.57,308,S0070,2.7,2023-07-21,true
+P00924,PrimeFit Accessories Model 924,Electronics,Accessories,PrimeFit,28733.00,21828.64,850,S0097,3.6,2022-08-28,1
+P00925,GlowCare Technology Model 925,Books,Technology,GlowCare,330.00,250.41,770,S0087,4.1,2021-05-26,0
+P00926,Apex Fitness Model 926,Sports,Fitness,Apex,34651.00,19251.83,552,S0065,4.6,2023-01-06,Yes
+P00927,Zenith Mobiles Model 927,Electronics,Mobiles,Zenith,7597.00,4751.05,111,S0027,4.2,2025-05-10,No
+P00928,Zenith Household Model 928,Grocery,Household,Zenith,1178.00,821.50,374,S0015,2.7,2025-10-11,Yes
+P00929,BookNest Women Model 929,Fashion,Women,BookNest,30928.00,18130.59,832,S0069,4.5,2021-02-08,0
+P00930,GreenLeaf Personal Care Model 930,Beauty,Personal Care,GreenLeaf,4137.00,2376.67,29,S0082,2.8,2025-03-26,1
+P00931,UrbanCo Cameras Model 931,Electronics,Cameras,UrbanCo,35816.00,25457.59,759,S0100,4.5,2021-05-02,false
+P00932,PrimeFit Team Sports Model 932,Sports,Team Sports,PrimeFit,68435.00,34129.93,462,S0091,3.2,2021-12-04,Yes
+P00933,GlowCare Beverages Model 933,Grocery,Beverages,GlowCare,2751.00,1460.12,317,S0006,4.2,2024-09-15,true
+P00934,GlowCare Education Model 934,Books,Education,GlowCare,2357.00,1420.09,677,S0093,2.6,2024-11-29,Yes
+P00935,HomeCraft Mobiles Model 935,Electronics,Mobiles,HomeCraft,75174.00,40149.85,697,S0004,5.0,2021-09-16,Y
+P00936,UrbanCo Decor Model 936,Home,Decor,UrbanCo,68233.00,40966.87,555,S0094,4.5,2024-07-10,No
+P00937,Apex Outdoor Model 937,Sports,Outdoor,Apex,8879.00,6119.32,862,S0051,2.8,2025-07-18,1
+P00938,GreenLeaf Personal Care Model 938,Beauty,Personal Care,GreenLeaf,694.00,357.15,-5,S0051,4.0,2021-11-27,Y
+P00939,BookNest Makeup Model 939,Beauty,Makeup,BookNest,4527.00,3598.03,427,S0099,3.9,2021-05-31,0
+P00940,Nova Yoga Model 940,Sports,Yoga,Nova,38918.00,29558.37,147,S0015,2.6,2021-05-22,0
+P00941,Zenith Staples Model 941,Grocery,Staples,Zenith,2436.00,1752.13,95,S0085,4.4,2025-07-03,N
+P00942,BookNest Decor Model 942,Home,Decor,BookNest,68816.00,41021.22,900,S0093,4.0,2022-06-08,0
+P00943,Zenith Snacks Model 943,Grocery,Snacks,Zenith,4787.00,2660.69,584,S0025,4.8,2022-09-30,true
+P00944,BookNest Fitness Model 944,Sports,Fitness,BookNest,FREE,53242.03,880,S0045,3.3,2024-02-28,Y
+P00945,Nova Appliances Model 945,Home,Appliances,Nova,3635.00,2351.83,185,S0087,2.9,2025-03-22,true
+P00946,GreenLeaf Household Model 946,Grocery,Household, greenleaf ,3095.00,1435.82,286,S0087,4.7,2025-06-04,0
+P00947,GlowCare Laptops Model 947,Electronics,Laptops,GlowCare,16613.00,7996.43,117,S0013,3.8,2023-11-07,Y
+P00948,GreenLeaf Organic Model 948,Grocery,Organic,GreenLeaf,1072.00,562.87,954,S0032,3.3,2024-11-10,Y
+P00949,Orbit Cycling Model 949,Sports,Cycling,Orbit,49890.00,23782.94,739,S0069,3.9,2021-10-08,No
+P00950,HomeCraft Skin Care Model 950,Beauty,Skin Care,HomeCraft,808.00,619.13,859,S0045,3.2,2024-07-20,N
+P00951,UrbanCo Audio Model 951,Electronics,Audio,UrbanCo,38296.00,25602.21,42,S0021,3.3,2024-07-29,1
+P00952,PrimeFit Organic Model 952,Grocery,Organic,PrimeFit,3917.00,2088.36,182,S0037,4.3,2025-04-14,true
+P00953,GlowCare Snacks Model 953,Grocery,Snacks,GlowCare,1790.00,1343.98,105,S0086,3.4,2021-11-10,false
+P00954,BookNest Skin Care Model 954,Beauty,Skin Care,BookNest,326.00,230.15,3,S0098,4.1,2025-08-10,true
+P00955,GlowCare Yoga Model 955,Sports,Yoga,GlowCare,52913.00,42864.96,508,S0015,4.7,2022-08-31,0
+P00956,UrbanCo Yoga Model 956,Sports,Yoga,UrbanCo,21805.00,10995.80,388,S0043,4.8,2024-10-04,0
+P00957,BookNest Hair Care Model 957,Beauty,Hair Care,BookNest,1018.00,743.81,345,S0020,4.8,2022-07-31,0
+P00958,Zenith Hair Care Model 958,Beauty,Hair Care,Zenith,1676.00,917.50,802,S0086,4.6,2025-03-05,1
+P00959,UrbanCo Makeup Model 959,Beauty,Makeup,UrbanCo,3332.00,3998.40,382,S0015,3.0,2022-09-04,0
+P00960,Swift Fragrance Model 960,Beauty,Fragrance,Swift,1865.00,1397.72,719,S0056,3.7,2025-10-08,N
+P00961,Nova Cameras Model 961,Electronics,Cameras,Nova,46845.00,29717.92,978,S0021,4.8,2021-08-24,N
+P00962,UrbanCo Appliances Model 962,Home,Appliances,UrbanCo,9249.00,6167.59,484,S0013,4.0,2024-06-12,Yes
+P00963,Pixel Children Model 963,Books,Children,Pixel,4388.00,1996.23,152,S0020,2.9,2024-05-28,N
+P00964,Zenith Laptops Model 964,Electronics,Laptops,Zenith,33105.00,22857.22,283,S0010,3.9,2025-06-14,0
+P00965,GreenLeaf Decor Model 965,Home,Decor,GreenLeaf,6535.00,3834.08,325,S0080,3.5,2021-04-10,Y
+P00966,Swift Personal Care Model 966,Beauty,Personal Care,Swift,417.00,249.51,859,S0081,2.6,2025-04-20,Y
+P00967,HomeCraft Mobiles Model 967,Electronics,Mobiles,HomeCraft,49677.00,40021.84,131,S0015,4.5,2025-04-25,0
+P00968,UrbanCo Education Model 968,Books,Education,UrbanCo,1785.00,971.29,240,S0066,2.6,2023-07-07,Y
+P00969,BookNest Business Model 969,Books,Business,BookNest,4194.00,3018.52,654,S0089,3.5,2023-02-18,true
+P00970,Swift Organic Model 970,Grocery,Organic,Swift,929.00,761.51,110,S0060,4.1,2023-01-01,No
+P00971,Zenith Bedding Model 971,Home,Bedding,Zenith,55825.00,37636.34,847,S0097,4.7,2024-01-31,N
+P00972,GreenLeaf Appliances Model 972,Home,Appliances,GreenLeaf,15160.00,9055.71,468,S0027,3.4,2024-03-01,N
+P00973,GlowCare Appliances Model 973,Home,Appliances,GlowCare,47774.00,22643.82,82,S0071,2.7,2022-11-02,1
+P00974,Orbit Personal Care Model 974,Beauty,Personal Care,Orbit,3545.00,2591.28,275,S0009,4.2,2021-09-27,Yes
+P00975,PrimeFit Cycling Model 975,Sports,Cycling,PrimeFit,34584.00,26619.96,763,S0061,4.3,2021-05-27,0
+P00976,UrbanCo Snacks Model 976,Grocery,Snacks,UrbanCo,130.00,90.06,633,S0082,4.2,2022-05-25,0
+P00977,UrbanCo Business Model 977,Books,Business,UrbanCo,1402.00,794.05,408,S0013,4.5,2022-09-06,N
+P00978,Orbit Fitness Model 978,Sports,Fitness,Orbit,61169.00,44782.15,719,S0047,3.3,2021-04-28,No
+P00979,Nova Makeup Model 979,Beauty,Makeup,Nova,203.00,128.39,875,S0011,3.2,2021-07-27,1
+P00980,UrbanCo Staples Model 980,Grocery,Staples,UrbanCo,2970.00,1734.89,503,S0072,4.7,2025-10-08,No
+P00981,Zenith Furniture Model 981,Home,Furniture,Zenith,60434.00,34088.82,many,S0090,4.7,2024-08-07,N
+P00982,HomeCraft Snacks Model 982,Grocery,Snacks,HomeCraft,801.00,456.80,766,S0002,3.1,2023-10-25,0
+P00983,GlowCare Outdoor Model 983,Sports,Outdoor,GlowCare,4954.00,3423.64,373,S0086,4.3,2025-06-21,Yes
+P00984,Zenith Laptops Model 984,Electronics,Laptops,Zenith,77444.00,60770.81,854,S0083,4.2,2022-07-13,N
+P00985,UrbanCo Personal Care Model 985,Beauty,Personal Care,UrbanCo,3066.00,2258.62,411,S0045,4.9,2025-04-26,true
+P00986,Apex Organic Model 986,Grocery,Organic,Apex,2958.00,2391.89,550,S0072,2.7,2024-03-17,false
+P00987,Pixel Fragrance Model 987,Beauty,Fragrance,Pixel,1526.00,1044.92,640,S0012,4.9,2022-11-03,true
+P00988,PrimeFit Technology Model 988,Books,Technology,PrimeFit,3957.00,1877.01,31,S0066,4.7,2025-09-19,false
+P00989,PrimeFit Audio Model 989,Electronics,Audio, primefit ,57534.00,45527.13,894,S0024,4.4,2021-02-22,false
+P00990,UrbanCo Business Model 990,Books,Business,UrbanCo,4113.00,2207.81,189,S0039,4.0,2021-06-30,No
+P00991,GlowCare Outdoor Model 991,Sports,Outdoor,GlowCare,24514.00,11390.56,181,S0035,3.3,2021-01-25,0
+P00992,BookNest Beverages Model 992,Grocery,Beverages,BookNest,1510.00,1027.85,69,S0070,3.5,2025-07-22,false
+P00993,Apex Women Model 993,Fashion,Women,Apex,12007.00,9493.70,462,S0080,2.8,2025-08-30,N
+P00994,PrimeFit Footwear Model 994,,Footwear,PrimeFit,8912.00,4695.49,107,S0017,4.8,2021-02-15,1
+P00995,PrimeFit Organic Model 995,Grocery,Organic,PrimeFit,4692.00,3451.84,876,S0056,4.9,2023-07-20,Yes
+P00996,Orbit Beverages Model 996,Grocery,Beverages,Orbit,-250.00,2769.05,41,S0005,4.2,2021-01-05,true
+P00997,GlowCare Women Model 997,Fashion,Women,GlowCare,5186.00,3606.96,510,S0046,3.7,2022-04-03,false
+P00998,UrbanCo Personal Care Model 998,Beauty,Personal Care,UrbanCo,969.00,587.65,191,S0097,4.6,2022-09-27,N
+P00999,Nova Outdoor Model 999,Sports,Outdoor,Nova,24750.00,19979.28,443,S0098,4.4,2024-12-21,1
+P01000,HomeCraft Beverages Model 1000,Grocery,Beverages,HomeCraft,1397.00,748.54,283,S0022,3.3,2021-01-31,Y
+P01001,UrbanCo Yoga Model 1001,Sports,Yoga,UrbanCo,50462.00,23391.05,136,S0010,3.8,2025-03-06,0
+P01002,Zenith Makeup Model 1002,Beauty,Makeup,Zenith,549.00,420.64,342,S0026,2.6,2023-10-13,N
+P01003,HomeCraft Organic Model 1003,Grocery,Organic,HomeCraft,FREE,2545.67,291,S0014,4.9,2022-10-01,true
+P01004,GlowCare Outdoor Model 1004,Sports,Outdoor,GlowCare,68011.00,33834.46,191,S0077,2.6,2023-06-08,No
+P01005,Swift Footwear Model 1005,Fashion,Footwear,Swift,44294.00,20667.05,-5,S0073,2.6,2025-01-01,Y
+P01006,GlowCare Fiction Model 1006,Books,Fiction,GlowCare,4766.00,2831.11,797,S0027,4.0,2023-06-07,Y
+P01007,Zenith Laptops Model 1007,Electronics,Laptops,Zenith,53838.00,43388.55,188,S0041,3.7,2025-08-09,N
+P01008,PrimeFit Accessories Model 1008,Electronics,Accessories,PrimeFit,7461.00,4807.44,628,S0071,3.2,2023-12-23,Y
+P01009,BookNest Household Model 1009,Grocery,Household,BookNest,4670.00,3045.44,566,S0032,2.7,2021-10-05,true
+P01010,Pixel Hair Care Model 1010,Beauty,Hair Care,Pixel,2468.00,1656.13,137,S0045,6.5,2024-07-06,No
+P01011,Pixel Footwear Model 1011,Fashion,Footwear,Pixel,43703.00,23746.78,977,S0091,5.0,2023-07-05,1
+P01012,Swift Audio Model 1012,Electronics,Audio,Swift,15291.00,9359.46,632,S0097,3.8,2022-09-11,true
+P01013,HomeCraft Men Model 1013,Fashion,Men,HomeCraft,61687.00,34637.43,286,S0085,2.7,2022-07-14,true
+P01014,Zenith Staples Model 1014,Grocery,Staples,Zenith,3292.00,1500.83,155,S0094,4.6,2022-09-01,N
+P01015,HomeCraft Team Sports Model 1015,Sports,Team Sports,HomeCraft,58330.00,35125.70,601,S0082,2.7,2021-01-12,No
+P01016,Apex Beverages Model 1016,Grocery,Beverages,Apex,825.00,669.41,543,S0071,4.2,2025-03-24,Yes
+P01017,GlowCare Cycling Model 1017,Sports,Cycling,GlowCare,27514.00,12635.95,757,S0025,4.0,2022-05-07,false
+P01018,GreenLeaf Audio Model 1018,Electronics,Audio,GreenLeaf,35038.00,21784.04,690,S0098,3.2,2021-10-05,false
+P01019,Orbit Personal Care Model 1019,Beauty,Personal Care,Orbit,2143.00,1334.98,332,S0079,5.0,2023-03-27,1
+P01020,Pixel Fragrance Model 1020,Beauty,Fragrance,Pixel,4232.00,1976.06,941,S0067,3.9,2022-11-08,Yes
+P01021,Nova Bags Model 1021,Fashion,Bags,Nova,7191.00,5492.36,124,S0066,3.3,2023-06-07,Yes
+P01022,Orbit Bags Model 1022,Fashion,Bags,Orbit,72237.00,48727.64,630,S0041,3.0,2021-10-03,0
+P01023,Orbit Organic Model 1023,Grocery,Organic,Orbit,1464.00,971.00,4,S0021,2.9,2022-04-19,1
+P01024,Orbit Accessories Model 1024,Electronics,Accessories,Orbit,59425.00,41690.67,44,S0002,3.6,2024-09-18,Y
+P01025,Nova Mobiles Model 1025,Electronics,Mobiles,Nova,22703.00,17986.66,621,S0071,3.0,2025-07-15,1
+P01026,Zenith Snacks Model 1026,Grocery,Snacks,Zenith,1477.00,1125.30,565,S0052,4.4,2024-07-03,Yes
+P01027,Nova Team Sports Model 1027,Sports,Team Sports,Nova,14489.00,10825.94,454,S0001,4.7,2022-04-14,true
+P01028,Swift Hair Care Model 1028,Beauty,Hair Care,Swift,4718.00,3186.78,92,S0031,2.6,2021-12-10,Yes
+P01029,Orbit Team Sports Model 1029,Sports,Team Sports,Orbit,60241.00,46004.71,160,S0004,4.9,2022-02-27,N
+P01030,PrimeFit Appliances Model 1030,Home,Appliances,PrimeFit,70862.00,36038.00,635,S0019,3.5,2023-11-12,No
+P01031,Pixel Appliances Model 1031,Home,Appliances,Pixel,16337.00,11219.02,187,S0010,4.7,2021-04-09,true
+P01032,Nova Fitness Model 1032,Sports,Fitness, nova ,65689.00,52080.33,629,S0040,3.6,2021-11-09,No
+P01033,HomeCraft Kitchen Model 1033,Home,Kitchen,HomeCraft,3124.00,2220.73,482,S0012,3.2,2024-03-15,Yes
+P01034,GreenLeaf Fitness Model 1034,Sports,Fitness,GreenLeaf,42953.00,29054.12,480,S0035,3.2,2022-07-01,true
+P01035,Pixel Technology Model 1035,Books,Technology,Pixel,4384.00,1994.84,408,S0027,3.8,2021-06-02,No
+P01036,Zenith Appliances Model 1036,Home,Appliances,Zenith,53560.00,27534.41,272,S0070,4.8,2022-12-16,1
+P01037,Swift Education Model 1037,Books,Education,Swift,325.00,233.24,104,S0047,4.8,2022-09-18,No
+P01038,Swift Watches Model 1038,Fashion,Watches,Swift,7015.00,3676.99,976,S0050,2.6,2022-07-14,1
+P01039,PrimeFit Children Model 1039,Books,Children,PrimeFit,2881.00,1509.18,209,S0070,4.2,2024-09-02,N
+P01040,PrimeFit Hair Care Model 1040,Beauty,Hair Care,PrimeFit,4747.00,3890.89,732,S0056,4.5,2025-10-06,No
+P01041,PrimeFit Cameras Model 1041,Electronics,Cameras,PrimeFit,49292.00,33426.66,133,S0025,3.5,2021-04-29,No
+P01042,Orbit Cameras Model 1042,Electronics,Cameras,Orbit,75186.00,50203.65,635,S0065,3.3,2022-04-19,N
+P01043,PrimeFit Women Model 1043,Fashion,Women,PrimeFit,42861.00,34149.24,801,S0070,4.0,2022-02-20,1
+P01044,Apex Furniture Model 1044,Home,Furniture,Apex,1844.00,1265.56,598,S0025,2.9,2022-04-07,true
+P01045,HomeCraft Technology Model 1045,Books,Technology,HomeCraft,1635.00,796.98,548,S0076,3.2,2021-04-16,0
+P01046,Apex Hair Care Model 1046,Beauty,Hair Care,Apex,3710.00,2873.64,178,S0061,2.8,2021-12-02,true
+P01047,PrimeFit Business Model 1047,Books,Business,PrimeFit,2316.00,1869.84,629,S0014,3.6,2025-10-11,0
+P01048,UrbanCo Laptops Model 1048,Electronics,Laptops,UrbanCo,44851.00,36114.60,21,S0077,4.6,2021-06-08,0
+P01049,HomeCraft Audio Model 1049,Electronics,Audio,HomeCraft,553.00,278.96,957,S0042,3.7,2022-12-20,true
+P01050,Zenith Cameras Model 1050,Electronics,Cameras,Zenith,8132.00,5110.91,83,S0077,4.4,2023-12-12,Y
+P01051,Zenith Decor Model 1051,Home,Decor,Zenith,13899.00,9691.24,754,S0065,3.2,2022-07-23,Yes
+P01052,HomeCraft Hair Care Model 1052,Beauty,Hair Care,HomeCraft,247.00,172.30,730,S0037,4.1,2022-04-04,1
+P01053,Zenith Bedding Model 1053,Home,Bedding,Zenith,75308.00,57833.25,297,S0058,3.5,2022-09-16,false
+P01054,Orbit Education Model 1054,Books,Education,Orbit,3543.00,2554.23,443,S0015,4.7,2024-11-04,Yes
+BADP1055,UrbanCo Snacks Model 1055,Grocery,Snacks,UrbanCo,4237.00,3065.82,834,S0035,3.7,2024-07-11,0
+P01056,Nova Decor Model 1056,Home,Decor,Nova,33992.00,15741.85,271,S0028,3.3,2023-12-18,N
+P01057,Swift Hair Care Model 1057,Beauty,Hair Care,Swift,820.00,502.38,563,S0044,2.6,2021-12-04,No
+P01058,Orbit Fragrance Model 1058,Beauty,Fragrance,Orbit,2507.00,1471.75,313,S0042,3.5,2022-02-25,true
+P01059,GreenLeaf Business Model 1059,Books,Business,GreenLeaf,81.00,47.02,800,S0067,3.2,2022-11-14,N
+P01060,GlowCare Skin Care Model 1060,Beauty,Skin Care,GlowCare,3521.00,2880.81,859,S0086,4.0,2025-06-15,No
+P01061,GreenLeaf Laptops Model 1061,Electronics,Laptops,GreenLeaf,23166.00,14384.68,667,S0079,2.8,2022-01-30,No
+P01062,Zenith Decor Model 1062,Home,Decor,Zenith,FREE,14294.57,595,S0024,4.3,2021-06-15,true
+P01063,PrimeFit Technology Model 1063,Books,Technology,PrimeFit,4784.00,3611.63,320,S0048,2.8,2024-07-22,No
+P01064,BookNest Accessories Model 1064,Electronics,Accessories,BookNest,56852.00,43888.67,26,S0093,3.9,2025-03-31,Yes
+P01065,PrimeFit Mobiles Model 1065,,Mobiles,PrimeFit,4475.00,2418.28,93,S0034,3.4,2023-09-11,false
+P01066,GlowCare Women Model 1066,Fashion,Women,GlowCare,45818.00,21640.27,414,S0023,4.9,2023-11-08,1
+P01067,Swift Children Model 1067,Books,Children,Swift,3770.00,2657.73,451,S0019,4.7,2024-07-18,false
+P01068,GreenLeaf Household Model 1068,Grocery,Household,GreenLeaf,2868.00,1704.49,592,S0092,3.7,2024-04-23,No
+P01069,BookNest Team Sports Model 1069,Sports,Team Sports,BookNest,62434.00,41899.29,442,S0029,2.8,2022-10-04,false
+P01070,Zenith Hair Care Model 1070,Beauty,Hair Care,Zenith,3344.00,2600.85,970,S0085,2.6,2025-03-23,false
+P01071,Apex Audio Model 1071,Electronics,Audio,Apex,10191.00,5335.05,708,S0044,4.3,2023-10-20,0
+P01072,PrimeFit Skin Care Model 1072,Beauty,Skin Care,PrimeFit,2722.00,1918.68,-5,S0037,4.9,2024-01-22,1
+P01073,Pixel Technology Model 1073,Books,Technology,Pixel,2314.00,1165.50,630,S0015,2.5,2023-06-08,true
+P01074,Orbit Cameras Model 1074,Electronics,Cameras,Orbit,76952.00,62227.26,370,S0053,3.4,2024-12-23,0
+P01075,GreenLeaf Mobiles Model 1075,Electronics,Mobiles, greenleaf ,70645.00,40140.56,706,S0062,2.8,2021-02-10,N
+P01076,GlowCare Outdoor Model 1076,Sports,Outdoor,GlowCare,25260.00,16900.41,754,S0097,4.1,2022-06-16,0
+P01077,Pixel Bedding Model 1077,Home,Bedding,Pixel,56596.00,39347.81,577,S0014,3.3,2021-10-31,N
+P01078,GlowCare Bedding Model 1078,Home,Bedding,GlowCare,29363.00,17650.86,930,S0076,2.8,2024-02-24,false
+P01079,GreenLeaf Women Model 1079,Fashion,Women,GreenLeaf,-250.00,45426.67,375,S0007,2.6,2023-12-13,false
+P01080,Apex Fragrance Model 1080,Beauty,Fragrance,Apex,4073.00,3070.56,738,S0070,4.8,2024-10-08,No
+P01081,GlowCare Hair Care Model 1081,Beauty,Hair Care,GlowCare,1547.00,996.39,754,S0019,4.2,2022-08-02,N
+P01082,Apex Footwear Model 1082,Fashion,Footwear,Apex,10154.00,7360.25,850,S0004,4.0,2024-02-24,false
+P01083,HomeCraft Fragrance Model 1083,Beauty,Fragrance,HomeCraft,4377.00,3000.77,355,S0018,3.7,2025-03-21,0
+P01084,HomeCraft Yoga Model 1084,Sports,Yoga,HomeCraft,27674.00,20142.61,336,S0004,2.6,2021-09-20,false
+P01085,GreenLeaf Laptops Model 1085,Electronics,Laptops,GreenLeaf,60325.00,35538.04,673,S0073,3.3,2024-10-19,1
+P01086,PrimeFit Furniture Model 1086,Home,Furniture,PrimeFit,24977.00,11943.07,311,S0009,2.7,2023-03-01,1
+P01087,UrbanCo Snacks Model 1087,Grocery,Snacks,UrbanCo,2829.00,1738.76,42,S0042,3.4,2021-06-29,N
+P01088,Nova Skin Care Model 1088,Beauty,Skin Care,Nova,3323.00,2248.24,660,S0020,3.6,2024-03-16,N
+P01089,BookNest Children Model 1089,Books,Children,BookNest,2353.00,1158.46,781,S0002,4.4,2024-04-28,true
+P01090,UrbanCo Hair Care Model 1090,Beauty,Hair Care,UrbanCo,1313.00,1030.62,many,S0020,2.8,2024-09-01,No
+P01091,Nova Cycling Model 1091,Sports,Cycling,Nova,37919.00,29604.70,798,S0068,3.7,2023-10-21,Y
+P01092,Pixel Team Sports Model 1092,Sports,Team Sports,Pixel,41129.00,28254.07,342,S0013,4.6,2021-10-10,Y
+P01093,UrbanCo Technology Model 1093,Books,Technology,UrbanCo,3418.00,2525.29,781,S0059,4.3,2022-02-11,Y
+P01094,Orbit Accessories Model 1094,Electronics,Accessories,Orbit,31823.00,18107.22,541,S0085,3.1,2023-06-17,Y
+P01095,GlowCare Men Model 1095,Fashion,Men,GlowCare,58532.00,33471.58,960,S0044,3.3,2023-09-27,Yes
+P01096,UrbanCo Personal Care Model 1096,Beauty,Personal Care,UrbanCo,772.00,926.40,954,S0044,2.8,2022-02-17,No
+P01097,Nova Hair Care Model 1097,Beauty,Hair Care,Nova,1990.00,1542.17,476,S0078,4.6,2024-11-11,true
+P01098,PrimeFit Cycling Model 1098,Sports,Cycling,PrimeFit,56862.00,29329.00,555,S0017,4.4,2022-03-22,1
+P01099,HomeCraft Children Model 1099,Books,Children,HomeCraft,2241.00,1324.02,645,S0046,3.8,2023-05-23,No
+P01100,Zenith Organic Model 1100,Grocery,Organic,Zenith,2844.00,1994.81,935,S0030,4.7,2021-02-09,true
+P01101,Orbit Appliances Model 1101,Home,Appliances,Orbit,48453.00,35438.93,176,S0064,2.8,2024-02-29,Y
+P01102,Pixel Household Model 1102,Grocery,Household,Pixel,3298.00,1962.36,829,S0092,4.7,2024-09-22,N
+P01103,UrbanCo Staples Model 1103,Grocery,Staples,UrbanCo,2215.00,1798.02,590,S0082,2.8,2023-10-08,false
+P01104,Nova Kitchen Model 1104,Home,Kitchen,Nova,8409.00,4846.45,201,S0089,5.0,2023-08-19,false
+P01105,Pixel Education Model 1105,Books,Education,Pixel,1567.00,854.29,98,S0077,4.7,2021-01-28,No
+P01106,HomeCraft Snacks Model 1106,Grocery,Snacks,HomeCraft,4070.00,1844.88,799,S0016,3.4,2022-04-29,Y
+P01107,GreenLeaf Hair Care Model 1107,Beauty,Hair Care,GreenLeaf,3752.00,2305.72,306,S0063,4.5,2024-03-15,false
+P01108,UrbanCo Snacks Model 1108,Grocery,Snacks,UrbanCo,1797.00,1120.77,740,S0036,4.9,2025-05-27,false
+P01109,BookNest Audio Model 1109,Electronics,Audio,BookNest,9327.00,6866.35,461,S0085,2.7,2022-03-09,false
+P01110,HomeCraft Technology Model 1110,Books,Technology,HomeCraft,3030.00,1757.95,971,S0017,4.3,2021-07-25,1
+P01111,UrbanCo Education Model 1111,Books,Education,UrbanCo,1962.00,1246.31,379,S0070,6.5,2021-10-28,false
+P01112,Apex Yoga Model 1112,Sports,Yoga,Apex,40888.00,23612.98,295,S0038,2.5,2023-05-26,false
+P01113,GlowCare Accessories Model 1113,Electronics,Accessories,GlowCare,28691.00,23099.26,943,S0011,3.7,2022-12-28,0
+P01114,Apex Yoga Model 1114,Sports,Yoga,Apex,14608.00,6990.80,516,S0037,2.7,2025-04-13,true
+P01115,PrimeFit Women Model 1115,Fashion,Women,PrimeFit,30184.00,22525.99,457,S0050,3.5,2021-12-02,N
+P01116,BookNest Audio Model 1116,Electronics,Audio,BookNest,25777.00,16322.41,167,S0039,2.6,2025-06-21,false
+P01117,Pixel Fiction Model 1117,Books,Fiction,Pixel,3773.00,2176.28,907,S0057,3.2,2022-06-15,Y
+P01118,Apex Business Model 1118,Books,Business, apex ,4012.00,2762.03,336,S0098,3.0,2021-04-02,N
+P01119,PrimeFit Appliances Model 1119,Home,Appliances,PrimeFit,31275.00,21109.23,156,S0071,4.2,2022-01-14,true
+P01120,Nova Yoga Model 1120,Sports,Yoga,Nova,22158.00,16397.09,20,S0041,3.2,2023-02-16,No
+P01121,UrbanCo Bedding Model 1121,Home,Bedding,UrbanCo,FREE,53607.29,705,S0025,3.9,2021-03-19,false
+P01122,GreenLeaf Watches Model 1122,Fashion,Watches,GreenLeaf,9763.00,4528.69,64,S0095,4.9,2021-09-04,false
+P01123,Pixel Decor Model 1123,Home,Decor,Pixel,60845.00,40193.96,306,S0069,3.3,2021-04-04,N
+P01124,Orbit Makeup Model 1124,Beauty,Makeup,Orbit,2764.00,2101.78,611,S0066,2.8,2023-05-11,Yes
+P01125,BookNest Organic Model 1125,Grocery,Organic,BookNest,596.00,481.78,533,S0043,2.5,2023-09-30,Yes
+P01126,Orbit Women Model 1126,Fashion,Women,Orbit,8062.00,6496.62,884,S0024,4.8,2025-11-22,1
+P01127,PrimeFit Household Model 1127,Grocery,Household,PrimeFit,2564.00,1546.30,402,S0009,4.6,2024-05-03,Y
+P01128,HomeCraft Snacks Model 1128,Grocery,Snacks,HomeCraft,3900.00,2041.01,24,S0071,3.8,2022-03-17,No
+P01129,GreenLeaf Staples Model 1129,Grocery,Staples,GreenLeaf,835.00,460.35,296,S0066,4.5,2021-04-15,Yes
+P01130,Nova Kitchen Model 1130,Home,Kitchen,Nova,7082.00,4483.89,746,S0038,3.8,2023-01-13,0
+P01131,GreenLeaf Education Model 1131,Books,Education,GreenLeaf,1092.00,639.72,54,S0097,4.9,2022-11-13,Yes
+P01132,BookNest Fragrance Model 1132,Beauty,Fragrance,BookNest,3989.00,2932.96,903,S0026,4.1,2023-07-24,false
+P01133,Apex Household Model 1133,Grocery,Household,Apex,2768.00,2138.42,359,S0067,4.9,2022-07-14,false
+P01134,BookNest Household Model 1134,Grocery,Household,BookNest,1874.00,1208.73,295,S0094,4.4,2021-07-03,No
+P01135,BookNest Kitchen Model 1135,Home,Kitchen,BookNest,73480.00,55850.84,117,S0004,4.1,2021-12-03,N
+P01136,Swift Cameras Model 1136,,Cameras,Swift,37315.00,27938.92,509,S0017,3.9,2023-10-10,No
+P01137,PrimeFit Technology Model 1137,Books,Technology,PrimeFit,755.00,479.73,201,S0045,3.2,2022-03-26,Y
+P01138,Apex Watches Model 1138,Fashion,Watches,Apex,39100.00,31478.57,741,S0091,2.5,2023-08-27,Y
+P01139,Orbit Snacks Model 1139,Grocery,Snacks,Orbit,2760.00,2184.91,-5,S0054,4.9,2022-06-03,true
+P01140,BookNest Furniture Model 1140,Home,Furniture,BookNest,18698.00,12589.47,952,S0039,3.5,2023-08-07,0
+P01141,Apex Kitchen Model 1141,Home,Kitchen,Apex,34348.00,21166.06,769,S0009,3.7,2023-08-06,No
+P01142,HomeCraft Bedding Model 1142,Home,Bedding,HomeCraft,77594.00,56628.40,638,S0006,2.9,2022-05-24,No
+P01143,Apex Footwear Model 1143,Fashion,Footwear,Apex,77245.00,34809.34,645,S0086,3.5,2023-10-09,Y
+P01144,Pixel Business Model 1144,Books,Business,Pixel,4610.00,3405.54,295,S0082,4.5,2025-01-26,1
+P01145,Swift Laptops Model 1145,Electronics,Laptops,Swift,4691.00,2546.17,367,S0050,4.5,2024-01-09,1
+P01146,Nova Team Sports Model 1146,Sports,Team Sports,Nova,15447.00,10776.54,255,S0065,3.6,2021-07-30,true
+P01147,BookNest Men Model 1147,Fashion,Men,BookNest,51899.00,29906.53,588,S0013,4.8,2025-05-23,false
+P01148,PrimeFit Hair Care Model 1148,Beauty,Hair Care,PrimeFit,1865.00,1519.87,374,S0061,2.9,2023-03-08,No
+P01149,HomeCraft Outdoor Model 1149,Sports,Outdoor,HomeCraft,46858.00,23200.31,584,S0070,2.9,2025-11-23,No
+P01150,BookNest Bags Model 1150,Fashion,Bags,BookNest,72407.00,37739.18,211,S0036,4.5,2024-08-07,N
+P01151,BookNest Mobiles Model 1151,Electronics,Mobiles,BookNest,33691.00,16756.86,542,S0062,4.0,2025-02-09,true
+P01152,Orbit Household Model 1152,Grocery,Household,Orbit,2064.00,1644.73,895,S0086,2.9,2021-02-27,Y
+P01153,UrbanCo Mobiles Model 1153,Electronics,Mobiles,UrbanCo,23509.00,16826.36,944,S0052,4.7,2025-07-26,0
+P01154,HomeCraft Hair Care Model 1154,Beauty,Hair Care,HomeCraft,2182.00,1522.00,245,S0017,3.2,2025-08-10,Yes
+P01155,Zenith Appliances Model 1155,Home,Appliances,Zenith,2432.00,1446.79,289,S0075,3.6,2023-04-08,No
+P01156,Zenith Business Model 1156,Books,Business,Zenith,4271.00,2288.89,829,S0033,2.6,2021-11-09,Y
+P01157,GreenLeaf Team Sports Model 1157,Sports,Team Sports,GreenLeaf,15805.00,12518.71,920,S0060,4.3,2023-12-29,0
+P01158,Zenith Mobiles Model 1158,Electronics,Mobiles,Zenith,39811.00,27945.65,888,S0069,3.6,2023-04-12,N
+P01159,Orbit Cameras Model 1159,Electronics,Cameras,Orbit,39673.00,27458.83,326,S0028,3.1,2025-10-19,true
+P01160,Pixel Bedding Model 1160,Home,Bedding,Pixel,54601.00,36930.57,304,S0036,3.7,2021-03-13,Yes
+P01161,GreenLeaf Makeup Model 1161,Beauty,Makeup, greenleaf ,2576.00,1503.99,515,S0038,4.3,2021-09-10,No
+P01162,GreenLeaf Watches Model 1162,Fashion,Watches,GreenLeaf,-250.00,31191.46,512,S0089,4.4,2025-09-07,false
+P01163,UrbanCo Footwear Model 1163,Fashion,Footwear,UrbanCo,53481.00,32739.74,421,S0051,3.2,2023-09-25,false
+P01164,UrbanCo Snacks Model 1164,Grocery,Snacks,UrbanCo,2668.00,1896.90,292,S0055,2.9,2024-03-27,1
+P01165,GlowCare Cameras Model 1165,Electronics,Cameras,GlowCare,60611.00,32529.61,625,S0033,4.6,2021-10-20,N
+P01166,Apex Footwear Model 1166,Fashion,Footwear,Apex,50602.00,23937.52,381,S0074,4.2,2023-05-02,No
+P01167,PrimeFit Staples Model 1167,Grocery,Staples,PrimeFit,2654.00,1542.37,830,S0057,2.6,2021-01-22,No
+P01168,GreenLeaf Footwear Model 1168,Fashion,Footwear,GreenLeaf,46642.00,37793.67,424,S0024,2.8,2024-07-26,true
+P01169,Orbit Fragrance Model 1169,Beauty,Fragrance,Orbit,4600.00,3678.39,839,S0100,4.8,2021-04-09,N
+P01170,HomeCraft Business Model 1170,Books,Business,HomeCraft,4448.00,3609.19,758,S0011,4.6,2024-12-12,true
+P01171,Orbit Makeup Model 1171,Beauty,Makeup,Orbit,2478.00,1522.12,409,S0028,4.4,2024-11-03,No
+P01172,Swift Audio Model 1172,Electronics,Audio,Swift,66830.00,38630.64,327,S0017,3.8,2024-06-23,Yes
+P01173,GlowCare Bedding Model 1173,Home,Bedding,GlowCare,14722.00,8407.45,697,S0008,3.2,2022-09-02,true
+P01174,HomeCraft Accessories Model 1174,Electronics,Accessories,HomeCraft,48568.00,39801.10,871,S0064,3.4,2024-11-06,Y
+P01175,Pixel Accessories Model 1175,Electronics,Accessories,Pixel,57124.00,28844.85,950,S0070,4.3,2023-03-26,Yes
+P01176,Zenith Decor Model 1176,Home,Decor,Zenith,18590.00,11649.09,880,S0038,4.5,2023-05-17,true
+P01177,Nova Beverages Model 1177,Grocery,Beverages,Nova,2447.00,1654.49,550,S0082,3.6,2024-10-19,0
+P01178,Apex Business Model 1178,Books,Business,Apex,2356.00,1929.44,807,S0014,2.8,2024-12-13,Yes
+P01179,GlowCare Personal Care Model 1179,Beauty,Personal Care,GlowCare,2646.00,1254.39,613,S0035,3.2,2022-09-29,true
+P01180,GreenLeaf Fragrance Model 1180,Beauty,Fragrance,GreenLeaf,FREE,49.74,160,S0035,4.4,2023-07-06,No
+P00001, URBANCO SNACKS MODEL 1 ,Grocery,Snacks,UrbanCo,1194.00,914.75,528,S0042,3.2,2026-06-30,false
+P00002, NOVA OUTDOOR MODEL 2 ,Sports,Outdoor,Nova,22560.00,12160.62,125,S0097,4.0,2026-06-30,true
+P00003, HOMECRAFT STAPLES MODEL 3 ,Grocery,Staples,HomeCraft,884.00,463.28,603,S0066,4.3,2026-06-30,1
+P00004, PIXEL AUDIO MODEL 4 ,Electronics,Audio,Pixel,22353.00,17117.19,781,S0046,4.3,2026-06-30,Y
+P00005, NOVA CHILDREN MODEL 5 ,Books,Children,Nova,833.00,587.03,271,S0023,4.1,2026-06-30,1
+P00006, GLOWCARE FICTION MODEL 6 ,Books,Fiction,GlowCare,3835.00,3114.81,201,S0037,2.9,2026-06-30,0
+P00007, ZENITH HAIR CARE MODEL 7 ,Beauty,Hair Care,Zenith,4628.00,2682.66,127,S0049,3.2,2026-06-30,N
+P00008, ZENITH SKIN CARE MODEL 8 ,Beauty,Skin Care,Zenith,1716.00,1049.64,983,S0030,3.9,2026-06-30,true
+P00009, URBANCO HOUSEHOLD MODEL 9 ,Grocery,Household,UrbanCo,1619.00,1301.13,232,S0060,4.9,2026-06-30,false
+P00010, URBANCO AUDIO MODEL 10 ,Electronics,Audio,UrbanCo,39606.00,22681.35,973,S0025,4.0,2026-06-30,No
+P00011, URBANCO WOMEN MODEL 11 ,Fashion,Women,UrbanCo,37873.00,30971.33,598,S0038,4.1,2026-06-30,0
+P00012, HOMECRAFT OUTDOOR MODEL 12 ,Sports,Outdoor,HomeCraft,69172.00,35352.21,466,S0035,4.7,2026-06-30,0
+P00013, APEX BUSINESS MODEL 13 ,Books,Business,Apex,3995.00,1819.16,817,S0008,4.9,2026-06-30,Yes
+P00014, HOMECRAFT LAPTOPS MODEL 14 ,Electronics,Laptops,HomeCraft,66670.00,50428.62,29,S0075,3.1,2026-06-30,0
+P00015, NOVA BAGS MODEL 15 ,Fashion,Bags,Nova,37726.00,17040.56,878,S0084,3.5,2026-06-30,true
+P00016, ORBIT FICTION MODEL 16 ,Books,Fiction,Orbit,146.00,107.86,572,S0057,4.4,2026-06-30,N
+P00017, APEX HOUSEHOLD MODEL 17 ,Grocery,Household,Apex,1197.00,947.74,896,S0002,3.8,2026-06-30,1
+P00018, ORBIT PERSONAL CARE MODEL 18 ,Beauty,Personal Care,Orbit,1789.00,949.18,338,S0019,3.4,2026-06-30,Yes
+P00019, ORBIT TECHNOLOGY MODEL 19 ,Books,Technology,Orbit,3133.00,2262.91,424,S0005,4.0,2026-06-30,0
+P00020, URBANCO APPLIANCES MODEL 20 ,Home,Appliances,UrbanCo,22574.00,17303.98,200,S0060,4.2,2026-06-30,true
