@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="760" viewBox="0 0 1400 760">
+<defs>
+<filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="5" stdDeviation="8" flood-opacity="0.13"/></filter>
+<marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M0,0 L12,6 L0,12 z" fill="#64748B"/></marker>
+</defs>
+<rect width="100%" height="100%" rx="28" fill="#F8FAFC"/>
+<text x="70" y="72" font-family="Segoe UI,Arial" font-size="38" font-weight="700" fill="#0F172A">ORDER BY vs SORT BY</text>
+<text x="70" y="112" font-family="Segoe UI,Arial" font-size="21" fill="#475569">Global ordering versus ordering inside each execution partition</text>
+<line x1="325" y1="260" x2="430" y2="240" stroke="#64748B" stroke-width="4" marker-end="url(#arrow)"/>
+<rect x="302.5" y="218.0" width="150" height="32" rx="16" fill="#FFFFFF" stroke="#CBD5E1"/>
+<text x="377.5" y="240.0" text-anchor="middle" font-family="Segoe UI,Arial" font-size="16" font-weight="600" fill="#334155">shuffle</text>
+<line x1="325" y1="350" x2="430" y2="510" stroke="#64748B" stroke-width="4" marker-end="url(#arrow)"/>
+<rect x="302.5" y="398.0" width="150" height="32" rx="16" fill="#FFFFFF" stroke="#CBD5E1"/>
+<text x="377.5" y="420.0" text-anchor="middle" font-family="Segoe UI,Arial" font-size="16" font-weight="600" fill="#334155">local</text>
+<line x1="730" y1="240" x2="860" y2="240" stroke="#64748B" stroke-width="4" marker-end="url(#arrow)"/>
+<rect x="720.0" y="208.0" width="150" height="32" rx="16" fill="#FFFFFF" stroke="#CBD5E1"/>
+<text x="795.0" y="230.0" text-anchor="middle" font-family="Segoe UI,Arial" font-size="16" font-weight="600" fill="#334155">global</text>
+<line x1="730" y1="510" x2="860" y2="510" stroke="#64748B" stroke-width="4" marker-end="url(#arrow)"/>
+<rect x="720.0" y="478.0" width="150" height="32" rx="16" fill="#FFFFFF" stroke="#CBD5E1"/>
+<text x="795.0" y="500.0" text-anchor="middle" font-family="Segoe UI,Arial" font-size="16" font-weight="600" fill="#334155">partitioned</text>
+<rect x="55" y="190" width="270" height="190" rx="22" fill="#F3F6FA" stroke="#475569" stroke-width="3" filter="url(#shadow)"/>
+<text x="190.0" y="232" text-anchor="middle" font-family="Segoe UI,Arial" font-size="23" font-weight="700" fill="#0F172A">Input Partitions</text>
+<text x="190.0" y="268" text-anchor="middle" font-family="Segoe UI,Arial" font-size="18" fill="#334155">P1: 700, 300</text>
+<text x="190.0" y="297" text-anchor="middle" font-family="Segoe UI,Arial" font-size="18" fill="#334155">P2: 900, 200</text>
+<text x="190.0" y="326" text-anchor="middle" font-family="Segoe UI,Arial" font-size="18" fill="#334155">P3: 800, 100</text>
+<rect x="430" y="150" width="300" height="180" rx="22" fill="#FFF0F0" stroke="#DC2626" stroke-width="3" filter="url(#shadow)"/>
+<text x="580.0" y="192" text-anchor="middle" font-family="Segoe UI,Arial" font-size="23" font-weight="700" fill="#0F172A">ORDER BY</text>
+<text x="580.0" y="228" text-anchor="middle" font-family="Segoe UI,Arial" font-size="18" fill="#334155">Global comparison</text>
+<text x="580.0" y="257" text-anchor="middle" font-family="Segoe UI,Arial" font-size="18" fill="#334155">Shuffle</text>
+<text x="580.0" y="286" text-anchor="middle" font-family="Segoe UI,Arial" font-size="18" fill="#334155">900 → 800 → 700</text>
+<rect x="430" y="420" width="300" height="180" rx="22" fill="#E8F1FF" stroke="#2563EB" stroke-width="3" filter="url(#shadow)"/>
+<text x="580.0" y="462" text-anchor="middle" font-family="Segoe UI,Arial" font-size="23" font-weight="700" fill="#0F172A">SORT BY</text>
+<text x="580.0" y="498" text-anchor="middle" font-family="Segoe UI,Arial" font-size="18" fill="#334155">Local partition sort</text>
+<text x="580.0" y="527" text-anchor="middle" font-family="Segoe UI,Arial" font-size="18" fill="#334155">No global guarantee</text>
+<rect x="860" y="150" width="440" height="180" rx="22" fill="#FFF7E6" stroke="#D97706" stroke-width="3" filter="url(#shadow)"/>
+<text x="1080.0" y="192" text-anchor="middle" font-family="Segoe UI,Arial" font-size="23" font-weight="700" fill="#0F172A">Final Report</text>
+<text x="1080.0" y="228" text-anchor="middle" font-family="Segoe UI,Arial" font-size="18" fill="#334155">Globally ranked rows</text>
+<text x="1080.0" y="257" text-anchor="middle" font-family="Segoe UI,Arial" font-size="18" fill="#334155">Top-N and exports</text>
+<rect x="860" y="420" width="440" height="180" rx="22" fill="#EAFBF2" stroke="#16A34A" stroke-width="3" filter="url(#shadow)"/>
+<text x="1080.0" y="462" text-anchor="middle" font-family="Segoe UI,Arial" font-size="23" font-weight="700" fill="#0F172A">Intermediate Work</text>
+<text x="1080.0" y="498" text-anchor="middle" font-family="Segoe UI,Arial" font-size="18" fill="#334155">Locally ordered partitions</text>
+</svg>

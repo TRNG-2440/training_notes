@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="760" viewBox="0 0 1400 760">
+<defs>
+<filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="5" stdDeviation="8" flood-opacity="0.13"/></filter>
+<marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M0,0 L12,6 L0,12 z" fill="#64748B"/></marker>
+</defs>
+<rect width="100%" height="100%" rx="28" fill="#F8FAFC"/>
+<text x="70" y="72" font-family="Segoe UI,Arial" font-size="38" font-weight="700" fill="#0F172A">Liquid Clustering and Data Skipping</text>
+<text x="70" y="112" font-family="Segoe UI,Arial" font-size="21" fill="#475569">File statistics help Spark skip files that cannot satisfy the filter</text>
+<line x1="305" y1="345" x2="375" y2="345" stroke="#64748B" stroke-width="4" marker-end="url(#arrow)"/>
+<rect x="265.0" y="313.0" width="150" height="32" rx="16" fill="#FFFFFF" stroke="#CBD5E1"/>
+<text x="340.0" y="335.0" text-anchor="middle" font-family="Segoe UI,Arial" font-size="16" font-weight="600" fill="#334155">organize</text>
+<line x1="660" y1="320" x2="750" y2="200" stroke="#64748B" stroke-width="4" marker-end="url(#arrow)"/>
+<rect x="630.0" y="228.0" width="150" height="32" rx="16" fill="#FFFFFF" stroke="#CBD5E1"/>
+<text x="705.0" y="250.0" text-anchor="middle" font-family="Segoe UI,Arial" font-size="16" font-weight="600" fill="#334155">cluster</text>
+<line x1="660" y1="345" x2="750" y2="390" stroke="#64748B" stroke-width="4" marker-end="url(#arrow)"/>
+<rect x="630.0" y="335.5" width="150" height="32" rx="16" fill="#FFFFFF" stroke="#CBD5E1"/>
+<text x="705.0" y="357.5" text-anchor="middle" font-family="Segoe UI,Arial" font-size="16" font-weight="600" fill="#334155">cluster</text>
+<line x1="660" y1="370" x2="750" y2="580" stroke="#64748B" stroke-width="4" marker-end="url(#arrow)"/>
+<rect x="630.0" y="443.0" width="150" height="32" rx="16" fill="#FFFFFF" stroke="#CBD5E1"/>
+<text x="705.0" y="465.0" text-anchor="middle" font-family="Segoe UI,Arial" font-size="16" font-weight="600" fill="#334155">cluster</text>
+<line x1="1000" y1="200" x2="1080" y2="320" stroke="#64748B" stroke-width="4" marker-end="url(#arrow)"/>
+<rect x="965.0" y="228.0" width="150" height="32" rx="16" fill="#FFFFFF" stroke="#CBD5E1"/>
+<text x="1040.0" y="250.0" text-anchor="middle" font-family="Segoe UI,Arial" font-size="16" font-weight="600" fill="#334155">match</text>
+<rect x="45" y="255" width="260" height="180" rx="22" fill="#F3F6FA" stroke="#475569" stroke-width="3" filter="url(#shadow)"/>
+<text x="175.0" y="297" text-anchor="middle" font-family="Segoe UI,Arial" font-size="23" font-weight="700" fill="#0F172A">Delta Table</text>
+<text x="175.0" y="333" text-anchor="middle" font-family="Segoe UI,Arial" font-size="18" fill="#334155">Mixed city/date rows</text>
+<rect x="375" y="255" width="285" height="180" rx="22" fill="#F4EDFF" stroke="#7C3AED" stroke-width="3" filter="url(#shadow)"/>
+<text x="517.5" y="297" text-anchor="middle" font-family="Segoe UI,Arial" font-size="23" font-weight="700" fill="#0F172A">CLUSTER BY</text>
+<text x="517.5" y="333" text-anchor="middle" font-family="Segoe UI,Arial" font-size="18" fill="#334155">city</text>
+<text x="517.5" y="362" text-anchor="middle" font-family="Segoe UI,Arial" font-size="18" fill="#334155">order_date</text>
+<rect x="750" y="130" width="250" height="145" rx="22" fill="#EAFBF2" stroke="#16A34A" stroke-width="3" filter="url(#shadow)"/>
+<text x="875.0" y="172" text-anchor="middle" font-family="Segoe UI,Arial" font-size="23" font-weight="700" fill="#0F172A">File Group A</text>
+<text x="875.0" y="208" text-anchor="middle" font-family="Segoe UI,Arial" font-size="18" fill="#334155">Chennai • Jan–Mar</text>
+<rect x="750" y="320" width="250" height="145" rx="22" fill="#E8F1FF" stroke="#2563EB" stroke-width="3" filter="url(#shadow)"/>
+<text x="875.0" y="362" text-anchor="middle" font-family="Segoe UI,Arial" font-size="23" font-weight="700" fill="#0F172A">File Group B</text>
+<text x="875.0" y="398" text-anchor="middle" font-family="Segoe UI,Arial" font-size="18" fill="#334155">Mumbai • Apr–Jun</text>
+<rect x="750" y="510" width="250" height="145" rx="22" fill="#E8F1FF" stroke="#2563EB" stroke-width="3" filter="url(#shadow)"/>
+<text x="875.0" y="552" text-anchor="middle" font-family="Segoe UI,Arial" font-size="23" font-weight="700" fill="#0F172A">File Group C</text>
+<text x="875.0" y="588" text-anchor="middle" font-family="Segoe UI,Arial" font-size="18" fill="#334155">Delhi • Jul–Sep</text>
+<rect x="1080" y="255" width="275" height="180" rx="22" fill="#FFF7E6" stroke="#D97706" stroke-width="3" filter="url(#shadow)"/>
+<text x="1217.5" y="297" text-anchor="middle" font-family="Segoe UI,Arial" font-size="23" font-weight="700" fill="#0F172A">Filtered Query</text>
+<text x="1217.5" y="333" text-anchor="middle" font-family="Segoe UI,Arial" font-size="18" fill="#334155">Reads A</text>
+<text x="1217.5" y="362" text-anchor="middle" font-family="Segoe UI,Arial" font-size="18" fill="#334155">Skips B and C</text>
+</svg>

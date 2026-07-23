@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="760" viewBox="0 0 1400 760">
+<defs>
+<filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="5" stdDeviation="8" flood-opacity="0.13"/></filter>
+<marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M0,0 L12,6 L0,12 z" fill="#64748B"/></marker>
+</defs>
+<rect width="100%" height="100%" rx="28" fill="#F8FAFC"/>
+<text x="70" y="72" font-family="Segoe UI,Arial" font-size="38" font-weight="700" fill="#0F172A">Spark Caching: Compute Once, Reuse</text>
+<text x="70" y="112" font-family="Segoe UI,Arial" font-size="21" fill="#475569">Caching helps only when an expensive result is reused</text>
+<line x1="270" y1="345" x2="340" y2="345" stroke="#64748B" stroke-width="4" marker-end="url(#arrow)"/>
+<rect x="230.0" y="313.0" width="150" height="32" rx="16" fill="#FFFFFF" stroke="#CBD5E1"/>
+<text x="305.0" y="335.0" text-anchor="middle" font-family="Segoe UI,Arial" font-size="16" font-weight="600" fill="#334155">read</text>
+<line x1="600" y1="345" x2="680" y2="345" stroke="#64748B" stroke-width="4" marker-end="url(#arrow)"/>
+<rect x="565.0" y="313.0" width="150" height="32" rx="16" fill="#FFFFFF" stroke="#CBD5E1"/>
+<text x="640.0" y="335.0" text-anchor="middle" font-family="Segoe UI,Arial" font-size="16" font-weight="600" fill="#334155">store</text>
+<line x1="910" y1="315" x2="1010" y2="182" stroke="#64748B" stroke-width="4" marker-end="url(#arrow)"/>
+<rect x="885.0" y="216.5" width="150" height="32" rx="16" fill="#FFFFFF" stroke="#CBD5E1"/>
+<text x="960.0" y="238.5" text-anchor="middle" font-family="Segoe UI,Arial" font-size="16" font-weight="600" fill="#334155">reuse</text>
+<line x1="910" y1="345" x2="1010" y2="372" stroke="#64748B" stroke-width="4" marker-end="url(#arrow)"/>
+<rect x="885.0" y="326.5" width="150" height="32" rx="16" fill="#FFFFFF" stroke="#CBD5E1"/>
+<text x="960.0" y="348.5" text-anchor="middle" font-family="Segoe UI,Arial" font-size="16" font-weight="600" fill="#334155">reuse</text>
+<line x1="910" y1="375" x2="1010" y2="562" stroke="#64748B" stroke-width="4" marker-end="url(#arrow)"/>
+<rect x="885.0" y="436.5" width="150" height="32" rx="16" fill="#FFFFFF" stroke="#CBD5E1"/>
+<text x="960.0" y="458.5" text-anchor="middle" font-family="Segoe UI,Arial" font-size="16" font-weight="600" fill="#334155">reuse</text>
+<rect x="45" y="260" width="225" height="175" rx="22" fill="#F3F6FA" stroke="#475569" stroke-width="3" filter="url(#shadow)"/>
+<text x="157.5" y="302" text-anchor="middle" font-family="Segoe UI,Arial" font-size="23" font-weight="700" fill="#0F172A">Source Files</text>
+<text x="157.5" y="338" text-anchor="middle" font-family="Segoe UI,Arial" font-size="18" fill="#334155">Delta / Parquet</text>
+<rect x="340" y="260" width="260" height="175" rx="22" fill="#FFF0F0" stroke="#DC2626" stroke-width="3" filter="url(#shadow)"/>
+<text x="470.0" y="302" text-anchor="middle" font-family="Segoe UI,Arial" font-size="23" font-weight="700" fill="#0F172A">Expensive Logic</text>
+<text x="470.0" y="338" text-anchor="middle" font-family="Segoe UI,Arial" font-size="18" fill="#334155">Filter • Join</text>
+<text x="470.0" y="367" text-anchor="middle" font-family="Segoe UI,Arial" font-size="18" fill="#334155">Transform</text>
+<rect x="680" y="260" width="230" height="175" rx="22" fill="#EAFBF2" stroke="#16A34A" stroke-width="3" filter="url(#shadow)"/>
+<text x="795.0" y="302" text-anchor="middle" font-family="Segoe UI,Arial" font-size="23" font-weight="700" fill="#0F172A">Cache</text>
+<text x="795.0" y="338" text-anchor="middle" font-family="Segoe UI,Arial" font-size="18" fill="#334155">Temporary blocks</text>
+<rect x="1010" y="110" width="300" height="145" rx="22" fill="#E8F1FF" stroke="#2563EB" stroke-width="3" filter="url(#shadow)"/>
+<text x="1160.0" y="152" text-anchor="middle" font-family="Segoe UI,Arial" font-size="23" font-weight="700" fill="#0F172A">Query A</text>
+<text x="1160.0" y="188" text-anchor="middle" font-family="Segoe UI,Arial" font-size="18" fill="#334155">Revenue by city</text>
+<rect x="1010" y="300" width="300" height="145" rx="22" fill="#E8F1FF" stroke="#2563EB" stroke-width="3" filter="url(#shadow)"/>
+<text x="1160.0" y="342" text-anchor="middle" font-family="Segoe UI,Arial" font-size="23" font-weight="700" fill="#0F172A">Query B</text>
+<text x="1160.0" y="378" text-anchor="middle" font-family="Segoe UI,Arial" font-size="18" fill="#334155">Cuisine average</text>
+<rect x="1010" y="490" width="300" height="145" rx="22" fill="#E8F1FF" stroke="#2563EB" stroke-width="3" filter="url(#shadow)"/>
+<text x="1160.0" y="532" text-anchor="middle" font-family="Segoe UI,Arial" font-size="23" font-weight="700" fill="#0F172A">Query C</text>
+<text x="1160.0" y="568" text-anchor="middle" font-family="Segoe UI,Arial" font-size="18" fill="#334155">Restaurant report</text>
+</svg>
