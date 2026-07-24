@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GCP Dataproc + GCS + PySpark — End-to-End Practical</title>
+<style>
+:root{--navy:#092a48;--blue:#1a73e8;--cyan:#e8f4ff;--green:#188038;--amber:#f9ab00;--red:#d93025;--ink:#243447;--muted:#60758a;--line:#d9e4ee;--card:#fff;--bg:#f3f7fb;--code:#102335}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.62}
+header{background:linear-gradient(125deg,#092a48,#0b57d0 60%,#00a1c9);color:#fff;padding:48px 24px 42px}
+.wrap{max-width:1180px;margin:auto}.eyebrow{font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#bfe5ff}.hero h1{font-size:clamp(2rem,5vw,3.7rem);line-height:1.08;margin:.3rem 0 1rem}.hero p{max-width:850px;font-size:1.1rem}
+.badges{display:flex;gap:10px;flex-wrap:wrap}.badge{background:#ffffff1f;border:1px solid #ffffff45;border-radius:99px;padding:6px 12px}
+nav{position:sticky;top:0;z-index:8;background:#fff;border-bottom:1px solid var(--line);box-shadow:0 3px 12px #17324d12}
+nav .wrap{display:flex;gap:6px;overflow:auto;padding:9px 16px}nav a{white-space:nowrap;color:var(--navy);text-decoration:none;padding:7px 10px;border-radius:8px;font-weight:650}nav a:hover{background:var(--cyan);color:var(--blue)}
+main{padding:28px 18px 70px}section{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:26px;margin:0 auto 22px;box-shadow:0 6px 24px #092a4808;transition:.2s}section:hover{box-shadow:0 10px 30px #092a4814;border-color:#aac9e6}
+h2{color:var(--navy);font-size:1.65rem;margin-top:0;border-left:5px solid var(--blue);padding-left:12px}h3{color:#0b57a1;margin-top:1.5rem}h4{margin-bottom:.25rem}.lead{font-size:1.08rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:15px}.card{border:1px solid var(--line);border-radius:13px;padding:17px;background:#fbfdff}.card h3{margin-top:0}
+.flow{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;align-items:stretch}.node{background:var(--cyan);border:2px solid #79b8ee;border-radius:13px;padding:15px;text-align:center;font-weight:700;position:relative}.node:not(:last-child):after{content:"→";position:absolute;right:-18px;top:35%;z-index:2;color:var(--blue);font-size:1.5rem}.node small{display:block;font-weight:400;color:var(--muted)}
+.arch{display:grid;grid-template-columns:1fr 1fr;gap:18px}.plane{border-radius:15px;padding:18px;border:2px solid}.control{background:#eef5ff;border-color:#82b5f3}.data{background:#effaf1;border-color:#7bc58c}.workers{display:flex;gap:9px;flex-wrap:wrap;margin-top:12px}.worker{background:#fff;border:1px solid #a9cfb2;border-radius:9px;padding:9px;flex:1;min-width:110px;text-align:center}
+.callout{border-left:5px solid var(--blue);background:#eef6ff;padding:14px 16px;border-radius:8px;margin:15px 0}.warning{border-left-color:var(--amber);background:#fff7df}.danger{border-left-color:var(--red);background:#fdefed}.success{border-left-color:var(--green);background:#edf8f0}
+.code{position:relative;background:var(--code);color:#eaf5ff;border-radius:12px;margin:12px 0;overflow:auto}.code pre{margin:0;padding:42px 17px 17px;white-space:pre;tab-size:2;font:14px/1.55 Consolas,Monaco,monospace}.copy{position:absolute;right:9px;top:8px;background:#26506f;color:#fff;border:0;border-radius:7px;padding:6px 10px;cursor:pointer}.copy:hover{background:#36719c}
+code{background:#edf3f8;padding:2px 5px;border-radius:5px}pre code{background:transparent;padding:0}
+table{width:100%;border-collapse:collapse;margin:14px 0}th,td{padding:11px;border:1px solid var(--line);text-align:left;vertical-align:top}th{background:#eaf3fc;color:var(--navy)}tr:nth-child(even){background:#fbfdff}
+.steps{counter-reset:s}.step{position:relative;padding:4px 0 19px 55px;min-height:55px}.step:before{counter-increment:s;content:counter(s);position:absolute;left:0;top:2px;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:var(--blue);color:#fff;font-weight:800}.step:not(:last-child):after{content:"";position:absolute;left:18px;top:42px;bottom:2px;border-left:2px dashed #aac5dc}
+details{border:1px solid var(--line);border-radius:10px;margin:9px 0;background:#fff}summary{cursor:pointer;font-weight:700;padding:12px 14px;color:var(--navy)}details>div{padding:0 14px 14px}
+.checklist label{display:block;padding:7px 10px;margin:5px 0;background:#f7fafc;border-radius:8px}.checklist input{margin-right:9px}
+.quizq{padding:16px;border:1px solid var(--line);border-radius:12px;margin:13px 0}.quizq label{display:block;padding:5px}.btn{border:0;border-radius:9px;padding:10px 16px;background:var(--blue);color:#fff;font-weight:700;cursor:pointer}.btn.secondary{background:#526d82}.score{font-weight:800;margin-left:10px}
+.diagram-note{text-align:center;color:var(--muted);font-size:.92rem}.cost{color:#9b5d00;font-weight:700}.pill{display:inline-block;border-radius:99px;background:#e6f4ea;color:#137333;padding:2px 9px;font-weight:700}
+footer{background:var(--navy);color:#dbefff;padding:25px;text-align:center}
+@media(max-width:780px){.flow{grid-template-columns:1fr}.node:not(:last-child):after{content:"↓";right:48%;top:auto;bottom:-23px}.arch{grid-template-columns:1fr}section{padding:19px}.step{padding-left:48px}}
+@media print{nav,.copy,.btn{display:none}body{background:#fff}section{box-shadow:none;break-inside:avoid}details>div{display:block!important}header{padding:22px}}
+</style>
+</head>
+<body>
+<header>
+ <div class="wrap hero">
+  <div class="eyebrow">Trainer-ready hands-on tutorial</div>
+  <h1>GCP Dataproc + GCS + PySpark</h1>
+  <p>A simple end-to-end retail sales demo for someone new to Google Cloud Console: architecture, Console and CLI, Cloud Storage as the durable HDFS replacement, IAM, job submission, verification, troubleshooting and cleanup.</p>
+  <div class="badges"><span class="badge">~60–90 minutes</span><span class="badge">Console + Cloud Shell</span><span class="badge">Small dataset</span><span class="badge">Cost cleanup included</span></div>
+ </div>
+</header>
+<nav><div class="wrap">
+ <a href="#outcome">Outcome</a><a href="#concepts">Concepts</a><a href="#architecture">Architecture</a><a href="#iam">IAM</a><a href="#prepare">Prepare</a><a href="#console">Console Lab</a><a href="#cli">CLI Lab</a><a href="#verify">Verify</a><a href="#cleanup">Cleanup</a><a href="#trouble">Troubleshoot</a><a href="#interview">Interview</a><a href="#quiz">Quiz</a>
+</div></nav>
+<main class="wrap">
+
+<section id="outcome">
+ <h2>1. Learning outcome and demo story</h2>
+ <p class="lead"><strong>Scenario:</strong> A retail company receives a CSV of store sales. You will keep the input and PySpark program in a Cloud Storage bucket, run the program on a Dataproc Spark cluster, and write a city/category summary back to the bucket as Parquet.</p>
+ <div class="flow">
+  <div class="node">sales.csv<small>Raw retail records</small></div>
+  <div class="node">GCS input/<small>Durable object storage</small></div>
+  <div class="node">Dataproc<small>Managed Spark cluster</small></div>
+  <div class="node">PySpark<small>Clean + aggregate</small></div>
+  <div class="node">GCS output/<small>Parquet report</small></div>
+ </div>
+ <h3>What you will prove</h3>
+ <div class="checklist">
+  <label><input type="checkbox">I can identify master/primary and worker responsibilities.</label>
+  <label><input type="checkbox">I can create and navigate a GCS bucket.</label>
+  <label><input type="checkbox">I can create a Dataproc cluster using the Console and CLI.</label>
+  <label><input type="checkbox">I can submit a PySpark job with <code>gcloud dataproc jobs submit pyspark</code>.</label>
+  <label><input type="checkbox">I understand why <code>gs://</code> data survives after the cluster is deleted.</label>
+ </div>
+ <div class="callout warning"><strong>Cost rule:</strong> A running Dataproc cluster uses Compute Engine VMs and incurs charges even while idle. Delete it immediately after the lab. Charges and quotas vary by region and account; check the Pricing Calculator before classroom use.</div>
+</section>
+
+<section id="concepts">
+ <h2>2. Key concepts in plain language</h2>
+ <div class="grid">
+  <div class="card"><h3>Google Cloud Console</h3><p>Browser-based interface to create and inspect projects, buckets, clusters, jobs, IAM and logs.</p></div>
+  <div class="card"><h3>Google Cloud CLI</h3><p><code>gcloud</code> commands for repeatable administration. Cloud Shell already includes the CLI and signs in with your Google identity.</p></div>
+  <div class="card"><h3>Dataproc</h3><p>Google Cloud’s managed service for Apache Spark and Hadoop. It creates the required VMs, installs software and manages job submission.</p></div>
+  <div class="card"><h3>Cloud Storage (GCS)</h3><p>Durable object storage. A bucket is a global-name container; files stored inside it are objects addressed with <code>gs://bucket/path</code>.</p></div>
+  <div class="card"><h3>PySpark</h3><p>Python API for Apache Spark. The driver plans work and executors process distributed partitions.</p></div>
+  <div class="card"><h3>IAM</h3><p>Identity and Access Management controls <em>who</em> can perform <em>which actions</em> on <em>which resources</em>.</p></div>
+ </div>
+ <h3>Console versus CLI</h3>
+ <table><thead><tr><th>Need</th><th>Console</th><th>CLI</th></tr></thead><tbody>
+  <tr><td>First-time learning</td><td>Excellent visibility</td><td>Requires command knowledge</td></tr>
+  <tr><td>Repeatability</td><td>Manual clicks</td><td>Commands can be scripted</td></tr>
+  <tr><td>Troubleshooting</td><td>Friendly job/log screens</td><td>Fast status and log commands</td></tr>
+  <tr><td>Production automation</td><td>Limited</td><td>Good; Infrastructure as Code is better at scale</td></tr>
+ </tbody></table>
+</section>
+
+<section id="architecture">
+ <h2>3. Dataproc cluster architecture</h2>
+ <div class="arch">
+  <div class="plane control">
+   <h3>Google-managed control plane</h3>
+   <p>Dataproc API receives create/delete/job requests, provisions resources, reports status and integrates with IAM, logging and monitoring.</p>
+   <p><strong>You interact through:</strong> Console, <code>gcloud</code>, REST APIs or client libraries.</p>
+  </div>
+  <div class="plane data">
+   <h3>Your project’s data plane</h3>
+   <div class="workers">
+    <div class="worker"><strong>Primary</strong><br>Spark driver, YARN ResourceManager, HDFS NameNode</div>
+    <div class="worker"><strong>Worker 1</strong><br>Executors, NodeManager, DataNode</div>
+    <div class="worker"><strong>Worker 2</strong><br>Executors, NodeManager, DataNode</div>
+   </div>
+   <p>Compute Engine VMs execute the job. This tutorial uses a <strong>single-node training cluster</strong>, so primary and worker functions share one VM.</p>
+  </div>
+ </div>
+ <p class="diagram-note">Conceptual view. Exact installed components depend on the Dataproc image and cluster configuration.</p>
+ <h3>Spark execution inside the cluster</h3>
+ <table><thead><tr><th>Component</th><th>Responsibility</th><th>Retail example</th></tr></thead><tbody>
+  <tr><td>Driver</td><td>Creates SparkSession, builds the execution plan and coordinates stages.</td><td>Plans read → clean → groupBy → write.</td></tr>
+  <tr><td>YARN ResourceManager</td><td>Allocates cluster resources to applications.</td><td>Grants CPU/memory containers to the Spark job.</td></tr>
+  <tr><td>Executors</td><td>Run tasks over data partitions and return results/metrics.</td><td>Aggregate sales records by city and category.</td></tr>
+  <tr><td>GCS Connector</td><td>Lets Hadoop/Spark APIs access <code>gs://</code> objects.</td><td>Reads CSV and writes Parquet without copying data into HDFS.</td></tr>
+ </tbody></table>
+ <h3>GCS as the HDFS replacement</h3>
+ <table><thead><tr><th>Area</th><th>HDFS</th><th>Cloud Storage</th></tr></thead><tbody>
+  <tr><td>Address</td><td><code>hdfs:///data/sales.csv</code></td><td><code>gs://my-bucket/input/sales.csv</code></td></tr>
+  <tr><td>Location</td><td>Cluster disks</td><td>Independent managed object storage</td></tr>
+  <tr><td>After cluster deletion</td><td>Data is normally lost with cluster disks</td><td>Objects remain until separately deleted</td></tr>
+  <tr><td>Scaling</td><td>Storage and compute are coupled</td><td>Storage and compute scale independently</td></tr>
+  <tr><td>Semantics</td><td>True distributed filesystem</td><td>Object store exposed through a connector; not identical to POSIX/HDFS</td></tr>
+ </tbody></table>
+ <div class="callout"><strong>Memory aid:</strong> HDFS is the cluster’s cupboard. GCS is the warehouse outside the cluster. You can replace the workers without throwing away the warehouse.</div>
+</section>
+
+<section id="iam">
+ <h2>4. IAM roles for data workloads</h2>
+ <p>Two identities matter. Do not mix them:</p>
+ <div class="grid">
+  <div class="card"><h3>1. Your user identity</h3><p>Creates buckets/clusters and submits jobs through Console or Cloud Shell.</p></div>
+  <div class="card"><h3>2. Cluster VM service account</h3><p>Used by Dataproc VMs at runtime to read input, write output and publish logs.</p></div>
+ </div>
+ <h3>Practical least-privilege role guide</h3>
+ <table><thead><tr><th>Identity</th><th>Typical role</th><th>Why</th></tr></thead><tbody>
+  <tr><td>Lab user</td><td>Dataproc Editor (<code>roles/dataproc.editor</code>)</td><td>Create/delete clusters and submit/manage jobs. Exact tasks may need extra permissions.</td></tr>
+  <tr><td>Lab user</td><td>Service Account User (<code>roles/iam.serviceAccountUser</code>) on the selected VM service account</td><td>Allows attaching/acting as that service account when creating the cluster.</td></tr>
+  <tr><td>Lab user</td><td>Storage Admin (<code>roles/storage.admin</code>) for a self-contained lab</td><td>Create/delete bucket and manage objects. Narrow this in production.</td></tr>
+  <tr><td>Cluster VM service account</td><td>Dataproc Worker (<code>roles/dataproc.worker</code>)</td><td>Required worker-node operations.</td></tr>
+  <tr><td>Cluster VM service account</td><td>Storage Object Viewer on input + Storage Object Creator/Admin on output</td><td>Read the CSV/script and write results. Object Admin is simpler for a disposable lab.</td></tr>
+ </tbody></table>
+ <div class="callout danger"><strong>Never download a service-account JSON key for this lab.</strong> Use the service account attached to the Dataproc VM. Long-lived keys are unnecessary and risky.</div>
+ <h3>Where to view roles in Console</h3>
+ <ol>
+  <li>Open Navigation menu ☰ → <strong>IAM &amp; Admin → IAM</strong>.</li>
+  <li>Use <strong>View by principals</strong> to find your user or service account.</li>
+  <li>For bucket-only access: Cloud Storage → Buckets → bucket name → <strong>Permissions</strong>.</li>
+  <li>If your organization manages permissions, ask the administrator; do not grant broad Owner/Editor merely to bypass errors.</li>
+ </ol>
+</section>
+
+<section id="prepare">
+ <h2>5. Prerequisites and safe naming</h2>
+ <div class="steps">
+  <div class="step"><h3>Select or create a project</h3><p>At the top of <a href="https://console.cloud.google.com/" target="_blank">Google Cloud Console</a>, click the project selector. Record the <strong>Project ID</strong>, not only the display name. Billing must be enabled.</p></div>
+  <div class="step"><h3>Open Cloud Shell</h3><p>Click the terminal icon <strong>&gt;_ Activate Cloud Shell</strong> in the top-right. Wait for the prompt.</p></div>
+  <div class="step"><h3>Set lab variables</h3><p>Replace <code>YOUR_PROJECT_ID</code>. Bucket names are globally unique, so the command builds one from your project ID.</p>
+   <div class="code"><button class="copy">Copy</button><pre>export DP_PROJECT="YOUR_PROJECT_ID"
+export DP_REGION="asia-south1"
+export DP_CLUSTER="retail-dp-cluster"
+export DP_BUCKET="${DP_PROJECT}-retail-dp-demo"
+
+gcloud config set project "$DP_PROJECT"
+gcloud config set dataproc/region "$DP_REGION"
+
+printf 'Project: %s\nRegion: %s\nCluster: %s\nBucket: %s\n' \
+  "$DP_PROJECT" "$DP_REGION" "$DP_CLUSTER" "$DP_BUCKET"</pre></div>
+  </div>
+  <div class="step"><h3>Enable APIs</h3>
+   <div class="code"><button class="copy">Copy</button><pre>gcloud services enable \
+  dataproc.googleapis.com \
+  compute.googleapis.com \
+  storage.googleapis.com</pre></div>
+   <p>If denied, an administrator needs to enable the APIs or grant Service Usage permissions.</p>
+  </div>
+ </div>
+</section>
+
+<section id="console">
+ <h2>6. Console practical — bucket, files, cluster and job</h2>
+ <h3>A. Create the Cloud Storage bucket</h3>
+ <div class="steps">
+  <div class="step"><p>Navigation menu ☰ → <strong>Cloud Storage → Buckets</strong> → <strong>Create</strong>.</p></div>
+  <div class="step"><p>Name: use the value shown by <code>echo "$DP_BUCKET"</code>. It must be globally unique.</p></div>
+  <div class="step"><p>Location type: <strong>Region</strong>; Location: <strong>asia-south1 (Mumbai)</strong>, matching the cluster. Default storage class: <strong>Standard</strong>.</p></div>
+  <div class="step"><p>Access control: <strong>Uniform</strong>. Keep public access prevention enabled. Keep other defaults and click <strong>Create</strong>.</p></div>
+ </div>
+ <h3>B. Create the two local lab files in Cloud Shell</h3>
+ <p>Use the following commands. They create a 12-row CSV and a PySpark application in your Cloud Shell home directory.</p>
+ <div class="code"><button class="copy">Copy</button><pre>mkdir -p ~/dataproc-retail-demo
+cd ~/dataproc-retail-demo
+
+cat &gt; sales.csv &lt;&lt;'CSV'
+sale_id,sale_date,city,category,quantity,unit_price
+S001,2026-07-01,Bengaluru,Electronics,1,55000
+S002,2026-07-01,Chennai,Grocery,5,120
+S003,2026-07-02,Bengaluru,Grocery,3,250
+S004,2026-07-02,Mumbai,Clothing,2,1500
+S005,2026-07-03,Chennai,Electronics,1,32000
+S006,2026-07-03,Mumbai,Grocery,10,80
+S007,2026-07-04,Bengaluru,Clothing,2,2200
+S008,2026-07-04,Chennai,Clothing,1,1800
+S009,2026-07-05,Mumbai,Electronics,2,28000
+S010,2026-07-05,Bengaluru,Grocery,4,150
+S011,2026-07-06,Chennai,Grocery,6,100
+S012,2026-07-06,Mumbai,Clothing,3,1200
+CSV</pre></div>
+ <div class="code"><button class="copy">Copy</button><pre>cat &gt; retail_sales_job.py &lt;&lt;'PY'
+import sys
+from pyspark.sql import SparkSession
+from pyspark.sql import functions as F
+from pyspark.sql.types import (
+    StructType, StructField, StringType,
+    IntegerType, DoubleType
+)
+
+if len(sys.argv) != 3:
+    raise ValueError(
+        "Usage: retail_sales_job.py &lt;input_gcs_path&gt; &lt;output_gcs_path&gt;"
+    )
+
+input_path = sys.argv[1]
+output_path = sys.argv[2]
+
+spark = SparkSession.builder.appName("RetailSalesSummary").getOrCreate()
+
+schema = StructType([
+    StructField("sale_id", StringType(), False),
+    StructField("sale_date", StringType(), True),
+    StructField("city", StringType(), True),
+    StructField("category", StringType(), True),
+    StructField("quantity", IntegerType(), True),
+    StructField("unit_price", DoubleType(), True)
+])
+
+sales_df = (
+    spark.read
+         .option("header", "true")
+         .schema(schema)
+         .csv(input_path)
+)
+
+clean_df = (
+    sales_df
+    .filter(F.col("quantity") &gt; 0)
+    .filter(F.col("unit_price") &gt;= 0)
+    .withColumn("sale_date", F.to_date("sale_date", "yyyy-MM-dd"))
+    .withColumn("city", F.initcap(F.trim("city")))
+    .withColumn("category", F.initcap(F.trim("category")))
+    .withColumn("revenue", F.col("quantity") * F.col("unit_price"))
+)
+
+report_df = (
+    clean_df
+    .groupBy("city", "category")
+    .agg(
+        F.countDistinct("sale_id").alias("total_sales"),
+        F.sum("quantity").alias("units_sold"),
+        F.round(F.sum("revenue"), 2).alias("total_revenue")
+    )
+    .orderBy("city", F.desc("total_revenue"))
+)
+
+print("=== RETAIL SALES REPORT ===")
+report_df.show(50, truncate=False)
+
+(
+    report_df.coalesce(1)
+             .write
+             .mode("overwrite")
+             .parquet(output_path)
+)
+
+spark.stop()
+PY
+
+python3 -m py_compile retail_sales_job.py
+echo "Files created and Python syntax validated."</pre></div>
+ <div class="callout"><strong>Why explicit schema?</strong> It prevents Spark from scanning the file to guess types and makes expected column types clear. <code>coalesce(1)</code> is only for this tiny classroom report; avoid forcing one partition for large production data.</div>
+ <h3>C. Upload through Console</h3>
+ <ol>
+  <li>Cloud Storage → Buckets → your bucket.</li>
+  <li>Click <strong>Create folder</strong>, enter <code>input</code>; open it and click <strong>Upload files</strong> → choose <code>sales.csv</code>.</li>
+  <li>Return to bucket root, create folder <code>code</code>; upload <code>retail_sales_job.py</code>.</li>
+  <li>The expected object paths are <code>gs://BUCKET/input/sales.csv</code> and <code>gs://BUCKET/code/retail_sales_job.py</code>.</li>
+ </ol>
+ <p>Cloud Shell file download: click ⋮ in Cloud Shell → <strong>Download</strong> is for downloading to your computer. To upload directly from Cloud Shell, the CLI method below is simpler.</p>
+ <h3>D. Create a low-cost training cluster in Console</h3>
+ <div class="steps">
+  <div class="step"><p>Navigation menu ☰ → <strong>Dataproc → Clusters</strong> → <strong>Create cluster</strong> → <strong>Cluster on Compute Engine</strong>.</p></div>
+  <div class="step"><p>Name: <code>retail-dp-cluster</code>. Region: <code>asia-south1</code>. Keep a zone selection within that region.</p></div>
+  <div class="step"><p>Under cluster type/configuration, select <strong>Single node</strong> for this learning demo. This is not for production high availability.</p></div>
+  <div class="step"><p>Machine type: choose a small available general-purpose type with at least 2 vCPUs, such as <code>e2-standard-2</code>. Set primary boot disk to around 50 GB if the UI permits.</p></div>
+  <div class="step"><p>Choose the intended VM service account. Ensure it has Dataproc Worker and required bucket object permissions. Keep the current recommended Dataproc image/default unless your course mandates a version.</p></div>
+  <div class="step"><p>Click <strong>Create</strong>. Wait until status becomes <span class="pill">Running</span>. Provisioning can take several minutes.</p></div>
+ </div>
+ <h3>E. Submit the PySpark job in Console</h3>
+ <ol>
+  <li>Dataproc → <strong>Jobs</strong> → <strong>Submit job</strong>.</li>
+  <li>Region: <code>asia-south1</code>; Cluster: <code>retail-dp-cluster</code>; Job type: <strong>PySpark</strong>.</li>
+  <li>Main Python file: <code>gs://YOUR_BUCKET/code/retail_sales_job.py</code>.</li>
+  <li>Arguments, in this order:
+   <ul><li><code>gs://YOUR_BUCKET/input/sales.csv</code></li><li><code>gs://YOUR_BUCKET/output/sales_summary</code></li></ul>
+  </li>
+  <li>Click <strong>Submit</strong>. Open the job and watch status/logs until it is <strong>Succeeded</strong>.</li>
+ </ol>
+</section>
+
+<section id="cli">
+ <h2>7. CLI practical — repeat the same workflow</h2>
+ <p>The CLI is the most reliable way to repeat the lab. Run these in Cloud Shell after the variables in Section 5 are set.</p>
+ <h3>A. Create bucket and upload files</h3>
+ <div class="code"><button class="copy">Copy</button><pre>gcloud storage buckets create "gs://${DP_BUCKET}" \
+  --project="$DP_PROJECT" \
+  --location="$DP_REGION" \
+  --default-storage-class=STANDARD \
+  --uniform-bucket-level-access
+
+gcloud storage cp ~/dataproc-retail-demo/sales.csv \
+  "gs://${DP_BUCKET}/input/sales.csv"
+
+gcloud storage cp ~/dataproc-retail-demo/retail_sales_job.py \
+  "gs://${DP_BUCKET}/code/retail_sales_job.py"
+
+gcloud storage ls --recursive "gs://${DP_BUCKET}"</pre></div>
+ <p>If you already created the bucket/files in Console, skip the create command; rerunning upload commands safely replaces those two objects.</p>
+ <h3>B. Create a single-node cluster</h3>
+ <div class="code"><button class="copy">Copy</button><pre>gcloud dataproc clusters create "$DP_CLUSTER" \
+  --project="$DP_PROJECT" \
+  --region="$DP_REGION" \
+  --single-node \
+  --master-machine-type=e2-standard-2 \
+  --master-boot-disk-size=50GB \
+  --labels=purpose=training,owner=trainer</pre></div>
+ <p>Inspect it:</p>
+ <div class="code"><button class="copy">Copy</button><pre>gcloud dataproc clusters describe "$DP_CLUSTER" \
+  --project="$DP_PROJECT" \
+  --region="$DP_REGION" \
+  --format="table(clusterName,status.state,config.masterConfig.machineTypeUri)"</pre></div>
+ <h3>C. Submit the job — important command syntax</h3>
+ <div class="code"><button class="copy">Copy</button><pre>gcloud dataproc jobs submit pyspark \
+  "gs://${DP_BUCKET}/code/retail_sales_job.py" \
+  --project="$DP_PROJECT" \
+  --cluster="$DP_CLUSTER" \
+  --region="$DP_REGION" \
+  -- \
+  "gs://${DP_BUCKET}/input/sales.csv" \
+  "gs://${DP_BUCKET}/output/sales_summary"</pre></div>
+ <div class="callout"><strong>What does <code>--</code> mean?</strong> Flags before it belong to <code>gcloud</code>. Values after it are passed to your Python program as <code>sys.argv[1]</code> and <code>sys.argv[2]</code>.</div>
+ <h3>D. Useful CLI status commands</h3>
+ <div class="code"><button class="copy">Copy</button><pre># List recent jobs
+gcloud dataproc jobs list \
+  --project="$DP_PROJECT" \
+  --region="$DP_REGION" \
+  --limit=10
+
+# Describe one job after replacing JOB_ID
+gcloud dataproc jobs describe JOB_ID \
+  --project="$DP_PROJECT" \
+  --region="$DP_REGION"
+
+# Stream driver output for one job
+gcloud dataproc jobs wait JOB_ID \
+  --project="$DP_PROJECT" \
+  --region="$DP_REGION"</pre></div>
+</section>
+
+<section id="verify">
+ <h2>8. Verify the output and explain what happened</h2>
+ <h3>Expected driver report</h3>
+ <table><thead><tr><th>City</th><th>Category</th><th>Total sales</th><th>Units sold</th><th>Total revenue</th></tr></thead><tbody>
+  <tr><td>Bengaluru</td><td>Electronics</td><td>1</td><td>1</td><td>55000.00</td></tr>
+  <tr><td>Bengaluru</td><td>Clothing</td><td>1</td><td>2</td><td>4400.00</td></tr>
+  <tr><td>Bengaluru</td><td>Grocery</td><td>2</td><td>7</td><td>1350.00</td></tr>
+  <tr><td>Chennai</td><td>Electronics</td><td>1</td><td>1</td><td>32000.00</td></tr>
+  <tr><td>Chennai</td><td>Clothing</td><td>1</td><td>1</td><td>1800.00</td></tr>
+  <tr><td>Chennai</td><td>Grocery</td><td>2</td><td>11</td><td>1200.00</td></tr>
+  <tr><td>Mumbai</td><td>Electronics</td><td>1</td><td>2</td><td>56000.00</td></tr>
+  <tr><td>Mumbai</td><td>Clothing</td><td>2</td><td>5</td><td>6600.00</td></tr>
+  <tr><td>Mumbai</td><td>Grocery</td><td>1</td><td>10</td><td>800.00</td></tr>
+ </tbody></table>
+ <p>Verify objects from Cloud Shell:</p>
+ <div class="code"><button class="copy">Copy</button><pre>gcloud storage ls --recursive \
+  "gs://${DP_BUCKET}/output/sales_summary/"
+
+# Copy the small Parquet output locally for optional inspection
+mkdir -p ~/dataproc-retail-demo/result
+gcloud storage cp --recursive \
+  "gs://${DP_BUCKET}/output/sales_summary/*" \
+  ~/dataproc-retail-demo/result/</pre></div>
+ <p>Console verification: Cloud Storage → Buckets → your bucket → <code>output/sales_summary/</code>. Spark writes a directory containing a <code>part-....snappy.parquet</code> object and <code>_SUCCESS</code>, not one file literally named <code>sales_summary.parquet</code>.</p>
+ <h3>End-to-end execution sequence</h3>
+ <ol>
+  <li>The Dataproc service receives the job request.</li>
+  <li>The Spark driver starts on the cluster and receives the two GCS paths.</li>
+  <li>The GCS connector streams CSV objects to Spark using the cluster service account.</li>
+  <li>Spark validates types, cleans records, creates <code>revenue</code>, shuffles by city/category and aggregates.</li>
+  <li>The connector writes Parquet objects back to GCS.</li>
+  <li>Because output is in GCS, it remains available after cluster deletion.</li>
+ </ol>
+</section>
+
+<section id="cleanup">
+ <h2>9. Cost-control cleanup</h2>
+ <div class="callout danger"><strong>Do this before leaving the lab.</strong> Delete the Dataproc cluster first. Deleting a job record does not stop or delete the cluster.</div>
+ <h3>Console cleanup</h3>
+ <ol>
+  <li>Dataproc → Clusters → select <code>retail-dp-cluster</code> → <strong>Delete</strong> → confirm.</li>
+  <li>Wait until the cluster disappears or reports deleted.</li>
+  <li>If you no longer need the data: Cloud Storage → Buckets → select the lab bucket → <strong>Delete</strong>.</li>
+ </ol>
+ <h3>CLI cleanup</h3>
+ <div class="code"><button class="copy">Copy</button><pre># 1. Delete compute first
+gcloud dataproc clusters delete "$DP_CLUSTER" \
+  --project="$DP_PROJECT" \
+  --region="$DP_REGION" \
+  --quiet
+
+# 2. Confirm no lab cluster remains
+gcloud dataproc clusters list \
+  --project="$DP_PROJECT" \
+  --region="$DP_REGION"
+
+# 3. Delete the disposable bucket and all its objects
+gcloud storage rm --recursive "gs://${DP_BUCKET}"
+
+# 4. Confirm bucket removal
+gcloud storage buckets list --project="$DP_PROJECT"</pre></div>
+ <div class="callout warning">The recursive bucket deletion is destructive. Run it only after confirming <code>echo "$DP_BUCKET"</code> identifies the disposable lab bucket—not a shared or production bucket.</div>
+</section>
+
+<section id="trouble">
+ <h2>10. Common errors and fixes</h2>
+ <details><summary>PERMISSION_DENIED when creating the cluster</summary><div><p>Check that your user can create Dataproc clusters and act as the selected VM service account. Typical missing access is Dataproc Editor or Service Account User. Your administrator may use a custom role instead.</p></div></details>
+ <details><summary>403 while reading or writing gs://</summary><div><p>The <strong>cluster VM service account</strong>, not only your user, needs object permissions on the bucket. Grant Viewer for input and Creator/Admin for output at the bucket level.</p></div></details>
+ <details><summary>Bucket name already exists</summary><div><p>Bucket names are global. Change <code>DP_BUCKET</code>, for example by appending a short unique suffix, then create again.</p></div></details>
+ <details><summary>Region mismatch / cluster not found</summary><div><p>The job’s <code>--region</code> must match the cluster region. Run <code>gcloud dataproc clusters list --regions=all</code> or check Dataproc → Clusters in Console.</p></div></details>
+ <details><summary>PySpark job says input path does not exist</summary><div><p>Run <code>gcloud storage ls gs://BUCKET/input/</code>. Check spelling, case and whether the bucket variable was expanded. GCS object names are case-sensitive.</p></div></details>
+ <details><summary>Output path already exists</summary><div><p>This script uses <code>mode("overwrite")</code>, so it should replace the old path. If an IAM rule blocks deletion of prior objects, use a new output folder or grant the precise delete permission required.</p></div></details>
+ <details><summary>Quota or stockout error for the machine type</summary><div><p>Choose another available zone/machine type in the same region, or request quota. Do not silently switch regions if the bucket’s regional placement is an important course requirement.</p></div></details>
+ <details><summary>Command not found: gcloud</summary><div><p>Use Google Cloud Shell, which already includes the CLI, or install and initialize the Google Cloud CLI locally with <code>gcloud init</code>.</p></div></details>
+</section>
+
+<section id="best">
+ <h2>11. Production improvements and edge cases</h2>
+ <table><thead><tr><th>Training choice</th><th>Production improvement</th></tr></thead><tbody>
+  <tr><td>Single-node cluster</td><td>Use multi-node or autoscaling clusters, or consider Dataproc Serverless for suitable batch workloads.</td></tr>
+  <tr><td>Object Admin for one bucket</td><td>Separate input/output buckets or prefixes and apply Viewer/Creator permissions narrowly.</td></tr>
+  <tr><td><code>inferSchema</code> avoided; static schema used</td><td>Store versioned schemas and validate malformed records/quarantine paths.</td></tr>
+  <tr><td><code>coalesce(1)</code></td><td>Retain parallel output files and manage file sizes through partitioning/compaction.</td></tr>
+  <tr><td>Overwrite output</td><td>Use partitioned, idempotent writes and atomic publication strategies.</td></tr>
+  <tr><td>Long-lived interactive cluster</td><td>Use ephemeral job clusters/workflows, scheduled deletion and labels for cost attribution.</td></tr>
+ </tbody></table>
+ <h3>When HDFS may still appear</h3>
+ <p>Dataproc clusters include HDFS for temporary/shuffle-adjacent or legacy use cases, but durable business data should normally live outside ephemeral cluster disks. GCS is not a perfect drop-in for every HDFS/POSIX behavior: rename-heavy algorithms, very small objects and assumptions about append semantics need review.</p>
+</section>
+
+<section id="interview">
+ <h2>12. Interview questions with answers</h2>
+ <details><summary>1. What is Dataproc?</summary><div>A managed Google Cloud service for running Apache Spark, Hadoop and related open-source data workloads on managed infrastructure.</div></details>
+ <details><summary>2. What is the difference between Dataproc and Spark?</summary><div>Spark is the processing engine. Dataproc is the cloud service that provisions, configures and manages environments where Spark jobs run.</div></details>
+ <details><summary>3. Why use GCS instead of HDFS for durable data?</summary><div>It decouples storage from compute, remains after cluster deletion, scales independently and can be accessed by multiple Google Cloud services.</div></details>
+ <details><summary>4. What does the GCS connector do?</summary><div>It allows Hadoop-compatible APIs and Spark to read and write Cloud Storage using <code>gs://</code> paths.</div></details>
+ <details><summary>5. What is the primary node?</summary><div>It hosts coordination services such as the Spark driver for submitted jobs, YARN ResourceManager and HDFS NameNode, depending on configuration.</div></details>
+ <details><summary>6. What do worker nodes do?</summary><div>They provide CPU and memory for executors/tasks and may run YARN NodeManager and HDFS DataNode services.</div></details>
+ <details><summary>7. Why must the cluster service account have GCS permissions?</summary><div>The code runs using the VM runtime identity. Your personal ability to view a bucket does not automatically give the cluster access.</div></details>
+ <details><summary>8. What does the double dash in the submit command mean?</summary><div>It separates <code>gcloud</code> flags from arguments passed to the PySpark application.</div></details>
+ <details><summary>9. Does deleting the Dataproc job delete the cluster?</summary><div>No. Job records and cluster compute are separate resources. Delete the cluster explicitly to stop VM charges.</div></details>
+ <details><summary>10. Why match the GCS and Dataproc region?</summary><div>It generally reduces latency and avoids unnecessary inter-region data transfer considerations; exact costs depend on the service/location design.</div></details>
+ <details><summary>11. Why is Parquet preferred over CSV for analytics?</summary><div>Parquet is columnar, typed and compressed, allowing Spark to read only relevant columns and often reduce I/O.</div></details>
+ <details><summary>12. What is a single-node cluster?</summary><div>A non-HA cluster where primary and worker roles share one VM. It is useful for small experiments, not resilient production workloads.</div></details>
+ <details><summary>13. Console or CLI—which is better?</summary><div>Console is easier for exploration; CLI is more repeatable and automatable. Strong teams understand both.</div></details>
+ <details><summary>14. How do you reduce Dataproc cost?</summary><div>Use right-sized or autoscaling/ephemeral compute, delete idle clusters, use appropriate secondary workers where suitable, label resources and keep durable data in GCS.</div></details>
+ <details><summary>15. What is the Spark driver versus executor?</summary><div>The driver plans and coordinates the application. Executors run distributed tasks and store intermediate data on worker resources.</div></details>
+</section>
+
+<section id="quiz">
+ <h2>13. Practice quiz</h2>
+ <div id="quizBox">
+  <div class="quizq" data-answer="b"><strong>1. Which path reads a GCS object from Spark?</strong><label><input type="radio" name="q1" value="a"> hdfs://bucket/file</label><label><input type="radio" name="q1" value="b"> gs://bucket/file</label><label><input type="radio" name="q1" value="c"> gcs://bucket/file</label></div>
+  <div class="quizq" data-answer="c"><strong>2. Which identity needs permission to read data during execution?</strong><label><input type="radio" name="q2" value="a"> Only the bucket creator</label><label><input type="radio" name="q2" value="b"> Only the billing administrator</label><label><input type="radio" name="q2" value="c"> The cluster VM service account</label></div>
+  <div class="quizq" data-answer="a"><strong>3. What survives normal Dataproc cluster deletion?</strong><label><input type="radio" name="q3" value="a"> Objects in GCS</label><label><input type="radio" name="q3" value="b"> HDFS data on deleted cluster disks</label><label><input type="radio" name="q3" value="c"> Running executors</label></div>
+  <div class="quizq" data-answer="b"><strong>4. What does <code>--</code> do in the submit command?</strong><label><input type="radio" name="q4" value="a"> Deletes the cluster</label><label><input type="radio" name="q4" value="b"> Separates gcloud flags from application arguments</label><label><input type="radio" name="q4" value="c"> Comments the remaining command</label></div>
+  <div class="quizq" data-answer="c"><strong>5. What should you do immediately after the lab?</strong><label><input type="radio" name="q5" value="a"> Delete only the job record</label><label><input type="radio" name="q5" value="b"> Leave the cluster idle</label><label><input type="radio" name="q5" value="c"> Delete the cluster and confirm removal</label></div>
+ </div>
+ <button class="btn" onclick="gradeQuiz()">Check score</button><button class="btn secondary" onclick="resetQuiz()">Reset</button><span class="score" id="score"></span>
+</section>
+
+<section id="reference">
+ <h2>14. Official references</h2>
+ <ul>
+  <li><a href="https://docs.cloud.google.com/dataproc/docs/guides/submit-job" target="_blank">Submit a Dataproc job</a></li>
+  <li><a href="https://docs.cloud.google.com/dataproc/docs/concepts/connectors/cloud-storage" target="_blank">Dataproc Cloud Storage connector</a></li>
+  <li><a href="https://docs.cloud.google.com/storage/docs/creating-buckets" target="_blank">Create a Cloud Storage bucket</a></li>
+  <li><a href="https://docs.cloud.google.com/sdk/gcloud/reference/dataproc/jobs/submit/pyspark" target="_blank">gcloud dataproc jobs submit pyspark reference</a></li>
+  <li><a href="https://docs.cloud.google.com/dataproc/docs/concepts/iam" target="_blank">Dataproc IAM</a></li>
+  <li><a href="https://cloud.google.com/products/calculator" target="_blank">Google Cloud Pricing Calculator</a></li>
+ </ul>
+ <div class="callout success"><strong>Completion check:</strong> You are finished only when the output exists in GCS, the job succeeded, and the cluster has been deleted and verified.</div>
+</section>
+</main>
+<footer>GCP Dataproc + GCS + PySpark Practical Tutorial • Updated July 2026</footer>
+<script>
+document.querySelectorAll('.copy').forEach(b=>b.addEventListener('click',async()=>{
+ const t=b.nextElementSibling.innerText;
+ try{await navigator.clipboard.writeText(t);b.textContent='Copied';setTimeout(()=>b.textContent='Copy',1200)}
+ catch(e){b.textContent='Select manually'}
+}));
+document.querySelectorAll('.checklist input').forEach((x,i)=>{
+ x.checked=localStorage.getItem('dpcheck'+i)==='1';
+ x.addEventListener('change',()=>localStorage.setItem('dpcheck'+i,x.checked?'1':'0'));
+});
+function gradeQuiz(){
+ let n=0;document.querySelectorAll('.quizq').forEach(q=>{
+  const v=q.querySelector('input:checked');q.style.borderColor=v&&v.value===q.dataset.answer?'#188038':'#d93025';
+  if(v&&v.value===q.dataset.answer)n++;
+ });document.getElementById('score').textContent=`${n}/5 — ${n===5?'Excellent':n>=3?'Good; review missed topics':'Review architecture, IAM and cleanup'}`;
+}
+function resetQuiz(){document.querySelectorAll('.quizq input').forEach(x=>x.checked=false);document.querySelectorAll('.quizq').forEach(q=>q.style.borderColor='');document.getElementById('score').textContent=''}
+</script>
+</body>
+</html>
