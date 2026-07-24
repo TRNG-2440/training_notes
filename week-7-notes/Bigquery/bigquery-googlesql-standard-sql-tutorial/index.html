@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BigQuery Standard SQL (GoogleSQL) – Complete Hands-on Tutorial</title>
+<style>
+:root{--b:#1769e0;--d:#102a56;--bg:#f6f8fc;--card:#fff;--line:#dce4f0;--code:#101827;--ok:#087f5b;--warn:#b45309}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:var(--bg);color:#172033;line-height:1.65}
+header{background:linear-gradient(120deg,var(--d),var(--b));color:#fff;padding:52px 22px}.hero{max-width:1200px;margin:auto}.hero h1{font-size:clamp(2rem,4vw,3.7rem);line-height:1.08;margin:0 0 12px}.hero p{font-size:1.12rem;max-width:900px}
+.wrap{max-width:1380px;margin:auto;padding:22px;display:grid;grid-template-columns:280px 1fr;gap:22px}
+nav{position:sticky;top:15px;align-self:start;max-height:calc(100vh - 30px);overflow:auto;background:#fff;border:1px solid var(--line);border-radius:15px;padding:15px}
+nav a{display:block;padding:7px 9px;color:#344054;text-decoration:none;border-radius:7px;font-size:.92rem}nav a:hover{background:#edf4ff;color:var(--b)}
+section{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:26px;margin-bottom:20px;transition:.2s}section:hover{box-shadow:0 8px 24px #17356a12}
+h2{margin-top:0;border-bottom:2px solid #edf1f7;padding-bottom:9px}h3{margin-top:24px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.card{border:1px solid var(--line);border-radius:12px;padding:15px;background:#fbfcff}.call{padding:14px 16px;border-left:5px solid var(--b);background:#edf5ff;border-radius:9px;margin:14px 0}.ok{border-left-color:var(--ok);background:#ecfdf5}.warn{border-left-color:var(--warn);background:#fff8e8}
+table{width:100%;border-collapse:collapse;margin:14px 0;font-size:.94rem}th,td{border:1px solid var(--line);padding:10px;vertical-align:top;text-align:left}th{background:#edf3ff}
+pre{background:var(--code);color:#e5e7eb;padding:18px;border-radius:11px;overflow:auto;position:relative}.copy{position:absolute;right:9px;top:9px;border:0;border-radius:7px;padding:6px 9px;cursor:pointer}
+.diagram{overflow:auto;border:1px solid var(--line);background:#fbfcff;border-radius:14px;padding:14px}.diagram svg{min-width:720px;width:100%;height:auto}
+details{border:1px solid var(--line);border-radius:10px;padding:10px 13px;margin:8px 0}summary{font-weight:650;cursor:pointer}.btn{border:0;border-radius:8px;padding:10px 15px;background:var(--b);color:#fff;cursor:pointer}
+label{display:block;margin:5px 0}.score{font-weight:bold;margin-top:12px}footer{text-align:center;padding:28px;color:#667085}
+@media(max-width:950px){.wrap{grid-template-columns:1fr}nav{position:relative;max-height:none}.grid,.grid3{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header><div class="hero"><h1>BigQuery Standard SQL — Now Called GoogleSQL</h1>
+<p>What it is, why it is used, how to implement it from scratch in BigQuery Studio, a complete retail demo, cost-control techniques, and safe resource cleanup.</p></div></header>
+<div class="wrap"><nav><strong>Contents</strong>
+<a href="#meaning">1. Meaning</a><a href="#why">2. Why GoogleSQL</a><a href="#types">3. Statement types</a><a href="#architecture">4. Execution flow</a>
+<a href="#setup">5. BigQuery setup</a><a href="#demo">6. End-to-end demo</a><a href="#queries">7. Query examples</a><a href="#ddl">8. DDL</a><a href="#dml">9. DML</a>
+<a href="#functions">10. Functions</a><a href="#cost">11. Cost control</a><a href="#cleanup">12. Cleanup</a><a href="#sandbox">13. Sandbox notes</a>
+<a href="#errors">14. Troubleshooting</a><a href="#practice">15. Exercises</a><a href="#quiz">16. Quiz</a><a href="#interview">17. Interview Q&A</a></nav>
+<main>
+<section id="meaning"><h2>1. What Is BigQuery Standard SQL?</h2>
+<div class="call ok"><strong>BigQuery Standard SQL is the former name of GoogleSQL.</strong> Google renamed “Google Standard SQL” to “GoogleSQL.” It is the recommended SQL dialect for new BigQuery projects.</div>
+<p>GoogleSQL is BigQuery's ANSI-compliant SQL dialect. It is used to create resources, query data, transform rows, manage access and run multi-statement analytical scripts.</p>
+<div class="grid">
+<div class="card"><h3>Standard SQL / GoogleSQL</h3><ul><li>Recommended for all new work.</li><li>ANSI-style SQL.</li><li>Supports joins, CTEs, arrays, structs, window functions, DDL and DML.</li><li>Uses backticks for fully qualified table names.</li></ul></div>
+<div class="card"><h3>Legacy SQL</h3><ul><li>Older BigQuery-specific dialect.</li><li>Retained mainly for compatibility.</li><li>Not recommended for new projects.</li><li>Has different syntax and restrictions.</li></ul></div>
+</div>
+<h3>Simple GoogleSQL example</h3>
+<pre><button class="copy">Copy</button><code>SELECT
+  product_category,
+  SUM(sales_amount) AS total_sales
+FROM `my-project.retail_demo.orders`
+GROUP BY product_category
+ORDER BY total_sales DESC;</code></pre>
+</section>
+
+<section id="why"><h2>2. Why Use GoogleSQL?</h2>
+<div class="grid3"><div class="card"><h3>Familiar syntax</h3><p>Developers and analysts who know standard SQL can learn it quickly.</p></div><div class="card"><h3>Large-scale analytics</h3><p>The same query style works across very large distributed tables.</p></div><div class="card"><h3>Advanced data</h3><p>It supports nested ARRAY and STRUCT data common in analytics.</p></div><div class="card"><h3>Resource creation</h3><p>DDL creates schemas, tables, views, functions and other resources.</p></div><div class="card"><h3>Data changes</h3><p>DML inserts, updates, deletes and merges data in billing-enabled projects.</p></div><div class="card"><h3>Cost visibility</h3><p>BigQuery estimates bytes processed before an on-demand query runs.</p></div></div>
+</section>
+
+<section id="types"><h2>3. GoogleSQL Statement Categories</h2>
+<table><tr><th>Category</th><th>Purpose</th><th>Examples</th></tr>
+<tr><td>DQL</td><td>Read and analyze data</td><td>SELECT, WITH, GROUP BY, QUALIFY</td></tr>
+<tr><td>DDL</td><td>Create, alter and drop resources</td><td>CREATE SCHEMA, CREATE TABLE, CREATE VIEW, DROP TABLE</td></tr>
+<tr><td>DML</td><td>Change table rows</td><td>INSERT, UPDATE, DELETE, MERGE</td></tr>
+<tr><td>DCL</td><td>Control resource access</td><td>GRANT, REVOKE</td></tr>
+<tr><td>TCL</td><td>Manage transactions</td><td>BEGIN TRANSACTION, COMMIT, ROLLBACK</td></tr>
+<tr><td>Procedural SQL</td><td>Run multi-statement logic</td><td>DECLARE, SET, IF, LOOP</td></tr></table>
+</section>
+
+<section id="architecture"><h2>4. How a GoogleSQL Query Runs</h2>
+<div class="diagram"><svg viewBox="0 0 1080 310">
+<defs><marker id="a" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3z" fill="#475467"/></marker></defs>
+<rect x="25" y="105" width="160" height="78" rx="12" fill="#fff" stroke="#1769e0"/><text x="105" y="135" text-anchor="middle" font-weight="700">SQL Editor</text><text x="105" y="158" text-anchor="middle" font-size="13">GoogleSQL query</text>
+<line x1="185" y1="144" x2="255" y2="144" stroke="#475467" stroke-width="3" marker-end="url(#a)"/>
+<rect x="260" y="95" width="185" height="98" rx="12" fill="#edf5ff" stroke="#1769e0"/><text x="352" y="126" text-anchor="middle" font-weight="700">Parser & Validator</text><text x="352" y="151" text-anchor="middle" font-size="13">syntax, names, types</text><text x="352" y="174" text-anchor="middle" font-size="13">permissions</text>
+<line x1="445" y1="144" x2="515" y2="144" stroke="#475467" stroke-width="3" marker-end="url(#a)"/>
+<rect x="520" y="95" width="185" height="98" rx="12" fill="#edf5ff" stroke="#1769e0"/><text x="612" y="126" text-anchor="middle" font-weight="700">Query Optimizer</text><text x="612" y="151" text-anchor="middle" font-size="13">filter pushdown</text><text x="612" y="174" text-anchor="middle" font-size="13">join and scan plan</text>
+<line x1="705" y1="144" x2="775" y2="144" stroke="#475467" stroke-width="3" marker-end="url(#a)"/>
+<rect x="780" y="95" width="180" height="98" rx="12" fill="#edf5ff" stroke="#1769e0"/><text x="870" y="126" text-anchor="middle" font-weight="700">Distributed Compute</text><text x="870" y="151" text-anchor="middle" font-size="13">parallel processing</text><text x="870" y="174" text-anchor="middle" font-size="13">managed slots</text>
+<line x1="870" y1="193" x2="870" y2="245" stroke="#475467" stroke-width="3" marker-end="url(#a)"/>
+<rect x="780" y="250" width="180" height="48" rx="12" fill="#ecfdf5" stroke="#087f5b"/><text x="870" y="280" text-anchor="middle" font-weight="700">Query Results</text>
+</svg></div>
+</section>
+
+<section id="setup"><h2>5. Setup from Scratch in BigQuery Studio</h2>
+<h3>Option A — BigQuery Sandbox</h3>
+<ol><li>Open Google Cloud Console.</li><li>Search for <strong>BigQuery</strong>.</li><li>Open <strong>BigQuery Studio</strong>.</li><li>Sign in and create or select a project.</li><li>Use Sandbox when you do not want to attach a billing account.</li></ol>
+<div class="call warn"><strong>Sandbox limitation:</strong> Sandbox supports learning and queries but does not support DML statements such as INSERT, UPDATE and DELETE. Tables, views and partitions expire automatically after 60 days.</div>
+<h3>Option B — Billing-enabled project</h3>
+<p>Use this when you need DML, streaming, transfer services or production features. For the lab below, the SQL is divided into Sandbox-safe and billing-enabled sections.</p>
+<h3>Create the dataset through Console</h3>
+<ol><li>In <strong>Explorer</strong>, locate your project.</li><li>Click the three-dot <strong>View actions</strong> menu.</li><li>Select <strong>Create dataset</strong>.</li><li>Dataset ID: <code>retail_standard_sql</code>.</li><li>Choose a location such as <code>US</code>. Keep all related resources in the same location.</li><li>For training, set a default table expiration such as one day when the UI permits.</li><li>Click <strong>Create dataset</strong>.</li></ol>
+<h3>Create with GoogleSQL instead</h3>
+<pre><button class="copy">Copy</button><code>CREATE SCHEMA IF NOT EXISTS `YOUR_PROJECT_ID.retail_standard_sql`
+OPTIONS (
+  location = 'US',
+  description = 'Temporary GoogleSQL training dataset'
+);</code></pre>
+</section>
+
+<section id="demo"><h2>6. End-to-End Retail Demo</h2>
+<div class="call"><strong>Replace every occurrence of <code>YOUR_PROJECT_ID</code> with your actual Google Cloud project ID.</strong></div>
+<h3>Step 1 — Create a table with sample data</h3>
+<p>This uses DDL with <code>CREATE TABLE AS SELECT</code>, avoiding INSERT so the main demo is suitable for Sandbox.</p>
+<pre><button class="copy">Copy</button><code>CREATE OR REPLACE TABLE
+  `YOUR_PROJECT_ID.retail_standard_sql.orders`
+OPTIONS (
+  description = 'Temporary retail orders training table',
+  expiration_timestamp = TIMESTAMP_ADD(CURRENT_TIMESTAMP(), INTERVAL 1 DAY)
+)
+AS
+SELECT * FROM UNNEST([
+  STRUCT(1001 AS order_id, DATE '2026-07-01' AS order_date,
+         'Bengaluru' AS city, 'Electronics' AS category,
+         'Laptop' AS product, 1 AS quantity, 55000.00 AS unit_price,
+         5.0 AS discount_pct, 'Delivered' AS status),
+  STRUCT(1002, DATE '2026-07-01', 'Chennai', 'Grocery',
+         'Rice Bag', 2, 1200.00, 0.0, 'Delivered'),
+  STRUCT(1003, DATE '2026-07-02', 'Hyderabad', 'Electronics',
+         'Headphones', 2, 3000.00, 10.0, 'Delivered'),
+  STRUCT(1004, DATE '2026-07-02', 'Bengaluru', 'Furniture',
+         'Office Chair', 1, 8500.00, 8.0, 'Shipped'),
+  STRUCT(1005, DATE '2026-07-03', 'Pune', 'Clothing',
+         'Formal Shirt', 3, 1800.00, 12.0, 'Delivered'),
+  STRUCT(1006, DATE '2026-07-03', 'Chennai', 'Electronics',
+         'Smartphone', 1, 32000.00, 6.0, 'Cancelled'),
+  STRUCT(1007, DATE '2026-07-04', 'Mumbai', 'Grocery',
+         'Cooking Oil', 4, 950.00, 3.0, 'Delivered'),
+  STRUCT(1008, DATE '2026-07-04', 'Bengaluru', 'Electronics',
+         'Monitor', 2, 14000.00, 7.0, 'Delivered'),
+  STRUCT(1009, DATE '2026-07-05', 'Hyderabad', 'Furniture',
+         'Study Table', 1, 12000.00, 5.0, 'Shipped'),
+  STRUCT(1010, DATE '2026-07-05', 'Pune', 'Clothing',
+         'Shoes', 2, 3500.00, 15.0, 'Delivered')
+]);</code></pre>
+<h3>Step 2 — Preview the rows</h3>
+<pre><button class="copy">Copy</button><code>SELECT *
+FROM `YOUR_PROJECT_ID.retail_standard_sql.orders`
+ORDER BY order_id;</code></pre>
+<h3>Step 3 — Build a calculated result</h3>
+<pre><button class="copy">Copy</button><code>SELECT
+  order_id,
+  city,
+  category,
+  quantity,
+  unit_price,
+  discount_pct,
+  ROUND(
+    quantity * unit_price * (1 - discount_pct / 100),
+    2
+  ) AS net_amount
+FROM `YOUR_PROJECT_ID.retail_standard_sql.orders`;</code></pre>
+<h3>Step 4 — Aggregate sales</h3>
+<pre><button class="copy">Copy</button><code>SELECT
+  category,
+  COUNT(*) AS order_lines,
+  SUM(quantity) AS units,
+  ROUND(SUM(quantity * unit_price *
+      (1 - discount_pct / 100)), 2) AS net_sales
+FROM `YOUR_PROJECT_ID.retail_standard_sql.orders`
+WHERE status != 'Cancelled'
+GROUP BY category
+ORDER BY net_sales DESC;</code></pre>
+<h3>Step 5 — Create a view</h3>
+<pre><button class="copy">Copy</button><code>CREATE OR REPLACE VIEW
+  `YOUR_PROJECT_ID.retail_standard_sql.delivered_orders_v`
+AS
+SELECT
+  order_id,
+  order_date,
+  city,
+  category,
+  product,
+  ROUND(quantity * unit_price *
+    (1 - discount_pct / 100), 2) AS net_amount
+FROM `YOUR_PROJECT_ID.retail_standard_sql.orders`
+WHERE status = 'Delivered';</code></pre>
+<h3>Step 6 — Query the view</h3>
+<pre><button class="copy">Copy</button><code>SELECT city, ROUND(SUM(net_amount), 2) AS delivered_sales
+FROM `YOUR_PROJECT_ID.retail_standard_sql.delivered_orders_v`
+GROUP BY city
+ORDER BY delivered_sales DESC;</code></pre>
+</section>
+
+<section id="queries"><h2>7. Important GoogleSQL Query Examples</h2>
+<h3>CTE</h3><pre><button class="copy">Copy</button><code>WITH sales AS (
+  SELECT category,
+         quantity * unit_price *
+         (1 - discount_pct / 100) AS net_amount
+  FROM `YOUR_PROJECT_ID.retail_standard_sql.orders`
+  WHERE status != 'Cancelled'
+)
+SELECT category, ROUND(SUM(net_amount), 2) AS total_sales
+FROM sales
+GROUP BY category;</code></pre>
+<h3>Window function</h3><pre><button class="copy">Copy</button><code>SELECT
+  city,
+  product,
+  quantity * unit_price AS gross_amount,
+  RANK() OVER (
+    PARTITION BY city
+    ORDER BY quantity * unit_price DESC
+  ) AS city_rank
+FROM `YOUR_PROJECT_ID.retail_standard_sql.orders`;</code></pre>
+<h3>QUALIFY</h3><pre><button class="copy">Copy</button><code>SELECT
+  city,
+  product,
+  quantity * unit_price AS gross_amount
+FROM `YOUR_PROJECT_ID.retail_standard_sql.orders`
+QUALIFY ROW_NUMBER() OVER (
+  PARTITION BY city
+  ORDER BY quantity * unit_price DESC
+) = 1;</code></pre>
+</section>
+
+<section id="ddl"><h2>8. DDL — Creating and Removing Resources</h2>
+<table><tr><th>Operation</th><th>GoogleSQL</th></tr>
+<tr><td>Create dataset</td><td><code>CREATE SCHEMA `project.dataset`</code></td></tr>
+<tr><td>Create table</td><td><code>CREATE TABLE `project.dataset.table` (...)</code></td></tr>
+<tr><td>Create from query</td><td><code>CREATE TABLE ... AS SELECT ...</code></td></tr>
+<tr><td>Create view</td><td><code>CREATE VIEW ... AS SELECT ...</code></td></tr>
+<tr><td>Change table</td><td><code>ALTER TABLE ...</code></td></tr>
+<tr><td>Remove view</td><td><code>DROP VIEW IF EXISTS ...</code></td></tr>
+<tr><td>Remove table</td><td><code>DROP TABLE IF EXISTS ...</code></td></tr>
+<tr><td>Remove dataset</td><td><code>DROP SCHEMA ... CASCADE</code></td></tr></table>
+</section>
+
+<section id="dml"><h2>9. DML — Billing-Enabled Projects Only</h2>
+<div class="call warn">Do not run this section in BigQuery Sandbox because Sandbox does not support DML.</div>
+<h3>Insert</h3><pre><button class="copy">Copy</button><code>INSERT INTO `YOUR_PROJECT_ID.retail_standard_sql.orders`
+VALUES (1011, DATE '2026-07-06', 'Delhi', 'Electronics',
+        'Keyboard', 2, 2200.00, 5.0, 'Delivered');</code></pre>
+<h3>Update</h3><pre><button class="copy">Copy</button><code>UPDATE `YOUR_PROJECT_ID.retail_standard_sql.orders`
+SET status = 'Delivered'
+WHERE order_id = 1004;</code></pre>
+<h3>Delete rows</h3><pre><button class="copy">Copy</button><code>DELETE FROM `YOUR_PROJECT_ID.retail_standard_sql.orders`
+WHERE status = 'Cancelled';</code></pre>
+<div class="call"><strong>Deleting rows is not the same as deleting the table.</strong> <code>DELETE</code> changes rows but keeps table storage and metadata. <code>DROP TABLE</code> removes the table resource.</div>
+</section>
+
+<section id="functions"><h2>10. Useful GoogleSQL Features</h2>
+<table><tr><th>Feature</th><th>Example</th></tr>
+<tr><td>String</td><td><code>UPPER(city)</code>, <code>CONCAT()</code>, <code>REGEXP_EXTRACT()</code></td></tr>
+<tr><td>Date</td><td><code>DATE_ADD()</code>, <code>DATE_DIFF()</code>, <code>EXTRACT()</code></td></tr>
+<tr><td>Null handling</td><td><code>COALESCE()</code>, <code>IFNULL()</code>, <code>NULLIF()</code></td></tr>
+<tr><td>Conditional</td><td><code>CASE WHEN</code>, <code>IF()</code></td></tr>
+<tr><td>Safe conversion</td><td><code>SAFE_CAST(value AS INT64)</code></td></tr>
+<tr><td>Arrays</td><td><code>ARRAY</code>, <code>UNNEST</code>, <code>ARRAY_AGG</code></td></tr>
+<tr><td>Nested records</td><td><code>STRUCT</code></td></tr>
+<tr><td>Analytics</td><td><code>ROW_NUMBER</code>, <code>RANK</code>, <code>LAG</code>, <code>LEAD</code></td></tr></table>
+</section>
+
+<section id="cost"><h2>11. Cost Reduction Before and During Queries</h2>
+<div class="grid">
+<div class="card"><h3>1. Check estimated processing</h3><p>Before clicking Run, review the bytes BigQuery estimates the query will process.</p></div>
+<div class="card"><h3>2. Avoid SELECT *</h3><p>Select only columns needed for the result. <code>LIMIT</code> does not necessarily reduce bytes scanned.</p></div>
+<div class="card"><h3>3. Partition large tables</h3><p>Filter directly on the partition column so BigQuery can prune partitions.</p></div>
+<div class="card"><h3>4. Cluster suitable columns</h3><p>Use frequently filtered or grouped columns to improve block pruning.</p></div>
+<div class="card"><h3>5. Set expiration</h3><p>Use dataset defaults or table-level expiration for temporary training resources.</p></div>
+<div class="card"><h3>6. Use quotas</h3><p>For on-demand billing, project-level or user-level custom query quotas can enforce hard limits.</p></div>
+</div>
+<h3>Set an expiration on an existing table</h3>
+<pre><button class="copy">Copy</button><code>ALTER TABLE `YOUR_PROJECT_ID.retail_standard_sql.orders`
+SET OPTIONS (
+  expiration_timestamp =
+    TIMESTAMP_ADD(CURRENT_TIMESTAMP(), INTERVAL 1 DAY)
+);</code></pre>
+<div class="call ok"><strong>Current free usage:</strong> BigQuery's free tier includes the first 10 GiB of storage and first 1 TiB of query data processed per month, subject to Google's current pricing rules.</div>
+</section>
+
+<section id="cleanup"><h2>12. Complete Cleanup After the Lab</h2>
+<h3>Recommended one-command cleanup</h3>
+<p>This removes the dataset and all tables and views inside it.</p>
+<pre><button class="copy">Copy</button><code>DROP SCHEMA IF EXISTS
+  `YOUR_PROJECT_ID.retail_standard_sql`
+CASCADE;</code></pre>
+<div class="call warn"><strong>CASCADE is destructive.</strong> Confirm that the dataset contains only temporary lab resources before running it.</div>
+<h3>Granular cleanup</h3>
+<pre><button class="copy">Copy</button><code>DROP VIEW IF EXISTS
+  `YOUR_PROJECT_ID.retail_standard_sql.delivered_orders_v`;
+
+DROP TABLE IF EXISTS
+  `YOUR_PROJECT_ID.retail_standard_sql.orders`;
+
+DROP SCHEMA IF EXISTS
+  `YOUR_PROJECT_ID.retail_standard_sql`;</code></pre>
+<h3>Console cleanup</h3>
+<ol><li>Open BigQuery Studio.</li><li>In Explorer, expand the project.</li><li>Open <strong>Datasets</strong>.</li><li>Select <code>retail_standard_sql</code>.</li><li>Click the three-dot <strong>View actions</strong> menu.</li><li>Select <strong>Delete</strong>.</li><li>Type <code>delete</code> in the confirmation dialog.</li><li>Click <strong>Delete</strong>.</li></ol>
+<h3>When to delete the entire project</h3>
+<p>When you created a separate project only for training, deleting the project is the most complete cleanup because it removes resources across BigQuery and other Google Cloud services. Check that the project contains no required resources first.</p>
+<h3>Post-cleanup checklist</h3>
+<ul><li>Refresh Explorer and confirm the dataset is gone.</li><li>Check for scheduled queries, data transfers, connections and reservations created separately.</li><li>Check Cloud Storage buckets if files were uploaded there.</li><li>Check billing reports when billing was enabled.</li><li>Do not delete public datasets; they belong to Google and are only queried by your project.</li></ul>
+</section>
+
+<section id="sandbox"><h2>13. Sandbox and Free-Tier Notes</h2>
+<table><tr><th>Item</th><th>Sandbox behavior</th></tr>
+<tr><td>Credit card</td><td>Not required.</td></tr>
+<tr><td>Storage allowance</td><td>Same free usage limits as the BigQuery free tier.</td></tr>
+<tr><td>Query allowance</td><td>Same free usage limits as the BigQuery free tier.</td></tr>
+<tr><td>Automatic expiration</td><td>Tables, views and partitions expire after 60 days.</td></tr>
+<tr><td>DML</td><td>Not supported.</td></tr>
+<tr><td>Streaming</td><td>Not supported.</td></tr>
+<tr><td>Data Transfer Service</td><td>Not supported.</td></tr></table>
+</section>
+
+<section id="errors"><h2>14. Common Errors and Fixes</h2>
+<table><tr><th>Error</th><th>Likely reason</th><th>Fix</th></tr>
+<tr><td>Not found: Dataset</td><td>Wrong project ID, dataset name or region</td><td>Verify the fully qualified name and location.</td></tr>
+<tr><td>Access Denied</td><td>Missing IAM permissions</td><td>Request BigQuery Job User and appropriate data role.</td></tr>
+<tr><td>DML is not supported</td><td>Using Sandbox</td><td>Use CTAS for the demo or enable billing for DML.</td></tr>
+<tr><td>Syntax error near table name</td><td>Missing backticks around qualified name</td><td>Use <code>`project.dataset.table`</code>.</td></tr>
+<tr><td>Cannot query across locations</td><td>Resources are in different regions</td><td>Create related datasets in the same location.</td></tr>
+<tr><td>Unexpected high bytes estimate</td><td>Full table scan or SELECT *</td><td>Project columns and filter partitions.</td></tr></table>
+</section>
+
+<section id="practice"><h2>15. Practice Exercises</h2>
+<ol><li>Find delivered orders only.</li><li>Calculate gross and net amount for every order.</li><li>Find total sales by city.</li><li>Find the highest-value product in each category using a window function.</li><li>Create a view containing non-cancelled orders.</li><li>Add a one-day expiration to the table.</li><li>Remove the view, table and dataset safely.</li></ol>
+</section>
+
+<section id="quiz"><h2>16. Knowledge Check</h2>
+<div><strong>1. What is the current name of BigQuery Standard SQL?</strong><label><input type="radio" name="q1" value="1"> GoogleSQL</label><label><input type="radio" name="q1" value="0"> Spark SQL</label></div>
+<div><strong>2. Which statement removes a complete table resource?</strong><label><input type="radio" name="q2" value="0"> DELETE</label><label><input type="radio" name="q2" value="1"> DROP TABLE</label></div>
+<div><strong>3. Is DML supported in BigQuery Sandbox?</strong><label><input type="radio" name="q3" value="0"> Yes</label><label><input type="radio" name="q3" value="1"> No</label></div>
+<div><strong>4. Which option removes a dataset and its contents?</strong><label><input type="radio" name="q4" value="1"> DROP SCHEMA ... CASCADE</label><label><input type="radio" name="q4" value="0"> SELECT *</label></div>
+<div><strong>5. Does LIMIT always reduce bytes scanned?</strong><label><input type="radio" name="q5" value="0"> Yes</label><label><input type="radio" name="q5" value="1"> No</label></div>
+<button class="btn" id="submit">Submit</button><div id="score" class="score"></div>
+</section>
+
+<section id="interview"><h2>17. Interview Questions and Answers</h2>
+<details><summary>1. What is BigQuery Standard SQL?</summary><p>It is the former name of GoogleSQL, BigQuery's recommended ANSI-compliant SQL dialect.</p></details>
+<details><summary>2. Why was it renamed?</summary><p>Google Standard SQL is now branded GoogleSQL; the underlying BigQuery dialect remains the preferred modern syntax.</p></details>
+<details><summary>3. What is the difference between GoogleSQL and Legacy SQL?</summary><p>GoogleSQL is the recommended ANSI-style dialect with modern features. Legacy SQL is the older compatibility dialect.</p></details>
+<details><summary>4. What are backticks used for?</summary><p>They quote identifiers such as fully qualified table names: project.dataset.table.</p></details>
+<details><summary>5. What is a fully qualified table name?</summary><p>A table reference containing project ID, dataset ID and table ID.</p></details>
+<details><summary>6. What is CTAS?</summary><p>CREATE TABLE AS SELECT creates a table using the result of a query.</p></details>
+<details><summary>7. What is the difference between DELETE and DROP TABLE?</summary><p>DELETE removes matching rows. DROP TABLE removes the whole table resource.</p></details>
+<details><summary>8. What is DROP SCHEMA CASCADE?</summary><p>It deletes a dataset and the objects contained in it. It must be used carefully.</p></details>
+<details><summary>9. How can training resources be removed automatically?</summary><p>Set default dataset expiration or table-level expiration timestamps.</p></details>
+<details><summary>10. What are the main BigQuery costs?</summary><p>Compute for query processing and storage for data kept in BigQuery.</p></details>
+<details><summary>11. How do you reduce query cost?</summary><p>Select required columns, filter partitions, use clustering, inspect bytes estimates and enforce quotas.</p></details>
+<details><summary>12. Is BigQuery Sandbox free?</summary><p>It provides limited BigQuery capabilities without a billing account, subject to sandbox and free-tier limits.</p></details>
+<details><summary>13. Why might INSERT fail in Sandbox?</summary><p>Sandbox does not support DML statements.</p></details>
+<details><summary>14. What are ARRAY and STRUCT?</summary><p>They are GoogleSQL data types used for repeated and nested data.</p></details>
+<details><summary>15. What is QUALIFY?</summary><p>It filters rows after window functions are evaluated.</p></details>
+</section>
+</main></div>
+<footer>BigQuery GoogleSQL Training Tutorial • Implementation, Cost Control and Cleanup</footer>
+<script>
+document.querySelectorAll('.copy').forEach(b=>b.onclick=()=>{navigator.clipboard.writeText(b.parentElement.querySelector('code').innerText);b.textContent='Copied';setTimeout(()=>b.textContent='Copy',1000)});
+document.getElementById('submit').onclick=()=>{let s=0;for(let i=1;i<=5;i++){let x=document.querySelector('input[name=q'+i+']:checked');if(x)s+=Number(x.value)}document.getElementById('score').textContent='Score: '+s+'/5'};
+</script></body></html>

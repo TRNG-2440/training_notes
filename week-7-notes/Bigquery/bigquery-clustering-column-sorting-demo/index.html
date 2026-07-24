@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BigQuery Clustering – Column-Level Sorting End-to-End Tutorial</title>
+<style>
+:root{--bg:#f7f9fc;--card:#fff;--ink:#172033;--muted:#5f6b7a;--accent:#3157d5;--accent2:#7c3aed;--good:#087f5b;--warn:#b45309;--bad:#b42318;--border:#dce3ef;--code:#111827}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.65}
+header{background:linear-gradient(120deg,#162456,#3157d5 58%,#7c3aed);color:white;padding:56px 20px 44px}
+.hero{max-width:1180px;margin:auto}.hero h1{font-size:clamp(2rem,4vw,3.6rem);line-height:1.1;margin:0 0 16px}.hero p{max-width:850px;font-size:1.12rem;opacity:.94}
+.badges{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}.badge{padding:8px 13px;border-radius:999px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25)}
+.layout{max-width:1320px;margin:0 auto;display:grid;grid-template-columns:270px minmax(0,1fr);gap:24px;padding:24px}
+nav{position:sticky;top:16px;align-self:start;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:18px;max-height:calc(100vh - 32px);overflow:auto}
+nav h3{margin:0 0 10px}nav a{display:block;color:#334155;text-decoration:none;padding:7px 9px;border-radius:8px;font-size:.94rem}nav a:hover{background:#edf2ff;color:var(--accent)}
+main{min-width:0}.section{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:28px;margin-bottom:22px;transition:.2s}
+.section:hover{box-shadow:0 10px 28px rgba(26,42,88,.08);transform:translateY(-1px)}
+h2{margin-top:0;font-size:1.75rem;border-bottom:2px solid #edf1f7;padding-bottom:10px}h3{margin-top:26px}h4{margin-bottom:8px}
+.callout{border-left:5px solid var(--accent);background:#eef3ff;padding:16px 18px;border-radius:10px;margin:18px 0}.good{border-left-color:var(--good);background:#ecfdf5}.warn{border-left-color:var(--warn);background:#fff8e8}.bad{border-left-color:var(--bad);background:#fff1f1}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.card{border:1px solid var(--border);border-radius:14px;padding:17px;background:#fbfcff}.card h3,.card h4{margin-top:0}
+table{width:100%;border-collapse:collapse;margin:14px 0;background:white}th,td{border:1px solid var(--border);padding:10px;text-align:left;vertical-align:top}th{background:#eef3ff}
+pre{position:relative;background:var(--code);color:#e5e7eb;padding:18px;border-radius:12px;overflow:auto;font-size:.9rem;line-height:1.5}
+code{font-family:Consolas,Monaco,monospace}.inline{background:#eef2f7;color:#172033;padding:2px 6px;border-radius:5px}
+.copy{position:absolute;right:10px;top:10px;background:#334155;color:white;border:0;border-radius:7px;padding:7px 10px;cursor:pointer}
+.diagram{background:#fafbff;border:1px solid var(--border);border-radius:15px;padding:18px;overflow:auto}.diagram svg{width:100%;height:auto;min-width:650px}
+.steps{counter-reset:step}.step{position:relative;margin:18px 0 18px 46px;padding:15px 18px;border:1px solid var(--border);border-radius:12px;background:#fff}.step:before{counter-increment:step;content:counter(step);position:absolute;left:-46px;top:11px;width:34px;height:34px;border-radius:50%;background:var(--accent);color:white;display:grid;place-items:center;font-weight:700}
+.meter{height:12px;background:#e8edf5;border-radius:8px;overflow:hidden}.meter span{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2))}
+.quiz-q{padding:16px;border:1px solid var(--border);border-radius:12px;margin:13px 0}.quiz-q label{display:block;margin:7px 0}.quiz-result{font-weight:700;margin-top:12px}
+footer{padding:28px;text-align:center;color:var(--muted)}
+@media(max-width:950px){.layout{grid-template-columns:1fr}nav{position:relative;top:0;max-height:none}.grid,.grid3{grid-template-columns:1fr}}
+@media print{nav,.copy,#quizBtn{display:none}.layout{display:block}.section{break-inside:avoid;box-shadow:none}}
+</style>
+</head>
+<body>
+<header>
+  <div class="hero">
+    <h1>BigQuery Clustering as Column-Level Sorting</h1>
+    <p>A complete trainer-ready tutorial using a retail order scenario, moderate data volume, visual diagrams, SQL implementation, block-pruning tests, column-order experiments, partition + clustering design, troubleshooting, exercises, and assessment.</p>
+    <div class="badges"><span class="badge">Real-world retail scenario</span><span class="badge">150,000 generated rows</span><span class="badge">End-to-end GoogleSQL lab</span><span class="badge">Visual block-pruning diagrams</span></div>
+  </div>
+</header>
+
+<div class="layout">
+<nav>
+  <h3>Contents</h3>
+  <a href="#outcomes">1. Learning outcomes</a>
+  <a href="#concept">2. What clustering is</a>
+  <a href="#sorting">3. Column-level sorting</a>
+  <a href="#scenario">4. Real-world scenario</a>
+  <a href="#architecture">5. Architecture diagram</a>
+  <a href="#prerequisites">6. Prerequisites</a>
+  <a href="#dataset">7. Create dataset and data</a>
+  <a href="#cluster">8. Create clustered table</a>
+  <a href="#verify">9. Verify metadata</a>
+  <a href="#compare">10. Compare queries</a>
+  <a href="#columnorder">11. Column order tests</a>
+  <a href="#partition">12. Partition + clustering</a>
+  <a href="#best">13. Best practices</a>
+  <a href="#trouble">14. Troubleshooting</a>
+  <a href="#exercise">15. Exercises</a>
+  <a href="#quiz">16. MCQ assessment</a>
+  <a href="#interview">17. Interview Q&A</a>
+</nav>
+
+<main>
+<section class="section" id="outcomes">
+<h2>1. Learning Outcomes</h2>
+<div class="grid3">
+<div class="card"><h3>Understand</h3><p>Explain clustering, storage blocks, block metadata and block pruning.</p></div>
+<div class="card"><h3>Implement</h3><p>Create unclustered, clustered, and partitioned + clustered BigQuery tables.</p></div>
+<div class="card"><h3>Evaluate</h3><p>Compare bytes processed and identify whether clustering column order supports a query.</p></div>
+</div>
+</section>
+
+<section class="section" id="concept">
+<h2>2. What Is BigQuery Clustering?</h2>
+<p>BigQuery clustering is a table storage property. You choose one or more columns, and BigQuery uses their values to colocate related records in adaptively sized storage blocks.</p>
+<div class="callout good"><strong>Core definition:</strong> A clustered table has a user-defined column sort order at the storage-block level. When a query filters clustered columns, BigQuery can skip blocks that cannot contain matching values. This is called <strong>block pruning</strong>.</div>
+<div class="callout warn"><strong>Important correction:</strong> Clustering does not promise that a normal <code class="inline">SELECT *</code> will display rows in sorted order. SQL result order is guaranteed only with an explicit <code class="inline">ORDER BY</code>. Clustering controls storage organization for query optimization.</div>
+<table>
+<tr><th>Concept</th><th>Meaning</th><th>Benefit</th></tr>
+<tr><td>Clustering column</td><td>A column listed in <code>CLUSTER BY</code></td><td>Guides storage-block organization</td></tr>
+<tr><td>Storage block</td><td>A physical/adaptive group of columnar data</td><td>Provides min/max-like metadata for pruning</td></tr>
+<tr><td>Block pruning</td><td>Skipping irrelevant storage blocks</td><td>Reduces bytes processed and often execution time</td></tr>
+<tr><td>Automatic reclustering</td><td>BigQuery reorganizes newly added data in the background</td><td>Maintains clustering quality without manual sorting jobs</td></tr>
+</table>
+</section>
+
+<section class="section" id="sorting">
+<h2>3. How Column-Level Sorting Works</h2>
+<p>Assume this clustering definition:</p>
+<pre><button class="copy">Copy</button><code>CLUSTER BY region, category, customer_id</code></pre>
+<p>The logical storage priority is:</p>
+<ol>
+<li>Group data primarily by <strong>region</strong>.</li>
+<li>Within similar region ranges, organize by <strong>category</strong>.</li>
+<li>Within region and category ranges, organize by <strong>customer_id</strong>.</li>
+</ol>
+<div class="diagram">
+<svg viewBox="0 0 1040 420" role="img" aria-label="Clustering column order diagram">
+<defs><marker id="a" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#3157d5"/></marker></defs>
+<rect x="25" y="25" width="190" height="70" rx="14" fill="#eaf0ff" stroke="#3157d5"/><text x="120" y="55" text-anchor="middle" font-size="18" font-weight="700">1. region</text><text x="120" y="78" text-anchor="middle" font-size="13">Primary organization</text>
+<line x1="215" y1="60" x2="295" y2="60" stroke="#3157d5" stroke-width="3" marker-end="url(#a)"/>
+<rect x="300" y="25" width="190" height="70" rx="14" fill="#f1ebff" stroke="#7c3aed"/><text x="395" y="55" text-anchor="middle" font-size="18" font-weight="700">2. category</text><text x="395" y="78" text-anchor="middle" font-size="13">Secondary organization</text>
+<line x1="490" y1="60" x2="570" y2="60" stroke="#3157d5" stroke-width="3" marker-end="url(#a)"/>
+<rect x="575" y="25" width="210" height="70" rx="14" fill="#e8fff7" stroke="#087f5b"/><text x="680" y="55" text-anchor="middle" font-size="18" font-weight="700">3. customer_id</text><text x="680" y="78" text-anchor="middle" font-size="13">Tertiary organization</text>
+
+<text x="25" y="140" font-size="17" font-weight="700">Illustrative storage blocks</text>
+<rect x="25" y="160" width="220" height="95" rx="12" fill="#fff" stroke="#3157d5" stroke-width="2"/><text x="135" y="188" text-anchor="middle" font-weight="700">Block A</text><text x="42" y="214">Region: East–North</text><text x="42" y="238">Category: mixed ranges</text>
+<rect x="265" y="160" width="220" height="95" rx="12" fill="#e8fff7" stroke="#087f5b" stroke-width="3"/><text x="375" y="188" text-anchor="middle" font-weight="700">Block B — Scan</text><text x="282" y="214">Region: South</text><text x="282" y="238">Category: Electronics</text>
+<rect x="505" y="160" width="220" height="95" rx="12" fill="#fff" stroke="#3157d5" stroke-width="2"/><text x="615" y="188" text-anchor="middle" font-weight="700">Block C</text><text x="522" y="214">Region: South–West</text><text x="522" y="238">Category: Fashion–Sports</text>
+<rect x="745" y="160" width="220" height="95" rx="12" fill="#fff" stroke="#3157d5" stroke-width="2"/><text x="855" y="188" text-anchor="middle" font-weight="700">Block D</text><text x="762" y="214">Region: West</text><text x="762" y="238">Category: mixed ranges</text>
+
+<rect x="150" y="305" width="740" height="70" rx="14" fill="#fff8e8" stroke="#b45309"/><text x="520" y="334" text-anchor="middle" font-size="17" font-weight="700">WHERE region='South' AND category='Electronics'</text><text x="520" y="359" text-anchor="middle" font-size="14">BigQuery checks block metadata → scans matching block(s) → prunes unrelated blocks</text>
+</svg>
+</div>
+</section>
+
+<section class="section" id="scenario">
+<h2>4. Real-World Scenario: Retail Order Analytics</h2>
+<p>A retail company stores orders from four sales regions. Analysts repeatedly ask:</p>
+<ul>
+<li>Revenue for a particular region and product category.</li>
+<li>Orders belonging to a customer range.</li>
+<li>Monthly region/category performance.</li>
+</ul>
+<p>The most common filters are <code class="inline">region</code>, followed by <code class="inline">category</code>, and then <code class="inline">customer_id</code>. Therefore the chosen clustering order is:</p>
+<pre><button class="copy">Copy</button><code>CLUSTER BY region, category, customer_id</code></pre>
+<div class="grid">
+<div class="card"><h3>Why region first?</h3><p>Most dashboards first select a region. It is the leading filter in the workload.</p></div>
+<div class="card"><h3>Why customer_id third?</h3><p>Customer lookup becomes more selective after the region and category have narrowed the storage range.</p></div>
+</div>
+</section>
+
+<section class="section" id="architecture">
+<h2>5. End-to-End Architecture</h2>
+<div class="diagram">
+<svg viewBox="0 0 1120 380" role="img" aria-label="End-to-end BigQuery clustering workflow">
+<defs><marker id="b" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#3157d5"/></marker></defs>
+<g font-family="Arial">
+<rect x="25" y="120" width="170" height="95" rx="15" fill="#eef3ff" stroke="#3157d5"/><text x="110" y="151" text-anchor="middle" font-weight="700">Data Generation</text><text x="110" y="176" text-anchor="middle" font-size="13">GENERATE_ARRAY</text><text x="110" y="197" text-anchor="middle" font-size="13">150,000 rows</text>
+<line x1="195" y1="167" x2="260" y2="167" stroke="#3157d5" stroke-width="3" marker-end="url(#b)"/>
+<rect x="265" y="120" width="175" height="95" rx="15" fill="#fff" stroke="#3157d5"/><text x="352" y="151" text-anchor="middle" font-weight="700">Unclustered Table</text><text x="352" y="176" text-anchor="middle" font-size="13">Baseline storage</text><text x="352" y="197" text-anchor="middle" font-size="13">Comparison query</text>
+<line x1="440" y1="167" x2="505" y2="167" stroke="#3157d5" stroke-width="3" marker-end="url(#b)"/>
+<rect x="510" y="105" width="205" height="125" rx="15" fill="#f1ebff" stroke="#7c3aed" stroke-width="2"/><text x="612" y="138" text-anchor="middle" font-weight="700">Clustered Table</text><text x="612" y="164" text-anchor="middle" font-size="13">region</text><text x="612" y="184" text-anchor="middle" font-size="13">category</text><text x="612" y="204" text-anchor="middle" font-size="13">customer_id</text>
+<line x1="715" y1="167" x2="780" y2="167" stroke="#3157d5" stroke-width="3" marker-end="url(#b)"/>
+<rect x="785" y="120" width="145" height="95" rx="15" fill="#e8fff7" stroke="#087f5b"/><text x="857" y="151" text-anchor="middle" font-weight="700">Filter Query</text><text x="857" y="176" text-anchor="middle" font-size="13">WHERE region...</text><text x="857" y="197" text-anchor="middle" font-size="13">Block pruning</text>
+<line x1="930" y1="167" x2="980" y2="167" stroke="#3157d5" stroke-width="3" marker-end="url(#b)"/>
+<rect x="985" y="120" width="110" height="95" rx="15" fill="#fff8e8" stroke="#b45309"/><text x="1040" y="151" text-anchor="middle" font-weight="700">Observe</text><text x="1040" y="176" text-anchor="middle" font-size="13">Bytes read</text><text x="1040" y="197" text-anchor="middle" font-size="13">Execution</text>
+<text x="560" y="290" text-anchor="middle" font-size="18" font-weight="700">Optional production extension</text>
+<rect x="390" y="315" width="340" height="50" rx="12" fill="#eef3ff" stroke="#3157d5"/><text x="560" y="346" text-anchor="middle">PARTITION BY order_date + CLUSTER BY region, category, customer_id</text>
+</g>
+</svg>
+</div>
+</section>
+
+<section class="section" id="prerequisites">
+<h2>6. Prerequisites and Console Navigation</h2>
+<table>
+<tr><th>Requirement</th><th>What to do</th></tr>
+<tr><td>Google Cloud project</td><td>Select an existing project or create one.</td></tr>
+<tr><td>BigQuery access</td><td>Open Google Cloud Console → navigation menu → BigQuery.</td></tr>
+<tr><td>Permissions</td><td>You need permission to create datasets, tables and query jobs.</td></tr>
+<tr><td>Query language</td><td>Use GoogleSQL, not Legacy SQL.</td></tr>
+</table>
+<div class="steps">
+<div class="step"><strong>Open BigQuery Studio.</strong> In Google Cloud Console, search for “BigQuery” and open it.</div>
+<div class="step"><strong>Choose your project.</strong> In Explorer, confirm that the correct project is expanded.</div>
+<div class="step"><strong>Create a query tab.</strong> Click <em>SQL query</em> or the plus icon.</div>
+<div class="step"><strong>Replace the placeholder.</strong> In every script, replace <code>YOUR_PROJECT_ID</code> with your project ID.</div>
+</div>
+</section>
+
+<section class="section" id="dataset">
+<h2>7. Create the Dataset and Moderate Test Data</h2>
+<p>This lab creates <strong>150,000 rows</strong>. It is large enough to demonstrate realistic filters and storage behavior without creating millions of rows.</p>
+<div class="callout warn"><strong>Trainer note:</strong> BigQuery documentation says clustering benefits are usually negligible for tables or individual partitions smaller than about 64 MB. The description column is deliberately repeated to make the training table more substantial while keeping the row count moderate.</div>
+<h3>7.1 Create the dataset</h3>
+<pre><button class="copy">Copy</button><code>CREATE SCHEMA IF NOT EXISTS `YOUR_PROJECT_ID.retail_clustering_lab`
+OPTIONS (
+  location = 'US',
+  description = 'Training dataset for BigQuery clustering demo'
+);</code></pre>
+<h3>7.2 Create the unclustered baseline table</h3>
+<pre><button class="copy">Copy</button><code>CREATE OR REPLACE TABLE `YOUR_PROJECT_ID.retail_clustering_lab.orders_unclustered`
+AS
+WITH generated_orders AS (
+  SELECT
+    order_number,
+    DATE_ADD(DATE '2025-01-01', INTERVAL MOD(order_number, 180) DAY) AS order_date,
+    CONCAT('CUST-', LPAD(CAST(MOD(order_number * 17, 10000) + 1 AS STRING), 5, '0')) AS customer_id,
+    ['South','North','East','West'][OFFSET(MOD(order_number, 4))] AS region,
+    ['Electronics','Grocery','Fashion','Furniture','Sports'][OFFSET(MOD(order_number * 3, 5))] AS category,
+    ['Completed','Pending','Cancelled','Returned'][OFFSET(MOD(order_number * 7, 4))] AS order_status,
+    MOD(order_number * 11, 8) + 1 AS quantity,
+    ROUND(50 + MOD(order_number * 29, 4950) + RAND() * 100, 2) AS unit_price,
+    CONCAT(
+      'Retail order generated for clustering demonstration. ',
+      REPEAT('Training data block content. ', 8)
+    ) AS order_description
+  FROM UNNEST(GENERATE_ARRAY(1, 150000)) AS order_number
+)
+SELECT
+  order_number AS order_id,
+  order_date,
+  customer_id,
+  region,
+  category,
+  order_status,
+  quantity,
+  unit_price,
+  ROUND(quantity * unit_price, 2) AS order_amount,
+  order_description
+FROM generated_orders;</code></pre>
+<h3>7.3 Validate the data</h3>
+<pre><button class="copy">Copy</button><code>SELECT
+  COUNT(*) AS row_count,
+  MIN(order_date) AS minimum_date,
+  MAX(order_date) AS maximum_date,
+  COUNT(DISTINCT customer_id) AS customers
+FROM `YOUR_PROJECT_ID.retail_clustering_lab.orders_unclustered`;</code></pre>
+</section>
+
+<section class="section" id="cluster">
+<h2>8. Create the Clustered Table</h2>
+<pre><button class="copy">Copy</button><code>CREATE OR REPLACE TABLE `YOUR_PROJECT_ID.retail_clustering_lab.orders_clustered`
+CLUSTER BY region, category, customer_id
+AS
+SELECT *
+FROM `YOUR_PROJECT_ID.retail_clustering_lab.orders_unclustered`;</code></pre>
+<div class="grid">
+<div class="card"><h3>region</h3><p>Leading column because most dashboard queries begin with region.</p></div>
+<div class="card"><h3>category</h3><p>Second-level grouping for product-line analysis.</p></div>
+<div class="card"><h3>customer_id</h3><p>High-cardinality column useful for narrower lookups.</p></div>
+<div class="card"><h3>Automatic maintenance</h3><p>BigQuery automatically reclusters data as required after writes.</p></div>
+</div>
+</section>
+
+<section class="section" id="verify">
+<h2>9. Verify Clustering Metadata</h2>
+<h3>Method 1: Console</h3>
+<p>Explorer → dataset → <strong>orders_clustered</strong> → Details. Look for the clustering fields.</p>
+<h3>Method 2: INFORMATION_SCHEMA</h3>
+<pre><button class="copy">Copy</button><code>SELECT
+  table_name,
+  clustering_ordinal_position,
+  column_name
+FROM `YOUR_PROJECT_ID.retail_clustering_lab.INFORMATION_SCHEMA.COLUMNS`
+WHERE table_name = 'orders_clustered'
+  AND clustering_ordinal_position IS NOT NULL
+ORDER BY clustering_ordinal_position;</code></pre>
+<table>
+<tr><th>Expected position</th><th>Column</th></tr>
+<tr><td>1</td><td>region</td></tr><tr><td>2</td><td>category</td></tr><tr><td>3</td><td>customer_id</td></tr>
+</table>
+</section>
+
+<section class="section" id="compare">
+<h2>10. Compare Unclustered and Clustered Queries</h2>
+<p>Run each query separately. Before execution, BigQuery may show an estimate. After execution, open <strong>Job information / Execution details</strong> and record bytes processed.</p>
+<h3>10.1 Unclustered table</h3>
+<pre><button class="copy">Copy</button><code>SELECT
+  region,
+  category,
+  COUNT(*) AS order_count,
+  ROUND(SUM(order_amount), 2) AS revenue
+FROM `YOUR_PROJECT_ID.retail_clustering_lab.orders_unclustered`
+WHERE region = 'South'
+  AND category = 'Electronics'
+  AND customer_id BETWEEN 'CUST-02000' AND 'CUST-02999'
+GROUP BY region, category;</code></pre>
+<h3>10.2 Clustered table</h3>
+<pre><button class="copy">Copy</button><code>SELECT
+  region,
+  category,
+  COUNT(*) AS order_count,
+  ROUND(SUM(order_amount), 2) AS revenue
+FROM `YOUR_PROJECT_ID.retail_clustering_lab.orders_clustered`
+WHERE region = 'South'
+  AND category = 'Electronics'
+  AND customer_id BETWEEN 'CUST-02000' AND 'CUST-02999'
+GROUP BY region, category;</code></pre>
+<table>
+<tr><th>Observation</th><th>Unclustered</th><th>Clustered</th></tr>
+<tr><td>Rows returned</td><td>Same logical result</td><td>Same logical result</td></tr>
+<tr><td>Storage organization</td><td>No selected clustering order</td><td>region → category → customer_id</td></tr>
+<tr><td>Possible pruning</td><td>No cluster block pruning</td><td>Relevant storage blocks can be selected</td></tr>
+<tr><td>Bytes processed</td><td>Usually higher for selective filters</td><td>Can be lower, depending on block layout and table size</td></tr>
+</table>
+<div class="callout"><strong>Do not hard-code expected byte values.</strong> BigQuery uses adaptively sized blocks, so results differ with table size, storage state and query projection. Compare the actual Job Information from your own execution.</div>
+</section>
+
+<section class="section" id="columnorder">
+<h2>11. Prove Why Clustering Column Order Matters</h2>
+<div class="grid3">
+<div class="card"><h3>Strong pattern</h3><p><code>region</code></p><div class="meter"><span style="width:92%"></span></div></div>
+<div class="card"><h3>Stronger selectivity</h3><p><code>region + category</code></p><div class="meter"><span style="width:97%"></span></div></div>
+<div class="card"><h3>Most selective</h3><p><code>region + category + customer_id</code></p><div class="meter"><span style="width:100%"></span></div></div>
+</div>
+<h3>11.1 Leading column</h3>
+<pre><button class="copy">Copy</button><code>SELECT COUNT(*)
+FROM `YOUR_PROJECT_ID.retail_clustering_lab.orders_clustered`
+WHERE region = 'South';</code></pre>
+<h3>11.2 Leading + second column</h3>
+<pre><button class="copy">Copy</button><code>SELECT COUNT(*)
+FROM `YOUR_PROJECT_ID.retail_clustering_lab.orders_clustered`
+WHERE region = 'South'
+  AND category = 'Electronics';</code></pre>
+<h3>11.3 Skip the leading column</h3>
+<pre><button class="copy">Copy</button><code>SELECT COUNT(*)
+FROM `YOUR_PROJECT_ID.retail_clustering_lab.orders_clustered`
+WHERE category = 'Electronics';</code></pre>
+<div class="callout warn"><strong>Expected learning:</strong> A query may still benefit when filtering a later clustering column, but pruning is normally most effective when filters begin with the first clustering column and proceed left to right.</div>
+<h3>Good vs complex predicate</h3>
+<div class="grid">
+<div class="card"><h4>Preferred</h4><pre><code>WHERE customer_id = 'CUST-02500'</code></pre><p>Direct, simple predicate.</p></div>
+<div class="card"><h4>Avoid when possible</h4><pre><code>WHERE LOWER(customer_id) = 'cust-02500'</code></pre><p>Function on the clustered column can prevent effective pruning.</p></div>
+</div>
+</section>
+
+<section class="section" id="partition">
+<h2>12. Production Design: Partitioning + Clustering</h2>
+<p>For time-based retail reporting, partition by date and cluster within each partition.</p>
+<pre><button class="copy">Copy</button><code>CREATE OR REPLACE TABLE
+  `YOUR_PROJECT_ID.retail_clustering_lab.orders_partitioned_clustered`
+PARTITION BY order_date
+CLUSTER BY region, category, customer_id
+AS
+SELECT *
+FROM `YOUR_PROJECT_ID.retail_clustering_lab.orders_unclustered`;</code></pre>
+<div class="diagram">
+<svg viewBox="0 0 1000 360" role="img" aria-label="Partition and cluster diagram">
+<g font-family="Arial">
+<text x="500" y="32" text-anchor="middle" font-size="19" font-weight="700">Step 1: Partition by order_date</text>
+<rect x="45" y="60" width="280" height="240" rx="15" fill="#eef3ff" stroke="#3157d5"/><text x="185" y="91" text-anchor="middle" font-weight="700">March Partition</text>
+<rect x="70" y="115" width="230" height="44" rx="8" fill="#fff" stroke="#7c3aed"/><text x="185" y="142" text-anchor="middle">South → Electronics → customers</text>
+<rect x="70" y="170" width="230" height="44" rx="8" fill="#fff" stroke="#7c3aed"/><text x="185" y="197" text-anchor="middle">South → Fashion → customers</text>
+<rect x="70" y="225" width="230" height="44" rx="8" fill="#fff" stroke="#7c3aed"/><text x="185" y="252" text-anchor="middle">West → Grocery → customers</text>
+
+<rect x="360" y="60" width="280" height="240" rx="15" fill="#eef3ff" stroke="#3157d5"/><text x="500" y="91" text-anchor="middle" font-weight="700">April Partition</text>
+<rect x="385" y="115" width="230" height="44" rx="8" fill="#fff" stroke="#7c3aed"/><text x="500" y="142" text-anchor="middle">South → Electronics → customers</text>
+<rect x="385" y="170" width="230" height="44" rx="8" fill="#fff" stroke="#7c3aed"/><text x="500" y="197" text-anchor="middle">East → Sports → customers</text>
+<rect x="385" y="225" width="230" height="44" rx="8" fill="#fff" stroke="#7c3aed"/><text x="500" y="252" text-anchor="middle">West → Furniture → customers</text>
+
+<rect x="675" y="60" width="280" height="240" rx="15" fill="#eef3ff" stroke="#3157d5"/><text x="815" y="91" text-anchor="middle" font-weight="700">May Partition</text>
+<rect x="700" y="115" width="230" height="44" rx="8" fill="#fff" stroke="#7c3aed"/><text x="815" y="142" text-anchor="middle">North → Grocery → customers</text>
+<rect x="700" y="170" width="230" height="44" rx="8" fill="#fff" stroke="#7c3aed"/><text x="815" y="197" text-anchor="middle">South → Electronics → customers</text>
+<rect x="700" y="225" width="230" height="44" rx="8" fill="#fff" stroke="#7c3aed"/><text x="815" y="252" text-anchor="middle">West → Sports → customers</text>
+<text x="500" y="338" text-anchor="middle" font-size="16">Date filter prunes partitions; region/category/customer filters prune blocks inside selected partitions.</text>
+</g>
+</svg>
+</div>
+<h3>Optimized query</h3>
+<pre><button class="copy">Copy</button><code>SELECT
+  order_date,
+  region,
+  category,
+  COUNT(*) AS order_count,
+  ROUND(SUM(order_amount), 2) AS revenue
+FROM `YOUR_PROJECT_ID.retail_clustering_lab.orders_partitioned_clustered`
+WHERE order_date BETWEEN DATE '2025-03-01' AND DATE '2025-03-31'
+  AND region = 'South'
+  AND category = 'Electronics'
+GROUP BY order_date, region, category
+ORDER BY order_date;</code></pre>
+</section>
+
+<section class="section" id="best">
+<h2>13. Best Practices and Decision Guide</h2>
+<table>
+<tr><th>Situation</th><th>Recommendation</th></tr>
+<tr><td>Frequent filters on one or more columns</td><td>Consider those columns for clustering.</td></tr>
+<tr><td>Several clustering columns</td><td>Put the most commonly filtered leading column first.</td></tr>
+<tr><td>High-cardinality lookup column</td><td>Often a good clustering candidate, especially after a common leading dimension.</td></tr>
+<tr><td>Date-based queries</td><td>Partition by date, then cluster using non-date filter columns.</td></tr>
+<tr><td>Tiny table</td><td>Do not expect a visible performance improvement.</td></tr>
+<tr><td>Need deterministic output order</td><td>Use <code>ORDER BY</code>; clustering is not a replacement.</td></tr>
+<tr><td>Complex function in filter</td><td>Rewrite to a direct comparison where possible.</td></tr>
+<tr><td>Too many candidates</td><td>BigQuery supports up to four clustering columns; choose based on actual query patterns.</td></tr>
+</table>
+<div class="callout good"><strong>Memory aid:</strong> <em>Partition chooses the room; clustering finds the shelf; filtering takes the required file.</em></div>
+</section>
+
+<section class="section" id="trouble">
+<h2>14. Troubleshooting</h2>
+<table>
+<tr><th>Problem</th><th>Likely reason</th><th>Fix</th></tr>
+<tr><td>No visible cost reduction</td><td>Table is too small or filter is not selective</td><td>Use the supplied 150,000-row dataset and a narrow customer range.</td></tr>
+<tr><td>Query filters category only</td><td>Leading clustering column is skipped</td><td>Add region when it matches the business question, or reconsider column order.</td></tr>
+<tr><td>Rows appear unsorted</td><td>Clustering does not guarantee query output order</td><td>Add an explicit <code>ORDER BY</code>.</td></tr>
+<tr><td>Wrong project error</td><td><code>YOUR_PROJECT_ID</code> was not replaced</td><td>Use the exact project ID from the console project selector.</td></tr>
+<tr><td>Location mismatch</td><td>Objects are in different BigQuery locations</td><td>Keep the dataset and related objects in the same location.</td></tr>
+<tr><td>Clustering metadata absent</td><td>Unclustered table was inspected</td><td>Open <code>orders_clustered</code> and check Details or INFORMATION_SCHEMA.</td></tr>
+</table>
+</section>
+
+<section class="section" id="exercise">
+<h2>15. Hands-On Exercises</h2>
+<ol>
+<li>Create another clustered table using <code>category, region, customer_id</code>. Compare a region-first query against the original design.</li>
+<li>Run a customer-only filter on both clustered designs. Record bytes processed.</li>
+<li>Add <code>order_status</code> as a fourth clustering column and test status-based queries.</li>
+<li>Create a query that uses <code>LOWER(region)</code>. Compare it with a direct equality predicate.</li>
+<li>Use the partitioned + clustered table to analyze April 2025 Electronics revenue in the West region.</li>
+<li>Create a small results table with columns: test_name, table_name, bytes_processed, duration, observation.</li>
+</ol>
+</section>
+
+<section class="section" id="quiz">
+<h2>16. MCQ Assessment</h2>
+<div id="quizBox">
+<div class="quiz-q"><strong>1. What does BigQuery clustering primarily organize?</strong>
+<label><input type="radio" name="q1" value="0"> Query result rows permanently</label>
+<label><input type="radio" name="q1" value="1"> Storage blocks using clustered column values</label>
+<label><input type="radio" name="q1" value="0"> Only partitions</label></div>
+<div class="quiz-q"><strong>2. Which clause guarantees displayed row order?</strong>
+<label><input type="radio" name="q2" value="0"> CLUSTER BY</label>
+<label><input type="radio" name="q2" value="1"> ORDER BY</label>
+<label><input type="radio" name="q2" value="0"> PARTITION BY</label></div>
+<div class="quiz-q"><strong>3. For CLUSTER BY region, category, customer_id, which query pattern is normally strongest?</strong>
+<label><input type="radio" name="q3" value="1"> region + category + customer_id</label>
+<label><input type="radio" name="q3" value="0"> customer_id only</label>
+<label><input type="radio" name="q3" value="0"> category only</label></div>
+<div class="quiz-q"><strong>4. What is block pruning?</strong>
+<label><input type="radio" name="q4" value="1"> Skipping storage blocks that cannot match the filter</label>
+<label><input type="radio" name="q4" value="0"> Deleting old rows</label>
+<label><input type="radio" name="q4" value="0"> Sorting query output</label></div>
+<div class="quiz-q"><strong>5. How many clustering columns can be specified?</strong>
+<label><input type="radio" name="q5" value="0"> One</label>
+<label><input type="radio" name="q5" value="1"> Up to four</label>
+<label><input type="radio" name="q5" value="0"> Unlimited</label></div>
+<button id="quizBtn" style="background:#3157d5;color:#fff;border:0;border-radius:9px;padding:11px 18px;cursor:pointer">Submit Quiz</button>
+<div class="quiz-result" id="quizResult" aria-live="polite"></div>
+</div>
+</section>
+
+<section class="section" id="interview">
+<h2>17. Interview Questions and Answers</h2>
+<details><summary><strong>1. What is clustering in BigQuery?</strong></summary><p>It is a table storage property that organizes storage blocks according to selected column values so relevant blocks can be found and unrelated blocks can be pruned.</p></details>
+<details><summary><strong>2. Is clustering the same as ORDER BY?</strong></summary><p>No. Clustering optimizes physical storage organization. ORDER BY controls the order of rows returned by a query.</p></details>
+<details><summary><strong>3. Why is clustering column order important?</strong></summary><p>The first column determines the primary storage ordering. Filters beginning with the leading clustered column normally allow more effective pruning.</p></details>
+<details><summary><strong>4. What is block pruning?</strong></summary><p>BigQuery uses filter values and block metadata to skip blocks that cannot contain matching records.</p></details>
+<details><summary><strong>5. Can clustering and partitioning be combined?</strong></summary><p>Yes. BigQuery first narrows the partitions and then can prune blocks inside those partitions using clustering columns.</p></details>
+<details><summary><strong>6. When is clustering useful?</strong></summary><p>It is useful when tables or partitions are reasonably large and queries repeatedly filter selective columns, especially columns with many distinct values.</p></details>
+<details><summary><strong>7. Does BigQuery require manual reclustering?</strong></summary><p>Normally no. BigQuery performs automatic reclustering in the background.</p></details>
+<details><summary><strong>8. Why might a function on a clustering column be inefficient?</strong></summary><p>A complex expression can make block metadata less usable, preventing or reducing block pruning.</p></details>
+<details><summary><strong>9. How do you verify clustering columns?</strong></summary><p>Check the table Details panel or query INFORMATION_SCHEMA.COLUMNS using clustering_ordinal_position.</p></details>
+<details><summary><strong>10. Why can actual bytes differ across demonstrations?</strong></summary><p>BigQuery uses adaptively sized storage blocks and the physical block layout may vary with data volume and storage state.</p></details>
+<details><summary><strong>11. What is a good retail design?</strong></summary><p>Partition by order date and cluster by common dashboard filters such as region, category and customer ID.</p></details>
+<details><summary><strong>12. Can later clustered columns be used alone?</strong></summary><p>Yes, but pruning is usually less effective than a filter that begins with the first clustering column.</p></details>
+<details><summary><strong>13. What is the clustering-column limit?</strong></summary><p>Up to four clustering columns.</p></details>
+<details><summary><strong>14. Why include a high-cardinality column?</strong></summary><p>It can help BigQuery locate a narrow range of matching blocks for selective lookups.</p></details>
+<details><summary><strong>15. What should determine clustering design?</strong></summary><p>Real query workload: common filters, filter order, selectivity, table size, and whether partitioning is also needed.</p></details>
+</section>
+
+<section class="section">
+<h2>18. Official Documentation Notes</h2>
+<ul>
+<li>Clustered data is organized into adaptively sized storage blocks.</li>
+<li>Column order controls the storage sort priority.</li>
+<li>Queries should filter clustered columns from the leading column onward for strongest pruning.</li>
+<li>Clustering is usually more beneficial when a table or partition exceeds roughly 64 MB.</li>
+<li>Up to four clustering columns are supported.</li>
+<li>Automatic reclustering maintains storage organization after data changes.</li>
+</ul>
+<p><strong>Sources:</strong> Google Cloud BigQuery documentation: Introduction to clustered tables, Querying clustered tables, and Create clustered tables. Documentation checked July 24, 2026.</p>
+</section>
+</main>
+</div>
+
+<footer>BigQuery Clustering Trainer Lab • Retail Orders • End-to-End Demonstration</footer>
+<script>
+document.querySelectorAll('.copy').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const code=btn.parentElement.querySelector('code').innerText;
+    navigator.clipboard.writeText(code).then(()=>{btn.textContent='Copied';setTimeout(()=>btn.textContent='Copy',1200)});
+  });
+});
+document.getElementById('quizBtn').addEventListener('click',()=>{
+  let score=0;
+  for(let i=1;i<=5;i++){
+    const selected=document.querySelector('input[name="q'+i+'"]:checked');
+    if(selected) score+=Number(selected.value);
+  }
+  document.getElementById('quizResult').textContent='Score: '+score+'/5 — '+(score===5?'Excellent!':score>=3?'Good. Review the missed concepts.':'Revisit clustering, block pruning, and column order.');
+});
+</script>
+</body>
+</html>

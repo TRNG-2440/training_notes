@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BigQuery vs Spark SQL – Complete Decision and Application Tutorial</title>
+<style>
+:root{--bg:#f6f8fc;--card:#fff;--ink:#182033;--muted:#5b6576;--bq:#1769e0;--spark:#d9480f;--good:#087f5b;--warn:#b45309;--border:#dbe2ee;--code:#111827}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.65}
+header{padding:55px 22px;color:#fff;background:linear-gradient(120deg,#0e3171,#1769e0 52%,#d9480f)}
+.hero{max-width:1200px;margin:auto}.hero h1{font-size:clamp(2rem,4vw,3.7rem);line-height:1.08;margin:0 0 15px}.hero p{max-width:900px;font-size:1.12rem}.chips{display:flex;flex-wrap:wrap;gap:9px}.chip{border:1px solid #ffffff55;background:#ffffff1c;border-radius:999px;padding:7px 12px}
+.layout{max-width:1360px;margin:auto;display:grid;grid-template-columns:275px minmax(0,1fr);gap:23px;padding:24px}
+nav{position:sticky;top:15px;align-self:start;max-height:calc(100vh - 30px);overflow:auto;background:#fff;border:1px solid var(--border);border-radius:16px;padding:17px}
+nav a{display:block;text-decoration:none;color:#344054;padding:7px 9px;border-radius:7px;font-size:.93rem}nav a:hover{background:#edf4ff;color:var(--bq)}
+section{background:var(--card);border:1px solid var(--border);border-radius:17px;padding:27px;margin-bottom:21px;transition:.2s}section:hover{box-shadow:0 9px 25px #20306012}
+h2{margin-top:0;border-bottom:2px solid #edf1f7;padding-bottom:9px}h3{margin-top:25px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.card{border:1px solid var(--border);border-radius:13px;padding:16px;background:#fbfcff}.bq{border-top:5px solid var(--bq)}.spark{border-top:5px solid var(--spark)}
+.call{border-left:5px solid var(--bq);background:#edf5ff;padding:15px 17px;border-radius:9px;margin:16px 0}.good{border-left-color:var(--good);background:#ecfdf5}.warn{border-left-color:var(--warn);background:#fff8e8}
+table{width:100%;border-collapse:collapse;margin:14px 0;font-size:.95rem}th,td{border:1px solid var(--border);padding:10px;text-align:left;vertical-align:top}th{background:#edf3ff}tr:hover td{background:#fafcff}
+pre{background:var(--code);color:#e5e7eb;padding:17px;border-radius:11px;overflow:auto;position:relative}.copy{position:absolute;right:9px;top:9px;border:0;border-radius:7px;padding:6px 9px;cursor:pointer}
+.diagram{border:1px solid var(--border);border-radius:14px;padding:17px;background:#fafcff;overflow:auto}.diagram svg{width:100%;height:auto;min-width:700px}
+.decision{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;margin:12px 0}.arrow{font-size:1.6rem;color:var(--muted)}
+details{border:1px solid var(--border);border-radius:10px;padding:11px 14px;margin:9px 0}summary{cursor:pointer;font-weight:650}
+.score{font-weight:bold;margin-top:12px}.btn{background:var(--bq);color:#fff;border:0;border-radius:8px;padding:10px 16px;cursor:pointer}
+footer{text-align:center;padding:27px;color:var(--muted)}
+@media(max-width:960px){.layout{grid-template-columns:1fr}nav{position:relative;max-height:none}.grid,.grid3{grid-template-columns:1fr}.decision{grid-template-columns:1fr}.arrow{transform:rotate(90deg);text-align:center}}
+</style>
+</head>
+<body>
+<header><div class="hero"><h1>When to Use BigQuery Over Spark SQL</h1>
+<p>A complete comparison across architecture, processing model, performance, scalability, operations, pricing, governance, SQL capability, machine learning, streaming, ETL, portability, skills, real-world applications, limitations and hybrid usage.</p>
+<div class="chips"><span class="chip">Decision framework</span><span class="chip">Retail case study</span><span class="chip">Architecture diagrams</span><span class="chip">SQL examples</span><span class="chip">Hybrid design</span></div></div></header>
+
+<div class="layout"><nav><strong>Contents</strong>
+<a href="#summary">1. Executive answer</a><a href="#definitions">2. What they are</a><a href="#architecture">3. Architecture</a>
+<a href="#similar">4. Similarities</a><a href="#difference">5. Differences</a><a href="#whenbq">6. Choose BigQuery</a>
+<a href="#whenspark">7. Choose Spark SQL</a><a href="#workloads">8. Workload comparison</a><a href="#performance">9. Performance</a>
+<a href="#cost">10. Cost</a><a href="#proscons">11. Pros and cons</a><a href="#applications">12. Applications</a>
+<a href="#case">13. Retail case study</a><a href="#hybrid">14. Hybrid architecture</a><a href="#sql">15. SQL comparison</a>
+<a href="#migration">16. Migration guidance</a><a href="#decision">17. Decision matrix</a><a href="#trouble">18. Common mistakes</a>
+<a href="#exercise">19. Exercises</a><a href="#quiz">20. Quiz</a><a href="#interview">21. Interview Q&A</a></nav>
+<main>
+
+<section id="summary"><h2>1. Executive Answer</h2>
+<div class="call good"><strong>Choose BigQuery over Spark SQL</strong> when your main objective is interactive SQL analytics, dashboards, governed enterprise reporting and scalable warehouse queries without creating or tuning a cluster.</div>
+<div class="call warn"><strong>Choose Spark SQL over BigQuery</strong> when the workload requires complex programmable transformations, custom libraries, processing across open file formats, reusable application logic, fine control over execution, or portability across clouds and on-premises systems.</div>
+<div class="call"><strong>Use both</strong> when Spark performs complex ingestion or transformation and BigQuery serves curated data to analysts, BI tools and data products.</div>
+</section>
+
+<section id="definitions"><h2>2. What Are They?</h2>
+<div class="grid">
+<div class="card bq"><h3>BigQuery</h3><p>A fully managed, serverless analytical data platform and cloud data warehouse on Google Cloud. Users submit SQL or Python workloads while Google manages infrastructure, scaling and much of the optimization.</p><p><strong>Main identity:</strong> managed analytics service.</p></div>
+<div class="card spark"><h3>Spark SQL</h3><p>A module of Apache Spark for structured data processing through SQL, DataFrames and Datasets. It runs as part of Spark on local machines, Kubernetes, Hadoop YARN, Dataproc, Databricks, EMR and other environments.</p><p><strong>Main identity:</strong> programmable distributed processing engine.</p></div>
+</div>
+<div class="call"><strong>Important:</strong> BigQuery is a service that stores and analyzes data. Spark SQL is an engine that reads, transforms and writes data from many storage systems. They overlap in SQL analytics but are not identical product categories.</div>
+</section>
+
+<section id="architecture"><h2>3. Architecture Comparison</h2>
+<div class="diagram"><svg viewBox="0 0 1120 480" role="img" aria-label="BigQuery and Spark SQL architecture comparison">
+<defs><marker id="a" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3z" fill="#475467"/></marker></defs>
+<text x="270" y="30" text-anchor="middle" font-size="21" font-weight="700" fill="#1769e0">BigQuery</text>
+<rect x="40" y="55" width="460" height="370" rx="18" fill="#edf5ff" stroke="#1769e0" stroke-width="2"/>
+<rect x="125" y="80" width="290" height="56" rx="11" fill="white" stroke="#1769e0"/><text x="270" y="113" text-anchor="middle" font-weight="700">Users / BI / SQL / Python</text>
+<line x1="270" y1="136" x2="270" y2="175" stroke="#475467" stroke-width="3" marker-end="url(#a)"/>
+<rect x="125" y="180" width="290" height="56" rx="11" fill="white" stroke="#1769e0"/><text x="270" y="213" text-anchor="middle" font-weight="700">Managed Query Service</text>
+<line x1="270" y1="236" x2="270" y2="275" stroke="#475467" stroke-width="3" marker-end="url(#a)"/>
+<rect x="75" y="280" width="180" height="72" rx="11" fill="white" stroke="#1769e0"/><text x="165" y="309" text-anchor="middle" font-weight="700">Compute Slots</text><text x="165" y="333" text-anchor="middle" font-size="13">managed / autoscaled</text>
+<rect x="285" y="280" width="180" height="72" rx="11" fill="white" stroke="#1769e0"/><text x="375" y="309" text-anchor="middle" font-weight="700">Managed Storage</text><text x="375" y="333" text-anchor="middle" font-size="13">columnar tables</text>
+<text x="270" y="395" text-anchor="middle" font-size="14">No cluster provisioning for standard SQL analysis</text>
+
+<text x="850" y="30" text-anchor="middle" font-size="21" font-weight="700" fill="#d9480f">Spark SQL</text>
+<rect x="620" y="55" width="460" height="370" rx="18" fill="#fff4ed" stroke="#d9480f" stroke-width="2"/>
+<rect x="705" y="80" width="290" height="56" rx="11" fill="white" stroke="#d9480f"/><text x="850" y="113" text-anchor="middle" font-weight="700">SQL / DataFrame Application</text>
+<line x1="850" y1="136" x2="850" y2="175" stroke="#475467" stroke-width="3" marker-end="url(#a)"/>
+<rect x="705" y="180" width="290" height="56" rx="11" fill="white" stroke="#d9480f"/><text x="850" y="205" text-anchor="middle" font-weight="700">Driver + Catalyst Optimizer</text><text x="850" y="225" text-anchor="middle" font-size="13">logical and physical plans</text>
+<line x1="850" y1="236" x2="850" y2="275" stroke="#475467" stroke-width="3" marker-end="url(#a)"/>
+<rect x="655" y="280" width="180" height="72" rx="11" fill="white" stroke="#d9480f"/><text x="745" y="309" text-anchor="middle" font-weight="700">Executors</text><text x="745" y="333" text-anchor="middle" font-size="13">CPU and memory</text>
+<rect x="865" y="280" width="180" height="72" rx="11" fill="white" stroke="#d9480f"/><text x="955" y="309" text-anchor="middle" font-weight="700">External Storage</text><text x="955" y="333" text-anchor="middle" font-size="13">lake, DB, warehouse</text>
+<text x="850" y="395" text-anchor="middle" font-size="14">Cluster or managed Spark runtime executes the application</text>
+</svg></div>
+</section>
+
+<section id="similar"><h2>4. Similarities</h2>
+<table><tr><th>Shared capability</th><th>Explanation</th></tr>
+<tr><td>SQL analytics</td><td>Both support SELECT, filters, joins, aggregations, windows, CTEs and many analytical functions.</td></tr>
+<tr><td>Columnar processing</td><td>Both benefit from column projection and columnar formats or storage.</td></tr>
+<tr><td>Distributed execution</td><td>Both divide large work into parallel execution units.</td></tr>
+<tr><td>Query optimization</td><td>Both transform logical SQL into optimized physical execution plans.</td></tr>
+<tr><td>Batch transformation</td><td>Both can clean, join, aggregate and load large datasets.</td></tr>
+<tr><td>Machine learning integration</td><td>BigQuery offers BigQuery ML; Spark integrates with MLlib and external ML libraries.</td></tr>
+<tr><td>Streaming-related use</td><td>BigQuery can ingest and analyze continuously arriving data; Spark Structured Streaming builds programmable streaming pipelines.</td></tr>
+<tr><td>Cloud integration</td><td>Both integrate with cloud storage, catalogs, security services and orchestration tools.</td></tr>
+</table>
+</section>
+
+<section id="difference"><h2>5. Major Differences Across All Perspectives</h2>
+<table>
+<tr><th>Perspective</th><th>BigQuery</th><th>Spark SQL</th></tr>
+<tr><td>Product type</td><td>Managed data platform and warehouse</td><td>Distributed processing engine</td></tr>
+<tr><td>Infrastructure</td><td>Serverless experience; infrastructure is managed</td><td>Requires a runtime or managed Spark service</td></tr>
+<tr><td>Primary users</td><td>Analysts, BI developers, analytics engineers</td><td>Data engineers, platform engineers, developers, data scientists</td></tr>
+<tr><td>Main interface</td><td>GoogleSQL, APIs, notebooks and Python</td><td>SQL plus DataFrame/Dataset APIs in Python, Scala, Java and R</td></tr>
+<tr><td>Storage</td><td>Native managed BigQuery tables plus external/federated options</td><td>Reads many external sources; Spark itself is not primarily a persistent warehouse</td></tr>
+<tr><td>Scaling</td><td>Managed allocation of distributed compute</td><td>Cluster size, autoscaling and executor resources matter</td></tr>
+<tr><td>Tuning effort</td><td>Lower infrastructure tuning; focus on SQL, partitioning, clustering and workload management</td><td>May require partitions, shuffle, memory, cores, skew, caching and join tuning</td></tr>
+<tr><td>Programming freedom</td><td>High for SQL analytics, but controlled service environment</td><td>Very high; custom code and libraries can be integrated</td></tr>
+<tr><td>Portability</td><td>Google Cloud-specific service</td><td>Open-source engine deployable in many environments</td></tr>
+<tr><td>BI concurrency</td><td>Designed for many analytical users and dashboards</td><td>Possible, but requires platform design and resource management</td></tr>
+<tr><td>Complex ETL</td><td>Excellent SQL ELT and managed transformations</td><td>Excellent multi-step and code-heavy ETL</td></tr>
+<tr><td>Streaming</td><td>Warehouse-centric real-time ingestion and analytics</td><td>Stateful programmable stream processing</td></tr>
+<tr><td>Cost unit</td><td>Storage plus on-demand bytes processed or capacity slots</td><td>Compute runtime, infrastructure, storage and operational platform costs</td></tr>
+<tr><td>Vendor management</td><td>Less operational control, less operational burden</td><td>More control, but more responsibility</td></tr>
+</table>
+</section>
+
+<section id="whenbq"><h2>6. When BigQuery Is Better Than Spark SQL</h2>
+<div class="grid3">
+<div class="card bq"><h3>Interactive analytics</h3><p>Business users need fast SQL exploration without waiting for a Spark cluster or application deployment.</p></div>
+<div class="card bq"><h3>BI dashboards</h3><p>Many users query governed warehouse tables through Looker, Power BI, Tableau or other BI tools.</p></div>
+<div class="card bq"><h3>Low operations</h3><p>The organization does not want to manage executors, drivers, memory, shuffle services or cluster lifecycle.</p></div>
+<div class="card bq"><h3>SQL-first ELT</h3><p>Transformations are expressible in SQL and data already resides in BigQuery.</p></div>
+<div class="card bq"><h3>Bursty demand</h3><p>Queries arrive irregularly and automatically managed compute is preferable to keeping a cluster alive.</p></div>
+<div class="card bq"><h3>Central warehouse</h3><p>A single governed analytics layer is needed for finance, operations, marketing and product reporting.</p></div>
+</div>
+<h3>Typical examples</h3>
+<ul><li>Daily sales dashboards and executive KPIs.</li><li>Ad-hoc analysis over terabytes or petabytes.</li><li>Customer segmentation using SQL.</li><li>Marketing attribution reporting.</li><li>Log and event analytics stored in BigQuery.</li><li>BigQuery ML models trained close to warehouse data.</li></ul>
+</section>
+
+<section id="whenspark"><h2>7. When Spark SQL Is Better Than BigQuery</h2>
+<div class="grid3">
+<div class="card spark"><h3>Complex code-driven ETL</h3><p>Transformation involves custom Python/Scala logic, specialized libraries or deeply procedural workflows.</p></div>
+<div class="card spark"><h3>Open data lake</h3><p>Large Parquet, ORC, Avro, Delta or Iceberg datasets must be processed across object storage.</p></div>
+<div class="card spark"><h3>Advanced streaming</h3><p>Stateful event-time processing, watermarking and custom stream logic are central requirements.</p></div>
+<div class="card spark"><h3>Portability</h3><p>The same engine must run on-premises and across AWS, Azure or Google Cloud.</p></div>
+<div class="card spark"><h3>Custom ML preparation</h3><p>Feature engineering requires Python/Scala packages and iterative DataFrame pipelines.</p></div>
+<div class="card spark"><h3>Execution control</h3><p>The team must control executor memory, cores, partitions, caching and data locality.</p></div>
+</div>
+</section>
+
+<section id="workloads"><h2>8. Workload-by-Workload Comparison</h2>
+<table><tr><th>Workload</th><th>Usually preferred</th><th>Reason</th></tr>
+<tr><td>Enterprise BI warehouse</td><td>BigQuery</td><td>Managed storage, SQL analytics, concurrency and BI integration</td></tr>
+<tr><td>Ad-hoc analyst query</td><td>BigQuery</td><td>No application or cluster setup</td></tr>
+<tr><td>Highly customized ETL</td><td>Spark SQL</td><td>DataFrame APIs and general-purpose programming</td></tr>
+<tr><td>Lakehouse file processing</td><td>Spark SQL</td><td>Strong support for distributed file transformation and open formats</td></tr>
+<tr><td>Simple SQL ELT inside warehouse</td><td>BigQuery</td><td>Moves logic to data and avoids extra data movement</td></tr>
+<tr><td>Stateful streaming application</td><td>Spark Structured Streaming</td><td>Programmable state, event time and sink logic</td></tr>
+<tr><td>Dashboard with many users</td><td>BigQuery</td><td>Warehouse-oriented concurrency and governance</td></tr>
+<tr><td>Cross-cloud reusable pipeline</td><td>Spark SQL</td><td>Engine portability</td></tr>
+<tr><td>BigQuery source plus complex transformation</td><td>Both</td><td>Spark reads BigQuery, transforms, then writes curated results back</td></tr>
+<tr><td>SQL-based predictive model</td><td>BigQuery ML</td><td>Model creation near warehouse data</td></tr>
+<tr><td>Custom distributed ML pipeline</td><td>Spark ecosystem</td><td>Broader programmatic control</td></tr></table>
+</section>
+
+<section id="performance"><h2>9. Performance Perspective</h2>
+<div class="grid">
+<div class="card bq"><h3>BigQuery optimization levers</h3><ul><li>Select only required columns.</li><li>Partition tables and filter partition columns.</li><li>Cluster on common selective filters.</li><li>Reduce repeated transformations.</li><li>Use materialized views or pre-aggregations.</li><li>Manage reservations and slots for capacity workloads.</li></ul></div>
+<div class="card spark"><h3>Spark SQL optimization levers</h3><ul><li>Choose effective file and shuffle partition counts.</li><li>Use predicate and column pushdown.</li><li>Broadcast small joins when appropriate.</li><li>Handle data skew.</li><li>Cache reused DataFrames selectively.</li><li>Tune executors, memory, serialization and adaptive query execution.</li></ul></div>
+</div>
+<div class="call warn"><strong>Do not say “Spark is always faster” or “BigQuery is always faster.”</strong> Performance depends on data location, file layout, SQL pattern, concurrency, startup overhead, shuffles, compute allocation and optimization quality.</div>
+</section>
+
+<section id="cost"><h2>10. Cost Perspective</h2>
+<table><tr><th>Question</th><th>BigQuery</th><th>Spark SQL platform</th></tr>
+<tr><td>How is compute commonly charged?</td><td>On-demand bytes processed or capacity measured through slots</td><td>Virtual machines, serverless processing units, cluster runtime or platform units</td></tr>
+<tr><td>Idle cost</td><td>No query compute charge when no on-demand query runs; storage remains billable</td><td>Persistent clusters may incur idle compute cost; ephemeral/serverless Spark reduces this</td></tr>
+<tr><td>Main cost risk</td><td>Poorly filtered queries scanning large tables</td><td>Oversized clusters, long runtimes, inefficient shuffles and idle resources</td></tr>
+<tr><td>Predictability</td><td>Capacity reservations improve predictability; on-demand varies with bytes scanned</td><td>Depends on cluster sizing, autoscaling and job duration</td></tr>
+<tr><td>Operational labor</td><td>Generally lower</td><td>Can be higher because platform and workload tuning may be needed</td></tr></table>
+<div class="call"><strong>Cost comparison must include engineering effort.</strong> A cheaper compute-hour is not necessarily cheaper if engineers spend significant time managing failures, tuning clusters or maintaining platform components.</div>
+</section>
+
+<section id="proscons"><h2>11. Pros and Cons</h2>
+<div class="grid">
+<div class="card bq"><h3>BigQuery advantages</h3><ul><li>No standard cluster administration.</li><li>Excellent SQL analytics experience.</li><li>Managed scalability and storage.</li><li>Strong BI and governance integration.</li><li>Partitioning, clustering, materialized views and built-in ML.</li><li>Suitable for centralized data warehouse workloads.</li></ul><h3>BigQuery limitations</h3><ul><li>Google Cloud service dependency.</li><li>On-demand scan costs require discipline.</li><li>Less control over low-level execution.</li><li>Custom procedural processing may be less natural than Spark.</li><li>Moving data out can introduce egress and latency concerns.</li></ul></div>
+<div class="card spark"><h3>Spark SQL advantages</h3><ul><li>Open source and widely deployable.</li><li>SQL plus Python, Scala, Java and R.</li><li>Excellent for complex transformation pipelines.</li><li>Works across numerous data stores and open formats.</li><li>Fine-grained execution and resource control.</li><li>Supports batch, streaming, ML and graph-oriented ecosystems.</li></ul><h3>Spark SQL limitations</h3><ul><li>More operational and tuning complexity.</li><li>Cluster startup and job orchestration overhead.</li><li>Memory, shuffle and skew problems require expertise.</li><li>BI concurrency needs careful architecture.</li><li>Spark itself is not a complete governed warehouse.</li></ul></div>
+</div>
+</section>
+
+<section id="applications"><h2>12. Industry Applications</h2>
+<table><tr><th>Industry</th><th>BigQuery application</th><th>Spark SQL application</th></tr>
+<tr><td>Retail</td><td>Sales dashboards, customer analytics, demand reporting</td><td>Raw clickstream cleansing, SKU enrichment, feature pipelines</td></tr>
+<tr><td>Banking</td><td>Regulatory reporting, portfolio analytics, governed marts</td><td>Transaction transformation, fraud feature engineering, large file ingestion</td></tr>
+<tr><td>Healthcare</td><td>Operational reporting and population analytics</td><td>Complex clinical data standardization and large semi-structured processing</td></tr>
+<tr><td>Telecom</td><td>Subscriber dashboards and churn analysis</td><td>Network-event pipelines and high-volume log transformation</td></tr>
+<tr><td>Manufacturing</td><td>Plant KPI reporting and supply-chain analytics</td><td>IoT stream processing and predictive-maintenance feature generation</td></tr>
+<tr><td>Media</td><td>Audience and campaign analytics</td><td>Large event-session construction and content recommendation preparation</td></tr></table>
+</section>
+
+<section id="case"><h2>13. Real-World Retail Case Study</h2>
+<h3>Business situation</h3><p>A retailer receives point-of-sale data, website events, product files and customer information. Management needs daily dashboards, while engineers need complex cleansing and sessionization.</p>
+<div class="decision"><div class="card spark"><strong>Spark SQL responsibility</strong><br>Parse raw JSON, remove malformed events, sessionize clickstream, enrich product records and build reusable transformation pipelines.</div><div class="arrow">→</div><div class="card bq"><strong>BigQuery responsibility</strong><br>Store curated facts and dimensions, run KPI queries, support BI dashboards, ad-hoc analysis and governed reporting.</div></div>
+<h3>BigQuery KPI query</h3><pre><button class="copy">Copy</button><code>SELECT
+  order_date,
+  region,
+  category,
+  COUNT(DISTINCT order_id) AS orders,
+  SUM(net_amount) AS revenue
+FROM `retail.gold.sales`
+WHERE order_date BETWEEN DATE '2026-07-01' AND DATE '2026-07-31'
+GROUP BY order_date, region, category
+ORDER BY order_date, region, category;</code></pre>
+<h3>Spark SQL transformation</h3><pre><button class="copy">Copy</button><code>from pyspark.sql import functions as F
+
+clean_orders = (
+    raw_orders
+    .filter(F.col("order_id").isNotNull())
+    .withColumn("order_date", F.to_date("order_timestamp"))
+    .withColumn("net_amount",
+                F.col("quantity") * F.col("unit_price")
+                * (1 - F.col("discount_pct") / 100))
+    .dropDuplicates(["order_id"])
+)
+
+clean_orders.createOrReplaceTempView("clean_orders")
+
+daily_sales = spark.sql("""
+SELECT order_date, region, category,
+       COUNT(DISTINCT order_id) AS orders,
+       SUM(net_amount) AS revenue
+FROM clean_orders
+GROUP BY order_date, region, category
+""")</code></pre>
+</section>
+
+<section id="hybrid"><h2>14. Recommended Hybrid Architecture</h2>
+<div class="diagram"><svg viewBox="0 0 1120 360" role="img" aria-label="Hybrid Spark and BigQuery architecture">
+<defs><marker id="h" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3z" fill="#475467"/></marker></defs>
+<rect x="25" y="125" width="155" height="85" rx="13" fill="#fff" stroke="#475467"/><text x="102" y="155" text-anchor="middle" font-weight="700">Raw Sources</text><text x="102" y="178" text-anchor="middle" font-size="13">files, events, DBs</text>
+<line x1="180" y1="167" x2="245" y2="167" stroke="#475467" stroke-width="3" marker-end="url(#h)"/>
+<rect x="250" y="105" width="200" height="125" rx="13" fill="#fff4ed" stroke="#d9480f" stroke-width="2"/><text x="350" y="140" text-anchor="middle" font-weight="700">Spark SQL</text><text x="350" y="165" text-anchor="middle" font-size="13">clean, validate, enrich</text><text x="350" y="187" text-anchor="middle" font-size="13">sessionize, feature build</text><text x="350" y="209" text-anchor="middle" font-size="13">complex transformations</text>
+<line x1="450" y1="167" x2="515" y2="167" stroke="#475467" stroke-width="3" marker-end="url(#h)"/>
+<rect x="520" y="105" width="200" height="125" rx="13" fill="#edf5ff" stroke="#1769e0" stroke-width="2"/><text x="620" y="140" text-anchor="middle" font-weight="700">BigQuery</text><text x="620" y="165" text-anchor="middle" font-size="13">curated warehouse</text><text x="620" y="187" text-anchor="middle" font-size="13">facts and dimensions</text><text x="620" y="209" text-anchor="middle" font-size="13">governed SQL analytics</text>
+<line x1="720" y1="167" x2="785" y2="167" stroke="#475467" stroke-width="3" marker-end="url(#h)"/>
+<rect x="790" y="78" width="145" height="75" rx="13" fill="#fff" stroke="#1769e0"/><text x="862" y="108" text-anchor="middle" font-weight="700">BI Tools</text><text x="862" y="130" text-anchor="middle" font-size="13">dashboards</text>
+<rect x="790" y="180" width="145" height="75" rx="13" fill="#fff" stroke="#1769e0"/><text x="862" y="210" text-anchor="middle" font-weight="700">Data Science</text><text x="862" y="232" text-anchor="middle" font-size="13">models and notebooks</text>
+<line x1="935" y1="115" x2="1000" y2="115" stroke="#475467" stroke-width="3" marker-end="url(#h)"/><line x1="935" y1="217" x2="1000" y2="217" stroke="#475467" stroke-width="3" marker-end="url(#h)"/>
+<rect x="1005" y="125" width="90" height="85" rx="13" fill="#ecfdf5" stroke="#087f5b"/><text x="1050" y="158" text-anchor="middle" font-weight="700">Business</text><text x="1050" y="181" text-anchor="middle" font-size="13">decisions</text>
+</svg></div>
+<p>The Spark BigQuery connector can read BigQuery tables into Spark DataFrames and write DataFrames back to BigQuery, enabling this architecture without treating the tools as mutually exclusive.</p>
+</section>
+
+<section id="sql"><h2>15. SQL Syntax and Capability Comparison</h2>
+<table><tr><th>Task</th><th>BigQuery GoogleSQL</th><th>Spark SQL</th></tr>
+<tr><td>Limit output</td><td><code>LIMIT 10</code></td><td><code>LIMIT 10</code></td></tr>
+<tr><td>Date difference</td><td><code>DATE_DIFF(end_date,start_date,DAY)</code></td><td><code>datediff(end_date,start_date)</code></td></tr>
+<tr><td>Conditional expression</td><td><code>CASE WHEN ... END</code></td><td><code>CASE WHEN ... END</code></td></tr>
+<tr><td>Array handling</td><td>Native ARRAY and UNNEST syntax</td><td>Array type with explode and higher-order functions</td></tr>
+<tr><td>Approximate distinct</td><td><code>APPROX_COUNT_DISTINCT</code></td><td><code>approx_count_distinct</code></td></tr>
+<tr><td>Temporary logical object</td><td>CTE, temp table, temp function</td><td>Temporary view and global temporary view</td></tr>
+<tr><td>Procedural support</td><td>Multi-statement queries and procedures</td><td>Usually application logic around SQL/DataFrames</td></tr></table>
+<div class="call warn"><strong>Migration warning:</strong> Both support ANSI-like SQL, but functions, data types, null behavior, timestamp semantics, arrays, intervals and DDL syntax are not completely identical.</div>
+</section>
+
+<section id="migration"><h2>16. Migration Guidance</h2>
+<h3>Move a Spark SQL workload to BigQuery when</h3><ol><li>The pipeline is mainly relational SQL.</li><li>Source and target data can reside in BigQuery.</li><li>Cluster administration adds little business value.</li><li>The output mainly serves analysts and dashboards.</li><li>Transformation can be rewritten as scheduled SQL, procedures or a managed transformation framework.</li></ol>
+<h3>Keep it in Spark when</h3><ol><li>Custom code or external libraries are fundamental.</li><li>The pipeline processes large open-format lake data.</li><li>Cross-cloud or on-premises portability is mandatory.</li><li>Advanced stateful streaming is required.</li><li>Execution-level control is a contractual or performance requirement.</li></ol>
+<h3>Safe migration steps</h3><ol><li>Inventory jobs and classify SQL-only versus code-heavy logic.</li><li>Compare source and target data location.</li><li>Translate SQL and validate data types.</li><li>Run parallel output reconciliation.</li><li>Measure bytes scanned, duration, concurrency and total operational cost.</li><li>Migrate low-risk SQL workloads first.</li></ol>
+</section>
+
+<section id="decision"><h2>17. Practical Decision Matrix</h2>
+<table><tr><th>Question</th><th>If yes, lean toward</th></tr>
+<tr><td>Do analysts need direct, interactive SQL access?</td><td>BigQuery</td></tr>
+<tr><td>Is infrastructure management undesirable?</td><td>BigQuery</td></tr>
+<tr><td>Is the target an enterprise analytical warehouse?</td><td>BigQuery</td></tr>
+<tr><td>Does the workload require arbitrary Python or Scala libraries?</td><td>Spark SQL</td></tr>
+<tr><td>Must it run in several clouds or on-premises?</td><td>Spark SQL</td></tr>
+<tr><td>Does it process open-format lake data heavily?</td><td>Spark SQL</td></tr>
+<tr><td>Is it a complex stateful streaming application?</td><td>Spark Structured Streaming</td></tr>
+<tr><td>Do you need complex ETL and a governed BI serving layer?</td><td>Both</td></tr></table>
+<div class="call good"><strong>Simple rule:</strong> Use BigQuery for managed analytical serving and SQL-first warehousing. Use Spark SQL for programmable distributed processing. Use both when the data journey needs both capabilities.</div>
+</section>
+
+<section id="trouble"><h2>18. Common Misunderstandings</h2>
+<table><tr><th>Misunderstanding</th><th>Correction</th></tr>
+<tr><td>BigQuery replaces all Spark jobs</td><td>Only workloads suited to warehouse SQL and managed analytics are natural replacements.</td></tr>
+<tr><td>Spark SQL is a database</td><td>It is a processing engine; persistent storage and governance usually come from surrounding systems.</td></tr>
+<tr><td>Serverless means zero cost</td><td>It means infrastructure is abstracted; storage and compute usage remain billable.</td></tr>
+<tr><td>Spark always processes data in memory</td><td>Spark can spill to disk, read from external storage and perform disk/network-heavy shuffles.</td></tr>
+<tr><td>SQL portability is automatic</td><td>Dialect and function differences require testing.</td></tr>
+<tr><td>BigQuery needs no optimization</td><td>Schema design, partitioning, clustering, query projection and cost governance still matter.</td></tr>
+</table>
+</section>
+
+<section id="exercise"><h2>19. Hands-On and Discussion Exercises</h2>
+<ol><li>Classify ten company workloads as BigQuery, Spark SQL or hybrid.</li><li>Rewrite a Spark aggregation query in BigQuery GoogleSQL.</li><li>Design a retail architecture where Spark processes clickstream and BigQuery serves dashboards.</li><li>Estimate cost risks for a full-table BigQuery scan and an always-running Spark cluster.</li><li>List five Spark transformations that are easy in SQL and five that require custom code.</li><li>Prepare a migration checklist for moving a SQL-only Spark job to BigQuery.</li></ol>
+</section>
+
+<section id="quiz"><h2>20. Knowledge Check</h2>
+<div class="q"><strong>1. Which is primarily a serverless analytical data platform?</strong><label><input type="radio" name="q1" value="1"> BigQuery</label> <label><input type="radio" name="q1" value="0"> Spark SQL</label></div>
+<div class="q"><strong>2. Which provides DataFrame APIs in Python, Scala, Java and R?</strong><label><input type="radio" name="q2" value="0"> BigQuery only</label> <label><input type="radio" name="q2" value="1"> Spark SQL</label></div>
+<div class="q"><strong>3. Best common choice for managed BI warehouse queries?</strong><label><input type="radio" name="q3" value="1"> BigQuery</label> <label><input type="radio" name="q3" value="0"> Self-managed Spark only</label></div>
+<div class="q"><strong>4. Best common choice for code-heavy cross-cloud ETL?</strong><label><input type="radio" name="q4" value="0"> BigQuery</label> <label><input type="radio" name="q4" value="1"> Spark SQL</label></div>
+<div class="q"><strong>5. Can Spark and BigQuery be used together?</strong><label><input type="radio" name="q5" value="1"> Yes</label> <label><input type="radio" name="q5" value="0"> No</label></div>
+<button class="btn" id="submit">Submit</button><div class="score" id="score"></div>
+</section>
+
+<section id="interview"><h2>21. Interview Questions and Answers</h2>
+<details><summary>1. Is BigQuery a replacement for Spark SQL?</summary><p>Not universally. BigQuery may replace SQL-centric analytical jobs, while Spark remains useful for complex programmable and open-data processing.</p></details>
+<details><summary>2. What is the fundamental architectural difference?</summary><p>BigQuery is a managed analytical service with managed compute and storage. Spark SQL is an engine executed within a Spark runtime against one or more storage systems.</p></details>
+<details><summary>3. Why is BigQuery attractive for BI?</summary><p>It offers managed scaling, governed warehouse tables, SQL access and direct integration with BI tools without standard cluster operations.</p></details>
+<details><summary>4. Why is Spark attractive for ETL?</summary><p>It combines SQL with general-purpose APIs and supports extensive data sources, formats and custom transformation logic.</p></details>
+<details><summary>5. How are BigQuery on-demand queries priced?</summary><p>Primarily by bytes processed, subject to the current pricing rules and free usage allowances.</p></details>
+<details><summary>6. What creates Spark cost?</summary><p>Compute resources, runtime duration, storage, platform charges, network traffic and operational engineering.</p></details>
+<details><summary>7. What is Catalyst?</summary><p>Spark SQL's optimizer framework that transforms logical plans and selects physical execution strategies.</p></details>
+<details><summary>8. What are BigQuery slots?</summary><p>Units of computational capacity used to execute BigQuery workloads, especially relevant to capacity-based pricing.</p></details>
+<details><summary>9. When should the tools be combined?</summary><p>When complex processing is performed in Spark and curated analytical results are served from BigQuery.</p></details>
+<details><summary>10. Which is more portable?</summary><p>Spark SQL, because Apache Spark can run in many cloud and on-premises environments.</p></details>
+<details><summary>11. Which needs more tuning?</summary><p>Spark commonly exposes more resource and execution tuning. BigQuery still needs query and table-design optimization.</p></details>
+<details><summary>12. Which is better for stateful streaming?</summary><p>Spark Structured Streaming is generally the more programmable fit for complex stateful processing.</p></details>
+<details><summary>13. Can BigQuery read external data?</summary><p>Yes, through supported external and federated capabilities, though native table storage often gives the strongest warehouse experience.</p></details>
+<details><summary>14. Can Spark read BigQuery?</summary><p>Yes, using the Spark BigQuery connector, which maps BigQuery data to Spark DataFrames and supports writing results back.</p></details>
+<details><summary>15. What should drive the final choice?</summary><p>Workload shape, data location, latency, concurrency, programming needs, governance, portability, operational skills and total cost.</p></details>
+</section>
+
+<section><h2>22. Source Notes</h2><p>This tutorial is aligned with official Google Cloud BigQuery documentation, official Apache Spark SQL documentation, Spark performance-tuning documentation, BigQuery pricing documentation and the official Spark BigQuery connector documentation. Product behavior and prices should always be verified against current official documentation before production planning.</p></section>
+
+</main></div>
+<footer>BigQuery vs Spark SQL • Architecture, Usage, Decision and Application Tutorial</footer>
+<script>
+document.querySelectorAll('.copy').forEach(b=>b.addEventListener('click',()=>{navigator.clipboard.writeText(b.parentElement.querySelector('code').innerText);b.textContent='Copied';setTimeout(()=>b.textContent='Copy',1000)}));
+document.getElementById('submit').addEventListener('click',()=>{let s=0;for(let i=1;i<=5;i++){const x=document.querySelector('input[name=q'+i+']:checked');if(x)s+=Number(x.value)}document.getElementById('score').textContent='Score: '+s+'/5 — '+(s===5?'Excellent':s>=3?'Good; review missed points':'Review the decision matrix again')});
+</script>
+</body></html>
