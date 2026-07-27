@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GCP Dataproc CLI — Complete Step-by-Step Food Delivery ETL Lab</title>
+<style>
+:root {
+  --bg:#f4f7fb;--panel:#fff;--ink:#152033;--muted:#5d6a7c;--blue:#1d4ed8;
+  --blue2:#2563eb;--purple:#6d28d9;--green:#15803d;--orange:#b45309;
+  --red:#b91c1c;--line:#dbe3ef;--code:#0a1220;--codeink:#e6edf7;
+  --shadow:0 12px 30px rgba(24,38,67,.10)
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,Segoe UI,Arial,sans-serif;line-height:1.65}
+header{background:linear-gradient(135deg,#081528,#173b85 58%,#5b21b6);color:#fff;padding:52px 24px;position:relative;overflow:hidden}
+header:before,header:after{content:"";position:absolute;border-radius:50%;background:rgba(255,255,255,.08)}
+header:before{width:300px;height:300px;right:-100px;top:-140px}header:after{width:180px;height:180px;left:-60px;bottom:-90px}
+.hero{max-width:1240px;margin:auto;position:relative;z-index:1}
+.badge{display:inline-block;border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.12);padding:6px 12px;border-radius:999px;font-size:.86rem}
+h1{font-size:clamp(2rem,5vw,3.7rem);line-height:1.1;margin:14px 0}
+.subtitle{max-width:980px;color:#dbeafe;font-size:1.12rem}
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px}
+.hero-actions a{color:#fff;text-decoration:none;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.28);padding:10px 14px;border-radius:10px;font-weight:800}
+.layout{max-width:1500px;margin:auto;padding:22px;display:grid;grid-template-columns:290px minmax(0,1fr);gap:22px}
+aside{position:sticky;top:14px;height:max-content;background:#fff;border:1px solid var(--line);border-radius:16px;padding:17px;box-shadow:var(--shadow);max-height:calc(100vh - 28px);overflow:auto}
+aside h3{margin:0 0 10px}aside input{width:100%;padding:10px;border:1px solid var(--line);border-radius:9px;margin-bottom:10px}
+aside a{display:block;text-decoration:none;color:#334155;padding:7px 9px;border-radius:8px;font-size:.91rem}aside a:hover{background:#eff6ff;color:var(--blue)}
+main{min-width:0}
+section{background:#fff;border:1px solid var(--line);border-radius:18px;padding:28px;margin-bottom:22px;box-shadow:var(--shadow);transition:.2s}
+section:hover{box-shadow:0 15px 38px rgba(24,38,67,.14)}
+h2{margin-top:0;font-size:1.8rem;line-height:1.25}h3{line-height:1.3}h4{margin-bottom:6px}
+.lead{font-size:1.08rem;color:#344054}
+.grid2,.grid3,.grid4{display:grid;gap:15px}.grid2{grid-template-columns:repeat(2,minmax(0,1fr))}.grid3{grid-template-columns:repeat(3,minmax(0,1fr))}.grid4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.card{border:1px solid var(--line);border-radius:14px;padding:17px;background:#fbfdff}.card h3,.card h4{margin-top:0}
+.callout{padding:15px 17px;border-left:5px solid var(--blue);background:#eff6ff;border-radius:10px;margin:16px 0}
+.callout.success{border-color:var(--green);background:#f0fdf4}.callout.warn{border-color:var(--orange);background:#fff7ed}.callout.danger{border-color:var(--red);background:#fef2f2}
+.diagram{background:linear-gradient(180deg,#f8fbff,#eef4ff);border:1px dashed #94a3b8;border-radius:16px;padding:22px;overflow:auto}
+.flow{display:flex;align-items:center;justify-content:center;gap:10px;min-width:900px}.node{background:#fff;border:2px solid #93c5fd;border-radius:13px;padding:13px;text-align:center;min-width:150px;box-shadow:0 5px 14px rgba(15,23,42,.08)}.arrow{font-size:1.7rem;color:var(--blue);font-weight:900}
+.command-card{border:1px solid var(--line);border-radius:16px;padding:20px;margin:18px 0;background:#fff}
+.command-title{display:flex;align-items:center;gap:12px}.command-title h3{margin:0}
+.step-number{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,var(--blue2),var(--purple));color:#fff;font-weight:900;flex:0 0 auto}
+.codebox{border:1px solid #25334a;border-radius:13px;overflow:hidden;margin:15px 0;background:var(--code)}
+.codehead{display:flex;justify-content:space-between;align-items:center;background:#17233a;color:#b9c7da;padding:7px 10px;font-size:.8rem;font-weight:800}
+.codehead button{border:0;background:#334155;color:#fff;border-radius:7px;padding:6px 10px;cursor:pointer;font-weight:800}
+pre{margin:0;padding:18px;overflow:auto;color:var(--codeink);font:14px/1.58 Consolas,Monaco,monospace;white-space:pre}
+.explain-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.explain-grid>div{background:#f8fafc;border:1px solid #e2e8f0;border-radius:11px;padding:12px}.explain-grid h4{margin-top:0;color:#1e3a8a}
+.note{background:#fff7ed;border:1px solid #fed7aa;border-radius:10px;padding:11px;margin-top:12px}
+table{width:100%;border-collapse:collapse;margin:14px 0}th,td{border:1px solid var(--line);padding:10px;text-align:left;vertical-align:top}th{background:#eef4ff}tr:nth-child(even) td{background:#fbfcfe}
+.pipeline{display:grid;grid-template-columns:repeat(7,minmax(110px,1fr));gap:8px;align-items:center;min-width:900px}.phase{text-align:center;border:1px solid #bfdbfe;background:#fff;padding:11px;border-radius:12px;font-weight:800}.phase small{display:block;color:var(--muted);font-weight:500}
+details{border:1px solid var(--line);border-radius:11px;margin:10px 0}summary{cursor:pointer;padding:13px;font-weight:800}details .answer{padding:0 14px 14px}
+.quizq{border:1px solid var(--line);border-radius:12px;padding:14px;margin:12px 0}.quizq label{display:block;padding:6px;border-radius:7px}.quizq label:hover{background:#f1f5f9}.correct{border-color:#22c55e;background:#f0fdf4}.wrong{border-color:#ef4444;background:#fef2f2}.explanation{display:none;margin-top:8px}
+button.action{border:0;border-radius:9px;padding:10px 14px;font-weight:800;cursor:pointer;background:var(--blue2);color:#fff}button.secondary{background:#e2e8f0;color:#1e293b}
+.tracker label{display:flex;gap:9px;margin:8px 0}.progress{height:14px;background:#e2e8f0;border-radius:99px;overflow:hidden}.bar{height:100%;width:0;background:linear-gradient(90deg,var(--blue2),var(--purple));transition:.3s}
+.user-note{outline:3px solid #f59e0b;position:relative}.user-note:after{content:"📝 Note saved";position:absolute;right:10px;top:10px;background:#fef3c7;padding:3px 8px;border-radius:6px;font-size:.75rem;color:#92400e}
+footer{text-align:center;color:#64748b;padding:20px 20px 40px}.sparkle{position:fixed;pointer-events:none;z-index:9999;font-size:14px;animation:sparkleFade .7s ease-out forwards}@keyframes sparkleFade{from{opacity:1;transform:translateY(0) scale(1)}to{opacity:0;transform:translateY(-18px) scale(.35)}}
+.hidden-search{display:none!important}
+@media(max-width:1050px){.layout{grid-template-columns:1fr}aside{position:relative;max-height:none}}
+@media(max-width:760px){.layout{padding:10px}section{padding:19px}.grid2,.grid3,.grid4,.explain-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header>
+<div class="hero">
+<span class="badge">GCP • Dataproc • PySpark • Windows CMD</span>
+<h1>GCP Dataproc CLI: Complete Working Lab</h1>
+<p class="subtitle">Installation, authentication, project setup, IAM, Cloud Storage, custom VPC networking, single-node cluster creation, PySpark job execution, output validation, and cost-safe cleanup—explained command by command.</p>
+<div class="hero-actions"><a href="#overview">Start Tutorial</a><a href="#commands">Command-by-Command Notes</a><a href="#lab-files">Lab Files</a><a href="#cleanup">Cleanup</a></div>
+</div>
+</header>
+
+<div class="layout">
+<aside>
+<h3>Contents</h3>
+<input id="searchBox" placeholder="Search commands or topics..." oninput="searchPage()">
+<a href="#overview">1. Tutorial Overview</a>
+<a href="#corrections">2. Corrections Applied</a>
+<a href="#architecture">3. Architecture</a>
+<a href="#installation">4. CLI Installation</a>
+<a href="#services">5. Resources and Services</a>
+<a href="#commands">6. Every Command Explained</a>
+<a href="#lab-files">7. Dataset and PySpark</a>
+<a href="#execution">8. Runtime Execution Flow</a>
+<a href="#expected">9. Expected Result</a>
+<a href="#troubleshooting">10. Troubleshooting</a>
+<a href="#cleanup">11. Cleanup</a>
+<a href="#interview">12. Interview Q&amp;A</a>
+<a href="#quiz">13. MCQ Quiz</a>
+<a href="#tracker">14. Progress Tracker</a>
+<a href="#sources">15. References</a>
+</aside>
+
+<main>
+<section id="overview" class="searchable">
+<h2>1. Tutorial Overview</h2>
+<p class="lead">This tutorial reconciles the supplied Command Prompt transcript and Word document into one clean, executable sequence. Commands that produced errors are excluded from the runnable path.</p>
+<div class="grid4">
+<div class="card"><h3>Source</h3><p>Windows laptop running Google Cloud CLI.</p></div>
+<div class="card"><h3>Storage</h3><p>Cloud Storage replaces HDFS as durable input and output storage.</p></div>
+<div class="card"><h3>Compute</h3><p>A small single-node Dataproc cluster runs Spark on YARN.</p></div>
+<div class="card"><h3>Use Case</h3><p>Clean food-delivery orders and calculate city revenue.</p></div>
+</div>
+<div class="callout success"><strong>Verified outcome from the supplied execution:</strong> the cluster reached RUNNING, the PySpark job reached DONE, 15 raw rows became 11 clean rows, and the job generated Parquet and CSV outputs.</div>
+<h3>Learning Objectives</h3>
+<ul>
+<li>Install and validate the Google Cloud CLI on Windows.</li>
+<li>Understand local CLI configuration versus actual cloud resources.</li>
+<li>Create a custom service account and assign the correct IAM permissions.</li>
+<li>Create secure Cloud Storage and networking resources.</li>
+<li>Understand which Dataproc, Compute Engine, Spark, YARN, and storage services are created.</li>
+<li>Submit a PySpark job and trace execution from CMD to Cloud Storage output.</li>
+<li>Delete all chargeable demonstration resources.</li>
+</ul>
+</section>
+
+<section id="corrections" class="searchable">
+<h2>2. Corrections Applied to Produce the Working Sequence</h2>
+<p>The runnable commands in this tutorial intentionally omit failed attempts and retain only corrected patterns.</p>
+<table>
+<thead><tr><th>Issue found in the transcript</th><th>Correction used here</th><th>Why it matters</th></tr></thead>
+<tbody>
+<tr><td>Project variable used before it was set</td><td>Define and echo every variable before use</td><td>CMD substitutes an empty string for an undefined variable.</td></tr>
+<tr><td>Linux-style <code>\</code> line continuation pasted into CMD</td><td>Use a single line or the CMD caret <code>^</code></td><td>Backslash is not a Windows CMD continuation character.</td></tr>
+<tr><td>File uploaded from the wrong local directory</td><td><code>cd /d C:\gcp-dataproc-demo</code> before upload</td><td>The source file must exist relative to the current directory or use an absolute path.</td></tr>
+<tr><td>Cluster command omitted the custom subnet</td><td>Include <code>--subnet=%SUBNET_NAME%</code></td><td>Dataproc otherwise selects another network/subnet and can fail.</td></tr>
+<tr><td>Cluster command used the default VM service account</td><td>Include <code>--service-account=%SERVICE_ACCOUNT_EMAIL%</code></td><td>The tested bucket access was granted to the custom workload identity.</td></tr>
+<tr><td>Custom VPC had no explicit internal rule</td><td>Create <code>dataproc-allow-internal</code></td><td>Hadoop/Spark nodes need internal TCP, UDP, and ICMP communication.</td></tr>
+<tr><td>Billing verification triggered beta component installation</td><td>Use current GA <code>gcloud billing projects describe</code></td><td>Avoids the interactive beta installation interruption.</td></tr>
+</tbody>
+</table>
+<div class="callout warn"><strong>Shell rule:</strong> All commands below are written for <strong>Windows Command Prompt</strong>. PowerShell uses different variables and continuation syntax.</div>
+</section>
+
+<section id="architecture" class="searchable">
+<h2>3. End-to-End Architecture</h2>
+<div class="diagram">
+<div class="flow">
+<div class="node"><strong>Windows CMD</strong>gcloud CLI<br>orders.csv<br>food_delivery_etl.py</div><div class="arrow">→</div>
+<div class="node"><strong>Google APIs</strong>IAM<br>Compute<br>Storage<br>Dataproc</div><div class="arrow">→</div>
+<div class="node"><strong>Cloud Storage</strong>input/<br>code/<br>output/</div><div class="arrow">→</div>
+<div class="node"><strong>Dataproc Cluster</strong>1 VM<br>Spark<br>YARN<br>HDFS services</div><div class="arrow">→</div>
+<div class="node"><strong>Output</strong>Clean Parquet<br>City Revenue CSV</div>
+</div>
+</div>
+<h3>Provisioning Lifecycle</h3>
+<div class="diagram">
+<div class="pipeline">
+<div class="phase">Authenticate<small>gcloud init</small></div>
+<div class="phase">Configure<small>project + region</small></div>
+<div class="phase">Authorize<small>service account + IAM</small></div>
+<div class="phase">Store<small>bucket + files</small></div>
+<div class="phase">Network<small>VPC + subnet + firewall</small></div>
+<div class="phase">Compute<small>Dataproc cluster + job</small></div>
+<div class="phase">Clean Up<small>delete resources</small></div>
+</div>
+</div>
+</section>
+
+<section id="installation" class="searchable">
+<h2>4. Google Cloud CLI Installation on Windows</h2>
+<div class="grid2">
+<div class="card">
+<h3>Graphical Installer</h3>
+<ol>
+<li>Open the official Google Cloud CLI installation page.</li>
+<li>Download the Windows installer signed by Google LLC.</li>
+<li>Launch the installer.</li>
+<li>Keep bundled Python selected unless you intentionally manage a supported Python installation.</li>
+<li>Allow the installer to add gcloud to PATH.</li>
+<li>Open a new Command Prompt after installation.</li>
+</ol>
+</div>
+<div class="card">
+<h3>PowerShell Installer Launch</h3>
+<div class="codebox"><div class="codehead"><span>POWERSHELL</span><button onclick="copyCode(this)">Copy</button></div><pre><code>(New-Object Net.WebClient).DownloadFile(
+  &quot;https://dl.google.com/dl/cloudsdk/channels/rapid/GoogleCloudSDKInstaller.exe&quot;,
+  &quot;$env:Temp\GoogleCloudSDKInstaller.exe&quot;
+)
+&amp; $env:Temp\GoogleCloudSDKInstaller.exe</code></pre></div>
+<p>This PowerShell snippet downloads and launches the official installer. After installation, use CMD for the rest of this lab.</p>
+</div>
+</div>
+<h3>Post-Installation Verification</h3>
+<div class="codebox"><div class="codehead"><span>CMD</span><button onclick="copyCode(this)">Copy</button></div><pre><code>gcloud version
+where gcloud
+gcloud auth list
+gcloud config list</code></pre></div>
+<div class="callout"><strong>What installation creates locally:</strong> the gcloud executable, bundled components, optional bundled Python, a user configuration directory, credential files, and PATH entries. It creates no Dataproc cluster and no cloud billing by itself.</div>
+</section>
+
+<section id="services" class="searchable">
+<h2>5. What Resources and Services Are Created?</h2>
+<table>
+<thead><tr><th>Stage</th><th>Resource or service</th><th>Created where</th><th>Purpose</th><th>Cost relevance</th></tr></thead>
+<tbody>
+<tr><td>CLI setup</td><td>gcloud configuration</td><td>Local Windows profile</td><td>Stores active account, project, and region</td><td>No direct cloud cost</td></tr>
+<tr><td>API enablement</td><td>Service enablement and Google-managed service agents</td><td>GCP project</td><td>Lets Google APIs manage resources</td><td>API enablement itself usually has no charge</td></tr>
+<tr><td>Identity</td><td>Custom service account</td><td>IAM</td><td>Identity used by the Dataproc VM and Spark job</td><td>No direct charge</td></tr>
+<tr><td>Storage</td><td>Cloud Storage bucket and objects</td><td>asia-south1</td><td>Input, code, staging, temp, logs, and output</td><td>Storage and operations can be billed</td></tr>
+<tr><td>Network</td><td>VPC, subnet, firewall rule</td><td>Global + asia-south1</td><td>Private IP allocation and service communication</td><td>Basic VPC resources generally have no direct hourly VM-like charge</td></tr>
+<tr><td>Cluster</td><td>Dataproc cluster</td><td>asia-south1</td><td>Managed Spark/Hadoop environment</td><td>Compute Engine, disk, and Dataproc charges apply while running</td></tr>
+<tr><td>Compute</td><td>One e2-standard-2 VM and 50 GB PD</td><td>Selected zone</td><td>Hosts master and worker components in single-node mode</td><td>Chargeable until cluster deletion</td></tr>
+<tr><td>Runtime</td><td>Spark driver, executors, YARN application</td><td>Cluster VM</td><td>Runs the ETL transformation</td><td>Uses cluster resources</td></tr>
+<tr><td>Output</td><td>Parquet and CSV objects</td><td>Cloud Storage</td><td>Clean detail and aggregated report</td><td>Small storage charge until deleted</td></tr>
+</tbody>
+</table>
+
+<h3>Services Inside a Single-Node Cluster</h3>
+<div class="grid3">
+<div class="card"><h4>YARN ResourceManager</h4><p>Accepts the Spark application and schedules containers.</p></div>
+<div class="card"><h4>YARN NodeManager</h4><p>Launches and monitors containers on the VM.</p></div>
+<div class="card"><h4>Spark Driver</h4><p>Builds the execution plan and coordinates stages and tasks.</p></div>
+<div class="card"><h4>Spark Executor</h4><p>Performs CSV reading, filtering, deduplication, aggregation, and writes.</p></div>
+<div class="card"><h4>HDFS Services</h4><p>Installed with the cluster, but this lab keeps durable data in GCS.</p></div>
+<div class="card"><h4>Component Gateway</h4><p>Provides authenticated access paths to supported web interfaces.</p></div>
+</div>
+</section>
+
+<section id="commands">
+<h2>6. Every Working Command Explained</h2>
+<p class="lead">The command cards below explain what each command does, what it creates, how it executes, and how to confirm success.</p>
+
+    <article class="command-card searchable">
+      <div class="command-title"><span class="step-number">1</span><h3>Check the Google Cloud CLI version</h3></div>
+      <div class="codebox"><div class="codehead"><span>CMD</span><button onclick="copyCode(this)">Copy</button></div><pre><code>gcloud version</code></pre></div>
+      <div class="explain-grid">
+        <div><h4>What it does</h4><p>Displays the installed Google Cloud CLI and bundled component versions.</p></div>
+        <div><h4>What it creates or changes</h4><p>No cloud resource. It only reads the local installation information.</p></div>
+        <div><h4>How it executes</h4><p>Windows locates gcloud through PATH and launches the local CLI executable.</p></div>
+        <div><h4>Success check</h4><p>The output displays Google Cloud CLI and component versions.</p></div>
+      </div>
+      <div class="note"><strong>Trainer note:</strong> Run this immediately after installation. If Windows says gcloud is not recognized, reopen Command Prompt or repair PATH.</div>
+    </article>
+    
+
+    <article class="command-card searchable">
+      <div class="command-title"><span class="step-number">2</span><h3>View authenticated accounts</h3></div>
+      <div class="codebox"><div class="codehead"><span>CMD</span><button onclick="copyCode(this)">Copy</button></div><pre><code>gcloud auth list</code></pre></div>
+      <div class="explain-grid">
+        <div><h4>What it does</h4><p>Lists Google accounts whose credentials are stored locally and marks the active account.</p></div>
+        <div><h4>What it creates or changes</h4><p>No cloud resource. It reads the local credential store.</p></div>
+        <div><h4>How it executes</h4><p>The CLI reads its local authentication configuration.</p></div>
+        <div><h4>Success check</h4><p>One account has an asterisk in the ACTIVE column.</p></div>
+      </div>
+      
+    </article>
+    
+
+    <article class="command-card searchable">
+      <div class="command-title"><span class="step-number">3</span><h3>Initialize and authenticate</h3></div>
+      <div class="codebox"><div class="codehead"><span>CMD</span><button onclick="copyCode(this)">Copy</button></div><pre><code>gcloud init</code></pre></div>
+      <div class="explain-grid">
+        <div><h4>What it does</h4><p>Starts an interactive wizard to authenticate, select a configuration, and choose a default project.</p></div>
+        <div><h4>What it creates or changes</h4><p>Creates or updates a local gcloud configuration profile such as default. It does not create a Dataproc cluster.</p></div>
+        <div><h4>How it executes</h4><p>The CLI opens a browser sign-in flow, stores credentials locally, and writes selected properties to the active configuration.</p></div>
+        <div><h4>Success check</h4><p>The final message says the Google Cloud CLI is configured and ready.</p></div>
+      </div>
+      <div class="note"><strong>Trainer note:</strong> This command was successful in the supplied transcript. Run it once during setup, not before every lab.</div>
+    </article>
+    
+
+    <article class="command-card searchable">
+      <div class="command-title"><span class="step-number">4</span><h3>List accessible projects</h3></div>
+      <div class="codebox"><div class="codehead"><span>CMD</span><button onclick="copyCode(this)">Copy</button></div><pre><code>gcloud projects list</code></pre></div>
+      <div class="explain-grid">
+        <div><h4>What it does</h4><p>Shows projects the active account can access.</p></div>
+        <div><h4>What it creates or changes</h4><p>No resource. It reads Cloud Resource Manager project metadata.</p></div>
+        <div><h4>How it executes</h4><p>The CLI calls the Resource Manager API using the active account.</p></div>
+        <div><h4>Success check</h4><p>Choose the value from the PROJECT_ID column, not the display name.</p></div>
+      </div>
+      
+    </article>
+    
+
+    <article class="command-card searchable">
+      <div class="command-title"><span class="step-number">5</span><h3>Create a project variable</h3></div>
+      <div class="codebox"><div class="codehead"><span>CMD</span><button onclick="copyCode(this)">Copy</button></div><pre><code>set PROJECT_ID=YOUR_PROJECT_ID</code></pre></div>
+      <div class="explain-grid">
+        <div><h4>What it does</h4><p>Stores the project ID in a Windows Command Prompt environment variable.</p></div>
+        <div><h4>What it creates or changes</h4><p>Creates only a temporary variable in the current CMD window.</p></div>
+        <div><h4>How it executes</h4><p>CMD places the string in its current process environment.</p></div>
+        <div><h4>Success check</h4><p>echo %PROJECT_ID% prints the selected project ID.</p></div>
+      </div>
+      <div class="note"><strong>Trainer note:</strong> Do not put spaces around the equals sign. The variable disappears when the CMD window closes.</div>
+    </article>
+    
+
+    <article class="command-card searchable">
+      <div class="command-title"><span class="step-number">6</span><h3>Set the region variable</h3></div>
+      <div class="codebox"><div class="codehead"><span>CMD</span><button onclick="copyCode(this)">Copy</button></div><pre><code>set REGION=asia-south1</code></pre></div>
+      <div class="explain-grid">
+        <div><h4>What it does</h4><p>Stores the Mumbai region code for later commands.</p></div>
+        <div><h4>What it creates or changes</h4><p>Creates a temporary CMD variable.</p></div>
+        <div><h4>How it executes</h4><p>CMD stores asia-south1 and substitutes it whenever %REGION% appears.</p></div>
+        <div><h4>Success check</h4><p>echo %REGION% prints asia-south1.</p></div>
+      </div>
+      
+    </article>
+    
+
+    <article class="command-card searchable">
+      <div class="command-title"><span class="step-number">7</span><h3>Set identity and resource variables</h3></div>
+      <div class="codebox"><div class="codehead"><span>CMD</span><button onclick="copyCode(this)">Copy</button></div><pre><code>set USER_EMAIL=YOUR_EMAIL_ADDRESS
+set SERVICE_ACCOUNT_NAME=dataproc-data-sa
+set SERVICE_ACCOUNT_EMAIL=%SERVICE_ACCOUNT_NAME%@%PROJECT_ID%.iam.gserviceaccount.com
+set BUCKET_NAME=%PROJECT_ID%-dataproc-demo-%RANDOM%%RANDOM%
+set CLUSTER_NAME=dataproc-beginner-cluster
+set VPC_NAME=dataproc-vpc
+set SUBNET_NAME=dataproc-subnet
+set FIREWALL_RULE=dataproc-allow-internal</code></pre></div>
+      <div class="explain-grid">
+        <div><h4>What it does</h4><p>Defines reusable names for the user, service account, bucket, cluster, VPC, subnet, and firewall rule.</p></div>
+        <div><h4>What it creates or changes</h4><p>Only local environment variables. Cloud resources are created by later commands.</p></div>
+        <div><h4>How it executes</h4><p>CMD expands earlier variables while assigning later values. Two RANDOM values reduce the chance of a bucket-name collision.</p></div>
+        <div><h4>Success check</h4><p>Use echo commands to confirm every value before provisioning.</p></div>
+      </div>
+      <div class="note"><strong>Trainer note:</strong> Cloud Storage bucket names are global. Generate a new value if the name is already taken.</div>
+    </article>
+    
+
+    <article class="command-card searchable">
+      <div class="command-title"><span class="step-number">8</span><h3>Select the active project</h3></div>
+      <div class="codebox"><div class="codehead"><span>CMD</span><button onclick="copyCode(this)">Copy</button></div><pre><code>gcloud config set project %PROJECT_ID%</code></pre></div>
+      <div class="explain-grid">
+        <div><h4>What it does</h4><p>Sets core/project in the active gcloud configuration.</p></div>
+        <div><h4>What it creates or changes</h4><p>Updates the local configuration; it does not create the project.</p></div>
+        <div><h4>How it executes</h4><p>Future commands use this project unless a different --project flag is supplied.</p></div>
+        <div><h4>Success check</h4><p>gcloud config get-value project returns the same project ID.</p></div>
+      </div>
+      
+    </article>
+    
+
+    <article class="command-card searchable">
+      <div class="command-title"><span class="step-number">9</span><h3>Set Compute and Dataproc regions</h3></div>
+      <div class="codebox"><div class="codehead"><span>CMD</span><button onclick="copyCode(this)">Copy</button></div><pre><code>gcloud config set compute/region %REGION%
+gcloud config set dataproc/region %REGION%</code></pre></div>
+      <div class="explain-grid">
+        <div><h4>What it does</h4><p>Sets default regions for Compute Engine and Dataproc commands.</p></div>
+        <div><h4>What it creates or changes</h4><p>Updates two local gcloud configuration properties.</p></div>
+        <div><h4>How it executes</h4><p>Commands that support defaults read these properties when --region is absent.</p></div>
+        <div><h4>Success check</h4><p>Both get-value commands return asia-south1.</p></div>
+      </div>
+      <div class="note"><strong>Trainer note:</strong> Important commands still include --region explicitly so a trainer can see the target region.</div>
+    </article>
+    
+
+    <article class="command-card searchable">
+      <div class="command-title"><span class="step-number">10</span><h3>Describe the project</h3></div>
+      <div class="codebox"><div class="codehead"><span>CMD</span><button onclick="copyCode(this)">Copy</button></div><pre><code>gcloud projects describe %PROJECT_ID%</code></pre></div>
+      <div class="explain-grid">
+        <div><h4>What it does</h4><p>Validates that the project exists, is accessible, and is active.</p></div>
+        <div><h4>What it creates or changes</h4><p>No resource. It reads project metadata.</p></div>
+        <div><h4>How it executes</h4><p>The Resource Manager API returns project ID, number, name, lifecycle state, and create time.</p></div>
+        <div><h4>Success check</h4><p>lifecycleState is ACTIVE.</p></div>
+      </div>
+      
+    </article>
+    
+
+    <article class="command-card searchable">
+      <div class="command-title"><span class="step-number">11</span><h3>Verify billing</h3></div>
+      <div class="codebox"><div class="codehead"><span>CMD</span><button onclick="copyCode(this)">Copy</button></div><pre><code>gcloud billing projects describe %PROJECT_ID%</code></pre></div>
+      <div class="explain-grid">
+        <div><h4>What it does</h4><p>Checks whether the project is connected to an active billing account.</p></div>
+        <div><h4>What it creates or changes</h4><p>No resource. It reads billing association metadata.</p></div>
+        <div><h4>How it executes</h4><p>The Cloud Billing API returns the billing status for the project.</p></div>
+        <div><h4>Success check</h4><p>billingEnabled is true.</p></div>
+      </div>
+      <div class="note"><strong>Trainer note:</strong> This tutorial uses the current GA command, avoiding the earlier beta-component installation interruption.</div>
+    </article>
+    
+
+    <article class="command-card searchable">
+      <div class="command-title"><span class="step-number">12</span><h3>Enable required APIs</h3></div>
+      <div class="codebox"><div class="codehead"><span>CMD</span><button onclick="copyCode(this)">Copy</button></div><pre><code>gcloud services enable serviceusage.googleapis.com cloudresourcemanager.googleapis.com iam.googleapis.com compute.googleapis.com storage.googleapis.com dataproc.googleapis.com --project=%PROJECT_ID%</code></pre></div>
+      <div class="explain-grid">
+        <div><h4>What it does</h4><p>Enables the APIs required for project management, IAM, Compute Engine, Cloud Storage, and Dataproc.</p></div>
+        <div><h4>What it creates or changes</h4><p>Creates service enablement records. First use can also provision Google-managed service agents, including the Dataproc service agent.</p></div>
+        <div><h4>How it executes</h4><p>Service Usage processes each API name for the selected project.</p></div>
+        <div><h4>Success check</h4><p>The operation finishes successfully and the APIs appear in gcloud services list --enabled.</p></div>
+      </div>
+      <div class="note"><strong>Trainer note:</strong> API enablement is project-specific.</div>
+    </article>
+    
+
+    <article class="command-card searchable">
+      <div class="command-title"><span class="step-number">13</span><h3>Create the custom workload service account</h3></div>
+      <div class="codebox"><div class="codehead"><span>CMD</span><button onclick="copyCode(this)">Copy</button></div><pre><code>gcloud iam service-accounts create %SERVICE_ACCOUNT_NAME% --display-name=&quot;Dataproc Data Workload Service Account&quot; --description=&quot;Runs the Dataproc PySpark food-delivery workload&quot; --project=%PROJECT_ID%</code></pre></div>
+      <div class="explain-grid">
+        <div><h4>What it does</h4><p>Creates a non-human identity for the cluster VM and Spark workload.</p></div>
+        <div><h4>What it creates or changes</h4><p>Creates dataproc-data-sa@PROJECT_ID.iam.gserviceaccount.com.</p></div>
+        <div><h4>How it executes</h4><p>IAM creates a service-account resource inside the project.</p></div>
+        <div><h4>Success check</h4><p>The command reports Created service account.</p></div>
+      </div>
+      <div class="note"><strong>Trainer note:</strong> If it already exists, do not create a second account; verify it with service-accounts describe.</div>
+    </article>
+    
+
+    <article class="command-card searchable">
+      <div class="command-title"><span class="step-number">14</span><h3>Grant Dataproc Worker to the service account</h3></div>
+      <div class="codebox"><div class="codehead"><span>CMD</span><button onclick="copyCode(this)">Copy</button></div><pre><code>gcloud projects add-iam-policy-binding %PROJECT_ID% --member=&quot;serviceAccount:%SERVICE_ACCOUNT_EMAIL%&quot; --role=&quot;roles/dataproc.worker&quot;</code></pre></div>
+      <div class="explain-grid">
+        <div><h4>What it does</h4><p>Allows the VM service account to perform Dataproc data-plane operations.</p></div>
+        <div><h4>What it creates or changes</h4><p>Adds a project-level IAM policy binding.</p></div>
+        <div><h4>How it executes</h4><p>Cloud Resource Manager updates the project IAM policy.</p></div>
+        <div><h4>Success check</h4><p>The returned bindings include roles/dataproc.worker for the service account.</p></div>
+      </div>
+      <div class="note"><strong>Trainer note:</strong> This role belongs to the service account, not the human user.</div>
+    </article>
+    
+
+    <article class="command-card searchable">
+      <div class="command-title"><span class="step-number">15</span><h3>Allow the user to attach the service account</h3></div>
+      <div class="codebox"><div class="codehead"><span>CMD</span><button onclick="copyCode(this)">Copy</button></div><pre><code>gcloud iam service-accounts add-iam-policy-binding %SERVICE_ACCOUNT_EMAIL% --member=&quot;user:%USER_EMAIL%&quot; --role=&quot;roles/iam.serviceAccountUser&quot; --project=%PROJECT_ID%</code></pre></div>
+      <div class="explain-grid">
+        <div><h4>What it does</h4><p>Grants iam.serviceAccounts.actAs so the human user can create a cluster that runs as the custom identity.</p></div>
+        <div><h4>What it creates or changes</h4><p>Adds an IAM binding directly on the service-account resource.</p></div>
+        <div><h4>How it executes</h4><p>IAM updates the service account policy.</p></div>
+        <div><h4>Success check</h4><p>The returned policy includes roles/iam.serviceAccountUser.</p></div>
+      </div>
+      <div class="note"><strong>Trainer note:</strong> Without ActAs permission, cluster creation commonly fails even when the service account itself has Worker permissions.</div>
+    </article>
+    
+
+    <article class="command-card searchable">
+      <div class="command-title"><span class="step-number">16</span><h3>Grant Dataproc Editor to the user</h3></div>
+      <div class="codebox"><div class="codehead"><span>CMD</span><button onclick="copyCode(this)">Copy</button></div><pre><code>gcloud projects add-iam-policy-binding %PROJECT_ID% --member=&quot;user:%USER_EMAIL%&quot; --role=&quot;roles/dataproc.editor&quot;</code></pre></div>
+      <div class="explain-grid">
+        <div><h4>What it does</h4><p>Allows the user to create, inspect, submit jobs to, and delete Dataproc resources.</p></div>
+        <div><h4>What it creates or changes</h4><p>Adds a project IAM binding.</p></div>
+        <div><h4>How it executes</h4><p>The project IAM policy is updated.</p></div>
+        <div><h4>Success check</h4><p>The user role list includes roles/dataproc.editor.</p></div>
+      </div>
+      <div class="note"><strong>Trainer note:</strong> An Owner already has broader permissions, but the explicit role documents the Dataproc requirement. An administrator must run this if the user cannot change IAM.</div>
+    </article>
+    
+
+    <article class="command-card searchable">
+      <div class="command-title"><span class="step-number">17</span><h3>Create the Cloud Storage bucket</h3></div>
+      <div class="codebox"><div class="codehead"><span>CMD</span><button onclick="copyCode(this)">Copy</button></div><pre><code>gcloud storage buckets create gs://%BUCKET_NAME% --project=%PROJECT_ID% --location=%REGION% --default-storage-class=STANDARD --uniform-bucket-level-access --public-access-prevention --soft-delete-duration=0</code></pre></div>
+      <div class="explain-grid">
+        <div><h4>What it does</h4><p>Creates regional object storage for input, code, Dataproc staging files, temporary files, logs, and job output.</p></div>
+        <div><h4>What it creates or changes</h4><p>Creates one Cloud Storage bucket in asia-south1.</p></div>
+        <div><h4>How it executes</h4><p>The Storage API validates the globally unique name and applies the requested security and retention settings.</p></div>
+        <div><h4>Success check</h4><p>buckets describe shows location ASIA-SOUTH1, STANDARD storage, uniform access, and public access prevention.</p></div>
+      </div>
+      <div class="note"><strong>Trainer note:</strong> Soft delete is disabled only because this is a disposable training lab. Keep protection enabled for valuable production data.</div>
+    </article>
+    
+
+    <article class="command-card searchable">
+      <div class="command-title"><span class="step-number">18</span><h3>Grant bucket access to the service account</h3></div>
+      <div class="codebox"><div class="codehead"><span>CMD</span><button onclick="copyCode(this)">Copy</button></div><pre><code>gcloud storage buckets add-iam-policy-binding gs://%BUCKET_NAME% --member=&quot;serviceAccount:%SERVICE_ACCOUNT_EMAIL%&quot; --role=&quot;roles/storage.objectUser&quot;</code></pre></div>
+      <div class="explain-grid">
+        <div><h4>What it does</h4><p>Allows the Spark workload to read input objects and create/update/delete output objects.</p></div>
+        <div><h4>What it creates or changes</h4><p>Adds a bucket-level IAM binding.</p></div>
+        <div><h4>How it executes</h4><p>Cloud Storage updates the bucket IAM policy.</p></div>
+        <div><h4>Success check</h4><p>get-iam-policy shows roles/storage.objectUser for the service account.</p></div>
+      </div>
+      
+    </article>
+    
+
+    <article class="command-card searchable">
+      <div class="command-title"><span class="step-number">19</span><h3>Create the local working directory</h3></div>
+      <div class="codebox"><div class="codehead"><span>CMD</span><button onclick="copyCode(this)">Copy</button></div><pre><code>mkdir C:\gcp-dataproc-demo
+cd /d C:\gcp-dataproc-demo
+dir</code></pre></div>
+      <div class="explain-grid">
+        <div><h4>What it does</h4><p>Creates a Windows folder and changes the current CMD location to it.</p></div>
+        <div><h4>What it creates or changes</h4><p>Creates C:\gcp-dataproc-demo on the local computer.</p></div>
+        <div><h4>How it executes</h4><p>mkdir creates the directory; cd /d changes drive and folder; dir lists files.</p></div>
+        <div><h4>Success check</h4><p>The prompt becomes C:\gcp-dataproc-demo> and dir shows orders.csv and food_delivery_etl.py after copying them.</p></div>
+      </div>
+      <div class="note"><strong>Trainer note:</strong> The upload failure in the transcript happened when the source file was referenced before changing into the directory containing it.</div>
+    </article>
+    
+
+    <article class="command-card searchable">
+      <div class="command-title"><span class="step-number">20</span><h3>Upload the CSV input</h3></div>
+      <div class="codebox"><div class="codehead"><span>CMD</span><button onclick="copyCode(this)">Copy</button></div><pre><code>gcloud storage cp orders.csv gs://%BUCKET_NAME%/input/orders.csv</code></pre></div>
+      <div class="explain-grid">
+        <div><h4>What it does</h4><p>Copies the local CSV dataset into the bucket.</p></div>
+        <div><h4>What it creates or changes</h4><p>Creates the Cloud Storage object input/orders.csv.</p></div>
+        <div><h4>How it executes</h4><p>The CLI reads the local file and uploads its bytes through the Storage API.</p></div>
+        <div><h4>Success check</h4><p>The output says Completed files 1/1.</p></div>
+      </div>
+      
+    </article>
+    
+
+    <article class="command-card searchable">
+      <div class="command-title"><span class="step-number">21</span><h3>Upload the PySpark program</h3></div>
+      <div class="codebox"><div class="codehead"><span>CMD</span><button onclick="copyCode(this)">Copy</button></div><pre><code>gcloud storage cp food_delivery_etl.py gs://%BUCKET_NAME%/code/food_delivery_etl.py</code></pre></div>
+      <div class="explain-grid">
+        <div><h4>What it does</h4><p>Copies the PySpark driver program into Cloud Storage.</p></div>
+        <div><h4>What it creates or changes</h4><p>Creates the object code/food_delivery_etl.py.</p></div>
+        <div><h4>How it executes</h4><p>The Storage API receives the local Python file.</p></div>
+        <div><h4>Success check</h4><p>gcloud storage ls --recursive lists both code and input objects.</p></div>
+      </div>
+      <div class="note"><strong>Trainer note:</strong> Cloud Storage folders shown here are object-name prefixes, not traditional disk directories.</div>
+    </article>
+    
+
+    <article class="command-card searchable">
+      <div class="command-title"><span class="step-number">22</span><h3>Create a custom VPC</h3></div>
+      <div class="codebox"><div class="codehead"><span>CMD</span><button onclick="copyCode(this)">Copy</button></div><pre><code>gcloud compute networks create %VPC_NAME% --subnet-mode=custom --project=%PROJECT_ID%</code></pre></div>
+      <div class="explain-grid">
+        <div><h4>What it does</h4><p>Creates an isolated Virtual Private Cloud network for the training cluster.</p></div>
+        <div><h4>What it creates or changes</h4><p>Creates one global VPC network named dataproc-vpc.</p></div>
+        <div><h4>How it executes</h4><p>Compute Engine creates a custom-mode network without automatically creating regional subnets.</p></div>
+        <div><h4>Success check</h4><p>gcloud compute networks list shows dataproc-vpc with CUSTOM subnet mode.</p></div>
+      </div>
+      
+    </article>
+    
+
+    <article class="command-card searchable">
+      <div class="command-title"><span class="step-number">23</span><h3>Create the regional subnet</h3></div>
+      <div class="codebox"><div class="codehead"><span>CMD</span><button onclick="copyCode(this)">Copy</button></div><pre><code>gcloud compute networks subnets create %SUBNET_NAME% --network=%VPC_NAME% --region=%REGION% --range=10.10.0.0/24 --enable-private-ip-google-access --project=%PROJECT_ID%</code></pre></div>
+      <div class="explain-grid">
+        <div><h4>What it does</h4><p>Creates the IP range from which the Dataproc VM receives its internal address.</p></div>
+        <div><h4>What it creates or changes</h4><p>Creates a regional subnetwork named dataproc-subnet with CIDR 10.10.0.0/24.</p></div>
+        <div><h4>How it executes</h4><p>Compute Engine reserves the range in the VPC and enables Private Google Access for Google APIs.</p></div>
+        <div><h4>Success check</h4><p>subnets describe shows privateIpGoogleAccess: true and region asia-south1.</p></div>
+      </div>
+      <div class="note"><strong>Trainer note:</strong> The earlier working cluster required --subnet=dataproc-subnet. Omitting it caused Dataproc to target an unsuitable default subnet.</div>
+    </article>
+    
+
+    <article class="command-card searchable">
+      <div class="command-title"><span class="step-number">24</span><h3>Create the internal firewall rule</h3></div>
+      <div class="codebox"><div class="codehead"><span>CMD</span><button onclick="copyCode(this)">Copy</button></div><pre><code>gcloud compute firewall-rules create %FIREWALL_RULE% --network=%VPC_NAME% --direction=INGRESS --priority=1000 --action=ALLOW --rules=tcp,udp,icmp --source-ranges=10.10.0.0/24 --project=%PROJECT_ID%</code></pre></div>
+      <div class="explain-grid">
+        <div><h4>What it does</h4><p>Allows cluster nodes and Hadoop/Spark services inside the subnet to communicate.</p></div>
+        <div><h4>What it creates or changes</h4><p>Creates one VPC ingress firewall rule restricted to the cluster subnet range.</p></div>
+        <div><h4>How it executes</h4><p>The distributed VPC firewall permits TCP, UDP, and ICMP only when the source is within 10.10.0.0/24.</p></div>
+        <div><h4>Success check</h4><p>firewall-rules describe shows ALLOW tcp, udp, icmp and the correct source range.</p></div>
+      </div>
+      <div class="note"><strong>Trainer note:</strong> The supplied run succeeded on one node but produced a network warning. This rule removes that design gap and is essential when moving to multiple nodes.</div>
+    </article>
+    
+
+    <article class="command-card searchable">
+      <div class="command-title"><span class="step-number">25</span><h3>Create the single-node Dataproc cluster</h3></div>
+      <div class="codebox"><div class="codehead"><span>CMD</span><button onclick="copyCode(this)">Copy</button></div><pre><code>gcloud dataproc clusters create %CLUSTER_NAME% ^
+  --project=%PROJECT_ID% ^
+  --region=%REGION% ^
+  --subnet=%SUBNET_NAME% ^
+  --single-node ^
+  --master-machine-type=e2-standard-2 ^
+  --master-boot-disk-type=pd-standard ^
+  --master-boot-disk-size=50GB ^
+  --service-account=%SERVICE_ACCOUNT_EMAIL% ^
+  --scopes=https://www.googleapis.com/auth/cloud-platform ^
+  --bucket=%BUCKET_NAME% ^
+  --temp-bucket=%BUCKET_NAME% ^
+  --enable-component-gateway ^
+  --delete-max-idle=30m ^
+  --labels=purpose=training-demo</code></pre></div>
+      <div class="explain-grid">
+        <div><h4>What it does</h4><p>Provisions a small managed Spark/Hadoop environment for the lab.</p></div>
+        <div><h4>What it creates or changes</h4><p>Creates a Dataproc cluster resource, one Compute Engine VM, a persistent boot disk, cluster metadata, staging objects, and services such as YARN, HDFS, Spark, and job history components.</p></div>
+        <div><h4>How it executes</h4><p>The Dataproc control plane validates IAM/network/storage, creates the VM, installs the selected image and services, and registers the cluster.</p></div>
+        <div><h4>Success check</h4><p>clusters describe returns RUNNING.</p></div>
+      </div>
+      <div class="note"><strong>Trainer note:</strong> A single-node cluster is appropriate for training, not high availability or large-scale production. In Windows CMD, use ^ for continuation; do not use the Linux backslash.</div>
+    </article>
+    
+
+    <article class="command-card searchable">
+      <div class="command-title"><span class="step-number">26</span><h3>List and inspect the cluster</h3></div>
+      <div class="codebox"><div class="codehead"><span>CMD</span><button onclick="copyCode(this)">Copy</button></div><pre><code>gcloud dataproc clusters list --region=%REGION% --project=%PROJECT_ID%
+gcloud dataproc clusters describe %CLUSTER_NAME% --region=%REGION% --project=%PROJECT_ID% --format=&quot;value(status.state)&quot;</code></pre></div>
+      <div class="explain-grid">
+        <div><h4>What it does</h4><p>Shows the cluster and extracts its current lifecycle state.</p></div>
+        <div><h4>What it creates or changes</h4><p>No new resource.</p></div>
+        <div><h4>How it executes</h4><p>The Dataproc API reads cluster metadata from the regional namespace.</p></div>
+        <div><h4>Success check</h4><p>The final value is RUNNING.</p></div>
+      </div>
+      
+    </article>
+    
+
+    <article class="command-card searchable">
+      <div class="command-title"><span class="step-number">27</span><h3>Submit the PySpark ETL job</h3></div>
+      <div class="codebox"><div class="codehead"><span>CMD</span><button onclick="copyCode(this)">Copy</button></div><pre><code>gcloud dataproc jobs submit pyspark gs://%BUCKET_NAME%/code/food_delivery_etl.py --cluster=%CLUSTER_NAME% --region=%REGION% --project=%PROJECT_ID% -- gs://%BUCKET_NAME%/input/orders.csv gs://%BUCKET_NAME%/output/run-001</code></pre></div>
+      <div class="explain-grid">
+        <div><h4>What it does</h4><p>Runs the Python program on the Dataproc cluster and passes the input and output Cloud Storage paths to it.</p></div>
+        <div><h4>What it creates or changes</h4><p>Creates a Dataproc job resource, a YARN application, Spark driver/executor processes, job logs, a clean Parquet dataset, and a city-revenue CSV dataset.</p></div>
+        <div><h4>How it executes</h4><p>Dataproc stages the driver, submits it through YARN, Spark reads the CSV from GCS, cleans and aggregates the rows, then writes results back to GCS.</p></div>
+        <div><h4>Success check</h4><p>The job finishes successfully, raw rows are 15, clean rows are 11, and status is DONE.</p></div>
+      </div>
+      <div class="note"><strong>Trainer note:</strong> The standalone -- separates gcloud options from arguments delivered to sys.argv[1] and sys.argv[2].</div>
+    </article>
+    
+
+    <article class="command-card searchable">
+      <div class="command-title"><span class="step-number">28</span><h3>List job output objects</h3></div>
+      <div class="codebox"><div class="codehead"><span>CMD</span><button onclick="copyCode(this)">Copy</button></div><pre><code>gcloud storage ls --recursive gs://%BUCKET_NAME%/output/run-001</code></pre></div>
+      <div class="explain-grid">
+        <div><h4>What it does</h4><p>Lists every result object under the selected output prefix.</p></div>
+        <div><h4>What it creates or changes</h4><p>No resource; it reads object metadata.</p></div>
+        <div><h4>How it executes</h4><p>Cloud Storage recursively returns names under the prefix.</p></div>
+        <div><h4>Success check</h4><p>The result includes clean_orders_parquet and city_revenue_csv with _SUCCESS markers and part files.</p></div>
+      </div>
+      
+    </article>
+    
+
+    <article class="command-card searchable">
+      <div class="command-title"><span class="step-number">29</span><h3>Display the city-revenue report</h3></div>
+      <div class="codebox"><div class="codehead"><span>CMD</span><button onclick="copyCode(this)">Copy</button></div><pre><code>gcloud storage cat gs://%BUCKET_NAME%/output/run-001/city_revenue_csv/part-*.csv</code></pre></div>
+      <div class="explain-grid">
+        <div><h4>What it does</h4><p>Prints the generated CSV part file directly in Command Prompt.</p></div>
+        <div><h4>What it creates or changes</h4><p>No resource; it reads the report object.</p></div>
+        <div><h4>How it executes</h4><p>The CLI matches the part file and streams its contents to stdout.</p></div>
+        <div><h4>Success check</h4><p>The five city rows and totals match the expected report.</p></div>
+      </div>
+      
+    </article>
+    
+
+    <article class="command-card searchable">
+      <div class="command-title"><span class="step-number">30</span><h3>Delete the Dataproc cluster</h3></div>
+      <div class="codebox"><div class="codehead"><span>CMD</span><button onclick="copyCode(this)">Copy</button></div><pre><code>gcloud dataproc clusters delete %CLUSTER_NAME% --region=%REGION% --project=%PROJECT_ID% --quiet</code></pre></div>
+      <div class="explain-grid">
+        <div><h4>What it does</h4><p>Stops ongoing Compute Engine billing for the cluster and removes the managed cluster.</p></div>
+        <div><h4>What it creates or changes</h4><p>Deletes the Dataproc cluster resource and its cluster VM/disks managed by Dataproc.</p></div>
+        <div><h4>How it executes</h4><p>Dataproc performs an asynchronous deletion operation and waits for completion.</p></div>
+        <div><h4>Success check</h4><p>The command reports Deleted and clusters list no longer shows the cluster.</p></div>
+      </div>
+      <div class="note"><strong>Trainer note:</strong> Run this immediately after the demonstration. The 30-minute idle deletion is only a safety net.</div>
+    </article>
+    
+
+    <article class="command-card searchable">
+      <div class="command-title"><span class="step-number">31</span><h3>Delete the bucket and contents</h3></div>
+      <div class="codebox"><div class="codehead"><span>CMD</span><button onclick="copyCode(this)">Copy</button></div><pre><code>gcloud storage rm --recursive gs://%BUCKET_NAME%/</code></pre></div>
+      <div class="explain-grid">
+        <div><h4>What it does</h4><p>Deletes input, code, outputs, logs, staging files, and the bucket itself.</p></div>
+        <div><h4>What it creates or changes</h4><p>Deletes all objects and the Cloud Storage bucket.</p></div>
+        <div><h4>How it executes</h4><p>The Storage CLI recursively removes every object, then removes the empty bucket.</p></div>
+        <div><h4>Success check</h4><p>gcloud storage buckets list no longer shows the bucket.</p></div>
+      </div>
+      
+    </article>
+    
+
+    <article class="command-card searchable">
+      <div class="command-title"><span class="step-number">32</span><h3>Delete network resources</h3></div>
+      <div class="codebox"><div class="codehead"><span>CMD</span><button onclick="copyCode(this)">Copy</button></div><pre><code>gcloud compute firewall-rules delete %FIREWALL_RULE% --project=%PROJECT_ID% --quiet
+gcloud compute networks subnets delete %SUBNET_NAME% --region=%REGION% --project=%PROJECT_ID% --quiet
+gcloud compute networks delete %VPC_NAME% --project=%PROJECT_ID% --quiet</code></pre></div>
+      <div class="explain-grid">
+        <div><h4>What it does</h4><p>Removes the lab firewall rule, subnet, and VPC in dependency order.</p></div>
+        <div><h4>What it creates or changes</h4><p>Deletes three Compute Engine networking resources.</p></div>
+        <div><h4>How it executes</h4><p>The firewall rule is removed first, then the regional subnet, then the global network.</p></div>
+        <div><h4>Success check</h4><p>compute networks list no longer shows dataproc-vpc.</p></div>
+      </div>
+      <div class="note"><strong>Trainer note:</strong> A VPC cannot be deleted while it still contains a subnet or dependent resource.</div>
+    </article>
+    
+
+    <article class="command-card searchable">
+      <div class="command-title"><span class="step-number">33</span><h3>Delete the custom service account</h3></div>
+      <div class="codebox"><div class="codehead"><span>CMD</span><button onclick="copyCode(this)">Copy</button></div><pre><code>gcloud iam service-accounts delete %SERVICE_ACCOUNT_EMAIL% --project=%PROJECT_ID% --quiet</code></pre></div>
+      <div class="explain-grid">
+        <div><h4>What it does</h4><p>Removes the workload identity after all resources using it are deleted.</p></div>
+        <div><h4>What it creates or changes</h4><p>Deletes the custom IAM service-account resource.</p></div>
+        <div><h4>How it executes</h4><p>IAM marks the service account deleted and removes it from the active list.</p></div>
+        <div><h4>Success check</h4><p>service-accounts list no longer shows dataproc-data-sa.</p></div>
+      </div>
+      <div class="note"><strong>Trainer note:</strong> Do not delete a service account that is shared by other workloads.</div>
+    </article>
+    
+</section>
+
+<section id="lab-files" class="searchable">
+<h2>7. Lab Dataset and PySpark Program</h2>
+<div class="callout success"><strong>Complete ZIP contents:</strong> tutorial HTML, orders.csv, food_delivery_etl.py, commands-windows-cmd.txt, cleanup-resources.cmd, and README.md.</div><h3>Input Dataset: orders.csv</h3>
+<p>The dataset contains 15 rows. Four rows demonstrate data-quality problems: a duplicate order, a cancelled order, a missing city, and a negative amount.</p>
+<div class="codebox"><div class="codehead"><span>CSV</span><button onclick="copyCode(this)">Copy</button></div><pre><code>order_id,customer_id,restaurant_name,city,order_status,order_amount,order_date
+ORD-1001,CUS-201,Spice Hub,Bengaluru,COMPLETED,500.00,2026-07-20
+ORD-1002,CUS-202,Green Bowl,Bengaluru,COMPLETED,450.00,2026-07-20
+ORD-1003,CUS-203,Urban Bites,Bengaluru,COMPLETED,600.00,2026-07-21
+ORD-1004,CUS-204,Pizza Corner,Mumbai,COMPLETED,980.00,2026-07-21
+ORD-1005,CUS-205,Curry House,Mumbai,COMPLETED,1050.00,2026-07-21
+ORD-1006,CUS-206,Dosa Point,Pune,COMPLETED,700.00,2026-07-22
+ORD-1007,CUS-207,Fresh Plate,Pune,COMPLETED,750.00,2026-07-22
+ORD-1008,CUS-208,Meal Box,Hyderabad,COMPLETED,520.00,2026-07-23
+ORD-1009,CUS-209,Food Street,Hyderabad,COMPLETED,600.00,2026-07-23
+ORD-1010,CUS-210,South Cafe,Chennai,COMPLETED,490.00,2026-07-24
+ORD-1011,CUS-211,City Kitchen,Chennai,COMPLETED,600.00,2026-07-24
+ORD-1001,CUS-201,Spice Hub,Bengaluru,COMPLETED,500.00,2026-07-20
+ORD-1012,CUS-212,Urban Bites,Bengaluru,CANCELLED,300.00,2026-07-25
+ORD-1013,CUS-213,Green Bowl,,COMPLETED,400.00,2026-07-25
+ORD-1014,CUS-214,Pizza Corner,Mumbai,COMPLETED,-100.00,2026-07-25</code></pre></div>
+<h3>PySpark Program: food_delivery_etl.py</h3>
+<div class="codebox"><div class="codehead"><span>PYTHON</span><button onclick="copyCode(this)">Copy</button></div><pre><code>import sys
+
+from pyspark.sql import SparkSession
+from pyspark.sql import functions as F
+from pyspark.sql.types import (
+    StructType,
+    StructField,
+    StringType,
+    DoubleType,
+)
+
+
+def main() -&gt; None:
+    &quot;&quot;&quot;Run a small food-delivery ETL job on Dataproc.&quot;&quot;&quot;
+
+    if len(sys.argv) != 3:
+        raise SystemExit(
+            &quot;Usage: food_delivery_etl.py &lt;input_csv_gs_uri&gt; &lt;output_base_gs_uri&gt;&quot;
+        )
+
+    input_path = sys.argv[1]
+    output_base = sys.argv[2].rstrip(&quot;/&quot;)
+
+    spark = (
+        SparkSession.builder
+        .appName(&quot;GCP-Dataproc-Beginner-ETL&quot;)
+        .getOrCreate()
+    )
+    spark.sparkContext.setLogLevel(&quot;WARN&quot;)
+
+    schema = StructType(
+        [
+            StructField(&quot;order_id&quot;, StringType(), True),
+            StructField(&quot;customer_id&quot;, StringType(), True),
+            StructField(&quot;restaurant_name&quot;, StringType(), True),
+            StructField(&quot;city&quot;, StringType(), True),
+            StructField(&quot;order_status&quot;, StringType(), True),
+            StructField(&quot;order_amount&quot;, DoubleType(), True),
+            StructField(&quot;order_date&quot;, StringType(), True),
+        ]
+    )
+
+    print(f&quot;Reading input from: {input_path}&quot;)
+
+    raw_df = (
+        spark.read
+        .option(&quot;header&quot;, True)
+        .schema(schema)
+        .csv(input_path)
+    )
+
+    raw_count = raw_df.count()
+
+    clean_df = (
+        raw_df
+        .withColumn(&quot;order_id&quot;, F.trim(F.col(&quot;order_id&quot;)))
+        .withColumn(&quot;customer_id&quot;, F.trim(F.col(&quot;customer_id&quot;)))
+        .withColumn(&quot;restaurant_name&quot;, F.trim(F.col(&quot;restaurant_name&quot;)))
+        .withColumn(&quot;city&quot;, F.initcap(F.trim(F.col(&quot;city&quot;))))
+        .withColumn(&quot;order_status&quot;, F.upper(F.trim(F.col(&quot;order_status&quot;))))
+        .withColumn(&quot;order_date&quot;, F.to_date(&quot;order_date&quot;, &quot;yyyy-MM-dd&quot;))
+        .filter(F.col(&quot;order_id&quot;).isNotNull())
+        .filter(F.length(F.col(&quot;order_id&quot;)) &gt; 0)
+        .filter(F.col(&quot;city&quot;).isNotNull())
+        .filter(F.length(F.col(&quot;city&quot;)) &gt; 0)
+        .filter(F.col(&quot;order_amount&quot;) &gt; 0)
+        .filter(F.col(&quot;order_status&quot;) == &quot;COMPLETED&quot;)
+        .dropDuplicates([&quot;order_id&quot;])
+    )
+
+    clean_count = clean_df.count()
+
+    city_revenue_df = (
+        clean_df
+        .groupBy(&quot;city&quot;)
+        .agg(
+            F.count(&quot;*&quot;).alias(&quot;completed_orders&quot;),
+            F.round(F.sum(&quot;order_amount&quot;), 2).alias(&quot;total_revenue&quot;),
+            F.round(F.avg(&quot;order_amount&quot;), 2).alias(&quot;average_order_value&quot;),
+        )
+        .orderBy(F.desc(&quot;total_revenue&quot;))
+    )
+
+    clean_output = f&quot;{output_base}/clean_orders_parquet&quot;
+    revenue_output = f&quot;{output_base}/city_revenue_csv&quot;
+
+    (
+        clean_df.write
+        .mode(&quot;overwrite&quot;)
+        .parquet(clean_output)
+    )
+
+    (
+        city_revenue_df
+        .coalesce(1)
+        .write
+        .mode(&quot;overwrite&quot;)
+        .option(&quot;header&quot;, True)
+        .csv(revenue_output)
+    )
+
+    print(f&quot;Raw rows:   {raw_count}&quot;)
+    print(f&quot;Clean rows: {clean_count}&quot;)
+    print(&quot;City revenue result:&quot;)
+    city_revenue_df.show(truncate=False)
+    print(f&quot;Clean Parquet output: {clean_output}&quot;)
+    print(f&quot;Revenue CSV output:   {revenue_output}&quot;)
+    print(&quot;ETL job completed successfully.&quot;)
+
+    spark.stop()
+
+
+if __name__ == &quot;__main__&quot;:
+    main()</code></pre></div>
+<h3>Transformation Logic</h3>
+<table>
+<thead><tr><th>Step</th><th>Operation</th><th>Reason</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>Read CSV using an explicit schema</td><td>Provides predictable data types and avoids inference surprises.</td></tr>
+<tr><td>2</td><td>Trim text and standardize city/status case</td><td>Prevents whitespace and casing from creating false categories.</td></tr>
+<tr><td>3</td><td>Convert order_date to DateType</td><td>Makes the column ready for date analysis.</td></tr>
+<tr><td>4</td><td>Require order ID and city</td><td>Removes unusable records.</td></tr>
+<tr><td>5</td><td>Require positive amount</td><td>Removes invalid monetary values.</td></tr>
+<tr><td>6</td><td>Keep COMPLETED orders</td><td>Revenue should exclude cancelled orders.</td></tr>
+<tr><td>7</td><td>Drop duplicate order IDs</td><td>Prevents double-counting.</td></tr>
+<tr><td>8</td><td>Write clean Parquet</td><td>Creates a compact analytical detail dataset.</td></tr>
+<tr><td>9</td><td>Group by city and write CSV</td><td>Produces a simple business report.</td></tr>
+</tbody>
+</table>
+</section>
+
+<section id="execution" class="searchable">
+<h2>8. How the Job Executes Internally</h2>
+<div class="diagram">
+<div class="flow">
+<div class="node"><strong>1. Submit</strong>gcloud creates a Dataproc job</div><div class="arrow">→</div>
+<div class="node"><strong>2. Stage</strong>Python driver URI and arguments recorded</div><div class="arrow">→</div>
+<div class="node"><strong>3. YARN</strong>ResourceManager accepts application</div><div class="arrow">→</div>
+<div class="node"><strong>4. Spark</strong>Driver builds DataFrame DAG</div><div class="arrow">→</div>
+<div class="node"><strong>5. Tasks</strong>Read, clean, shuffle, aggregate</div><div class="arrow">→</div>
+<div class="node"><strong>6. Write</strong>Parquet + CSV in GCS</div>
+</div>
+</div>
+<h3>DataFrame Execution Stages</h3>
+<ol>
+<li><strong>Read stage:</strong> Spark connectors read <code>gs://.../input/orders.csv</code>.</li>
+<li><strong>Narrow transformations:</strong> trim, upper, initcap, date conversion, and row filters are applied.</li>
+<li><strong>Deduplication shuffle:</strong> records with the same order ID are brought together.</li>
+<li><strong>Aggregation shuffle:</strong> completed orders are grouped by city.</li>
+<li><strong>Output stage:</strong> clean rows are written as Snappy Parquet; city metrics are written as CSV.</li>
+<li><strong>Completion:</strong> Dataproc marks the job DONE after Spark exits successfully.</li>
+</ol>
+<div class="callout"><strong>Why GCS instead of HDFS?</strong> Cluster-local HDFS disappears with an ephemeral cluster. Cloud Storage remains independent of the cluster and is the durable data layer.</div>
+</section>
+
+<section id="expected" class="searchable">
+<h2>9. Expected Output and Validation</h2>
+<div class="grid3">
+<div class="card"><h3>Raw Rows</h3><p style="font-size:2rem;font-weight:900;color:#1d4ed8">15</p></div>
+<div class="card"><h3>Clean Rows</h3><p style="font-size:2rem;font-weight:900;color:#15803d">11</p></div>
+<div class="card"><h3>Invalid/Duplicate Rows Removed</h3><p style="font-size:2rem;font-weight:900;color:#b45309">4</p></div>
+</div>
+<table>
+<thead><tr><th>City</th><th>Completed Orders</th><th>Total Revenue</th><th>Average Order Value</th></tr></thead>
+<tbody>
+<tr><td>Mumbai</td><td>2</td><td>2030.00</td><td>1015.00</td></tr>
+<tr><td>Bengaluru</td><td>3</td><td>1550.00</td><td>516.67</td></tr>
+<tr><td>Pune</td><td>2</td><td>1450.00</td><td>725.00</td></tr>
+<tr><td>Hyderabad</td><td>2</td><td>1120.00</td><td>560.00</td></tr>
+<tr><td>Chennai</td><td>2</td><td>1090.00</td><td>545.00</td></tr>
+</tbody>
+</table>
+<h3>Output Layout</h3>
+<div class="codebox"><div class="codehead"><span>TEXT</span><button onclick="copyCode(this)">Copy</button></div><pre><code>gs://BUCKET/output/run-001/
+├── clean_orders_parquet/
+│   ├── _SUCCESS
+│   └── part-....snappy.parquet
+└── city_revenue_csv/
+    ├── _SUCCESS
+    └── part-....csv</code></pre></div>
+<p><code>_SUCCESS</code> is an empty marker created by Spark to indicate that the write completed successfully.</p>
+</section>
+
+<section id="troubleshooting" class="searchable">
+<h2>10. Troubleshooting Guide</h2>
+<table>
+<thead><tr><th>Symptom</th><th>Meaning</th><th>Correct action</th></tr></thead>
+<tbody>
+<tr><td><code>gcloud is not recognized</code></td><td>PATH was not refreshed or installation failed</td><td>Open a new CMD, run <code>where gcloud</code>, or repair the CLI installation.</td></tr>
+<tr><td>Project variable prints literally or blank</td><td>Wrong shell syntax or variable not defined</td><td>In CMD use <code>set NAME=value</code> and reference <code>%NAME%</code>.</td></tr>
+<tr><td>Local source file not found</td><td>CMD is in another directory</td><td>Run <code>cd /d C:\gcp-dataproc-demo</code> and <code>dir</code> before upload.</td></tr>
+<tr><td>Bucket name already exists</td><td>Bucket names are global</td><td>Set a new bucket name with additional random digits.</td></tr>
+<tr><td><code>iam.serviceAccounts.actAs denied</code></td><td>User cannot attach the VM service account</td><td>An IAM administrator must grant Service Account User on the service account.</td></tr>
+<tr><td>Storage permissions missing</td><td>Wrong VM service account or missing bucket access</td><td>Use <code>--service-account</code> and grant Storage Object User on the bucket.</td></tr>
+<tr><td>Default subnet not ready or wrong network</td><td>Cluster command did not select the custom subnet</td><td>Include <code>--subnet=%SUBNET_NAME%</code>.</td></tr>
+<tr><td>Network communication warning</td><td>Custom VPC lacks internal ingress permission</td><td>Create the subnet-restricted TCP/UDP/ICMP firewall rule.</td></tr>
+<tr><td>Cluster not found</td><td>Wrong regional namespace</td><td>Use the same <code>--region</code> used during cluster creation.</td></tr>
+<tr><td>Output path already exists</td><td>Spark default write mode rejects existing data</td><td>This lab uses <code>mode("overwrite")</code>; alternatively select a new run path.</td></tr>
+<tr><td>Job stays pending</td><td>Cluster not RUNNING or scheduler/resource issue</td><td>Describe the cluster and job; verify RUNNING and inspect driver output.</td></tr>
+<tr><td>Unexpected cost</td><td>Cluster or bucket remains</td><td>Delete the cluster first, then bucket, network, and service account; verify all lists.</td></tr>
+</tbody>
+</table>
+</section>
+
+<section id="cleanup" class="searchable">
+<h2>11. Cost-Safe Cleanup</h2>
+<p class="lead">Delete resources in dependency order. Start with the Dataproc cluster because its VM and disk are the primary ongoing cost.</p>
+<div class="codebox"><div class="codehead"><span>CMD</span><button onclick="copyCode(this)">Copy</button></div><pre><code>gcloud dataproc clusters delete %CLUSTER_NAME% --region=%REGION% --project=%PROJECT_ID% --quiet
+gcloud storage rm --recursive gs://%BUCKET_NAME%/
+gcloud compute firewall-rules delete %FIREWALL_RULE% --project=%PROJECT_ID% --quiet
+gcloud compute networks subnets delete %SUBNET_NAME% --region=%REGION% --project=%PROJECT_ID% --quiet
+gcloud compute networks delete %VPC_NAME% --project=%PROJECT_ID% --quiet
+gcloud iam service-accounts delete %SERVICE_ACCOUNT_EMAIL% --project=%PROJECT_ID% --quiet</code></pre></div>
+<h3>Final Verification</h3>
+<div class="codebox"><div class="codehead"><span>CMD</span><button onclick="copyCode(this)">Copy</button></div><pre><code>gcloud dataproc clusters list --region=%REGION% --project=%PROJECT_ID%
+gcloud storage buckets list --project=%PROJECT_ID%
+gcloud iam service-accounts list --project=%PROJECT_ID%
+gcloud compute networks list --project=%PROJECT_ID%</code></pre></div>
+<div class="callout danger"><strong>Do not delete the complete project</strong> unless it was created only for this lab and contains no other resources.</div>
+</section>
+
+<section id="interview" class="searchable">
+<h2>12. Interview Questions and Answers</h2>
+<details><summary>1. What is Google Cloud Dataproc?</summary><div class="answer">It is a managed service for running Apache Spark, Hadoop, and related workloads on provisioned clusters or other managed execution models.</div></details>
+<details><summary>2. Why use Cloud Storage rather than HDFS for this lab?</summary><div class="answer">Cloud Storage is durable and independent of the cluster. The cluster can be deleted without deleting the data unless the bucket is explicitly removed.</div></details>
+<details><summary>3. What is the purpose of a Dataproc VM service account?</summary><div class="answer">It is the identity used by the cluster VM and workload when calling Google Cloud APIs and accessing data.</div></details>
+<details><summary>4. Why is Service Account User assigned to the human user?</summary><div class="answer">It contains the ActAs permission needed to deploy a cluster using the selected service account.</div></details>
+<details><summary>5. What does roles/dataproc.worker provide?</summary><div class="answer">It provides permissions needed by the Dataproc VM service account for data-plane cluster operations, including required storage interactions.</div></details>
+<details><summary>6. What does --single-node do?</summary><div class="answer">It places master and worker components on one VM. It is useful for small labs but is not highly available and cannot be converted into a multi-node cluster.</div></details>
+<details><summary>7. Why is --region important?</summary><div class="answer">Dataproc clusters and jobs are regional resources. Commands pointed at another region cannot find them.</div></details>
+<details><summary>8. What is the purpose of --bucket and --temp-bucket?</summary><div class="answer">They select Cloud Storage locations for staging, driver output, temporary files, and related Dataproc artifacts.</div></details>
+<details><summary>9. What does the standalone -- mean in the job command?</summary><div class="answer">It separates gcloud/Dataproc options from arguments passed to the Python driver.</div></details>
+<details><summary>10. What does the YARN ResourceManager do?</summary><div class="answer">It accepts the Spark application and allocates resources for containers.</div></details>
+<details><summary>11. Why use an explicit Spark schema?</summary><div class="answer">It produces predictable types, improves data-quality control, and avoids schema-inference surprises.</div></details>
+<details><summary>12. Why is a shuffle required for groupBy?</summary><div class="answer">Rows with the same grouping key may start in different partitions, so Spark redistributes them before calculating city aggregates.</div></details>
+<details><summary>13. What is the _SUCCESS file?</summary><div class="answer">It is a marker indicating that the Spark output commit completed successfully.</div></details>
+<details><summary>14. Why create an internal firewall rule?</summary><div class="answer">Nodes and distributed services need internal TCP, UDP, and ICMP communication within the subnet.</div></details>
+<details><summary>15. How do you reduce Dataproc lab cost?</summary><div class="answer">Use a small single-node cluster, auto-delete idle settings, short-lived storage, and explicit cleanup immediately after validation.</div></details>
+</section>
+
+<section id="quiz" class="searchable">
+<h2>13. Practice MCQ Quiz</h2>
+<form id="quizForm"></form>
+<button class="action" type="button" onclick="gradeQuiz()">Submit Quiz</button>
+<button class="action secondary" type="button" onclick="resetQuiz()">Reset</button>
+<p id="score" style="font-weight:900"></p>
+</section>
+
+<section id="tracker" class="searchable">
+<h2>14. Preparation Tracker</h2>
+<p>Progress is saved in your browser. Double-click any section to store a personal note.</p>
+<div class="tracker" id="trackerList">
+<label><input type="checkbox" data-k="install"> I verified the gcloud installation.</label>
+<label><input type="checkbox" data-k="config"> I understand project and region configuration.</label>
+<label><input type="checkbox" data-k="iam"> I understand human user versus service-account permissions.</label>
+<label><input type="checkbox" data-k="storage"> I understand the bucket, input, code, staging, and output paths.</label>
+<label><input type="checkbox" data-k="network"> I understand VPC, subnet, Private Google Access, and firewall rules.</label>
+<label><input type="checkbox" data-k="cluster"> I understand the single-node cluster command.</label>
+<label><input type="checkbox" data-k="job"> I understand the PySpark submission and internal execution flow.</label>
+<label><input type="checkbox" data-k="output"> I validated the expected city report.</label>
+<label><input type="checkbox" data-k="cleanup"> I completed and verified resource cleanup.</label>
+<label><input type="checkbox" data-k="quiz"> I completed the MCQ quiz.</label>
+</div>
+<div class="progress"><div class="bar" id="bar"></div></div>
+<p id="progressText"><strong>0%</strong> completed</p>
+</section>
+
+<section id="sources" class="searchable">
+<h2>15. Official References</h2>
+<ul>
+<li><a href="https://docs.cloud.google.com/sdk/docs/install-sdk" target="_blank" rel="noopener">Install and initialize Google Cloud CLI</a></li>
+<li><a href="https://docs.cloud.google.com/sdk/gcloud/reference/dataproc/clusters/create" target="_blank" rel="noopener">gcloud dataproc clusters create reference</a></li>
+<li><a href="https://docs.cloud.google.com/dataproc/docs/concepts/configuring-clusters/single-node-clusters" target="_blank" rel="noopener">Single-node clusters</a></li>
+<li><a href="https://docs.cloud.google.com/sdk/gcloud/reference/dataproc/jobs/submit/pyspark" target="_blank" rel="noopener">Submit a PySpark job</a></li>
+<li><a href="https://docs.cloud.google.com/storage/docs/creating-buckets" target="_blank" rel="noopener">Create Cloud Storage buckets</a></li>
+<li><a href="https://docs.cloud.google.com/storage/docs/uniform-bucket-level-access" target="_blank" rel="noopener">Uniform bucket-level access</a></li>
+<li><a href="https://docs.cloud.google.com/storage/docs/public-access-prevention" target="_blank" rel="noopener">Public access prevention</a></li>
+<li><a href="https://docs.cloud.google.com/sdk/gcloud/reference/compute/firewall-rules/create" target="_blank" rel="noopener">Create VPC firewall rules</a></li>
+<li><a href="https://docs.cloud.google.com/sdk/gcloud/reference/storage/rm" target="_blank" rel="noopener">Delete objects and buckets recursively</a></li>
+</ul>
+</section>
+</main>
+</div>
+
+<footer>GCP Dataproc Food-Delivery ETL • Interactive Trainer Tutorial • Windows Command Prompt</footer>
+
+<script>
+const store={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}},remove(k){try{localStorage.removeItem(k)}catch(e){}}};
+function copyCode(btn){const text=btn.closest('.codebox').querySelector('code').innerText;navigator.clipboard.writeText(text).then(()=>{const x=btn.textContent;btn.textContent='Copied!';setTimeout(()=>btn.textContent=x,1000)})}
+function searchPage(){const q=document.getElementById('searchBox').value.toLowerCase().trim();document.querySelectorAll('.searchable,.command-card').forEach(el=>{el.classList.toggle('hidden-search',q && !el.innerText.toLowerCase().includes(q))})}
+
+const quiz=[
+['Which shell are the commands designed for?',['Linux Bash','Windows Command Prompt','PowerShell only','Spark shell'],1,'The variables and caret continuation use Windows CMD syntax.'],
+['What does gcloud config set project change?',['Creates a project','Selects the default project in local CLI config','Deletes a project','Creates billing'],1,'It updates core/project in the active local configuration.'],
+['Which identity runs the cluster workload?',['The bucket','The custom service account','The VPC','The CSV file'],1,'The service account passed with --service-account is the VM/workload identity.'],
+['Which role provides ActAs permission?',['Dataproc Worker','Storage Object User','Service Account User','Viewer'],2,'roles/iam.serviceAccountUser contains iam.serviceAccounts.actAs.'],
+['Why is a bucket needed?',['To replace the Google account','To store code, input, staging and output','To create CMD variables','To install Python'],1,'Cloud Storage is the durable data layer for the lab.'],
+['What does --single-node create?',['No VM','One VM containing master and worker components','Three worker VMs','A serverless batch only'],1,'Single-node mode places components on one VM.'],
+['What does -- separate in the job command?',['Two projects','Dataproc flags from Python program arguments','Two buckets','Network rules'],1,'Arguments after -- are passed to the driver program.'],
+['Why is the firewall rule included?',['To make the bucket public','To allow internal cluster service communication','To disable IAM','To delete the VPC'],1,'Distributed services require allowed internal traffic.'],
+['How many clean rows should the ETL produce?',['4','11','15','19'],1,'The lab filters/deduplicates 15 raw rows into 11 clean rows.'],
+['Which output format stores the clean detail?',['PDF','Parquet','DOCX','XML'],1,'The clean_orders_parquet path stores the cleaned rows.'],
+['Which command shows cluster state only?',['gcloud auth list','gcloud dataproc clusters describe ... --format=value(status.state)','gcloud storage cat','mkdir'],1,'The describe command with format extracts status.state.'],
+['Which resource should be deleted first for cost control?',['Local README','Dataproc cluster','CMD variable','Firewall rule only'],1,'The cluster owns the chargeable VM and disk.'],
+['What does Private Google Access help internal-only VMs reach?',['Only local Notepad','Google APIs and services','Public anonymous buckets only','Windows Registry'],1,'It enables access to Google APIs from internal IPs through supported routes.'],
+['Why use dropDuplicates on order_id?',['Increase row count','Prevent double-counting repeated orders','Delete every city','Create a project'],1,'Duplicate IDs would inflate counts and revenue.'],
+['What does _SUCCESS indicate?',['Authentication failure','Successful Spark output commit','Bucket is public','Cluster is stopped'],1,'Spark writes the marker after a successful output commit.']
+];
+
+function renderQuiz(){const f=document.getElementById('quizForm');quiz.forEach((x,i)=>{const d=document.createElement('div');d.className='quizq';d.id='q'+i;d.innerHTML='<strong>'+(i+1)+'. '+x[0]+'</strong>'+x[1].map((o,j)=>`<label><input type="radio" name="q${i}" value="${j}"> ${o}</label>`).join('')+`<div class="explanation" id="e${i}"></div>`;f.appendChild(d)})}
+function gradeQuiz(){let s=0;quiz.forEach((x,i)=>{const d=document.getElementById('q'+i),sel=document.querySelector(`input[name="q${i}"]:checked`),e=document.getElementById('e'+i);d.classList.remove('correct','wrong');e.style.display='block';if(sel&&Number(sel.value)===x[2]){s++;d.classList.add('correct');e.innerHTML='✅ Correct. '+x[3]}else{d.classList.add('wrong');e.innerHTML='❌ Correct answer: <strong>'+x[1][x[2]]+'</strong>. '+x[3]}});document.getElementById('score').textContent=`Score: ${s}/${quiz.length} (${Math.round(s/quiz.length*100)}%)`;store.set('dataproc_quiz',s)}
+function resetQuiz(){document.getElementById('quizForm').reset();document.querySelectorAll('.quizq').forEach(d=>d.classList.remove('correct','wrong'));document.querySelectorAll('.explanation').forEach(e=>e.style.display='none');document.getElementById('score').textContent=''}
+
+const checks=[...document.querySelectorAll('#trackerList input')];checks.forEach(c=>{c.checked=store.get('dp_'+c.dataset.k)==='true';c.onchange=()=>{store.set('dp_'+c.dataset.k,c.checked);progress()}});function progress(){const d=checks.filter(c=>c.checked).length,p=Math.round(d/checks.length*100);document.getElementById('bar').style.width=p+'%';document.getElementById('progressText').innerHTML='<strong>'+p+'%</strong> completed'}progress();
+
+document.querySelectorAll('main section').forEach(sec=>{const k='dpnote_'+sec.id,n=store.get(k);if(n){sec.classList.add('user-note');sec.title=n}sec.addEventListener('dblclick',()=>{const v=prompt('Personal note for this section:',store.get(k)||'');if(v===null)return;if(v.trim()){store.set(k,v.trim());sec.classList.add('user-note');sec.title=v.trim()}else{store.remove(k);sec.classList.remove('user-note');sec.removeAttribute('title')}})});
+
+document.addEventListener('mousemove',(e)=>{if(Math.random()>.9){const s=document.createElement('span');s.className='sparkle';s.textContent=Math.random()>.5?'✦':'·';s.style.left=e.clientX+'px';s.style.top=e.clientY+'px';s.style.color=Math.random()>.5?'#2563eb':'#6d28d9';document.body.appendChild(s);setTimeout(()=>s.remove(),700)}});
+
+renderQuiz();
+</script>
+</body>
+</html>

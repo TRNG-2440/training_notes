@@ -1,0 +1,160 @@
+GCP DATAPROC COMPLETE LAB — WINDOWS COMMAND PROMPT
+==================================================
+
+IMPORTANT
+- Run these in Windows Command Prompt (cmd.exe), not PowerShell or Linux shell.
+- Replace YOUR_PROJECT_ID and YOUR_EMAIL_ADDRESS.
+- Do not put spaces around the = sign in SET commands.
+- Use ^ only when continuing a command onto the next line in Windows CMD.
+- IAM grant commands require an account allowed to change IAM policies.
+
+1. VERIFY GCLOUD
+----------------
+gcloud version
+gcloud auth list
+gcloud config list
+
+2. INITIALIZE/AUTHENTICATE
+--------------------------
+gcloud init
+
+3. SET VARIABLES
+----------------
+set PROJECT_ID=YOUR_PROJECT_ID
+set REGION=asia-south1
+set USER_EMAIL=YOUR_EMAIL_ADDRESS
+set SERVICE_ACCOUNT_NAME=dataproc-data-sa
+set SERVICE_ACCOUNT_EMAIL=%SERVICE_ACCOUNT_NAME%@%PROJECT_ID%.iam.gserviceaccount.com
+set BUCKET_NAME=%PROJECT_ID%-dataproc-demo-%RANDOM%%RANDOM%
+set CLUSTER_NAME=dataproc-beginner-cluster
+set VPC_NAME=dataproc-vpc
+set SUBNET_NAME=dataproc-subnet
+set FIREWALL_RULE=dataproc-allow-internal
+
+4. VERIFY VARIABLES
+-------------------
+echo Project: %PROJECT_ID%
+echo Region: %REGION%
+echo User: %USER_EMAIL%
+echo Service account: %SERVICE_ACCOUNT_EMAIL%
+echo Bucket: %BUCKET_NAME%
+echo Cluster: %CLUSTER_NAME%
+echo VPC: %VPC_NAME%
+echo Subnet: %SUBNET_NAME%
+
+5. SELECT PROJECT AND REGION
+----------------------------
+gcloud config set project %PROJECT_ID%
+gcloud config set compute/region %REGION%
+gcloud config set dataproc/region %REGION%
+gcloud config get-value project
+gcloud config get-value compute/region
+gcloud config get-value dataproc/region
+gcloud projects describe %PROJECT_ID%
+gcloud billing projects describe %PROJECT_ID%
+
+6. ENABLE APIS
+--------------
+gcloud services enable serviceusage.googleapis.com cloudresourcemanager.googleapis.com iam.googleapis.com compute.googleapis.com storage.googleapis.com dataproc.googleapis.com --project=%PROJECT_ID%
+gcloud services list --enabled --project=%PROJECT_ID% | findstr /I "dataproc.googleapis.com compute.googleapis.com storage.googleapis.com iam.googleapis.com"
+
+7. CREATE SERVICE ACCOUNT
+-------------------------
+gcloud iam service-accounts create %SERVICE_ACCOUNT_NAME% --display-name="Dataproc Data Workload Service Account" --description="Runs the Dataproc PySpark food-delivery workload" --project=%PROJECT_ID%
+gcloud iam service-accounts describe %SERVICE_ACCOUNT_EMAIL% --project=%PROJECT_ID%
+
+8. GRANT IAM ROLES
+------------------
+gcloud projects add-iam-policy-binding %PROJECT_ID% --member="serviceAccount:%SERVICE_ACCOUNT_EMAIL%" --role="roles/dataproc.worker"
+gcloud iam service-accounts add-iam-policy-binding %SERVICE_ACCOUNT_EMAIL% --member="user:%USER_EMAIL%" --role="roles/iam.serviceAccountUser" --project=%PROJECT_ID%
+gcloud projects add-iam-policy-binding %PROJECT_ID% --member="user:%USER_EMAIL%" --role="roles/dataproc.editor"
+
+9. CREATE BUCKET
+----------------
+gcloud storage buckets create gs://%BUCKET_NAME% --project=%PROJECT_ID% --location=%REGION% --default-storage-class=STANDARD --uniform-bucket-level-access --public-access-prevention --soft-delete-duration=0
+gcloud storage buckets add-iam-policy-binding gs://%BUCKET_NAME% --member="serviceAccount:%SERVICE_ACCOUNT_EMAIL%" --role="roles/storage.objectUser"
+gcloud storage buckets add-iam-policy-binding gs://%BUCKET_NAME% --member="user:%USER_EMAIL%" --role="roles/storage.objectUser"
+gcloud storage buckets describe gs://%BUCKET_NAME%
+
+10. PREPARE LOCAL FILES
+-----------------------
+mkdir C:\gcp-dataproc-demo
+cd /d C:\gcp-dataproc-demo
+dir
+
+Copy orders.csv and food_delivery_etl.py from this package into:
+C:\gcp-dataproc-demo
+
+11. UPLOAD FILES
+----------------
+gcloud storage cp orders.csv gs://%BUCKET_NAME%/input/orders.csv
+gcloud storage cp food_delivery_etl.py gs://%BUCKET_NAME%/code/food_delivery_etl.py
+gcloud storage ls --recursive gs://%BUCKET_NAME%
+
+12. CREATE CUSTOM NETWORK
+-------------------------
+gcloud compute networks create %VPC_NAME% --subnet-mode=custom --project=%PROJECT_ID%
+gcloud compute networks subnets create %SUBNET_NAME% --network=%VPC_NAME% --region=%REGION% --range=10.10.0.0/24 --enable-private-ip-google-access --project=%PROJECT_ID%
+gcloud compute firewall-rules create %FIREWALL_RULE% --network=%VPC_NAME% --direction=INGRESS --priority=1000 --action=ALLOW --rules=tcp,udp,icmp --source-ranges=10.10.0.0/24 --project=%PROJECT_ID%
+gcloud compute networks subnets describe %SUBNET_NAME% --region=%REGION% --project=%PROJECT_ID%
+gcloud compute firewall-rules describe %FIREWALL_RULE% --project=%PROJECT_ID%
+
+13. CREATE SINGLE-NODE DATAPROC CLUSTER
+---------------------------------------
+gcloud dataproc clusters create %CLUSTER_NAME% ^
+  --project=%PROJECT_ID% ^
+  --region=%REGION% ^
+  --subnet=%SUBNET_NAME% ^
+  --single-node ^
+  --master-machine-type=e2-standard-2 ^
+  --master-boot-disk-type=pd-standard ^
+  --master-boot-disk-size=50GB ^
+  --service-account=%SERVICE_ACCOUNT_EMAIL% ^
+  --scopes=https://www.googleapis.com/auth/cloud-platform ^
+  --bucket=%BUCKET_NAME% ^
+  --temp-bucket=%BUCKET_NAME% ^
+  --enable-component-gateway ^
+  --delete-max-idle=30m ^
+  --labels=purpose=training-demo
+
+14. VERIFY CLUSTER
+------------------
+gcloud dataproc clusters list --region=%REGION% --project=%PROJECT_ID%
+gcloud dataproc clusters describe %CLUSTER_NAME% --region=%REGION% --project=%PROJECT_ID% --format="value(status.state)"
+
+Expected final state:
+RUNNING
+
+15. SUBMIT PYSPARK JOB
+----------------------
+gcloud dataproc jobs submit pyspark gs://%BUCKET_NAME%/code/food_delivery_etl.py --cluster=%CLUSTER_NAME% --region=%REGION% --project=%PROJECT_ID% -- gs://%BUCKET_NAME%/input/orders.csv gs://%BUCKET_NAME%/output/run-001
+
+16. VERIFY JOB AND OUTPUT
+-------------------------
+gcloud dataproc jobs list --region=%REGION% --project=%PROJECT_ID%
+gcloud storage ls --recursive gs://%BUCKET_NAME%/output/run-001
+gcloud storage cat gs://%BUCKET_NAME%/output/run-001/city_revenue_csv/part-*.csv
+
+Expected result:
+city,completed_orders,total_revenue,average_order_value
+Mumbai,2,2030.0,1015.0
+Bengaluru,3,1550.0,516.67
+Pune,2,1450.0,725.0
+Hyderabad,2,1120.0,560.0
+Chennai,2,1090.0,545.0
+
+17. CLEAN UP
+------------
+gcloud dataproc clusters delete %CLUSTER_NAME% --region=%REGION% --project=%PROJECT_ID% --quiet
+gcloud storage rm --recursive gs://%BUCKET_NAME%/
+gcloud compute firewall-rules delete %FIREWALL_RULE% --project=%PROJECT_ID% --quiet
+gcloud compute networks subnets delete %SUBNET_NAME% --region=%REGION% --project=%PROJECT_ID% --quiet
+gcloud compute networks delete %VPC_NAME% --project=%PROJECT_ID% --quiet
+gcloud iam service-accounts delete %SERVICE_ACCOUNT_EMAIL% --project=%PROJECT_ID% --quiet
+
+18. FINAL VERIFICATION
+----------------------
+gcloud dataproc clusters list --region=%REGION% --project=%PROJECT_ID%
+gcloud storage buckets list --project=%PROJECT_ID%
+gcloud iam service-accounts list --project=%PROJECT_ID%
+gcloud compute networks list --project=%PROJECT_ID%
