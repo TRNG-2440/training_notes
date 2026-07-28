@@ -1,0 +1,1187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Apache Kafka Architecture — Topics, Brokers, Producers and Consumers</title>
+<style>
+:root{
+  --bg:#f5f7fb;
+  --surface:#ffffff;
+  --surface-2:#eef4ff;
+  --text:#172033;
+  --muted:#5f6b7a;
+  --primary:#3457d5;
+  --primary-2:#1f3ca6;
+  --accent:#ffb020;
+  --green:#15803d;
+  --red:#c24141;
+  --purple:#7c3aed;
+  --border:#dce3ef;
+  --shadow:0 12px 30px rgba(26,43,84,.09);
+  --code:#101827;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  font-family:Inter,Segoe UI,Arial,sans-serif;
+  color:var(--text);
+  background:var(--bg);
+  line-height:1.65;
+}
+a{color:var(--primary)}
+header{
+  background:linear-gradient(135deg,#16224a 0%,#2849b8 55%,#4769dd 100%);
+  color:white;
+  padding:44px 24px 38px;
+}
+.hero{
+  max-width:1240px;
+  margin:auto;
+  display:grid;
+  grid-template-columns:1.3fr .7fr;
+  gap:28px;
+  align-items:center;
+}
+.hero h1{font-size:clamp(2rem,4vw,3.6rem);line-height:1.12;margin:0 0 16px}
+.hero p{font-size:1.12rem;color:#e7ecff;max-width:820px}
+.hero-badges{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+.badge{padding:7px 12px;border-radius:999px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.25);font-size:.9rem}
+.hero-visual{
+  background:rgba(255,255,255,.1);
+  border:1px solid rgba(255,255,255,.25);
+  border-radius:22px;
+  padding:22px;
+}
+.hero-node{background:white;color:#172033;border-radius:12px;padding:12px;text-align:center;font-weight:700;margin:8px 0}
+.hero-arrow{text-align:center;font-size:1.6rem;color:#ffd166}
+.layout{
+  max-width:1420px;
+  margin:auto;
+  display:grid;
+  grid-template-columns:260px minmax(0,1fr) 220px;
+  gap:24px;
+  padding:28px 20px 70px;
+}
+nav,aside{
+  position:sticky;
+  top:16px;
+  align-self:start;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:16px;
+  box-shadow:var(--shadow);
+  max-height:calc(100vh - 32px);
+  overflow:auto;
+}
+nav h3,aside h3{margin:0 0 12px}
+nav a{
+  display:block;
+  padding:8px 10px;
+  border-radius:9px;
+  text-decoration:none;
+  color:var(--text);
+  font-size:.92rem;
+}
+nav a:hover,nav a.active{background:var(--surface-2);color:var(--primary);font-weight:700}
+main{min-width:0}
+section{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:28px;
+  margin-bottom:24px;
+  box-shadow:var(--shadow);
+  transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease;
+}
+section:hover{transform:translateY(-2px);border-color:#afc1ef;box-shadow:0 16px 38px rgba(26,43,84,.12)}
+h2{font-size:1.7rem;margin-top:0;padding-bottom:10px;border-bottom:2px solid var(--surface-2)}
+h3{margin-top:24px}
+h4{margin-bottom:6px}
+.lead{font-size:1.08rem;color:#364152}
+.callout{
+  border-left:5px solid var(--primary);
+  background:var(--surface-2);
+  padding:15px 17px;
+  border-radius:10px;
+  margin:16px 0;
+}
+.warning{border-left-color:var(--accent);background:#fff8e8}
+.success{border-left-color:var(--green);background:#effcf3}
+.danger{border-left-color:var(--red);background:#fff1f1}
+.grid-2,.grid-3,.grid-4{display:grid;gap:16px}
+.grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.grid-4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.card{
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:18px;
+  background:#fff;
+}
+.card h3,.card h4{margin-top:0}
+.number{
+  width:36px;height:36px;border-radius:50%;
+  display:inline-grid;place-items:center;
+  background:var(--primary);color:white;font-weight:800;margin-right:8px;
+}
+.memory{
+  font-size:1.08rem;
+  border:2px dashed var(--accent);
+  background:#fffaf0;
+  border-radius:13px;
+  padding:16px;
+}
+.table-wrap{overflow:auto}
+table{width:100%;border-collapse:collapse;min-width:680px}
+th,td{border:1px solid var(--border);padding:12px;text-align:left;vertical-align:top}
+th{background:#eaf0ff;color:#1d347c}
+tr:nth-child(even) td{background:#fafcff}
+code{font-family:Consolas,monospace}
+pre{
+  background:var(--code);
+  color:#edf4ff;
+  padding:18px;
+  border-radius:13px;
+  overflow:auto;
+  position:relative;
+}
+.copy-btn{
+  position:absolute;right:10px;top:10px;
+  border:0;border-radius:7px;padding:6px 9px;
+  background:#334155;color:white;cursor:pointer;
+}
+.diagram{
+  background:#fbfcff;
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:16px;
+  overflow:auto;
+}
+.diagram svg{display:block;width:100%;height:auto;min-width:680px}
+.svg-title{font:700 19px Segoe UI,Arial;fill:#172033}
+.svg-label{font:600 14px Segoe UI,Arial;fill:#172033}
+.svg-small{font:12px Segoe UI,Arial;fill:#445066}
+.node-blue{fill:#dfe8ff;stroke:#3457d5;stroke-width:2}
+.node-green{fill:#e6f7eb;stroke:#15803d;stroke-width:2}
+.node-orange{fill:#fff2cf;stroke:#d48a00;stroke-width:2}
+.node-purple{fill:#f0e8ff;stroke:#7c3aed;stroke-width:2}
+.node-red{fill:#ffe7e7;stroke:#c24141;stroke-width:2}
+.arrow{stroke:#536178;stroke-width:2.5;fill:none;marker-end:url(#arrow)}
+.arrow-dash{stroke:#7c3aed;stroke-width:2.2;stroke-dasharray:7 5;fill:none;marker-end:url(#arrowPurple)}
+.topic-box{
+  border:2px solid var(--purple);
+  border-radius:14px;
+  padding:14px;
+  background:#faf7ff;
+}
+.partition{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:12px;padding:10px 12px;border:1px solid #cbb8f6;
+  border-radius:10px;background:white;margin:8px 0;
+}
+.broker{
+  border:2px solid var(--primary);
+  border-radius:14px;padding:14px;background:#f5f8ff;
+}
+.message-chip{
+  display:inline-block;padding:4px 8px;border-radius:7px;
+  background:#edf2ff;border:1px solid #cbd7ff;margin:3px;font-family:Consolas,monospace;font-size:.86rem;
+}
+.flow{
+  display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:10px;margin:18px 0;
+}
+.flow-box{border:2px solid var(--primary);background:#edf2ff;border-radius:12px;padding:14px;text-align:center;min-width:140px;font-weight:700}
+.flow-arrow{font-size:1.7rem;color:var(--primary)}
+details{border:1px solid var(--border);border-radius:12px;padding:11px 14px;margin:10px 0;background:#fff}
+summary{cursor:pointer;font-weight:700}
+.quiz-question{
+  border:1px solid var(--border);
+  border-radius:14px;padding:16px;margin:14px 0;background:#fbfcff;
+}
+.quiz-question label{display:block;margin:7px 0;cursor:pointer}
+.button{
+  border:0;border-radius:10px;padding:11px 16px;
+  background:var(--primary);color:white;font-weight:700;cursor:pointer;margin:5px 5px 5px 0;
+}
+.button.secondary{background:#526079}
+.button.green{background:var(--green)}
+.result{font-weight:800;padding:14px;border-radius:10px;margin-top:12px;display:none}
+.timer{
+  font-size:1.35rem;font-weight:800;color:var(--red);
+  padding:10px 14px;background:#fff1f1;border-radius:10px;display:inline-block;
+}
+.progress-shell{height:10px;background:#e7ebf3;border-radius:999px;overflow:hidden;margin:10px 0}
+.progress-bar{height:100%;width:0;background:var(--primary);transition:width .3s}
+.note-box{width:100%;min-height:90px;border:1px solid var(--border);border-radius:10px;padding:10px;font:inherit}
+.small{font-size:.9rem;color:var(--muted)}
+.keyterm{
+  border-bottom:2px dotted var(--primary);
+  cursor:help;
+}
+.sidebar-card{
+  border:1px solid var(--border);
+  border-radius:12px;padding:12px;margin-bottom:12px;background:#fbfcff;
+}
+.checklist label{display:block;margin:8px 0}
+footer{max-width:1400px;margin:0 auto 30px;padding:0 20px;color:var(--muted);font-size:.9rem}
+.sparkle{
+  position:fixed;
+  pointer-events:none;
+  z-index:9999;
+  width:7px;height:7px;border-radius:50%;
+  background:#ffb020;
+  animation:spark .7s ease-out forwards;
+}
+@keyframes spark{to{transform:translateY(-18px) scale(.1);opacity:0}}
+@media(max-width:1120px){
+  .layout{grid-template-columns:220px minmax(0,1fr)}
+  aside{display:none}
+}
+@media(max-width:800px){
+  .hero{grid-template-columns:1fr}
+  .layout{display:block;padding:14px}
+  nav{position:relative;top:auto;margin-bottom:18px;max-height:none}
+  .grid-2,.grid-3,.grid-4{grid-template-columns:1fr}
+  section{padding:20px}
+}
+@media print{
+  nav,aside,.copy-btn,.button,#timerControls{display:none!important}
+  body{background:white}
+  section{box-shadow:none;break-inside:avoid}
+  .layout{display:block;max-width:none}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="hero">
+    <div>
+      <h1>Apache Kafka Architecture</h1>
+      <p>A trainer-ready visual tutorial covering Topics, Brokers, Producers, Consumers, Partitions, Replication, Consumer Groups, Offsets and the complete message journey.</p>
+      <div class="hero-badges">
+        <span class="badge">Architecture diagrams</span>
+        <span class="badge">Topic vs Broker clarity</span>
+        <span class="badge">Real-world use case</span>
+        <span class="badge">Commands</span>
+        <span class="badge">MCQ + timed exam</span>
+      </div>
+    </div>
+    <div class="hero-visual" aria-label="Kafka high-level flow">
+      <div class="hero-node">Producer Application</div>
+      <div class="hero-arrow">↓ publishes events</div>
+      <div class="hero-node">Kafka Topic → Partitions → Brokers</div>
+      <div class="hero-arrow">↓ consumers fetch</div>
+      <div class="hero-node">Consumer Group</div>
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+<nav>
+  <h3>Course Contents</h3>
+  <a href="#objectives">1. Learning Objectives</a>
+  <a href="#what-is-kafka">2. What is Kafka?</a>
+  <a href="#architecture">3. Architecture Overview</a>
+  <a href="#producer">4. Producers</a>
+  <a href="#topic">5. Topics</a>
+  <a href="#partition">6. Partitions & Offsets</a>
+  <a href="#broker">7. Brokers</a>
+  <a href="#topic-vs-broker">8. Topic vs Broker</a>
+  <a href="#consumer">9. Consumers</a>
+  <a href="#groups">10. Consumer Groups</a>
+  <a href="#replication">11. Replication</a>
+  <a href="#kraft">12. KRaft Controller</a>
+  <a href="#journey">13. Message Journey</a>
+  <a href="#scenario">14. Real-world Scenario</a>
+  <a href="#commands">15. Essential Commands</a>
+  <a href="#mistakes">16. Common Mistakes</a>
+  <a href="#best-practices">17. Best Practices</a>
+  <a href="#interview">18. Interview Q&amp;A</a>
+  <a href="#exercises">19. Exercises</a>
+  <a href="#quiz">20. Practice Quiz</a>
+  <a href="#exam">21. Timed Exam</a>
+  <a href="#sources">22. References</a>
+</nav>
+
+<main>
+<section id="objectives">
+  <h2>1. Learning Objectives</h2>
+  <p>After completing this tutorial, learners should be able to:</p>
+  <div class="grid-2">
+    <div class="card"><span class="number">1</span>Describe the purpose of Producers, Topics, Partitions, Brokers and Consumers.</div>
+    <div class="card"><span class="number">2</span>Clearly differentiate a logical Topic from a physical Broker.</div>
+    <div class="card"><span class="number">3</span>Explain how messages are partitioned, stored, replicated and consumed.</div>
+    <div class="card"><span class="number">4</span>Explain consumer groups, offsets, parallelism and ordering.</div>
+  </div>
+  <div class="memory"><strong>Memory line:</strong> Producer <strong>writes</strong> → Topic <strong>organizes</strong> → Partition <strong>splits</strong> → Broker <strong>stores</strong> → Consumer <strong>reads</strong>.</div>
+</section>
+
+<section id="what-is-kafka">
+  <h2>2. What is Apache Kafka?</h2>
+  <p class="lead">Apache Kafka is a distributed event-streaming platform used to publish, store, read and process continuous streams of events across multiple machines.</p>
+  <h3>What is an event?</h3>
+  <p>An event is a statement that something happened. It commonly contains:</p>
+  <div class="grid-4">
+    <div class="card"><h4>Key</h4><p><code>CUST-104</code></p><p class="small">Used for partition selection and grouping related events.</p></div>
+    <div class="card"><h4>Value</h4><p><code>{"status":"PAID"}</code></p><p class="small">The business data.</p></div>
+    <div class="card"><h4>Timestamp</h4><p><code>2026-07-28T10:15:00Z</code></p><p class="small">When the event occurred or was appended.</p></div>
+    <div class="card"><h4>Headers</h4><p><code>source=checkout</code></p><p class="small">Optional metadata.</p></div>
+  </div>
+  <h3>Common use cases</h3>
+  <ul>
+    <li>Order, payment and shipment event pipelines</li>
+    <li>Application logs and observability</li>
+    <li>IoT sensor streams</li>
+    <li>Database change data capture</li>
+    <li>Real-time fraud detection and analytics</li>
+  </ul>
+</section>
+
+<section id="architecture">
+  <h2>3. Kafka Architecture Overview</h2>
+  <div class="diagram">
+    <svg viewBox="0 0 1100 610" role="img" aria-label="Kafka architecture with producers, brokers, topics, partitions, consumers and controller">
+      <defs>
+        <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#536178"/></marker>
+        <marker id="arrowPurple" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#7c3aed"/></marker>
+      </defs>
+      <text x="550" y="34" text-anchor="middle" class="svg-title">Kafka Cluster — High-Level Architecture</text>
+
+      <rect x="30" y="85" rx="15" ry="15" width="180" height="90" class="node-green"/>
+      <text x="120" y="118" text-anchor="middle" class="svg-label">Producer A</text>
+      <text x="120" y="145" text-anchor="middle" class="svg-small">Order Service</text>
+
+      <rect x="30" y="235" rx="15" ry="15" width="180" height="90" class="node-green"/>
+      <text x="120" y="268" text-anchor="middle" class="svg-label">Producer B</text>
+      <text x="120" y="295" text-anchor="middle" class="svg-small">Payment Service</text>
+
+      <rect x="300" y="65" rx="18" ry="18" width="500" height="410" fill="#f7f9ff" stroke="#3457d5" stroke-width="3"/>
+      <text x="550" y="96" text-anchor="middle" class="svg-label">Kafka Cluster</text>
+
+      <rect x="330" y="125" rx="13" ry="13" width="135" height="310" class="node-blue"/>
+      <text x="397" y="155" text-anchor="middle" class="svg-label">Broker 1</text>
+      <rect x="350" y="185" rx="7" ry="7" width="95" height="50" class="node-purple"/>
+      <text x="397" y="208" text-anchor="middle" class="svg-small">orders-P0</text>
+      <text x="397" y="226" text-anchor="middle" class="svg-small">Leader</text>
+      <rect x="350" y="255" rx="7" ry="7" width="95" height="50" class="node-orange"/>
+      <text x="397" y="278" text-anchor="middle" class="svg-small">orders-P2</text>
+      <text x="397" y="296" text-anchor="middle" class="svg-small">Follower</text>
+      <rect x="350" y="325" rx="7" ry="7" width="95" height="50" class="node-red"/>
+      <text x="397" y="350" text-anchor="middle" class="svg-small">payments-P1</text>
+
+      <rect x="483" y="125" rx="13" ry="13" width="135" height="310" class="node-blue"/>
+      <text x="550" y="155" text-anchor="middle" class="svg-label">Broker 2</text>
+      <rect x="503" y="185" rx="7" ry="7" width="95" height="50" class="node-purple"/>
+      <text x="550" y="208" text-anchor="middle" class="svg-small">orders-P1</text>
+      <text x="550" y="226" text-anchor="middle" class="svg-small">Leader</text>
+      <rect x="503" y="255" rx="7" ry="7" width="95" height="50" class="node-orange"/>
+      <text x="550" y="278" text-anchor="middle" class="svg-small">orders-P0</text>
+      <text x="550" y="296" text-anchor="middle" class="svg-small">Follower</text>
+      <rect x="503" y="325" rx="7" ry="7" width="95" height="50" class="node-red"/>
+      <text x="550" y="350" text-anchor="middle" class="svg-small">payments-P0</text>
+
+      <rect x="636" y="125" rx="13" ry="13" width="135" height="310" class="node-blue"/>
+      <text x="703" y="155" text-anchor="middle" class="svg-label">Broker 3</text>
+      <rect x="656" y="185" rx="7" ry="7" width="95" height="50" class="node-purple"/>
+      <text x="703" y="208" text-anchor="middle" class="svg-small">orders-P2</text>
+      <text x="703" y="226" text-anchor="middle" class="svg-small">Leader</text>
+      <rect x="656" y="255" rx="7" ry="7" width="95" height="50" class="node-orange"/>
+      <text x="703" y="278" text-anchor="middle" class="svg-small">orders-P1</text>
+      <text x="703" y="296" text-anchor="middle" class="svg-small">Follower</text>
+      <rect x="656" y="325" rx="7" ry="7" width="95" height="50" class="node-red"/>
+      <text x="703" y="350" text-anchor="middle" class="svg-small">payments-P1</text>
+
+      <rect x="870" y="85" rx="15" ry="15" width="200" height="90" class="node-orange"/>
+      <text x="970" y="118" text-anchor="middle" class="svg-label">Consumer Group A</text>
+      <text x="970" y="145" text-anchor="middle" class="svg-small">Order processors</text>
+
+      <rect x="870" y="235" rx="15" ry="15" width="200" height="90" class="node-orange"/>
+      <text x="970" y="268" text-anchor="middle" class="svg-label">Consumer Group B</text>
+      <text x="970" y="295" text-anchor="middle" class="svg-small">Analytics application</text>
+
+      <rect x="405" y="515" rx="15" ry="15" width="290" height="65" class="node-purple"/>
+      <text x="550" y="542" text-anchor="middle" class="svg-label">KRaft Controller Quorum</text>
+      <text x="550" y="563" text-anchor="middle" class="svg-small">Cluster metadata and partition leadership</text>
+
+      <path d="M210 130 C250 130,260 180,330 205" class="arrow"/>
+      <path d="M210 280 C255 280,270 335,330 350" class="arrow"/>
+      <path d="M771 205 C820 205,830 130,870 130" class="arrow"/>
+      <path d="M771 350 C820 350,830 280,870 280" class="arrow"/>
+      <path d="M550 515 L550 475" class="arrow-dash"/>
+    </svg>
+  </div>
+
+  <h3>Architecture in one sentence</h3>
+  <div class="callout success">Producers send events to a named topic; Kafka divides that topic into partitions; brokers store and serve those partitions; consumers read partitions and track progress using offsets.</div>
+</section>
+
+<section id="producer">
+  <h2>4. Producer</h2>
+  <p>A <strong>Producer</strong> is a client application that publishes events to Kafka topics.</p>
+  <div class="grid-3">
+    <div class="card"><h3>Chooses the topic</h3><p>Example: <code>orders</code>, <code>payments</code> or <code>shipments</code>.</p></div>
+    <div class="card"><h3>Selects a partition</h3><p>Usually based on a message key, explicit partition or partitioner strategy.</p></div>
+    <div class="card"><h3>Sends records in batches</h3><p>Batching and compression can improve throughput.</p></div>
+  </div>
+  <h3>Producer request path</h3>
+  <div class="flow">
+    <div class="flow-box">Create event</div><div class="flow-arrow">→</div>
+    <div class="flow-box">Serialize key/value</div><div class="flow-arrow">→</div>
+    <div class="flow-box">Choose partition</div><div class="flow-arrow">→</div>
+    <div class="flow-box">Send to leader broker</div><div class="flow-arrow">→</div>
+    <div class="flow-box">Receive acknowledgement</div>
+  </div>
+  <h3>Key producer settings</h3>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Setting</th><th>Purpose</th><th>Typical learning point</th></tr></thead>
+    <tbody>
+      <tr><td><code>bootstrap.servers</code></td><td>Initial broker addresses used to discover the cluster.</td><td>It is a discovery list, not necessarily every broker.</td></tr>
+      <tr><td><code>key.serializer</code></td><td>Converts the key to bytes.</td><td>Keys influence partitioning.</td></tr>
+      <tr><td><code>value.serializer</code></td><td>Converts the event value to bytes.</td><td>Both producer and consumer must agree on format.</td></tr>
+      <tr><td><code>acks</code></td><td>Controls acknowledgement requirements.</td><td>Durability and latency trade-off.</td></tr>
+      <tr><td><code>enable.idempotence</code></td><td>Helps prevent duplicates caused by producer retries.</td><td>Important for reliable delivery.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="topic">
+  <h2>5. Topic</h2>
+  <p>A <strong>Topic</strong> is a named logical stream or category into which related events are published.</p>
+  <div class="callout"><strong>Examples:</strong> <code>orders</code>, <code>payments</code>, <code>customer-events</code>, <code>website-clicks</code>.</div>
+  <p>A topic is not one computer, one directory or one broker. It is an abstraction that may be divided into many partitions and distributed across multiple brokers.</p>
+  <div class="topic-box">
+    <h3 style="margin-top:0">Topic: <code>orders</code></h3>
+    <div class="partition"><strong>Partition 0</strong><span>ORDER-100, ORDER-103, ORDER-106…</span></div>
+    <div class="partition"><strong>Partition 1</strong><span>ORDER-101, ORDER-104, ORDER-107…</span></div>
+    <div class="partition"><strong>Partition 2</strong><span>ORDER-102, ORDER-105, ORDER-108…</span></div>
+  </div>
+  <h3>Important topic properties</h3>
+  <ul>
+    <li><strong>Partition count:</strong> controls how many independent ordered logs the topic has.</li>
+    <li><strong>Replication factor:</strong> controls how many broker copies each partition has.</li>
+    <li><strong>Retention:</strong> controls how long or how much data Kafka keeps.</li>
+    <li><strong>Cleanup policy:</strong> commonly deletion by time/size or log compaction.</li>
+  </ul>
+</section>
+
+<section id="partition">
+  <h2>6. Partitions and Offsets</h2>
+  <p>A topic is split into <strong>partitions</strong>. Each partition is an append-only ordered log.</p>
+  <div class="diagram">
+    <svg viewBox="0 0 1080 390" role="img" aria-label="Three Kafka partitions with ordered offsets">
+      <defs><marker id="arrow2" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#3457d5"/></marker></defs>
+      <text x="540" y="30" text-anchor="middle" class="svg-title">Topic: orders — Three Independent Ordered Logs</text>
+      <text x="45" y="96" class="svg-label">Partition 0</text>
+      <text x="45" y="196" class="svg-label">Partition 1</text>
+      <text x="45" y="296" class="svg-label">Partition 2</text>
+
+      <g>
+        <rect x="170" y="60" width="120" height="60" rx="8" class="node-blue"/><text x="230" y="86" text-anchor="middle" class="svg-small">Offset 0</text><text x="230" y="105" text-anchor="middle" class="svg-small">ORDER-A</text>
+        <rect x="320" y="60" width="120" height="60" rx="8" class="node-blue"/><text x="380" y="86" text-anchor="middle" class="svg-small">Offset 1</text><text x="380" y="105" text-anchor="middle" class="svg-small">ORDER-D</text>
+        <rect x="470" y="60" width="120" height="60" rx="8" class="node-blue"/><text x="530" y="86" text-anchor="middle" class="svg-small">Offset 2</text><text x="530" y="105" text-anchor="middle" class="svg-small">ORDER-G</text>
+      </g>
+      <g>
+        <rect x="170" y="160" width="120" height="60" rx="8" class="node-green"/><text x="230" y="186" text-anchor="middle" class="svg-small">Offset 0</text><text x="230" y="205" text-anchor="middle" class="svg-small">ORDER-B</text>
+        <rect x="320" y="160" width="120" height="60" rx="8" class="node-green"/><text x="380" y="186" text-anchor="middle" class="svg-small">Offset 1</text><text x="380" y="205" text-anchor="middle" class="svg-small">ORDER-E</text>
+        <rect x="470" y="160" width="120" height="60" rx="8" class="node-green"/><text x="530" y="186" text-anchor="middle" class="svg-small">Offset 2</text><text x="530" y="205" text-anchor="middle" class="svg-small">ORDER-H</text>
+      </g>
+      <g>
+        <rect x="170" y="260" width="120" height="60" rx="8" class="node-orange"/><text x="230" y="286" text-anchor="middle" class="svg-small">Offset 0</text><text x="230" y="305" text-anchor="middle" class="svg-small">ORDER-C</text>
+        <rect x="320" y="260" width="120" height="60" rx="8" class="node-orange"/><text x="380" y="286" text-anchor="middle" class="svg-small">Offset 1</text><text x="380" y="305" text-anchor="middle" class="svg-small">ORDER-F</text>
+        <rect x="470" y="260" width="120" height="60" rx="8" class="node-orange"/><text x="530" y="286" text-anchor="middle" class="svg-small">Offset 2</text><text x="530" y="305" text-anchor="middle" class="svg-small">ORDER-I</text>
+      </g>
+      <path d="M610 90 L970 90" stroke="#3457d5" stroke-width="3" marker-end="url(#arrow2)"/>
+      <text x="790" y="78" text-anchor="middle" class="svg-small">New records append at the end</text>
+      <text x="790" y="150" text-anchor="middle" class="svg-label">Ordering is guaranteed within one partition</text>
+      <text x="790" y="185" text-anchor="middle" class="svg-small">Kafka does not create one universal order across all partitions.</text>
+      <text x="790" y="245" text-anchor="middle" class="svg-label">Offset</text>
+      <text x="790" y="274" text-anchor="middle" class="svg-small">A sequential position within a partition.</text>
+      <text x="790" y="304" text-anchor="middle" class="svg-small">Consumers use offsets to track progress.</text>
+    </svg>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <h3>Why partitions?</h3>
+      <ul><li>Parallel reads and writes</li><li>Horizontal scalability</li><li>Distribution across brokers</li><li>Independent ordered logs</li></ul>
+    </div>
+    <div class="card">
+      <h3>Message keys</h3>
+      <p>Records with the same key are normally routed consistently to the same partition, supporting ordered processing for that key.</p>
+      <p><code>customerId=C101</code> → same partition for that customer.</p>
+    </div>
+  </div>
+  <div class="callout warning"><strong>Important:</strong> Increasing a topic’s partition count later can change key-to-partition mapping. Plan partition counts carefully.</div>
+</section>
+
+<section id="broker">
+  <h2>7. Broker</h2>
+  <p>A <strong>Broker</strong> is a running Kafka server process. Multiple brokers together form a Kafka cluster.</p>
+  <div class="grid-3">
+    <div class="card"><h3>Stores partitions</h3><p>A broker stores leader and follower replicas from many topics.</p></div>
+    <div class="card"><h3>Handles requests</h3><p>Receives producer writes and serves consumer fetch requests.</p></div>
+    <div class="card"><h3>Replicates data</h3><p>Follower replicas copy partition data from leaders.</p></div>
+  </div>
+  <h3>One broker can store many topics</h3>
+  <div class="broker">
+    <h3 style="margin-top:0">Broker 2</h3>
+    <span class="message-chip">orders-P1 leader</span>
+    <span class="message-chip">orders-P0 follower</span>
+    <span class="message-chip">payments-P0 leader</span>
+    <span class="message-chip">shipments-P2 follower</span>
+    <span class="message-chip">clickstream-P4 leader</span>
+  </div>
+  <p>A broker is identified by a node ID and network listeners. Clients connect using bootstrap broker addresses and then discover the full cluster metadata.</p>
+</section>
+
+<section id="topic-vs-broker">
+  <h2>8. Topic vs Broker — The Essential Difference</h2>
+  <div class="callout success"><strong>Topic = WHAT kind of data?</strong> &nbsp;&nbsp; <strong>Broker = WHERE the data is stored and served?</strong></div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Aspect</th><th>Topic</th><th>Broker</th></tr></thead>
+      <tbody>
+        <tr><td>Meaning</td><td>A logical named stream/category of events.</td><td>A physical or virtual server process running Kafka.</td></tr>
+        <tr><td>Example</td><td><code>orders</code>, <code>payments</code>.</td><td><code>broker-1:9092</code>, <code>broker-2:9092</code>.</td></tr>
+        <tr><td>Main purpose</td><td>Organizes related events.</td><td>Stores partitions and handles client requests.</td></tr>
+        <tr><td>Contains</td><td>Partitions, which contain records.</td><td>Partition replicas belonging to many topics.</td></tr>
+        <tr><td>Logical or physical?</td><td>Logical abstraction.</td><td>Running infrastructure component.</td></tr>
+        <tr><td>Can span machines?</td><td>Yes. Its partitions may be spread across many brokers.</td><td>No. One broker is one Kafka server process, though it may run on a VM, container or physical host.</td></tr>
+        <tr><td>Created by</td><td>Admin/API/topic command or controlled auto-creation.</td><td>Infrastructure deployment and broker configuration.</td></tr>
+        <tr><td>Scaled by</td><td>Adding partitions, with design considerations.</td><td>Adding broker nodes and rebalancing partitions.</td></tr>
+        <tr><td>Failure impact</td><td>A topic remains available when its partition leaders can be served by healthy replicas.</td><td>A broker failure causes affected partition leaders to move to eligible replicas.</td></tr>
+        <tr><td>Analogy</td><td>A book title/category in a library.</td><td>A library building or storage facility holding many books.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <h3>Visual proof: one topic distributed across brokers</h3>
+  <div class="diagram">
+    <svg viewBox="0 0 1100 410" role="img" aria-label="One orders topic with three partitions distributed across three brokers">
+      <defs><marker id="arrow3" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#536178"/></marker></defs>
+      <rect x="45" y="135" width="230" height="135" rx="16" class="node-purple"/>
+      <text x="160" y="175" text-anchor="middle" class="svg-label">Logical Topic: orders</text>
+      <text x="160" y="210" text-anchor="middle" class="svg-small">Partition 0</text>
+      <text x="160" y="235" text-anchor="middle" class="svg-small">Partition 1</text>
+      <text x="160" y="260" text-anchor="middle" class="svg-small">Partition 2</text>
+
+      <rect x="430" y="40" width="190" height="105" rx="14" class="node-blue"/>
+      <text x="525" y="75" text-anchor="middle" class="svg-label">Broker 1</text>
+      <text x="525" y="106" text-anchor="middle" class="svg-small">stores orders-P0</text>
+
+      <rect x="430" y="155" width="190" height="105" rx="14" class="node-blue"/>
+      <text x="525" y="190" text-anchor="middle" class="svg-label">Broker 2</text>
+      <text x="525" y="221" text-anchor="middle" class="svg-small">stores orders-P1</text>
+
+      <rect x="430" y="270" width="190" height="105" rx="14" class="node-blue"/>
+      <text x="525" y="305" text-anchor="middle" class="svg-label">Broker 3</text>
+      <text x="525" y="336" text-anchor="middle" class="svg-small">stores orders-P2</text>
+
+      <path d="M275 170 C340 130,360 90,430 90" class="arrow"/>
+      <path d="M275 205 L430 205" class="arrow"/>
+      <path d="M275 240 C340 280,360 320,430 320" class="arrow"/>
+
+      <rect x="745" y="100" width="300" height="205" rx="16" class="node-orange"/>
+      <text x="895" y="140" text-anchor="middle" class="svg-label">Key idea</text>
+      <text x="895" y="180" text-anchor="middle" class="svg-small">The topic is not located on only one broker.</text>
+      <text x="895" y="215" text-anchor="middle" class="svg-small">Its partitions are distributed.</text>
+      <text x="895" y="250" text-anchor="middle" class="svg-small">Replicas may create additional copies</text>
+      <text x="895" y="275" text-anchor="middle" class="svg-small">on other brokers.</text>
+      <path d="M620 205 L745 205" class="arrow"/>
+    </svg>
+  </div>
+  <div class="memory"><strong>Never say:</strong> “The topic is a broker.”<br><strong>Correct statement:</strong> “A topic is split into partitions, and brokers store partition replicas.”</div>
+</section>
+
+<section id="consumer">
+  <h2>9. Consumer</h2>
+  <p>A <strong>Consumer</strong> is a client application that reads events from Kafka topics.</p>
+  <h3>Consumer responsibilities</h3>
+  <ul>
+    <li>Subscribe to one or more topics or directly assign partitions.</li>
+    <li>Fetch records from partition leaders.</li>
+    <li>Deserialize keys and values.</li>
+    <li>Process the business event.</li>
+    <li>Commit or manage offsets to record processing progress.</li>
+  </ul>
+  <div class="callout"><strong>Consumer pull model:</strong> Consumers request data from brokers at their own pace. This helps different applications process the same topic independently.</div>
+</section>
+
+<section id="groups">
+  <h2>10. Consumer Groups and Parallelism</h2>
+  <p>Consumers using the same <code>group.id</code> form a <strong>consumer group</strong>. Within a group, a partition is assigned to only one consumer at a time.</p>
+  <div class="diagram">
+    <svg viewBox="0 0 1080 470" role="img" aria-label="Consumer group partition assignment and parallelism">
+      <defs><marker id="arrow4" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#536178"/></marker></defs>
+      <text x="540" y="32" text-anchor="middle" class="svg-title">Topic with 3 Partitions → Consumer Group</text>
+      <rect x="70" y="80" width="220" height="70" rx="12" class="node-purple"/><text x="180" y="110" text-anchor="middle" class="svg-label">Partition 0</text><text x="180" y="132" text-anchor="middle" class="svg-small">ordered records</text>
+      <rect x="70" y="200" width="220" height="70" rx="12" class="node-purple"/><text x="180" y="230" text-anchor="middle" class="svg-label">Partition 1</text><text x="180" y="252" text-anchor="middle" class="svg-small">ordered records</text>
+      <rect x="70" y="320" width="220" height="70" rx="12" class="node-purple"/><text x="180" y="350" text-anchor="middle" class="svg-label">Partition 2</text><text x="180" y="372" text-anchor="middle" class="svg-small">ordered records</text>
+
+      <rect x="700" y="80" width="230" height="70" rx="12" class="node-orange"/><text x="815" y="110" text-anchor="middle" class="svg-label">Consumer 1</text><text x="815" y="132" text-anchor="middle" class="svg-small">processes P0</text>
+      <rect x="700" y="200" width="230" height="70" rx="12" class="node-orange"/><text x="815" y="230" text-anchor="middle" class="svg-label">Consumer 2</text><text x="815" y="252" text-anchor="middle" class="svg-small">processes P1</text>
+      <rect x="700" y="320" width="230" height="70" rx="12" class="node-orange"/><text x="815" y="350" text-anchor="middle" class="svg-label">Consumer 3</text><text x="815" y="372" text-anchor="middle" class="svg-small">processes P2</text>
+
+      <path d="M290 115 L700 115" class="arrow"/>
+      <path d="M290 235 L700 235" class="arrow"/>
+      <path d="M290 355 L700 355" class="arrow"/>
+      <text x="495" y="98" text-anchor="middle" class="svg-small">assignment</text>
+      <text x="540" y="440" text-anchor="middle" class="svg-label">Maximum active parallelism in this group = 3 partitions</text>
+    </svg>
+  </div>
+  <div class="grid-2">
+    <div class="card"><h3>Fewer consumers than partitions</h3><p>Some consumers receive multiple partitions.</p></div>
+    <div class="card"><h3>More consumers than partitions</h3><p>Extra consumers remain idle because one partition cannot be divided among multiple consumers in the same group at the same time.</p></div>
+  </div>
+  <h3>Different groups get independent copies</h3>
+  <p>The <code>fraud-service</code> group and the <code>analytics-service</code> group may both consume every event from the <code>payments</code> topic independently.</p>
+</section>
+
+<section id="replication">
+  <h2>11. Replication, Leaders and Followers</h2>
+  <p>Each partition may have multiple replicas on different brokers. One replica is the <strong>leader</strong>; other replicas are <strong>followers</strong>.</p>
+  <div class="diagram">
+    <svg viewBox="0 0 1080 390" role="img" aria-label="Partition leader and follower replicas across three brokers">
+      <defs><marker id="arrow5" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#7c3aed"/></marker></defs>
+      <text x="540" y="32" text-anchor="middle" class="svg-title">orders-Partition 0, Replication Factor 3</text>
+      <rect x="80" y="90" width="250" height="210" rx="15" class="node-blue"/>
+      <text x="205" y="130" text-anchor="middle" class="svg-label">Broker 1</text>
+      <rect x="115" y="165" width="180" height="80" rx="10" class="node-green"/>
+      <text x="205" y="196" text-anchor="middle" class="svg-label">Leader Replica</text>
+      <text x="205" y="221" text-anchor="middle" class="svg-small">client reads/writes</text>
+
+      <rect x="415" y="90" width="250" height="210" rx="15" class="node-blue"/>
+      <text x="540" y="130" text-anchor="middle" class="svg-label">Broker 2</text>
+      <rect x="450" y="165" width="180" height="80" rx="10" class="node-orange"/>
+      <text x="540" y="196" text-anchor="middle" class="svg-label">Follower Replica</text>
+      <text x="540" y="221" text-anchor="middle" class="svg-small">copies leader data</text>
+
+      <rect x="750" y="90" width="250" height="210" rx="15" class="node-blue"/>
+      <text x="875" y="130" text-anchor="middle" class="svg-label">Broker 3</text>
+      <rect x="785" y="165" width="180" height="80" rx="10" class="node-orange"/>
+      <text x="875" y="196" text-anchor="middle" class="svg-label">Follower Replica</text>
+      <text x="875" y="221" text-anchor="middle" class="svg-small">copies leader data</text>
+
+      <path d="M295 190 L450 190" stroke="#7c3aed" stroke-width="3" marker-end="url(#arrow5)"/>
+      <path d="M295 220 C470 350,690 350,785 220" stroke="#7c3aed" stroke-width="3" fill="none" marker-end="url(#arrow5)"/>
+      <text x="540" y="348" text-anchor="middle" class="svg-small">If Broker 1 fails, an eligible in-sync follower can become the new leader.</text>
+    </svg>
+  </div>
+  <h3>Key terms</h3>
+  <ul>
+    <li><strong>Leader:</strong> the replica that normally handles client reads and writes for that partition.</li>
+    <li><strong>Follower:</strong> copies records from the leader.</li>
+    <li><strong>ISR:</strong> in-sync replicas sufficiently caught up with the leader.</li>
+    <li><strong>Replication factor:</strong> total number of replicas for each partition.</li>
+  </ul>
+  <div class="callout warning">Replication factor cannot exceed the number of available brokers used for distinct replicas.</div>
+</section>
+
+<section id="kraft">
+  <h2>12. KRaft Controllers and Cluster Metadata</h2>
+  <p>Modern Kafka uses <strong>KRaft</strong> for metadata management. Kafka server processes may be configured as brokers, controllers or both in small development deployments.</p>
+  <div class="grid-2">
+    <div class="card">
+      <h3>Broker role</h3>
+      <p>Stores topic partitions and handles producer/consumer data requests.</p>
+      <code>process.roles=broker</code>
+    </div>
+    <div class="card">
+      <h3>Controller role</h3>
+      <p>Participates in the metadata quorum and manages cluster metadata and leadership decisions.</p>
+      <code>process.roles=controller</code>
+    </div>
+  </div>
+  <div class="callout danger"><strong>Do not confuse controller and broker.</strong> A controller manages metadata; a broker stores and serves event data. A development node may combine both roles, but critical deployments normally separate them.</div>
+</section>
+
+<section id="journey">
+  <h2>13. Complete Message Journey</h2>
+  <ol>
+    <li><strong>Producer creates an event:</strong> for example, <code>orderId=O9001</code>.</li>
+    <li><strong>Producer discovers metadata:</strong> it connects to bootstrap brokers and learns which broker leads each partition.</li>
+    <li><strong>Partition is selected:</strong> the producer uses the key or partitioning logic.</li>
+    <li><strong>Leader broker receives the record:</strong> the record is appended to the selected partition log.</li>
+    <li><strong>Followers replicate:</strong> copies are maintained according to the replication setup.</li>
+    <li><strong>Producer receives acknowledgement:</strong> behavior depends on reliability configuration.</li>
+    <li><strong>Consumer group assignment occurs:</strong> each partition is assigned to one consumer in the group.</li>
+    <li><strong>Consumer fetches and processes:</strong> the record is deserialized and business logic runs.</li>
+    <li><strong>Offset advances:</strong> the consumer records how far it has processed.</li>
+  </ol>
+  <div class="flow">
+    <div class="flow-box">Order API</div><div class="flow-arrow">→</div>
+    <div class="flow-box">Producer</div><div class="flow-arrow">→</div>
+    <div class="flow-box">orders topic</div><div class="flow-arrow">→</div>
+    <div class="flow-box">Partition leader</div><div class="flow-arrow">→</div>
+    <div class="flow-box">Consumer</div><div class="flow-arrow">→</div>
+    <div class="flow-box">Order processing</div>
+  </div>
+</section>
+
+<section id="scenario">
+  <h2>14. Real-World Scenario — Online Retail Order Platform</h2>
+  <h3>Business requirement</h3>
+  <p>When a customer places an order, several systems must react without the checkout service calling every downstream system directly.</p>
+  <div class="diagram">
+    <svg viewBox="0 0 1100 560" role="img" aria-label="Retail order event use case with one topic and multiple consumer groups">
+      <defs><marker id="arrow6" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#536178"/></marker></defs>
+      <rect x="35" y="220" width="200" height="95" rx="14" class="node-green"/>
+      <text x="135" y="256" text-anchor="middle" class="svg-label">Checkout Service</text>
+      <text x="135" y="282" text-anchor="middle" class="svg-small">Producer</text>
+
+      <rect x="350" y="175" width="300" height="185" rx="18" class="node-purple"/>
+      <text x="500" y="212" text-anchor="middle" class="svg-label">Topic: order-events</text>
+      <rect x="385" y="235" width="230" height="30" rx="7" fill="white" stroke="#7c3aed"/><text x="500" y="255" text-anchor="middle" class="svg-small">Partition 0</text>
+      <rect x="385" y="275" width="230" height="30" rx="7" fill="white" stroke="#7c3aed"/><text x="500" y="295" text-anchor="middle" class="svg-small">Partition 1</text>
+      <rect x="385" y="315" width="230" height="30" rx="7" fill="white" stroke="#7c3aed"/><text x="500" y="335" text-anchor="middle" class="svg-small">Partition 2</text>
+
+      <rect x="800" y="40" width="230" height="75" rx="14" class="node-orange"/>
+      <text x="915" y="70" text-anchor="middle" class="svg-label">Inventory Group</text>
+      <text x="915" y="94" text-anchor="middle" class="svg-small">Reserve stock</text>
+      <rect x="800" y="145" width="230" height="75" rx="14" class="node-orange"/>
+      <text x="915" y="175" text-anchor="middle" class="svg-label">Payment Group</text>
+      <text x="915" y="199" text-anchor="middle" class="svg-small">Collect payment</text>
+      <rect x="800" y="250" width="230" height="75" rx="14" class="node-orange"/>
+      <text x="915" y="280" text-anchor="middle" class="svg-label">Notification Group</text>
+      <text x="915" y="304" text-anchor="middle" class="svg-small">Send email/SMS</text>
+      <rect x="800" y="355" width="230" height="75" rx="14" class="node-orange"/>
+      <text x="915" y="385" text-anchor="middle" class="svg-label">Analytics Group</text>
+      <text x="915" y="409" text-anchor="middle" class="svg-small">Real-time dashboard</text>
+      <rect x="800" y="460" width="230" height="75" rx="14" class="node-orange"/>
+      <text x="915" y="490" text-anchor="middle" class="svg-label">Fraud Group</text>
+      <text x="915" y="514" text-anchor="middle" class="svg-small">Risk scoring</text>
+
+      <path d="M235 267 L350 267" class="arrow"/>
+      <path d="M650 235 C720 150,745 78,800 78" class="arrow"/>
+      <path d="M650 250 C725 220,745 182,800 182" class="arrow"/>
+      <path d="M650 267 L800 287" class="arrow"/>
+      <path d="M650 295 C720 330,745 392,800 392" class="arrow"/>
+      <path d="M650 315 C720 410,745 497,800 497" class="arrow"/>
+    </svg>
+  </div>
+  <h3>Component mapping</h3>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Kafka concept</th><th>Retail example</th><th>Reason</th></tr></thead>
+    <tbody>
+      <tr><td>Producer</td><td>Checkout service</td><td>Publishes an order-created event.</td></tr>
+      <tr><td>Topic</td><td><code>order-events</code></td><td>Logical stream for order lifecycle events.</td></tr>
+      <tr><td>Partition key</td><td><code>orderId</code></td><td>Keeps events for one order in a consistent partition.</td></tr>
+      <tr><td>Brokers</td><td>Kafka server nodes</td><td>Store and replicate topic partitions.</td></tr>
+      <tr><td>Consumer groups</td><td>Inventory, payment, notification, analytics</td><td>Each business capability receives the full stream independently.</td></tr>
+      <tr><td>Consumers inside a group</td><td>Multiple inventory workers</td><td>Process partitions in parallel.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="commands">
+  <h2>15. Essential Kafka Commands</h2>
+  <p class="small">Commands use the modern <code>--bootstrap-server</code> style. On Windows distributions, use the matching scripts under <code>bin\windows\</code>.</p>
+
+  <h3>Create a topic</h3>
+  <pre><button class="copy-btn">Copy</button><code>bin/kafka-topics.sh \
+  --bootstrap-server localhost:9092 \
+  --create \
+  --topic orders \
+  --partitions 3 \
+  --replication-factor 1</code></pre>
+
+  <h3>List topics</h3>
+  <pre><button class="copy-btn">Copy</button><code>bin/kafka-topics.sh --bootstrap-server localhost:9092 --list</code></pre>
+
+  <h3>Describe a topic</h3>
+  <pre><button class="copy-btn">Copy</button><code>bin/kafka-topics.sh \
+  --bootstrap-server localhost:9092 \
+  --describe \
+  --topic orders</code></pre>
+
+  <h3>Start a console producer</h3>
+  <pre><button class="copy-btn">Copy</button><code>bin/kafka-console-producer.sh \
+  --bootstrap-server localhost:9092 \
+  --topic orders</code></pre>
+
+  <h3>Start a console consumer</h3>
+  <pre><button class="copy-btn">Copy</button><code>bin/kafka-console-consumer.sh \
+  --bootstrap-server localhost:9092 \
+  --topic orders \
+  --from-beginning \
+  --group order-processing-group</code></pre>
+
+  <h3>View consumer-group offsets and lag</h3>
+  <pre><button class="copy-btn">Copy</button><code>bin/kafka-consumer-groups.sh \
+  --bootstrap-server localhost:9092 \
+  --describe \
+  --group order-processing-group</code></pre>
+
+  <div class="callout warning"><strong>Production note:</strong> A replication factor of 1 is only for a simple local demonstration. Real deployments normally use replication across brokers based on availability requirements.</div>
+</section>
+
+<section id="mistakes">
+  <h2>16. Common Misunderstandings</h2>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Incorrect idea</th><th>Correct explanation</th></tr></thead>
+    <tbody>
+      <tr><td>“A topic is a server.”</td><td>A topic is a logical event stream. Brokers are servers.</td></tr>
+      <tr><td>“One topic belongs to one broker.”</td><td>A topic’s partitions and replicas can be distributed across many brokers.</td></tr>
+      <tr><td>“A broker stores only one topic.”</td><td>A broker commonly stores partition replicas from many topics.</td></tr>
+      <tr><td>“Kafka guarantees global ordering.”</td><td>Kafka guarantees ordering within a partition, not across all partitions of a topic.</td></tr>
+      <tr><td>“Adding more consumers always increases speed.”</td><td>Within a group, useful parallelism is bounded by the number of assigned partitions.</td></tr>
+      <tr><td>“Consumers delete records after reading.”</td><td>Consumption does not normally delete records; retention/compaction policies manage stored data.</td></tr>
+      <tr><td>“Bootstrap servers must list every broker.”</td><td>The list is used for initial discovery; clients learn cluster metadata after connecting.</td></tr>
+      <tr><td>“A follower receives producer writes directly.”</td><td>Clients normally communicate with the partition leader; followers replicate from it.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="best-practices">
+  <h2>17. Architecture Best Practices</h2>
+  <div class="grid-2">
+    <div class="card">
+      <h3>Topic design</h3>
+      <ul>
+        <li>Use meaningful domain-based topic names.</li>
+        <li>Define schemas and compatibility rules.</li>
+        <li>Choose retention and cleanup policies deliberately.</li>
+        <li>Avoid uncontrolled topic auto-creation in production.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Partition design</h3>
+      <ul>
+        <li>Use stable business keys when ordering by entity matters.</li>
+        <li>Estimate throughput and consumer parallelism.</li>
+        <li>Avoid very hot keys that overload one partition.</li>
+        <li>Remember that partition count is difficult to reduce.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Broker design</h3>
+      <ul>
+        <li>Spread replicas across failure domains.</li>
+        <li>Monitor disk, network, request latency and under-replicated partitions.</li>
+        <li>Balance partition leaders and storage across brokers.</li>
+        <li>Use multiple bootstrap addresses for resilience.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Consumer design</h3>
+      <ul>
+        <li>Make processing idempotent where duplicates are possible.</li>
+        <li>Commit offsets only according to a deliberate processing strategy.</li>
+        <li>Monitor consumer lag.</li>
+        <li>Handle rebalances and processing failures safely.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="interview">
+  <h2>18. Interview Questions and Answers</h2>
+  <details><summary>1. What is Apache Kafka?</summary><p>A distributed event-streaming platform that enables applications to publish, store, consume and process streams of events across a cluster.</p></details>
+  <details><summary>2. What is a Kafka topic?</summary><p>A named logical stream/category of events. A topic is divided into partitions.</p></details>
+  <details><summary>3. What is a Kafka broker?</summary><p>A running Kafka server process that stores partition replicas and handles producer, consumer and administrative requests.</p></details>
+  <details><summary>4. What is the key difference between a topic and broker?</summary><p>A topic is a logical organization of events; a broker is infrastructure that physically stores and serves topic partitions.</p></details>
+  <details><summary>5. Can one topic exist on multiple brokers?</summary><p>Yes. Its partitions and replicas can be spread across multiple brokers.</p></details>
+  <details><summary>6. Can one broker store multiple topics?</summary><p>Yes. One broker normally stores replicas from many topics and partitions.</p></details>
+  <details><summary>7. What is a partition?</summary><p>An ordered, append-only log that forms one shard of a topic.</p></details>
+  <details><summary>8. What is an offset?</summary><p>A sequential position of a record within a partition. Consumers use offsets to track progress.</p></details>
+  <details><summary>9. Where is ordering guaranteed?</summary><p>Within one partition. Kafka does not provide a single total order across all partitions of a topic.</p></details>
+  <details><summary>10. What does a producer do?</summary><p>Serializes and publishes records to a topic, selecting a partition and sending the record to the appropriate leader broker.</p></details>
+  <details><summary>11. What does a consumer do?</summary><p>Fetches records from topic partitions, deserializes them, performs processing and manages offsets.</p></details>
+  <details><summary>12. What is a consumer group?</summary><p>A set of consumers sharing a group ID. Topic partitions are divided among active consumers in that group.</p></details>
+  <details><summary>13. Why can an extra consumer remain idle?</summary><p>Because a partition can be assigned to only one consumer in a group at a time. If consumers exceed partitions, some receive no partition.</p></details>
+  <details><summary>14. What is a partition leader?</summary><p>The replica that handles normal client reads and writes for the partition.</p></details>
+  <details><summary>15. What is a follower replica?</summary><p>A copy that fetches data from the leader and may become leader after a failure when eligible.</p></details>
+  <details><summary>16. What is ISR?</summary><p>The set of in-sync replicas that are sufficiently caught up with the leader.</p></details>
+  <details><summary>17. What is replication factor?</summary><p>The number of replicas maintained for each partition.</p></details>
+  <details><summary>18. What are bootstrap servers?</summary><p>Initial broker addresses used by clients to connect and discover cluster metadata. They do not have to include every broker.</p></details>
+  <details><summary>19. What is consumer lag?</summary><p>The difference between the latest available offset and the consumer group’s processed or committed position.</p></details>
+  <details><summary>20. What is KRaft?</summary><p>Kafka’s Raft-based metadata management mode, using a controller quorum instead of a separate ZooKeeper ensemble.</p></details>
+  <details><summary>21. Why use a message key?</summary><p>To influence partition selection and keep related entity events, such as all events for one order, in a consistent partition.</p></details>
+  <details><summary>22. Does reading an event remove it from Kafka?</summary><p>No. Kafka retains events according to topic retention or compaction settings, independently of consumer reads.</p></details>
+</section>
+
+<section id="exercises">
+  <h2>19. Hands-on and Classroom Exercises</h2>
+  <h3>Exercise 1 — Component identification</h3>
+  <p>For a banking payment system, identify the producer, topic, partition key, brokers and three possible consumer groups.</p>
+  <h3>Exercise 2 — Topic vs Broker explanation</h3>
+  <p>Explain the difference using a library analogy and then rewrite the answer using precise technical terms.</p>
+  <h3>Exercise 3 — Parallelism</h3>
+  <p>A topic has 6 partitions. Predict assignments for consumer groups containing 2, 6 and 9 consumers.</p>
+  <h3>Exercise 4 — Ordering</h3>
+  <p>Design a key strategy that keeps all events for one customer in order while still allowing multiple customers to be processed in parallel.</p>
+  <h3>Exercise 5 — Failure handling</h3>
+  <p>Draw a 3-broker cluster with replication factor 3. Mark the leader and followers. Explain what happens when the leader broker stops.</p>
+  <h3>Double-click notes area</h3>
+  <p class="small">Double-click anywhere in a section to focus this notes box, then type your classroom notes.</p>
+  <textarea id="notes" class="note-box" placeholder="Type your personal training notes here..."></textarea>
+  <button class="button" id="saveNotes">Save Notes</button>
+  <button class="button secondary" id="clearNotes">Clear Notes</button>
+  <span id="noteStatus" class="small"></span>
+</section>
+
+<section id="quiz">
+  <h2>20. Practice MCQ Quiz</h2>
+  <div id="practiceQuiz">
+    <div class="quiz-question" data-answer="b">
+      <strong>1. Which component is a logical named stream of events?</strong>
+      <label><input type="radio" name="q1" value="a"> Broker</label>
+      <label><input type="radio" name="q1" value="b"> Topic</label>
+      <label><input type="radio" name="q1" value="c"> Controller</label>
+      <label><input type="radio" name="q1" value="d"> Consumer group</label>
+    </div>
+    <div class="quiz-question" data-answer="c">
+      <strong>2. Which component physically stores partition replicas?</strong>
+      <label><input type="radio" name="q2" value="a"> Producer</label>
+      <label><input type="radio" name="q2" value="b"> Topic name</label>
+      <label><input type="radio" name="q2" value="c"> Broker</label>
+      <label><input type="radio" name="q2" value="d"> Offset</label>
+    </div>
+    <div class="quiz-question" data-answer="a">
+      <strong>3. Kafka ordering is guaranteed primarily within:</strong>
+      <label><input type="radio" name="q3" value="a"> A partition</label>
+      <label><input type="radio" name="q3" value="b"> The entire cluster</label>
+      <label><input type="radio" name="q3" value="c"> Every topic globally</label>
+      <label><input type="radio" name="q3" value="d"> A broker rack</label>
+    </div>
+    <div class="quiz-question" data-answer="d">
+      <strong>4. A topic has 4 partitions and a group has 6 consumers. How many consumers can be active on partitions at one time?</strong>
+      <label><input type="radio" name="q4" value="a"> 6</label>
+      <label><input type="radio" name="q4" value="b"> 10</label>
+      <label><input type="radio" name="q4" value="c"> 1</label>
+      <label><input type="radio" name="q4" value="d"> At most 4</label>
+    </div>
+    <div class="quiz-question" data-answer="b">
+      <strong>5. What identifies a consumer’s position within a partition?</strong>
+      <label><input type="radio" name="q5" value="a"> Topic name</label>
+      <label><input type="radio" name="q5" value="b"> Offset</label>
+      <label><input type="radio" name="q5" value="c"> Broker ID</label>
+      <label><input type="radio" name="q5" value="d"> Replication factor</label>
+    </div>
+    <div class="quiz-question" data-answer="c">
+      <strong>6. Which statement is correct?</strong>
+      <label><input type="radio" name="q6" value="a"> One topic must stay on one broker.</label>
+      <label><input type="radio" name="q6" value="b"> A broker can store only one topic.</label>
+      <label><input type="radio" name="q6" value="c"> Topic partitions can be distributed across brokers.</label>
+      <label><input type="radio" name="q6" value="d"> Consumers store broker replicas.</label>
+    </div>
+    <div class="quiz-question" data-answer="a">
+      <strong>7. The producer normally sends a record to:</strong>
+      <label><input type="radio" name="q7" value="a"> The selected partition leader</label>
+      <label><input type="radio" name="q7" value="b"> Every consumer</label>
+      <label><input type="radio" name="q7" value="c"> Every broker equally</label>
+      <label><input type="radio" name="q7" value="d"> The consumer offset</label>
+    </div>
+    <div class="quiz-question" data-answer="d">
+      <strong>8. What is the purpose of a message key?</strong>
+      <label><input type="radio" name="q8" value="a"> Rename the broker</label>
+      <label><input type="radio" name="q8" value="b"> Create a consumer group</label>
+      <label><input type="radio" name="q8" value="c"> Delete old records</label>
+      <label><input type="radio" name="q8" value="d"> Influence partition selection and entity ordering</label>
+    </div>
+    <button class="button green" id="gradePractice">Submit Quiz</button>
+    <button class="button secondary" id="resetPractice">Reset</button>
+    <div id="practiceResult" class="result"></div>
+  </div>
+</section>
+
+<section id="exam">
+  <h2>21. Timed Architecture Exam</h2>
+  <p>10 questions • 10 minutes • One mark each</p>
+  <div id="timerControls"><span class="timer" id="timer">10:00</span> <button class="button" id="startExam">Start Exam</button></div>
+  <div id="examArea" style="display:none">
+    <div class="quiz-question" data-answer="a"><strong>1. Which component publishes records?</strong><label><input type="radio" name="e1" value="a"> Producer</label><label><input type="radio" name="e1" value="b"> Topic</label><label><input type="radio" name="e1" value="c"> Offset</label><label><input type="radio" name="e1" value="d"> ISR</label></div>
+    <div class="quiz-question" data-answer="b"><strong>2. A broker is best described as:</strong><label><input type="radio" name="e2" value="a"> A logical event category</label><label><input type="radio" name="e2" value="b"> A Kafka server process</label><label><input type="radio" name="e2" value="c"> A consumer position</label><label><input type="radio" name="e2" value="d"> A message key</label></div>
+    <div class="quiz-question" data-answer="c"><strong>3. A topic is divided into:</strong><label><input type="radio" name="e3" value="a"> Groups</label><label><input type="radio" name="e3" value="b"> Clients</label><label><input type="radio" name="e3" value="c"> Partitions</label><label><input type="radio" name="e3" value="d"> Controllers only</label></div>
+    <div class="quiz-question" data-answer="d"><strong>4. Multiple consumers sharing work use the same:</strong><label><input type="radio" name="e4" value="a"> Broker ID</label><label><input type="radio" name="e4" value="b"> Offset value</label><label><input type="radio" name="e4" value="c"> Topic partition count</label><label><input type="radio" name="e4" value="d"> group.id</label></div>
+    <div class="quiz-question" data-answer="a"><strong>5. An offset is unique within:</strong><label><input type="radio" name="e5" value="a"> A partition</label><label><input type="radio" name="e5" value="b"> Every Kafka cluster worldwide</label><label><input type="radio" name="e5" value="c"> A producer</label><label><input type="radio" name="e5" value="d"> A controller quorum</label></div>
+    <div class="quiz-question" data-answer="b"><strong>6. With 3 partitions, maximum active consumers in one group is normally:</strong><label><input type="radio" name="e6" value="a"> Unlimited</label><label><input type="radio" name="e6" value="b"> 3</label><label><input type="radio" name="e6" value="c"> 1</label><label><input type="radio" name="e6" value="d"> 6</label></div>
+    <div class="quiz-question" data-answer="c"><strong>7. A follower replica primarily:</strong><label><input type="radio" name="e7" value="a"> Creates topics</label><label><input type="radio" name="e7" value="b"> Publishes events</label><label><input type="radio" name="e7" value="c"> Replicates data from the leader</label><label><input type="radio" name="e7" value="d"> Commits consumer offsets for all groups</label></div>
+    <div class="quiz-question" data-answer="d"><strong>8. Which is a correct Topic-vs-Broker statement?</strong><label><input type="radio" name="e8" value="a"> Both are logical names.</label><label><input type="radio" name="e8" value="b"> Both are consumer groups.</label><label><input type="radio" name="e8" value="c"> A broker is stored inside a topic.</label><label><input type="radio" name="e8" value="d"> A topic is logical; a broker is a server process.</label></div>
+    <div class="quiz-question" data-answer="a"><strong>9. KRaft controllers mainly manage:</strong><label><input type="radio" name="e9" value="a"> Cluster metadata</label><label><input type="radio" name="e9" value="b"> Customer payment cards</label><label><input type="radio" name="e9" value="c"> Consumer application code</label><label><input type="radio" name="e9" value="d"> Producer serialization libraries</label></div>
+    <div class="quiz-question" data-answer="c"><strong>10. Consumers normally obtain data by:</strong><label><input type="radio" name="e10" value="a"> Receiving direct pushes from producers</label><label><input type="radio" name="e10" value="b"> Reading broker disks directly</label><label><input type="radio" name="e10" value="c"> Fetching from brokers</label><label><input type="radio" name="e10" value="d"> Reading the controller metadata log as business data</label></div>
+    <button class="button green" id="submitExam">Submit Exam</button>
+    <div id="examResult" class="result"></div>
+  </div>
+</section>
+
+<section id="sources">
+  <h2>22. Official References</h2>
+  <ul>
+    <li><a href="https://kafka.apache.org/documentation/" target="_blank" rel="noopener">Apache Kafka Documentation</a></li>
+    <li><a href="https://kafka.apache.org/43/design/design/" target="_blank" rel="noopener">Apache Kafka Design</a></li>
+    <li><a href="https://kafka.apache.org/43/operations/basic-kafka-operations/" target="_blank" rel="noopener">Basic Kafka Operations</a></li>
+    <li><a href="https://kafka.apache.org/quickstart/" target="_blank" rel="noopener">Apache Kafka Quickstart</a></li>
+    <li><a href="https://kafka.apache.org/41/operations/kraft/" target="_blank" rel="noopener">KRaft Operations Documentation</a></li>
+  </ul>
+</section>
+</main>
+
+<aside>
+  <h3>Learning Tracker</h3>
+  <p class="small">Mark each milestone as completed.</p>
+  <div class="checklist">
+    <label><input type="checkbox" class="track" data-key="overview"> Architecture overview</label>
+    <label><input type="checkbox" class="track" data-key="topic"> Topics understood</label>
+    <label><input type="checkbox" class="track" data-key="broker"> Brokers understood</label>
+    <label><input type="checkbox" class="track" data-key="difference"> Topic vs Broker</label>
+    <label><input type="checkbox" class="track" data-key="consumer"> Consumer groups</label>
+    <label><input type="checkbox" class="track" data-key="replication"> Replication</label>
+    <label><input type="checkbox" class="track" data-key="quiz"> Practice quiz</label>
+  </div>
+  <div class="progress-shell"><div class="progress-bar" id="progressBar"></div></div>
+  <div id="progressText" class="small">0% complete</div>
+
+  <div class="sidebar-card">
+    <strong>Fast Recall</strong>
+    <p class="small">Topic = logical stream<br>Partition = ordered shard<br>Broker = Kafka server<br>Producer = writer<br>Consumer = reader</p>
+  </div>
+  <div class="sidebar-card">
+    <strong>Trainer Prompt</strong>
+    <p class="small">Ask: “Can one topic span three brokers?” Expected answer: Yes—through its partitions and replicas.</p>
+  </div>
+</aside>
+</div>
+
+<footer>
+  Built as a classroom tutorial. Architecture behavior should always be validated against the version of Apache Kafka used in your environment.
+</footer>
+
+<script>
+const storage = {
+  get(key, fallback){
+    try{
+      const value = localStorage.getItem(key);
+      return value === null ? fallback : JSON.parse(value);
+    }catch(e){ return fallback; }
+  },
+  set(key, value){
+    try{ localStorage.setItem(key, JSON.stringify(value)); return true; }
+    catch(e){ return false; }
+  },
+  remove(key){ try{ localStorage.removeItem(key); }catch(e){} }
+};
+
+document.querySelectorAll('.copy-btn').forEach(btn=>{
+  btn.addEventListener('click', async ()=>{
+    const text = btn.parentElement.querySelector('code').innerText;
+    try{
+      await navigator.clipboard.writeText(text);
+      btn.textContent='Copied';
+      setTimeout(()=>btn.textContent='Copy',1200);
+    }catch(e){
+      btn.textContent='Select text';
+    }
+  });
+});
+
+const navLinks=[...document.querySelectorAll('nav a')];
+const sections=[...document.querySelectorAll('main section')];
+const observer=new IntersectionObserver(entries=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      navLinks.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+entry.target.id));
+    }
+  });
+},{rootMargin:'-35% 0px -55% 0px'});
+sections.forEach(s=>observer.observe(s));
+
+document.addEventListener('mousemove',e=>{
+  if(Math.random()>.78){
+    const s=document.createElement('span');
+    s.className='sparkle';
+    s.style.left=e.clientX+'px';
+    s.style.top=e.clientY+'px';
+    document.body.appendChild(s);
+    setTimeout(()=>s.remove(),700);
+  }
+});
+
+const notes=document.getElementById('notes');
+notes.value=storage.get('kafkaNotes','');
+document.getElementById('saveNotes').addEventListener('click',()=>{
+  const ok=storage.set('kafkaNotes',notes.value);
+  document.getElementById('noteStatus').textContent=ok?' Notes saved in this browser.':' Storage unavailable; keep a manual copy.';
+});
+document.getElementById('clearNotes').addEventListener('click',()=>{
+  notes.value='';storage.remove('kafkaNotes');document.getElementById('noteStatus').textContent=' Notes cleared.';
+});
+sections.forEach(section=>section.addEventListener('dblclick',e=>{
+  if(!['INPUT','BUTTON','TEXTAREA','A','SUMMARY'].includes(e.target.tagName)){
+    notes.focus();
+    notes.scrollIntoView({behavior:'smooth',block:'center'});
+  }
+}));
+
+const trackers=[...document.querySelectorAll('.track')];
+function updateProgress(){
+  const state={};
+  trackers.forEach(c=>state[c.dataset.key]=c.checked);
+  storage.set('kafkaProgress',state);
+  const done=trackers.filter(c=>c.checked).length;
+  const pct=Math.round(done/trackers.length*100);
+  document.getElementById('progressBar').style.width=pct+'%';
+  document.getElementById('progressText').textContent=pct+'% complete';
+}
+const savedProgress=storage.get('kafkaProgress',{});
+trackers.forEach(c=>{c.checked=!!savedProgress[c.dataset.key];c.addEventListener('change',updateProgress)});
+updateProgress();
+
+function grade(containerId,resultId){
+  const qs=[...document.querySelectorAll('#'+containerId+' .quiz-question')];
+  let correct=0;
+  qs.forEach(q=>{
+    const checked=q.querySelector('input:checked');
+    const isCorrect=checked&&checked.value===q.dataset.answer;
+    if(isCorrect) correct++;
+    q.style.borderColor=isCorrect?'#15803d':'#c24141';
+    q.style.background=isCorrect?'#effcf3':'#fff4f4';
+  });
+  const pct=Math.round(correct/qs.length*100);
+  const result=document.getElementById(resultId);
+  result.style.display='block';
+  result.style.background=pct>=70?'#eaf8ee':'#fff2dc';
+  result.textContent=`Score: ${correct}/${qs.length} (${pct}%). ${pct>=80?'Excellent architecture understanding!':pct>=60?'Good attempt. Review Topic vs Broker and consumer groups.':'Review the diagrams and try again.'}`;
+  return {correct,total:qs.length,pct};
+}
+document.getElementById('gradePractice').addEventListener('click',()=>{
+  const r=grade('practiceQuiz','practiceResult');
+  if(r.pct>=60){
+    const quizTrack=document.querySelector('.track[data-key="quiz"]');
+    quizTrack.checked=true;updateProgress();
+  }
+});
+document.getElementById('resetPractice').addEventListener('click',()=>{
+  document.querySelectorAll('#practiceQuiz input').forEach(i=>i.checked=false);
+  document.querySelectorAll('#practiceQuiz .quiz-question').forEach(q=>{q.style.borderColor='';q.style.background=''});
+  document.getElementById('practiceResult').style.display='none';
+});
+
+let remaining=600,timerHandle=null,examStarted=false;
+function renderTimer(){
+  const m=String(Math.floor(remaining/60)).padStart(2,'0');
+  const s=String(remaining%60).padStart(2,'0');
+  document.getElementById('timer').textContent=m+':'+s;
+}
+function finishExam(){
+  if(timerHandle) clearInterval(timerHandle);
+  grade('examArea','examResult');
+  document.querySelectorAll('#examArea input').forEach(i=>i.disabled=true);
+  document.getElementById('submitExam').disabled=true;
+}
+document.getElementById('startExam').addEventListener('click',()=>{
+  if(examStarted) return;
+  examStarted=true;
+  document.getElementById('examArea').style.display='block';
+  document.getElementById('startExam').disabled=true;
+  timerHandle=setInterval(()=>{
+    remaining--;renderTimer();
+    if(remaining<=0) finishExam();
+  },1000);
+});
+document.getElementById('submitExam').addEventListener('click',finishExam);
+renderTimer();
+</script>
+</body>
+</html>
