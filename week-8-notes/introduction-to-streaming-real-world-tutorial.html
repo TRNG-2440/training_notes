@@ -1,0 +1,1231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Introduction to Streaming — Real-World Tutorial</title>
+<style>
+  :root{
+    --bg:#f4f7fb;
+    --panel:#ffffff;
+    --text:#172033;
+    --muted:#5d6a7d;
+    --primary:#2563eb;
+    --primary-dark:#1d4ed8;
+    --accent:#7c3aed;
+    --success:#16803a;
+    --danger:#c62828;
+    --warning:#b45309;
+    --border:#dce3ee;
+    --code:#0d1728;
+    --code-text:#e6edf7;
+    --shadow:0 12px 30px rgba(31,45,75,.10);
+  }
+
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;
+    font-family:Inter,Segoe UI,Arial,sans-serif;
+    color:var(--text);
+    background:var(--bg);
+    line-height:1.65;
+  }
+
+  header{
+    background:linear-gradient(135deg,#0f172a,#1e3a8a 58%,#6d28d9);
+    color:white;
+    padding:54px 24px 46px;
+    position:relative;
+    overflow:hidden;
+  }
+  header:before,header:after{
+    content:"";
+    position:absolute;
+    border-radius:50%;
+    background:rgba(255,255,255,.08);
+  }
+  header:before{width:260px;height:260px;right:-70px;top:-100px}
+  header:after{width:180px;height:180px;left:-60px;bottom:-90px}
+  .hero{max-width:1200px;margin:auto;position:relative;z-index:1}
+  .badge{
+    display:inline-block;
+    background:rgba(255,255,255,.15);
+    border:1px solid rgba(255,255,255,.25);
+    padding:6px 12px;
+    border-radius:999px;
+    font-size:.85rem;
+    margin-bottom:14px;
+  }
+  h1{font-size:clamp(2rem,5vw,3.6rem);line-height:1.12;margin:0 0 14px}
+  .subtitle{max-width:880px;font-size:1.12rem;color:#dbeafe;margin:0}
+  .hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}
+  .hero-actions a{
+    color:white;text-decoration:none;font-weight:700;padding:11px 16px;border-radius:10px;
+    background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25)
+  }
+  .hero-actions a:hover{background:rgba(255,255,255,.24)}
+
+  .layout{
+    max-width:1400px;
+    margin:0 auto;
+    display:grid;
+    grid-template-columns:270px minmax(0,1fr);
+    gap:22px;
+    padding:24px;
+  }
+
+  aside{
+    position:sticky;
+    top:16px;
+    height:max-content;
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:16px;
+    box-shadow:var(--shadow);
+    padding:18px;
+  }
+  aside h3{margin:0 0 10px}
+  aside a{
+    display:block;
+    color:#334155;
+    text-decoration:none;
+    padding:8px 10px;
+    border-radius:8px;
+    font-size:.94rem;
+  }
+  aside a:hover{background:#eff6ff;color:var(--primary)}
+
+  main{min-width:0}
+  section{
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:18px;
+    box-shadow:var(--shadow);
+    padding:28px;
+    margin-bottom:22px;
+    transition:.22s ease;
+  }
+  section:hover{transform:translateY(-2px);box-shadow:0 15px 38px rgba(31,45,75,.14)}
+  h2{margin-top:0;font-size:1.75rem;line-height:1.25}
+  h3{margin-top:26px}
+  .lead{font-size:1.08rem;color:#364152}
+  .muted{color:var(--muted)}
+
+  .callout{
+    border-left:5px solid var(--primary);
+    background:#eff6ff;
+    padding:16px 18px;
+    border-radius:10px;
+    margin:18px 0;
+  }
+  .callout.warning{border-color:var(--warning);background:#fff7ed}
+  .callout.success{border-color:var(--success);background:#f0fdf4}
+
+  .grid-2,.grid-3,.grid-4{
+    display:grid;
+    gap:16px;
+  }
+  .grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .grid-4{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .card{
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:18px;
+    background:#fbfdff;
+  }
+  .card h3,.card h4{margin-top:0}
+  .icon{
+    width:42px;height:42px;border-radius:12px;display:grid;place-items:center;
+    background:#e0e7ff;font-size:1.35rem;margin-bottom:10px;
+  }
+
+  .diagram{
+    border:1px dashed #94a3b8;
+    background:linear-gradient(180deg,#f8fafc,#eef4ff);
+    border-radius:16px;
+    padding:22px;
+    overflow-x:auto;
+  }
+  .flow{
+    min-width:850px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+  }
+  .node{
+    min-width:145px;
+    text-align:center;
+    background:white;
+    border:2px solid #93c5fd;
+    padding:14px 12px;
+    border-radius:13px;
+    box-shadow:0 5px 14px rgba(15,23,42,.08);
+  }
+  .node strong{display:block}
+  .arrow{font-size:1.8rem;color:var(--primary);font-weight:800}
+  .subflow{
+    display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap;margin-top:18px
+  }
+  .pill{
+    border-radius:999px;padding:7px 12px;background:#ede9fe;color:#5b21b6;font-weight:700;font-size:.88rem
+  }
+
+  table{width:100%;border-collapse:collapse;margin:16px 0}
+  th,td{border:1px solid var(--border);padding:12px;text-align:left;vertical-align:top}
+  th{background:#eef4ff}
+  tr:nth-child(even) td{background:#fafcff}
+
+  .memory{
+    display:grid;
+    grid-template-columns:100px 1fr;
+    gap:14px;
+    align-items:center;
+    border:1px solid #ddd6fe;
+    background:#faf5ff;
+    border-radius:14px;
+    padding:16px;
+  }
+  .memory .word{
+    font-size:2.2rem;font-weight:900;color:var(--accent);text-align:center
+  }
+
+  .code-wrap{position:relative;margin:16px 0}
+  pre{
+    background:var(--code);color:var(--code-text);
+    padding:20px;border-radius:14px;overflow:auto;white-space:pre;
+    font:14px/1.55 Consolas,Monaco,monospace;
+    border:1px solid #24334d;
+  }
+  .copy-btn{
+    position:absolute;right:10px;top:10px;border:0;border-radius:8px;
+    background:#334155;color:white;padding:7px 10px;cursor:pointer;font-weight:700;
+  }
+  .copy-btn:hover{background:#475569}
+
+  .simulator{
+    border:1px solid #c7d2fe;
+    background:#f8faff;
+    border-radius:16px;
+    padding:20px;
+  }
+  .controls{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+  button{
+    border:none;border-radius:10px;padding:10px 14px;
+    font-weight:700;cursor:pointer;
+  }
+  .primary{background:var(--primary);color:white}
+  .primary:hover{background:var(--primary-dark)}
+  .secondary{background:#e2e8f0;color:#1e293b}
+  .danger{background:#fee2e2;color:#991b1b}
+  .metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:16px 0}
+  .metric{background:white;border:1px solid var(--border);border-radius:12px;padding:14px}
+  .metric strong{display:block;font-size:1.6rem;color:var(--primary)}
+  .event-log{
+    background:#09111f;color:#d7e2f0;border-radius:12px;
+    height:250px;overflow:auto;padding:12px;font:13px/1.6 Consolas,monospace
+  }
+  .event{padding:4px 0;border-bottom:1px solid rgba(255,255,255,.06)}
+  .event .accepted{color:#86efac}
+  .event .alert{color:#fca5a5}
+  .event .info{color:#93c5fd}
+
+  .step{
+    display:grid;grid-template-columns:46px 1fr;gap:14px;margin:16px 0
+  }
+  .step-no{
+    width:42px;height:42px;border-radius:50%;display:grid;place-items:center;
+    background:var(--primary);color:white;font-weight:900
+  }
+  details{
+    border:1px solid var(--border);
+    border-radius:12px;
+    margin:10px 0;
+    background:#fff;
+  }
+  summary{cursor:pointer;padding:14px 16px;font-weight:800}
+  details div.answer{padding:0 16px 16px;color:#344054}
+
+  .quiz-question{
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:16px;
+    margin:14px 0;
+  }
+  .quiz-question.correct{border-color:#22c55e;background:#f0fdf4}
+  .quiz-question.wrong{border-color:#ef4444;background:#fef2f2}
+  .quiz-question label{display:block;padding:7px 9px;border-radius:8px;cursor:pointer}
+  .quiz-question label:hover{background:#f1f5f9}
+  .explanation{display:none;margin-top:10px;padding:10px;border-radius:8px;background:#fff}
+  .score{
+    font-size:1.1rem;font-weight:900;margin-top:14px
+  }
+  .exam-bar{
+    display:flex;align-items:center;justify-content:space-between;gap:14px;
+    flex-wrap:wrap;background:#eef4ff;border:1px solid #bfdbfe;
+    border-radius:12px;padding:12px 14px;margin:14px 0;
+  }
+  .timer{
+    font:900 1.25rem Consolas,monospace;color:#1e3a8a;
+  }
+  .timer.urgent{color:#b91c1c}
+
+  .tracker label{display:flex;gap:10px;align-items:flex-start;margin:9px 0}
+  .progress-shell{height:14px;background:#e2e8f0;border-radius:999px;overflow:hidden;margin-top:12px}
+  .progress-bar{height:100%;width:0;background:linear-gradient(90deg,#2563eb,#7c3aed);transition:.3s}
+
+  .notes-tip{
+    background:#fff7ed;border:1px solid #fed7aa;border-radius:12px;padding:12px 14px;
+    margin-top:14px;font-size:.92rem
+  }
+  .user-note{
+    outline:3px solid #f59e0b!important;
+    position:relative;
+  }
+  .user-note:after{
+    content:"📝 Note saved";
+    position:absolute;right:10px;top:10px;
+    background:#fef3c7;color:#92400e;padding:3px 8px;border-radius:6px;font-size:.75rem;
+  }
+
+  footer{
+    text-align:center;color:#64748b;padding:18px 24px 38px
+  }
+
+  .sparkle{
+    position:fixed;pointer-events:none;font-size:15px;z-index:9999;
+    animation:fade .7s ease-out forwards;
+  }
+  @keyframes fade{
+    from{opacity:1;transform:translateY(0) scale(1)}
+    to{opacity:0;transform:translateY(-18px) scale(.4)}
+  }
+
+  @media(max-width:1050px){
+    .layout{grid-template-columns:1fr}
+    aside{position:relative;top:auto}
+    .grid-4{grid-template-columns:repeat(2,1fr)}
+  }
+  @media(max-width:720px){
+    .layout{padding:12px}
+    section{padding:20px}
+    .grid-2,.grid-3,.grid-4,.metrics{grid-template-columns:1fr}
+    .memory{grid-template-columns:1fr}
+    .hero-actions{flex-direction:column;align-items:flex-start}
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="hero">
+    <span class="badge">Data Engineering • Interactive Tutorial</span>
+    <h1>Introduction to Streaming</h1>
+    <p class="subtitle">
+      Understand how continuously arriving data is collected, processed, analysed, and acted upon using a real-world
+      food-delivery order monitoring system.
+    </p>
+    <div class="hero-actions">
+      <a href="#meaning">Start Learning</a>
+      <a href="#simulator">Run Live Simulation</a>
+      <a href="#quiz">Take Quiz</a>
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+  <aside>
+    <h3>Course Menu</h3>
+    <a href="#objectives">1. Learning Objectives</a>
+    <a href="#meaning">2. What Is Streaming?</a>
+    <a href="#comparison">3. Batch vs Streaming</a>
+    <a href="#usecase">4. Real-World Use Case</a>
+    <a href="#architecture">5. Architecture</a>
+    <a href="#concepts">6. Core Concepts</a>
+    <a href="#simulator">7. Live Simulator</a>
+    <a href="#pyspark">8. PySpark Demo</a>
+    <a href="#applications">9. Industry Applications</a>
+    <a href="#best-practices">10. Best Practices</a>
+    <a href="#troubleshooting">11. Troubleshooting</a>
+    <a href="#interview">12. Interview Q&amp;A</a>
+    <a href="#exercise">13. Exercises</a>
+    <a href="#quiz">14. Quiz</a>
+    <a href="#tracker">15. Progress Tracker</a>
+  </aside>
+
+  <main>
+    <section id="objectives">
+      <h2>1. Learning Objectives</h2>
+      <p class="lead">By the end of this tutorial, you should be able to:</p>
+      <div class="grid-3">
+        <div class="card"><div class="icon">🌊</div><h3>Explain Streaming</h3><p>Describe streaming as continuous processing of events while they arrive.</p></div>
+        <div class="card"><div class="icon">⚖️</div><h3>Compare Approaches</h3><p>Differentiate batch processing from stream processing.</p></div>
+        <div class="card"><div class="icon">🏗️</div><h3>Read Architecture</h3><p>Identify producers, brokers, processors, storage systems, and consumers.</p></div>
+        <div class="card"><div class="icon">🍔</div><h3>Apply a Use Case</h3><p>Understand real-time monitoring for a food-delivery platform.</p></div>
+        <div class="card"><div class="icon">💻</div><h3>Run Code</h3><p>Use simple PySpark Structured Streaming examples.</p></div>
+        <div class="card"><div class="icon">🧠</div><h3>Answer Interviews</h3><p>Prepare for practical and conceptual streaming questions.</p></div>
+      </div>
+    </section>
+
+    <section id="meaning">
+      <h2>2. What Is Streaming?</h2>
+      <p class="lead">
+        <strong>Streaming</strong> is the continuous movement and processing of data events as soon as, or shortly after,
+        they are generated.
+      </p>
+      <p>
+        An event may be a food order, card payment, sensor reading, website click, GPS location, application log,
+        or social-media message. Instead of waiting for an entire day’s data, a streaming system handles events
+        continuously.
+      </p>
+
+      <div class="callout">
+        <strong>Simple idea:</strong> Batch processing is like collecting all exam papers and correcting them at night.
+        Streaming is like checking every answer immediately as the student submits it.
+      </div>
+
+      <div class="memory">
+        <div class="word">LIVE</div>
+        <div>
+          <strong>L — Listen</strong> to incoming events<br>
+          <strong>I — Inspect</strong> and validate the data<br>
+          <strong>V — Value</strong> is calculated through transformations<br>
+          <strong>E — Emit</strong> the result to a dashboard, database, alert, or another application
+        </div>
+      </div>
+
+      <h3>Important Characteristics</h3>
+      <div class="grid-4">
+        <div class="card"><h4>Continuous</h4><p>Events keep arriving without a fixed end.</p></div>
+        <div class="card"><h4>Low Latency</h4><p>Results are produced in seconds or milliseconds.</p></div>
+        <div class="card"><h4>Event Driven</h4><p>Each event can trigger processing or an action.</p></div>
+        <div class="card"><h4>Scalable</h4><p>The system must handle changing event volumes.</p></div>
+      </div>
+    </section>
+
+    <section id="comparison">
+      <h2>3. Batch Processing vs Streaming Processing</h2>
+      <table>
+        <thead>
+          <tr><th>Area</th><th>Batch Processing</th><th>Streaming Processing</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Data arrival</td><td>Collected over a period</td><td>Continuously generated</td></tr>
+          <tr><td>Processing time</td><td>Scheduled, such as hourly or daily</td><td>Immediately or near real time</td></tr>
+          <tr><td>Typical latency</td><td>Minutes to hours</td><td>Milliseconds to seconds</td></tr>
+          <tr><td>Example</td><td>Daily sales report</td><td>Live fraud alert</td></tr>
+          <tr><td>Data size</td><td>Large bounded dataset</td><td>Unbounded sequence of events</td></tr>
+          <tr><td>Main question</td><td>“What happened yesterday?”</td><td>“What is happening now?”</td></tr>
+        </tbody>
+      </table>
+
+      <div class="callout warning">
+        Streaming does not replace batch processing. Most real systems use both: streaming for immediate action and batch
+        processing for historical reporting, reconciliation, and complex analytics.
+      </div>
+    </section>
+
+    <section id="usecase">
+      <h2>4. Real-World Use Case: Food-Delivery Order Monitoring</h2>
+      <p class="lead">
+        Consider a food-delivery platform that receives thousands of orders from customers across multiple cities.
+      </p>
+
+      <h3>Business Problem</h3>
+      <p>
+        Customers expect immediate confirmation, live order status, accurate driver location, and quick notification
+        when an order is delayed. Waiting until the end of the day to process orders would make the platform unusable.
+      </p>
+
+      <div class="grid-2">
+        <div class="card">
+          <h3>Incoming Events</h3>
+          <ul>
+            <li>Order created</li>
+            <li>Payment completed</li>
+            <li>Restaurant accepted order</li>
+            <li>Food prepared</li>
+            <li>Driver assigned</li>
+            <li>Driver location updated</li>
+            <li>Order delivered</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Required Real-Time Actions</h3>
+          <ul>
+            <li>Show order confirmation immediately</li>
+            <li>Update customer tracking screen</li>
+            <li>Detect unusually long preparation time</li>
+            <li>Notify operations when orders are delayed</li>
+            <li>Calculate live orders per city</li>
+            <li>Update restaurant performance dashboards</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>Sample Event</h3>
+      <div class="code-wrap">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+<pre>{
+  "event_id": "EVT-90017",
+  "event_type": "ORDER_CREATED",
+  "order_id": "ORD-1025",
+  "customer_id": "CUS-550",
+  "restaurant_id": "RES-44",
+  "city": "Bengaluru",
+  "order_amount": 24.75,
+  "event_time": "2026-07-27T10:15:08Z"
+}</pre>
+      </div>
+
+      <h3>Why Streaming Is Suitable</h3>
+      <table>
+        <thead><tr><th>Requirement</th><th>Why Streaming Helps</th></tr></thead>
+        <tbody>
+          <tr><td>Instant order confirmation</td><td>The order-created event is processed immediately.</td></tr>
+          <tr><td>Live tracking</td><td>Frequent driver-location events update the map continuously.</td></tr>
+          <tr><td>Delay detection</td><td>Processing time can be checked continuously against a threshold.</td></tr>
+          <tr><td>Operational dashboard</td><td>Metrics such as active orders and late orders update every few seconds.</td></tr>
+          <tr><td>Automatic notification</td><td>An alert can be emitted as soon as a rule is violated.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="architecture">
+      <h2>5. Streaming Architecture</h2>
+      <div class="diagram">
+        <div class="flow">
+          <div class="node"><strong>Event Producers</strong>Mobile app<br>Restaurant app<br>Driver app</div>
+          <div class="arrow">→</div>
+          <div class="node"><strong>Message Broker</strong>Kafka / Event Hubs<br>Buffers events</div>
+          <div class="arrow">→</div>
+          <div class="node"><strong>Stream Processor</strong>Spark Structured Streaming<br>Validate • Filter • Aggregate</div>
+          <div class="arrow">→</div>
+          <div class="node"><strong>Data Sinks</strong>Delta Lake<br>Database<br>Dashboard</div>
+          <div class="arrow">→</div>
+          <div class="node"><strong>Consumers</strong>Customer<br>Operations team<br>Alerts service</div>
+        </div>
+        <div class="subflow">
+          <span class="pill">Producer creates event</span>
+          <span class="pill">Broker stores event safely</span>
+          <span class="pill">Processor applies logic</span>
+          <span class="pill">Sink saves result</span>
+        </div>
+      </div>
+
+      <h3>Component Explanation</h3>
+      <div class="grid-3">
+        <div class="card"><h4>1. Producer</h4><p>An application or device that creates events. Example: the customer mobile app creates an order event.</p></div>
+        <div class="card"><h4>2. Broker</h4><p>A durable event transport layer. It receives events, keeps them ordered within partitions, and allows consumers to read them.</p></div>
+        <div class="card"><h4>3. Stream Processor</h4><p>Reads events, validates them, transforms fields, performs aggregations, and detects patterns.</p></div>
+        <div class="card"><h4>4. State Store</h4><p>Stores intermediate information required for windows, joins, counts, and deduplication.</p></div>
+        <div class="card"><h4>5. Sink</h4><p>The destination for processed results, such as a database, Delta table, dashboard, or alerting system.</p></div>
+        <div class="card"><h4>6. Consumer</h4><p>The user or application that uses the result, such as a customer-tracking screen.</p></div>
+      </div>
+    </section>
+
+    <section id="concepts">
+      <h2>6. Core Streaming Concepts</h2>
+
+      <h3>6.1 Event</h3>
+      <p>A small record that represents something that happened at a particular time.</p>
+
+      <h3>6.2 Unbounded Data</h3>
+      <p>A stream normally has no fixed end. More events may continue to arrive.</p>
+
+      <h3>6.3 Event Time and Processing Time</h3>
+      <table>
+        <thead><tr><th>Time Type</th><th>Meaning</th><th>Food-Delivery Example</th></tr></thead>
+        <tbody>
+          <tr><td>Event time</td><td>When the event actually occurred</td><td>The driver reached the restaurant at 10:15:05.</td></tr>
+          <tr><td>Processing time</td><td>When the streaming engine processed it</td><td>The server processed the update at 10:15:08.</td></tr>
+        </tbody>
+      </table>
+
+      <h3>6.4 Window</h3>
+      <p>
+        A window groups events from a time interval. For example, calculate the number of orders received during every
+        five-minute period.
+      </p>
+
+      <h3>6.5 Watermark</h3>
+      <p>
+        A watermark tells the engine how long to wait for late events. It helps control the amount of state retained by
+        the streaming query.
+      </p>
+
+      <h3>6.6 Checkpoint</h3>
+      <p>
+        A checkpoint stores progress and state so that a failed streaming job can restart without reprocessing
+        everything from the beginning.
+      </p>
+
+      <h3>6.7 Delivery Guarantees</h3>
+      <table>
+        <thead><tr><th>Guarantee</th><th>Meaning</th></tr></thead>
+        <tbody>
+          <tr><td>At most once</td><td>An event may be lost, but it is not processed more than once.</td></tr>
+          <tr><td>At least once</td><td>An event is not lost, but duplicates are possible.</td></tr>
+          <tr><td>Exactly once</td><td>Each event affects the final result once, assuming the complete pipeline supports it.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="simulator">
+      <h2>7. Live Streaming Simulator</h2>
+      <p>
+        Start the simulator to generate food-order events. The dashboard updates continuously, similar to a small
+        streaming application.
+      </p>
+      <div class="simulator">
+        <div class="controls">
+          <button class="primary" onclick="startStream()">▶ Start Stream</button>
+          <button class="secondary" onclick="pauseStream()">⏸ Pause</button>
+          <button class="danger" onclick="resetStream()">↺ Reset</button>
+        </div>
+        <div class="metrics">
+          <div class="metric"><span>Total Events</span><strong id="totalEvents">0</strong></div>
+          <div class="metric"><span>Orders Created</span><strong id="createdOrders">0</strong></div>
+          <div class="metric"><span>Delivered</span><strong id="deliveredOrders">0</strong></div>
+          <div class="metric"><span>Alerts</span><strong id="alertCount">0</strong></div>
+        </div>
+        <div class="event-log" id="eventLog">
+          <div class="event"><span class="info">System ready. Select “Start Stream”.</span></div>
+        </div>
+      </div>
+      <div class="callout success">
+        Observe that metrics change event by event. This is the main value of streaming: the system reacts while data is arriving.
+      </div>
+    </section>
+
+    <section id="pyspark">
+      <h2>8. PySpark Structured Streaming Demonstration</h2>
+      <p class="lead">The following examples demonstrate the basic streaming workflow.</p>
+
+      <h3>Example A: Socket Word Count</h3>
+      <p>This example reads text continuously from a network socket and counts words.</p>
+
+      <div class="step"><div class="step-no">1</div><div><strong>Open a terminal and start a socket source</strong>
+        <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre>ncat -lk 9999</pre></div>
+        <p class="muted">On Linux or macOS, you may use: <code>nc -lk 9999</code>.</p>
+      </div></div>
+
+      <div class="step"><div class="step-no">2</div><div><strong>Create streaming_wordcount.py</strong>
+        <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">Copy</button>
+<pre>from pyspark.sql import SparkSession
+from pyspark.sql.functions import explode, split
+
+# Create the Spark session.
+spark = (
+    SparkSession.builder
+    .appName("StreamingWordCount")
+    .master("local[*]")
+    .getOrCreate()
+)
+
+# Reduce unnecessary log output.
+spark.sparkContext.setLogLevel("WARN")
+
+# Read continuously arriving text from the socket.
+lines_df = (
+    spark.readStream
+    .format("socket")
+    .option("host", "localhost")
+    .option("port", 9999)
+    .load()
+)
+
+# Split every line into individual words.
+words_df = lines_df.select(
+    explode(split(lines_df["value"], " ")).alias("word")
+)
+
+# Maintain a running count for every word.
+word_counts_df = words_df.groupBy("word").count()
+
+# Write the continuously updated result to the console.
+query = (
+    word_counts_df.writeStream
+    .outputMode("complete")
+    .format("console")
+    .option("truncate", "false")
+    .start()
+)
+
+# Keep the application running until it is stopped.
+query.awaitTermination()</pre></div>
+      </div></div>
+
+      <div class="step"><div class="step-no">3</div><div><strong>Run the application</strong>
+        <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre>spark-submit streaming_wordcount.py</pre></div>
+      </div></div>
+
+      <div class="step"><div class="step-no">4</div><div><strong>Type data in the socket terminal</strong>
+        <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre>spark streaming
+spark is fast
+streaming is useful</pre></div>
+      </div></div>
+
+      <h3>Expected Running Count</h3>
+      <table>
+        <thead><tr><th>Word</th><th>Count</th></tr></thead>
+        <tbody>
+          <tr><td>spark</td><td>2</td></tr>
+          <tr><td>streaming</td><td>2</td></tr>
+          <tr><td>is</td><td>2</td></tr>
+          <tr><td>fast</td><td>1</td></tr>
+          <tr><td>useful</td><td>1</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Example B: Food-Order File Streaming</h3>
+      <p>
+        Spark watches an input folder. Whenever a new JSON file is copied into the folder, Spark processes it as new
+        streaming data.
+      </p>
+      <div class="code-wrap">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+<pre>from pyspark.sql import SparkSession
+from pyspark.sql.functions import col, count, sum as spark_sum
+from pyspark.sql.types import (
+    StructType, StructField, StringType,
+    DoubleType, TimestampType
+)
+
+spark = (
+    SparkSession.builder
+    .appName("FoodOrderStreaming")
+    .master("local[*]")
+    .getOrCreate()
+)
+
+spark.sparkContext.setLogLevel("WARN")
+
+# A streaming file source requires a predefined schema.
+order_schema = StructType([
+    StructField("event_id", StringType(), False),
+    StructField("event_type", StringType(), False),
+    StructField("order_id", StringType(), False),
+    StructField("city", StringType(), True),
+    StructField("order_amount", DoubleType(), True),
+    StructField("event_time", TimestampType(), True)
+])
+
+# Read new JSON files arriving in the input directory.
+orders_df = (
+    spark.readStream
+    .schema(order_schema)
+    .json("data/incoming_orders")
+)
+
+# Retain only valid order-created events.
+valid_orders_df = orders_df.filter(
+    (col("event_type") == "ORDER_CREATED") &
+    col("order_id").isNotNull() &
+    (col("order_amount") > 0)
+)
+
+# Calculate live order count and sales amount by city.
+city_summary_df = (
+    valid_orders_df
+    .groupBy("city")
+    .agg(
+        count("*").alias("order_count"),
+        spark_sum("order_amount").alias("sales_amount")
+    )
+)
+
+query = (
+    city_summary_df.writeStream
+    .outputMode("complete")
+    .format("console")
+    .option("truncate", "false")
+    .option(
+        "checkpointLocation",
+        "checkpoints/food_order_summary"
+    )
+    .start()
+)
+
+query.awaitTermination()</pre>
+      </div>
+
+      <h3>Sample Input File: order_001.json</h3>
+      <div class="code-wrap">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+<pre>{"event_id":"EVT-001","event_type":"ORDER_CREATED","order_id":"ORD-1001","city":"Bengaluru","order_amount":18.50,"event_time":"2026-07-27T10:15:08Z"}
+{"event_id":"EVT-002","event_type":"ORDER_CREATED","order_id":"ORD-1002","city":"Chennai","order_amount":23.75,"event_time":"2026-07-27T10:15:11Z"}</pre>
+      </div>
+
+      <div class="callout warning">
+        Copy new files into the input folder; do not repeatedly modify the same file. File-streaming sources are designed
+        to discover newly arrived files.
+      </div>
+    </section>
+
+    <section id="applications">
+      <h2>9. Industry Applications of Streaming</h2>
+      <div class="grid-3">
+        <div class="card"><div class="icon">🏦</div><h3>Banking</h3><p>Detect suspicious card transactions and block risky payments immediately.</p></div>
+        <div class="card"><div class="icon">🛒</div><h3>E-Commerce</h3><p>Update stock, recommendations, and live order status.</p></div>
+        <div class="card"><div class="icon">🏭</div><h3>Manufacturing</h3><p>Monitor machine temperature and predict failures.</p></div>
+        <div class="card"><div class="icon">🚕</div><h3>Transport</h3><p>Process vehicle location, route, traffic, and arrival-time events.</p></div>
+        <div class="card"><div class="icon">🏥</div><h3>Healthcare</h3><p>Monitor patient devices and generate emergency alerts.</p></div>
+        <div class="card"><div class="icon">🛡️</div><h3>Cybersecurity</h3><p>Analyse logs continuously to detect attacks and abnormal behaviour.</p></div>
+      </div>
+    </section>
+
+    <section id="best-practices">
+      <h2>10. Best Practices</h2>
+      <div class="grid-2">
+        <div class="card">
+          <h3>Design Practices</h3>
+          <ul>
+            <li>Define a clear event schema and version it.</li>
+            <li>Include a unique event identifier.</li>
+            <li>Store event time, not only processing time.</li>
+            <li>Make sink operations idempotent where possible.</li>
+            <li>Use checkpoints for recoverable state.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Operational Practices</h3>
+          <ul>
+            <li>Monitor input rate, processing rate, and delay.</li>
+            <li>Handle malformed events separately.</li>
+            <li>Plan for duplicate and late events.</li>
+            <li>Use partitioning to distribute load.</li>
+            <li>Set retention policies to control storage cost.</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>Streaming Metrics to Monitor</h3>
+      <table>
+        <thead><tr><th>Metric</th><th>What It Indicates</th></tr></thead>
+        <tbody>
+          <tr><td>Input rate</td><td>How many events arrive per second.</td></tr>
+          <tr><td>Processing rate</td><td>How many events the engine processes per second.</td></tr>
+          <tr><td>Consumer lag</td><td>How far the consumer is behind the latest available event.</td></tr>
+          <tr><td>End-to-end latency</td><td>Time between event generation and usable output.</td></tr>
+          <tr><td>Failed records</td><td>Events rejected because of schema or data-quality problems.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="troubleshooting">
+      <h2>11. Common Problems and Troubleshooting</h2>
+      <table>
+        <thead><tr><th>Problem</th><th>Likely Cause</th><th>Solution</th></tr></thead>
+        <tbody>
+          <tr><td>No output appears</td><td>No new event has arrived</td><td>Add new socket text or copy a new file into the watched folder.</td></tr>
+          <tr><td>Socket connection refused</td><td>The socket server is not running</td><td>Start <code>ncat -lk 9999</code> before starting Spark.</td></tr>
+          <tr><td>File stream schema error</td><td>Streaming file source cannot infer schema reliably</td><td>Define the schema using <code>StructType</code>.</td></tr>
+          <tr><td>Duplicates in output</td><td>At-least-once processing or producer retry</td><td>Use event IDs and deduplication logic.</td></tr>
+          <tr><td>Increasing delay</td><td>Input rate is higher than processing rate</td><td>Add resources, reduce expensive operations, or repartition appropriately.</td></tr>
+          <tr><td>Very large state</td><td>No watermark or unbounded aggregation state</td><td>Use event-time windows and suitable watermarks.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="interview">
+      <h2>12. Interview Questions and Answers</h2>
+
+      <details><summary>1. What is stream processing?</summary><div class="answer">Stream processing is the continuous processing of events as they arrive, usually with low latency.</div></details>
+      <details><summary>2. How is streaming different from batch processing?</summary><div class="answer">Batch processing works on bounded data collected over time, while streaming works on a continuously arriving, usually unbounded sequence of events.</div></details>
+      <details><summary>3. What is an event producer?</summary><div class="answer">A producer is an application, device, or service that creates and publishes events.</div></details>
+      <details><summary>4. Why is a message broker used?</summary><div class="answer">A broker buffers events, decouples producers from consumers, supports scalable consumption, and improves reliability.</div></details>
+      <details><summary>5. What is event time?</summary><div class="answer">Event time is the time at which the real-world event occurred.</div></details>
+      <details><summary>6. What is a time window?</summary><div class="answer">A time window groups events that belong to a defined interval, such as orders received during each five-minute period.</div></details>
+      <details><summary>7. What is a watermark?</summary><div class="answer">A watermark defines how late an event may arrive and still be included in event-time processing.</div></details>
+      <details><summary>8. Why are checkpoints important?</summary><div class="answer">Checkpoints save query progress and state, allowing recovery after a failure.</div></details>
+      <details><summary>9. What is consumer lag?</summary><div class="answer">Consumer lag is the difference between the latest available event and the latest event processed by a consumer.</div></details>
+      <details><summary>10. What is an idempotent operation?</summary><div class="answer">An idempotent operation can be repeated without changing the final result beyond the first successful application.</div></details>
+      <details><summary>11. What is late-arriving data?</summary><div class="answer">It is an event that reaches the processing system later than expected compared with its event time.</div></details>
+      <details><summary>12. What is a streaming sink?</summary><div class="answer">A sink is the destination to which processed streaming results are written.</div></details>
+      <details><summary>13. Name common stream-processing technologies.</summary><div class="answer">Examples include Apache Spark Structured Streaming, Apache Flink, Kafka Streams, Azure Stream Analytics, and Google Cloud Dataflow.</div></details>
+      <details><summary>14. Why is schema management important?</summary><div class="answer">It prevents incompatible changes, helps validate events, and allows producers and consumers to evolve safely.</div></details>
+      <details><summary>15. Give one end-to-end streaming use case.</summary><div class="answer">A food-delivery application publishes order and driver events, processes them through a streaming engine, updates a live dashboard, and generates delay alerts.</div></details>
+    </section>
+
+    <section id="exercise">
+      <h2>13. Hands-On Exercises</h2>
+      <div class="grid-2">
+        <div class="card">
+          <h3>Exercise 1: Identify Components</h3>
+          <p>For an online payment fraud system, identify:</p>
+          <ol>
+            <li>Event producer</li>
+            <li>Message broker</li>
+            <li>Processing rules</li>
+            <li>Output sink</li>
+            <li>Final consumer</li>
+          </ol>
+        </div>
+        <div class="card">
+          <h3>Exercise 2: Design an Event</h3>
+          <p>Create a JSON event for a driver-location update. Include event ID, driver ID, order ID, latitude, longitude, and event time.</p>
+        </div>
+        <div class="card">
+          <h3>Exercise 3: Add a Filter</h3>
+          <p>Modify the PySpark file-streaming code to retain only orders whose amount is greater than 30.</p>
+        </div>
+        <div class="card">
+          <h3>Exercise 4: Add an Alert</h3>
+          <p>Create logic that marks an order as high value when the amount is greater than 100.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="quiz">
+      <h2>14. Knowledge Check</h2>
+      <p>Select one answer for each question and submit the quiz. Correct answers appear in green; incorrect answers appear in red with an explanation.</p>
+      <div class="exam-bar">
+        <div>
+          <strong>Timed Exam:</strong> 10 minutes for 10 questions
+        </div>
+        <div class="controls" style="margin:0">
+          <span class="timer" id="examTimer">10:00</span>
+          <button class="primary" type="button" onclick="startExam()">Start Exam</button>
+          <button class="secondary" type="button" onclick="pauseExam()">Pause</button>
+        </div>
+      </div>
+      <form id="quizForm"></form>
+      <button class="primary" type="button" onclick="gradeQuiz()">Submit Quiz</button>
+      <button class="secondary" type="button" onclick="resetQuiz()">Reset Quiz</button>
+      <div class="score" id="quizScore"></div>
+    </section>
+
+    <section id="tracker">
+      <h2>15. Preparation Tracker</h2>
+      <p>Mark each item after completing it. Progress is saved in your browser.</p>
+      <div class="tracker" id="trackerList">
+        <label><input type="checkbox" data-key="meaning"> I can explain streaming in my own words.</label>
+        <label><input type="checkbox" data-key="batch"> I can compare batch and streaming processing.</label>
+        <label><input type="checkbox" data-key="architecture"> I can explain the streaming architecture.</label>
+        <label><input type="checkbox" data-key="events"> I understand event time and processing time.</label>
+        <label><input type="checkbox" data-key="window"> I understand windows and watermarks.</label>
+        <label><input type="checkbox" data-key="code"> I reviewed the PySpark examples.</label>
+        <label><input type="checkbox" data-key="interview"> I reviewed all interview questions.</label>
+        <label><input type="checkbox" data-key="quiz"> I completed the knowledge-check quiz.</label>
+      </div>
+      <div class="progress-shell"><div class="progress-bar" id="progressBar"></div></div>
+      <p id="progressText"><strong>0%</strong> completed</p>
+
+      <div class="notes-tip">
+        <strong>Personal notes:</strong> Double-click any tutorial section to add or edit a note. The note is stored in your browser.
+      </div>
+    </section>
+  </main>
+</div>
+
+<footer>
+  Introduction to Streaming • Classroom Tutorial • Offline-ready single HTML file
+</footer>
+
+<script>
+/* Use localStorage when available; otherwise retain data for this open page. */
+const memoryStorage = {};
+const storage = {
+  getItem(key){
+    try { return window.storage.getItem(key); }
+    catch(error) { return Object.prototype.hasOwnProperty.call(memoryStorage,key) ? memoryStorage[key] : null; }
+  },
+  setItem(key,value){
+    try { window.storage.setItem(key,String(value)); }
+    catch(error) { memoryStorage[key] = String(value); }
+  },
+  removeItem(key){
+    try { window.storage.removeItem(key); }
+    catch(error) { delete memoryStorage[key]; }
+  }
+};
+
+const quizData = [
+  {
+    q:"1. Which statement best describes streaming?",
+    options:["Processing data only once a month","Processing continuously arriving events","Backing up a database","Compressing old files"],
+    answer:1,
+    exp:"Streaming processes events continuously as they arrive."
+  },
+  {
+    q:"2. Which is a streaming use case?",
+    options:["Year-end tax report","Monthly payroll export","Real-time card fraud detection","Archived document conversion"],
+    answer:2,
+    exp:"Fraud detection needs immediate processing and action."
+  },
+  {
+    q:"3. What does a message broker do?",
+    options:["Creates mobile screens","Buffers and transports events","Designs database tables","Replaces all storage systems"],
+    answer:1,
+    exp:"A broker receives, retains, and distributes events between producers and consumers."
+  },
+  {
+    q:"4. What is event time?",
+    options:["When an event actually happened","When a report is printed","When the server was installed","When a user logs out"],
+    answer:0,
+    exp:"Event time records when the real-world event occurred."
+  },
+  {
+    q:"5. Why is a checkpoint used?",
+    options:["To change the event schema","To store recovery progress and state","To create a producer","To stop all events"],
+    answer:1,
+    exp:"Checkpoint data helps a streaming query recover after failure."
+  },
+  {
+    q:"6. What is a window used for?",
+    options:["Encrypting a message","Grouping events by time interval","Deleting every event","Installing Spark"],
+    answer:1,
+    exp:"Windows group events into intervals for calculations such as five-minute counts."
+  },
+  {
+    q:"7. What does consumer lag indicate?",
+    options:["Difference between produced and processed progress","Number of producers","Database table count","Amount of disk space only"],
+    answer:0,
+    exp:"Lag shows how far a consumer is behind the newest available event."
+  },
+  {
+    q:"8. Which source is used in the simple word-count demo?",
+    options:["PDF source","Socket source","Image source","Excel chart"],
+    answer:1,
+    exp:"The demo continuously reads text from a network socket."
+  },
+  {
+    q:"9. Which is a valid streaming sink?",
+    options:["Dashboard","Database","Delta table","All of these"],
+    answer:3,
+    exp:"Streaming results can be written to dashboards, databases, lakehouse tables, and many other destinations."
+  },
+  {
+    q:"10. Why should an event have a unique ID?",
+    options:["To help detect duplicates","To increase screen brightness","To replace timestamps","To reduce all network traffic"],
+    answer:0,
+    exp:"A unique event ID supports deduplication and traceability."
+  }
+];
+
+function renderQuiz(){
+  const form = document.getElementById("quizForm");
+  form.innerHTML = "";
+  quizData.forEach((item, qi)=>{
+    const box = document.createElement("div");
+    box.className = "quiz-question";
+    box.id = "quiz-q-" + qi;
+    let html = "<strong>" + item.q + "</strong>";
+    item.options.forEach((opt, oi)=>{
+      html += `<label><input type="radio" name="q${qi}" value="${oi}"> ${opt}</label>`;
+    });
+    html += `<div class="explanation" id="exp-${qi}"></div>`;
+    box.innerHTML = html;
+    form.appendChild(box);
+  });
+}
+
+function gradeQuiz(){
+  let score = 0;
+  quizData.forEach((item, qi)=>{
+    const box = document.getElementById("quiz-q-" + qi);
+    const selected = document.querySelector(`input[name="q${qi}"]:checked`);
+    const exp = document.getElementById("exp-" + qi);
+    box.classList.remove("correct","wrong");
+    exp.style.display = "block";
+    if(selected && Number(selected.value) === item.answer){
+      score++;
+      box.classList.add("correct");
+      exp.innerHTML = "✅ Correct. " + item.exp;
+    }else{
+      box.classList.add("wrong");
+      exp.innerHTML = "❌ Incorrect. Correct answer: <strong>" +
+        item.options[item.answer] + "</strong>. " + item.exp;
+    }
+  });
+  const percent = Math.round((score / quizData.length) * 100);
+  document.getElementById("quizScore").innerHTML =
+    `Score: ${score}/${quizData.length} (${percent}%)`;
+  if(score === quizData.length){
+    storage.setItem("streaming_quiz_complete","true");
+  }
+}
+
+function resetQuiz(){
+  document.getElementById("quizForm").reset();
+  document.querySelectorAll(".quiz-question").forEach(x=>{
+    x.classList.remove("correct","wrong");
+  });
+  document.querySelectorAll(".explanation").forEach(x=>x.style.display="none");
+  document.getElementById("quizScore").textContent="";
+  resetExamTimer();
+}
+
+function copyCode(btn){
+  const text = btn.nextElementSibling.innerText;
+  navigator.clipboard.writeText(text).then(()=>{
+    const old = btn.textContent;
+    btn.textContent = "Copied!";
+    setTimeout(()=>btn.textContent=old,1200);
+  });
+}
+
+
+/* Timed exam */
+let examSeconds = 600;
+let examInterval = null;
+
+function updateExamTimer(){
+  const minutes = String(Math.floor(examSeconds / 60)).padStart(2,"0");
+  const seconds = String(examSeconds % 60).padStart(2,"0");
+  const timer = document.getElementById("examTimer");
+  timer.textContent = `${minutes}:${seconds}`;
+  timer.classList.toggle("urgent", examSeconds <= 60);
+}
+
+function startExam(){
+  if(examInterval || examSeconds <= 0) return;
+  examInterval = setInterval(()=>{
+    examSeconds--;
+    updateExamTimer();
+    if(examSeconds <= 0){
+      clearInterval(examInterval);
+      examInterval = null;
+      gradeQuiz();
+      document.getElementById("quizScore").innerHTML +=
+        "<br>⏰ Time completed. The quiz was submitted automatically.";
+    }
+  },1000);
+}
+
+function pauseExam(){
+  clearInterval(examInterval);
+  examInterval = null;
+}
+
+function resetExamTimer(){
+  pauseExam();
+  examSeconds = 600;
+  updateExamTimer();
+}
+
+/* Streaming simulator */
+let streamTimer = null;
+let total = 0, created = 0, delivered = 0, alerts = 0;
+const eventTypes = [
+  "ORDER_CREATED","PAYMENT_COMPLETED","RESTAURANT_ACCEPTED",
+  "FOOD_PREPARED","DRIVER_ASSIGNED","OUT_FOR_DELIVERY","ORDER_DELIVERED"
+];
+const cities = ["Bengaluru","Chennai","Hyderabad","Mumbai","Pune"];
+const restaurants = ["Spice Hub","Green Bowl","Pizza Corner","Dosa Point","Urban Bites"];
+
+function makeEvent(){
+  const type = eventTypes[Math.floor(Math.random()*eventTypes.length)];
+  const city = cities[Math.floor(Math.random()*cities.length)];
+  const restaurant = restaurants[Math.floor(Math.random()*restaurants.length)];
+  const orderId = "ORD-" + (1000 + Math.floor(Math.random()*9000));
+  const amount = (8 + Math.random()*92).toFixed(2);
+  const delayed = Math.random() < .12;
+  total++;
+  if(type === "ORDER_CREATED") created++;
+  if(type === "ORDER_DELIVERED") delivered++;
+  if(delayed) alerts++;
+
+  document.getElementById("totalEvents").textContent = total;
+  document.getElementById("createdOrders").textContent = created;
+  document.getElementById("deliveredOrders").textContent = delivered;
+  document.getElementById("alertCount").textContent = alerts;
+
+  const log = document.getElementById("eventLog");
+  const line = document.createElement("div");
+  line.className = "event";
+  const timestamp = new Date().toLocaleTimeString();
+  if(delayed){
+    line.innerHTML = `<span class="alert">[${timestamp}] DELAY_ALERT ${orderId} • ${restaurant} • ${city}</span>`;
+  }else{
+    const cls = type === "ORDER_DELIVERED" ? "accepted" : "info";
+    line.innerHTML = `<span class="${cls}">[${timestamp}] ${type} ${orderId} • ${city} • $${amount}</span>`;
+  }
+  log.prepend(line);
+  while(log.children.length > 60) log.removeChild(log.lastChild);
+}
+
+function startStream(){
+  if(streamTimer) return;
+  makeEvent();
+  streamTimer = setInterval(makeEvent,900);
+}
+
+function pauseStream(){
+  clearInterval(streamTimer);
+  streamTimer = null;
+}
+
+function resetStream(){
+  pauseStream();
+  total=created=delivered=alerts=0;
+  ["totalEvents","createdOrders","deliveredOrders","alertCount"].forEach(id=>{
+    document.getElementById(id).textContent="0";
+  });
+  document.getElementById("eventLog").innerHTML =
+    '<div class="event"><span class="info">System reset. Select “Start Stream”.</span></div>';
+}
+
+/* Progress tracker */
+const checks = [...document.querySelectorAll("#trackerList input")];
+checks.forEach(check=>{
+  const saved = storage.getItem("streaming_tracker_" + check.dataset.key);
+  check.checked = saved === "true";
+  check.addEventListener("change",()=>{
+    storage.setItem("streaming_tracker_" + check.dataset.key, check.checked);
+    updateProgress();
+  });
+});
+function updateProgress(){
+  const done = checks.filter(c=>c.checked).length;
+  const pct = Math.round(done/checks.length*100);
+  document.getElementById("progressBar").style.width = pct + "%";
+  document.getElementById("progressText").innerHTML = `<strong>${pct}%</strong> completed`;
+}
+updateProgress();
+
+/* Double-click notes */
+document.querySelectorAll("main section").forEach(section=>{
+  const key = "streaming_note_" + section.id;
+  const note = storage.getItem(key);
+  if(note){
+    section.classList.add("user-note");
+    section.title = note;
+  }
+  section.addEventListener("dblclick",()=>{
+    const current = storage.getItem(key) || "";
+    const text = prompt("Add your note for this section:", current);
+    if(text === null) return;
+    if(text.trim()){
+      storage.setItem(key,text.trim());
+      section.classList.add("user-note");
+      section.title = text.trim();
+    }else{
+      storage.removeItem(key);
+      section.classList.remove("user-note");
+      section.removeAttribute("title");
+    }
+  });
+});
+
+/* Sparkle cursor */
+document.addEventListener("mousemove",(e)=>{
+  if(Math.random() > .88){
+    const s = document.createElement("span");
+    s.className = "sparkle";
+    s.textContent = Math.random() > .5 ? "✦" : "·";
+    s.style.left = e.clientX + "px";
+    s.style.top = e.clientY + "px";
+    s.style.color = Math.random() > .5 ? "#2563eb" : "#7c3aed";
+    document.body.appendChild(s);
+    setTimeout(()=>s.remove(),700);
+  }
+});
+
+renderQuiz();
+updateExamTimer();
+</script>
+</body>
+</html>
