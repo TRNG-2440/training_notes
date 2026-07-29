@@ -1,0 +1,1461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Apache Airflow on Windows: Complete Setup and UI Overview</title>
+<meta name="description" content="Trainer-ready Apache Airflow 3.3 tutorial: Windows prerequisites, WSL 2, Docker Desktop, PowerShell installation, sample DAG, UI overview, troubleshooting, exercises, MCQs and interview questions.">
+<style>
+:root{
+  --bg:#06101c;--surface:#0c1c2c;--surface2:#10263c;--surface3:#071725;
+  --text:#eef7ff;--muted:#a9bdd1;--border:#28475f;--aqua:#53e6d3;
+  --blue:#65b5ff;--green:#54dc91;--yellow:#ffd166;--red:#ff6b83;--violet:#b9a1ff;
+  --shadow:0 18px 55px rgba(0,0,0,.32);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;color:var(--text);font-family:Inter,Segoe UI,Arial,sans-serif;line-height:1.65;
+background:
+ radial-gradient(circle at 8% 2%,rgba(83,230,211,.11),transparent 28%),
+ radial-gradient(circle at 92% 5%,rgba(101,181,255,.12),transparent 28%),
+ linear-gradient(145deg,#050d17,#081624 50%,#050d17)}
+a{color:#9ed8ff}
+a:hover{color:white}
+header{padding:64px 28px 48px;border-bottom:1px solid var(--border)}
+.wrap{max-width:1240px;margin:auto}
+.pills{display:flex;gap:8px;flex-wrap:wrap}
+.pill{padding:6px 11px;border:1px solid #3c617e;border-radius:999px;background:#0c2134;color:#cbeaff;font-size:.86rem}
+h1{font-size:clamp(2.35rem,5vw,5rem);line-height:1.03;letter-spacing:-.05em;margin:18px 0 12px}
+.lead{font-size:1.18rem;color:#c9d9e8;max-width:920px}
+.hero{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:28px}
+.hero .card strong{display:block;color:var(--aqua);font-size:1.08rem}
+.layout{max-width:1550px;margin:auto;display:grid;grid-template-columns:300px minmax(0,1fr)}
+aside{height:100vh;position:sticky;top:0;overflow:auto;background:rgba(4,13,23,.95);
+border-right:1px solid var(--border);padding:22px 17px;backdrop-filter:blur(10px)}
+aside h3{margin:0 0 12px}
+#search{width:100%;padding:11px;border:1px solid var(--border);border-radius:10px;background:#071725;color:white}
+.progress{height:8px;background:#13283b;border-radius:9px;overflow:hidden;margin:8px 0 15px}
+.progress>div{height:100%;width:0;background:linear-gradient(90deg,var(--aqua),var(--blue))}
+nav a{display:block;padding:7px 9px;border-radius:8px;text-decoration:none;color:#afc5d8;font-size:.9rem}
+nav a:hover,nav a.active{background:#11304a;color:white}
+main{min-width:0;padding:32px clamp(18px,4vw,58px) 80px}
+section{max-width:1160px;margin:0 auto 32px;padding:28px;border:1px solid var(--border);
+border-radius:22px;background:rgba(12,28,44,.8);box-shadow:var(--shadow);transition:.2s}
+section:hover{border-color:#3a6585}
+h2{font-size:clamp(1.55rem,3vw,2.4rem);letter-spacing:-.025em;margin-top:0}
+h3{color:#d1edff;margin-top:28px}
+h4{color:#b7f5e7}
+p,li{color:#d9e5ef}
+.muted{color:var(--muted)}
+.grid2,.grid3,.grid4{display:grid;gap:15px}
+.grid2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.grid3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.grid4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.card{padding:18px;border:1px solid var(--border);border-radius:16px;background:#081a2a}
+.card h3,.card h4{margin-top:0}
+.callout{margin:17px 0;padding:16px 18px;border-left:4px solid var(--blue);border-radius:10px;background:#071725}
+.callout.ok{border-color:var(--green)}
+.callout.warn{border-color:var(--yellow)}
+.callout.danger{border-color:var(--red)}
+.memory{padding:17px;border:1px dashed #4d7897;border-radius:14px;background:#071827;font-size:1.07rem}
+table{width:100%;border-collapse:collapse;margin:17px 0;display:block;overflow:auto}
+th,td{padding:11px 12px;border:1px solid #2b4a62;text-align:left;vertical-align:top;min-width:125px}
+th{background:#12304a;color:#e6f7ff}
+tr:nth-child(even){background:rgba(11,34,53,.45)}
+pre{position:relative;background:#020912;border:1px solid #213e55;border-radius:14px;padding:18px;overflow:auto;line-height:1.52}
+code{font-family:Consolas,Monaco,monospace;color:#dff6ff}
+.copy{position:absolute;top:8px;right:8px;padding:6px 9px;border-radius:8px;border:1px solid #3c6381;background:#0f2a41;color:white;cursor:pointer}
+button{padding:10px 14px;border:1px solid #3b6686;border-radius:10px;background:#113653;color:white;cursor:pointer}
+button:hover{background:#194d74}
+.diagram{overflow:auto;background:#04111e;border:1px solid #2e5069;border-radius:18px;padding:18px}
+.diagram svg{min-width:850px}
+.diagram text{fill:#eef8ff;font-family:Segoe UI,Arial,sans-serif}
+.flow{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:10px;margin:18px 0}
+.node{min-width:135px;text-align:center;padding:13px;border:1px solid #477391;background:#0d2a42;border-radius:12px}
+.arrow{font-size:1.6rem;color:var(--aqua)}
+.step{display:grid;grid-template-columns:54px 1fr;gap:15px;margin:18px 0}
+.step-num{width:44px;height:44px;display:grid;place-items:center;border-radius:50%;background:#133c5b;border:1px solid #5d99c2;font-weight:800}
+.download{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:15px;border:1px solid var(--border);
+border-radius:14px;background:#081a2a;margin:10px 0}
+.download a{white-space:nowrap;padding:8px 12px;border:1px solid #3c6a8a;border-radius:9px;text-decoration:none;background:#113653}
+.state{display:inline-flex;align-items:center;gap:7px;margin:4px 8px 4px 0}
+.dot{width:11px;height:11px;border-radius:50%;display:inline-block}
+.success{background:var(--green)}.failed{background:var(--red)}.running{background:var(--yellow)}
+.queued{background:var(--blue)}.skipped{background:var(--violet)}.neutral{background:#91a4b7}
+details{border:1px solid var(--border);border-radius:12px;background:#071827;margin:10px 0}
+summary{cursor:pointer;padding:13px 15px;font-weight:700}
+details>div{padding:0 15px 15px}
+.quiz{padding:16px;border:1px solid var(--border);border-radius:14px;background:#071827;margin:13px 0}
+.quiz label{display:block;padding:5px 8px;border-radius:7px;cursor:pointer}
+.quiz label:hover{background:#10304a}
+.result{font-weight:800;margin-top:14px}
+.checklist label{display:block;padding:7px}
+.hidden{display:none!important}
+.note{position:fixed;z-index:50;right:18px;bottom:18px;width:min(400px,calc(100vw - 36px));padding:16px;
+border:1px solid #497594;border-radius:14px;background:#061521;box-shadow:var(--shadow);display:none}
+.note textarea{width:100%;height:100px;padding:10px;border:1px solid #34566e;background:#020a12;color:white;border-radius:8px}
+.spark{position:fixed;width:7px;height:7px;border-radius:50%;background:var(--aqua);pointer-events:none;z-index:9999;
+box-shadow:0 0 14px var(--aqua);animation:vanish .65s forwards}
+@keyframes vanish{to{opacity:0;transform:scale(0) translateY(-12px)}}
+.kbd{padding:2px 6px;border:1px solid #45657d;border-bottom-width:3px;border-radius:6px;background:#102539}
+.small{font-size:.9rem}
+footer{text-align:center;color:#93aabd;padding:25px}
+@media(max-width:1050px){
+ .layout{grid-template-columns:1fr}aside{height:auto;position:relative;border-right:0;border-bottom:1px solid var(--border)}
+ nav{columns:2}.hero,.grid4{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:720px){
+ header{padding:42px 18px}.hero,.grid2,.grid3,.grid4{grid-template-columns:1fr}
+ nav{columns:1}main{padding:18px 11px 70px}section{padding:20px}.download{align-items:flex-start;flex-direction:column}
+}
+@media print{
+ aside,.copy,.note,#sparkToggle{display:none!important}.layout{display:block}body{background:white;color:black}
+ section{box-shadow:none;background:white;break-inside:avoid}p,li,h1,h2,h3,h4,td,th{color:black}
+}
+</style>
+</head>
+<body>
+<header>
+<div class="wrap">
+  <div class="pills">
+    <span class="pill">Apache Airflow 3.3</span>
+    <span class="pill">Windows 11 / supported Windows setup</span>
+    <span class="pill">WSL 2 + Docker Desktop</span>
+    <span class="pill">Trainer-ready hands-on tutorial</span>
+  </div>
+  <h1>Airflow on Windows<br>Setup + UI Overview</h1>
+  <p class="lead">Install every required component, launch Apache Airflow through the official Docker Compose learning environment, run a sample DAG, and confidently navigate the Airflow 3 user interface.</p>
+  <div class="hero">
+    <div class="card"><strong>Recommended path</strong>Windows → WSL 2 → Docker Desktop → Linux containers → Airflow</div>
+    <div class="card"><strong>Estimated machine need</strong>8 GB RAM minimum; 16 GB or more is more comfortable</div>
+    <div class="card"><strong>Airflow address</strong>http://localhost:8080</div>
+    <div class="card"><strong>Lab outcome</strong>Trigger, monitor, debug, retry, and inspect a DAG</div>
+  </div>
+</div>
+</header>
+
+<div class="layout">
+<aside>
+<h3>Navigation</h3>
+<input id="search" placeholder="Search this tutorial...">
+<small>Reading progress: <span id="pct">0%</span></small>
+<div class="progress"><div id="bar"></div></div>
+<nav id="toc">
+<a href="#objectives">1. Objectives</a>
+<a href="#support">2. Windows Support</a>
+<a href="#architecture">3. Setup Architecture</a>
+<a href="#requirements">4. Requirements</a>
+<a href="#downloads">5. Software Downloads</a>
+<a href="#precheck">6. Windows Pre-check</a>
+<a href="#wsl">7. Install WSL 2</a>
+<a href="#docker">8. Install Docker</a>
+<a href="#optional">9. Developer Tools</a>
+<a href="#airflow">10. Install Airflow</a>
+<a href="#verify">11. Verify Services</a>
+<a href="#sample">12. Sample DAG</a>
+<a href="#login">13. Login to UI</a>
+<a href="#home">14. Home Page</a>
+<a href="#dags-list">15. DAG List</a>
+<a href="#dag-detail">16. DAG Details</a>
+<a href="#grid">17. Grid View</a>
+<a href="#graph">18. Graph View</a>
+<a href="#runs">19. Runs & Tasks</a>
+<a href="#task-instance">20. Task Instance</a>
+<a href="#assets">21. Assets</a>
+<a href="#admin">22. Admin Pages</a>
+<a href="#daily-ops">23. Daily Operations</a>
+<a href="#commands">24. Commands</a>
+<a href="#automation-script">25. Setup Script</a>
+<a href="#troubleshoot">26. Troubleshooting</a>
+<a href="#production">27. Production Note</a>
+<a href="#exercises">28. Exercises</a>
+<a href="#quiz">29. MCQ Quiz</a>
+<a href="#interview">30. Interview Q&A</a>
+<a href="#tracker">31. Tracker</a>
+<a href="#references">32. References</a>
+</nav>
+<p class="muted small">Double-click a paragraph to save a personal note.</p>
+<button id="sparkToggle">Sparkle cursor: On</button>
+</aside>
+
+<main>
+<section id="objectives" data-title="Learning Objectives">
+<h2>1. Learning Objectives</h2>
+<p>After completing this tutorial, you will be able to:</p>
+<ul>
+<li>Explain why Airflow is not installed directly as a normal native Windows service.</li>
+<li>Install WSL 2 and Docker Desktop correctly.</li>
+<li>Download and start the official Apache Airflow Docker Compose learning stack.</li>
+<li>Understand the purpose of every running container.</li>
+<li>Create a DAG file and observe it in the Airflow UI.</li>
+<li>Use Home, DAG List, Overview, Grid, Graph, Runs, Tasks, Code, Details, Logs, XCom, Assets, Connections, Variables, Pools, Providers, and Config pages.</li>
+<li>Diagnose common Windows, WSL, Docker, port, memory, and DAG parsing problems.</li>
+</ul>
+<div class="memory"><strong>Memory path:</strong> Windows hosts Docker Desktop → Docker runs Linux containers → the containers run Airflow services → your browser opens the Airflow UI.</div>
+</section>
+
+<section id="support" data-title="Airflow Windows Support">
+<h2>2. Important: How Airflow Runs on Windows</h2>
+<p>Apache Airflow is designed for POSIX-compatible operating systems. It is not officially supported as a native Windows installation. On Windows, use one of these Linux-based approaches:</p>
+<div class="grid2">
+<div class="card">
+<h3>Recommended for this tutorial</h3>
+<p><strong>Docker Desktop with WSL 2 backend.</strong> It is easier to reproduce, includes PostgreSQL and Redis, and closely follows the official Airflow Docker Compose guide.</p>
+</div>
+<div class="card">
+<h3>Alternative</h3>
+<p><strong>Install inside an Ubuntu WSL 2 distribution.</strong> This is useful for learning Linux administration, but you must manually manage Python, databases, services, and dependencies.</p>
+</div>
+</div>
+<div class="callout danger"><strong>Do not use:</strong> <code>pip install apache-airflow</code> directly in ordinary Windows PowerShell or Command Prompt and expect a supported native Windows deployment.</div>
+</section>
+
+<section id="architecture" data-title="Windows Airflow Setup Architecture">
+<h2>3. Windows Airflow Setup Architecture</h2>
+<div class="diagram">
+<svg viewBox="0 0 1050 575" width="100%" aria-label="Windows Airflow Docker architecture">
+<defs><marker id="a" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0,10 3.5,0 7" fill="#65b5ff"/></marker></defs>
+<rect x="20" y="35" width="1010" height="500" rx="22" fill="#071725" stroke="#31536d" stroke-width="2"/>
+<text x="525" y="68" text-anchor="middle" font-size="22">Windows Host</text>
+
+<rect x="55" y="100" width="230" height="120" rx="16" fill="#102d46" stroke="#53e6d3"/>
+<text x="170" y="143" text-anchor="middle" font-size="21">Browser</text>
+<text x="170" y="176" text-anchor="middle" font-size="15">localhost:8080</text>
+
+<rect x="330" y="100" width="650" height="390" rx="20" fill="#0a2134" stroke="#65b5ff"/>
+<text x="655" y="136" text-anchor="middle" font-size="22">Docker Desktop using WSL 2 Linux backend</text>
+
+<rect x="375" y="170" width="165" height="90" rx="14" fill="#123852" stroke="#65b5ff"/>
+<text x="457" y="207" text-anchor="middle" font-size="18">API Server</text>
+<text x="457" y="234" text-anchor="middle" font-size="14">UI + REST API</text>
+
+<rect x="570" y="170" width="165" height="90" rx="14" fill="#123852" stroke="#53e6d3"/>
+<text x="652" y="207" text-anchor="middle" font-size="18">Scheduler</text>
+<text x="652" y="234" text-anchor="middle" font-size="14">Queues tasks</text>
+
+<rect x="765" y="170" width="165" height="90" rx="14" fill="#123852" stroke="#53e6d3"/>
+<text x="847" y="207" text-anchor="middle" font-size="18">DAG Processor</text>
+<text x="847" y="234" text-anchor="middle" font-size="14">Parses DAG files</text>
+
+<rect x="375" y="300" width="165" height="90" rx="14" fill="#123852" stroke="#ffd166"/>
+<text x="457" y="337" text-anchor="middle" font-size="18">Worker</text>
+<text x="457" y="364" text-anchor="middle" font-size="14">Executes tasks</text>
+
+<rect x="570" y="300" width="165" height="90" rx="14" fill="#123852" stroke="#b9a1ff"/>
+<text x="652" y="337" text-anchor="middle" font-size="18">Triggerer</text>
+<text x="652" y="364" text-anchor="middle" font-size="14">Async waiting</text>
+
+<rect x="765" y="300" width="165" height="90" rx="14" fill="#123852" stroke="#54dc91"/>
+<text x="847" y="337" text-anchor="middle" font-size="18">PostgreSQL</text>
+<text x="847" y="364" text-anchor="middle" font-size="14">Metadata DB</text>
+
+<rect x="475" y="420" width="165" height="55" rx="12" fill="#123852" stroke="#ff6b83"/>
+<text x="557" y="453" text-anchor="middle" font-size="18">Redis Broker</text>
+
+<rect x="690" y="420" width="210" height="55" rx="12" fill="#123852" stroke="#65b5ff"/>
+<text x="795" y="453" text-anchor="middle" font-size="18">Mounted folders</text>
+
+<line x1="285" y1="160" x2="375" y2="210" stroke="#65b5ff" stroke-width="3" marker-end="url(#a)"/>
+<line x1="540" y1="215" x2="570" y2="215" stroke="#65b5ff" stroke-width="3" marker-end="url(#a)"/>
+<line x1="735" y1="215" x2="765" y2="215" stroke="#65b5ff" stroke-width="3" marker-end="url(#a)"/>
+<line x1="652" y1="260" x2="500" y2="300" stroke="#65b5ff" stroke-width="3" marker-end="url(#a)"/>
+<line x1="652" y1="260" x2="652" y2="300" stroke="#65b5ff" stroke-width="3" marker-end="url(#a)"/>
+<line x1="847" y1="260" x2="847" y2="300" stroke="#65b5ff" stroke-width="3" marker-end="url(#a)"/>
+<line x1="500" y1="390" x2="545" y2="420" stroke="#65b5ff" stroke-width="3" marker-end="url(#a)"/>
+<line x1="847" y1="390" x2="808" y2="420" stroke="#65b5ff" stroke-width="3" marker-end="url(#a)"/>
+</svg>
+</div>
+<h3>Why multiple containers?</h3>
+<table>
+<tr><th>Container</th><th>Purpose</th><th>What happens when unavailable?</th></tr>
+<tr><td><code>airflow-api-server</code></td><td>Serves the Airflow 3 UI and REST API.</td><td>The browser cannot use the UI.</td></tr>
+<tr><td><code>airflow-scheduler</code></td><td>Examines schedules and queues runnable task instances.</td><td>New scheduled tasks stop being queued.</td></tr>
+<tr><td><code>airflow-dag-processor</code></td><td>Imports and parses DAG Python files.</td><td>New or changed DAGs may not appear.</td></tr>
+<tr><td><code>airflow-worker</code></td><td>Executes queued tasks.</td><td>Tasks remain queued.</td></tr>
+<tr><td><code>airflow-triggerer</code></td><td>Handles asynchronous triggers for deferrable tasks.</td><td>Deferred tasks cannot resume correctly.</td></tr>
+<tr><td><code>postgres</code></td><td>Stores Airflow metadata and task state.</td><td>Most Airflow components cannot work.</td></tr>
+<tr><td><code>redis</code></td><td>Celery message broker between scheduler and worker.</td><td>Queued work is not delivered to workers.</td></tr>
+<tr><td><code>airflow-init</code></td><td>Runs initialization and creates the learning user.</td><td>Used once before normal startup.</td></tr>
+</table>
+</section>
+
+<section id="requirements" data-title="Hardware and System Requirements">
+<h2>4. Hardware and System Requirements</h2>
+<table>
+<tr><th>Item</th><th>Minimum for the lab</th><th>Recommended</th></tr>
+<tr><td>Operating system</td><td>Supported 64-bit Windows configuration with WSL 2 capability.</td><td>Current Windows 11 release.</td></tr>
+<tr><td>Processor</td><td>64-bit CPU with virtualization and SLAT.</td><td>4 or more logical cores.</td></tr>
+<tr><td>RAM</td><td>8 GB system RAM.</td><td>16 GB or 32 GB for smoother use.</td></tr>
+<tr><td>Docker memory</td><td>At least 4 GB available.</td><td>8 GB available to Docker/WSL.</td></tr>
+<tr><td>Disk space</td><td>Approximately 10 GB free.</td><td>20 GB or more for images, logs, and practice data.</td></tr>
+<tr><td>Browser</td><td>Current Edge, Chrome, Firefox, or Safari.</td><td>Latest Edge or Chrome.</td></tr>
+<tr><td>Internet</td><td>Required during installation and image downloads.</td><td>Stable broadband connection.</td></tr>
+</table>
+<div class="callout warn"><strong>Virtualization check:</strong> Open Task Manager → Performance → CPU. Confirm that <strong>Virtualization: Enabled</strong> is displayed. When disabled, enable Intel VT-x or AMD-V/SVM in BIOS/UEFI.</div>
+</section>
+
+<section id="downloads" data-title="Software Download Links">
+<h2>5. Required and Recommended Software Downloads</h2>
+
+<h3>Required</h3>
+<div class="download">
+<div><strong>Windows Subsystem for Linux 2</strong><br><span class="muted">Provides the Linux kernel/backend used by Docker Desktop.</span></div>
+<a href="https://learn.microsoft.com/en-us/windows/wsl/install" target="_blank" rel="noopener">Official WSL guide</a>
+</div>
+<div class="download">
+<div><strong>Docker Desktop for Windows</strong><br><span class="muted">Provides Docker Engine, Docker Compose, Linux containers, and the desktop management UI.</span></div>
+<a href="https://docs.docker.com/desktop/setup/install/windows-install/" target="_blank" rel="noopener">Download Docker Desktop</a>
+</div>
+<div class="download">
+<div><strong>Apache Airflow 3.3 Docker Compose file</strong><br><span class="muted">Official local learning stack with CeleryExecutor, PostgreSQL, and Redis.</span></div>
+<a href="https://airflow.apache.org/docs/apache-airflow/3.3.0/docker-compose.yaml" target="_blank" rel="noopener">Download YAML</a>
+</div>
+
+<h3>Recommended developer tools</h3>
+<div class="download">
+<div><strong>Visual Studio Code</strong><br><span class="muted">Edit DAG Python files and project configuration.</span></div>
+<a href="https://code.visualstudio.com/Download" target="_blank" rel="noopener">Download VS Code</a>
+</div>
+<div class="download">
+<div><strong>Git for Windows</strong><br><span class="muted">Version-control your DAGs and deployment files.</span></div>
+<a href="https://git-scm.com/download/win" target="_blank" rel="noopener">Download Git</a>
+</div>
+<div class="download">
+<div><strong>Windows Terminal</strong><br><span class="muted">Convenient tabs for PowerShell, Command Prompt, and Ubuntu/WSL.</span></div>
+<a href="https://learn.microsoft.com/en-us/windows/terminal/install" target="_blank" rel="noopener">Install Windows Terminal</a>
+</div>
+<div class="download">
+<div><strong>Airflow official documentation</strong><br><span class="muted">Reference for installation, UI, DAGs, operators, and administration.</span></div>
+<a href="https://airflow.apache.org/docs/apache-airflow/stable/" target="_blank" rel="noopener">Open Airflow docs</a>
+</div>
+
+<div class="callout ok"><strong>You do not need to install separately:</strong> Python, PostgreSQL, Redis, Celery, or Apache Airflow on the Windows host for this Docker-based lab. They run inside containers.</div>
+</section>
+
+<section id="precheck" data-title="Windows Pre-installation Checks">
+<h2>6. Windows Pre-installation Checks</h2>
+<h3>Step 1: Check Windows version</h3>
+<pre><code>winver</code></pre>
+<p>Use a currently supported Windows release. Windows 11 is recommended for a new setup.</p>
+
+<h3>Step 2: Check architecture and memory</h3>
+<pre><code>Get-ComputerInfo |
+  Select-Object WindowsProductName, WindowsVersion, OsBuildNumber,
+                OsArchitecture, CsTotalPhysicalMemory</code></pre>
+
+<h3>Step 3: Check virtualization</h3>
+<pre><code>systeminfo.exe | Select-String "Virtualization|Hyper-V Requirements"</code></pre>
+
+<h3>Step 4: Check free disk space</h3>
+<pre><code>Get-PSDrive C</code></pre>
+
+<h3>Step 5: Check whether port 8080 is already in use</h3>
+<pre><code>Get-NetTCPConnection -LocalPort 8080 -ErrorAction SilentlyContinue</code></pre>
+<p>No output normally means port 8080 is free.</p>
+</section>
+
+<section id="wsl" data-title="Install WSL 2">
+<h2>7. Install and Configure WSL 2</h2>
+
+<div class="step"><div class="step-num">1</div><div>
+<h3>Open PowerShell as Administrator</h3>
+<p>Search for PowerShell, right-click it, and choose <strong>Run as administrator</strong>.</p>
+</div></div>
+
+<div class="step"><div class="step-num">2</div><div>
+<h3>Install WSL and Ubuntu</h3>
+<pre><code>wsl --install</code></pre>
+<p>This enables the required Windows features and installs Ubuntu by default. Restart Windows when requested.</p>
+</div></div>
+
+<div class="step"><div class="step-num">3</div><div>
+<h3>Update WSL</h3>
+<pre><code>wsl --update</code></pre>
+</div></div>
+
+<div class="step"><div class="step-num">4</div><div>
+<h3>Set WSL 2 as the default</h3>
+<pre><code>wsl --set-default-version 2</code></pre>
+</div></div>
+
+<div class="step"><div class="step-num">5</div><div>
+<h3>Verify the distribution and version</h3>
+<pre><code>wsl --list --verbose</code></pre>
+<p>Expected example:</p>
+<pre><code>  NAME      STATE           VERSION
+* Ubuntu    Stopped         2</code></pre>
+</div></div>
+
+<div class="step"><div class="step-num">6</div><div>
+<h3>Complete the first Ubuntu launch</h3>
+<p>Open Ubuntu from the Start menu. Create a Linux username and password when requested. The password does not display while typing; this is normal.</p>
+</div></div>
+
+<h3>Useful WSL commands</h3>
+<pre><code># View status
+wsl --status
+
+# Update WSL
+wsl --update
+
+# List distributions
+wsl -l -v
+
+# Stop all WSL distributions and Docker's WSL VM
+wsl --shutdown
+
+# Enter Ubuntu
+wsl -d Ubuntu</code></pre>
+</section>
+
+<section id="docker" data-title="Install Docker Desktop">
+<h2>8. Install Docker Desktop</h2>
+<div class="step"><div class="step-num">1</div><div>
+<h3>Download the installer</h3>
+<p>Use the official Docker Desktop for Windows page in the downloads section.</p>
+</div></div>
+
+<div class="step"><div class="step-num">2</div><div>
+<h3>Run the installer</h3>
+<p>Select the WSL 2 backend when the installer presents the backend option. Complete the installation and restart when requested.</p>
+</div></div>
+
+<div class="step"><div class="step-num">3</div><div>
+<h3>Start Docker Desktop</h3>
+<p>Open Docker Desktop from the Start menu. Accept the required agreement. Wait until Docker reports that the engine is running.</p>
+</div></div>
+
+<div class="step"><div class="step-num">4</div><div>
+<h3>Confirm Linux containers</h3>
+<p>Airflow requires Linux containers. If the Docker tray menu shows <strong>Switch to Linux containers</strong>, select it. If it shows <strong>Switch to Windows containers</strong>, Docker is already using Linux containers.</p>
+</div></div>
+
+<div class="step"><div class="step-num">5</div><div>
+<h3>Verify Docker and Compose</h3>
+<pre><code>docker --version
+docker compose version
+docker info</code></pre>
+<p>Docker Compose must be version 2.14 or newer for the official Airflow Compose file.</p>
+</div></div>
+
+<div class="step"><div class="step-num">6</div><div>
+<h3>Run a basic container test</h3>
+<pre><code>docker run --rm hello-world</code></pre>
+</div></div>
+
+<div class="callout warn"><strong>Memory:</strong> Airflow’s official Compose guide requires at least 4 GB available to Docker and recommends approximately 8 GB for a smoother experience.</div>
+</section>
+
+<section id="optional" data-title="Install Optional Developer Tools">
+<h2>9. Install Recommended Developer Tools</h2>
+<h3>Visual Studio Code</h3>
+<p>Install the Windows User Installer, then add these extensions:</p>
+<ul>
+<li>Python — useful for Python editing and linting.</li>
+<li>Docker — view containers, images, and Compose resources.</li>
+<li>WSL — open a project inside Ubuntu when needed.</li>
+<li>YAML — improve Compose-file editing.</li>
+</ul>
+
+<h3>Git for Windows</h3>
+<pre><code>git --version
+git config --global user.name "Your Name"
+git config --global user.email "your-email@example.com"</code></pre>
+
+<h3>Windows Terminal</h3>
+<p>Use separate tabs for:</p>
+<ul>
+<li>PowerShell — Docker Compose commands.</li>
+<li>Ubuntu — Linux/WSL practice.</li>
+<li>Command Prompt — optional Windows command checks.</li>
+</ul>
+</section>
+
+<section id="airflow" data-title="Install Apache Airflow with Docker">
+<h2>10. Install Apache Airflow 3.3 with Docker Compose</h2>
+
+<h3>Step 1: Create a clean project folder</h3>
+<pre><code>New-Item -ItemType Directory -Force C:\AirflowLab | Out-Null
+Set-Location C:\AirflowLab</code></pre>
+<p>Avoid spaces and special characters in the project path.</p>
+
+<h3>Step 2: Create mounted folders</h3>
+<pre><code>"dags","logs","plugins","config" |
+  ForEach-Object {
+    New-Item -ItemType Directory -Force $_ | Out-Null
+  }</code></pre>
+
+<h3>Step 3: Download the official Compose file</h3>
+<pre><code>Invoke-WebRequest `
+  -Uri "https://airflow.apache.org/docs/apache-airflow/3.3.0/docker-compose.yaml" `
+  -OutFile "docker-compose.yaml"</code></pre>
+
+<h3>Step 4: Create the Windows <code>.env</code> file</h3>
+<pre><code>'AIRFLOW_UID=50000' | Set-Content -Encoding ascii .env</code></pre>
+
+<h3>Step 5: Confirm the files</h3>
+<pre><code>Get-ChildItem -Force</code></pre>
+<p>You should see:</p>
+<pre><code>config
+dags
+logs
+plugins
+.env
+docker-compose.yaml</code></pre>
+
+<h3>Step 6: Initialize the metadata database and admin account</h3>
+<pre><code>docker compose up airflow-init</code></pre>
+<p>Wait for:</p>
+<pre><code>airflow-init-1 exited with code 0</code></pre>
+
+<h3>Step 7: Start Airflow in the background</h3>
+<pre><code>docker compose up -d</code></pre>
+
+<h3>Step 8: Check container status</h3>
+<pre><code>docker compose ps</code></pre>
+
+<h3>Step 9: Open Airflow</h3>
+<pre><code>Start-Process "http://localhost:8080"</code></pre>
+
+<h3>Learning login</h3>
+<table>
+<tr><th>Field</th><th>Value</th></tr>
+<tr><td>URL</td><td><code>http://localhost:8080</code></td></tr>
+<tr><td>Username</td><td><code>airflow</code></td></tr>
+<tr><td>Password</td><td><code>airflow</code></td></tr>
+</table>
+<div class="callout danger"><strong>Security:</strong> These credentials and the official Compose quick-start are only for local learning. Do not expose port 8080 publicly or reuse these credentials in a real environment.</div>
+</section>
+
+<section id="verify" data-title="Verify Airflow Services">
+<h2>11. Verify Every Airflow Service</h2>
+<pre><code>docker compose ps</code></pre>
+<table>
+<tr><th>Service</th><th>Expected state</th><th>Diagnostic command</th></tr>
+<tr><td>API server</td><td>Up / healthy; port 8080 published</td><td><code>docker compose logs airflow-api-server</code></td></tr>
+<tr><td>Scheduler</td><td>Up / healthy</td><td><code>docker compose logs airflow-scheduler</code></td></tr>
+<tr><td>DAG Processor</td><td>Up / healthy</td><td><code>docker compose logs airflow-dag-processor</code></td></tr>
+<tr><td>Worker</td><td>Up / healthy</td><td><code>docker compose logs airflow-worker</code></td></tr>
+<tr><td>Triggerer</td><td>Up / healthy</td><td><code>docker compose logs airflow-triggerer</code></td></tr>
+<tr><td>PostgreSQL</td><td>Up / healthy</td><td><code>docker compose logs postgres</code></td></tr>
+<tr><td>Redis</td><td>Up / healthy</td><td><code>docker compose logs redis</code></td></tr>
+</table>
+
+<h3>Run Airflow CLI inside a container</h3>
+<pre><code>docker compose run --rm airflow-worker airflow info
+docker compose run --rm airflow-worker airflow version
+docker compose run --rm airflow-worker airflow dags list</code></pre>
+
+<h3>Follow logs live</h3>
+<pre><code>docker compose logs -f airflow-scheduler</code></pre>
+<p>Press <span class="kbd">Ctrl</span> + <span class="kbd">C</span> to stop following logs; this does not stop the containers.</p>
+</section>
+
+<section id="sample" data-title="Create Sample UI Demonstration DAG">
+<h2>12. Create a Sample DAG for the UI Walkthrough</h2>
+<p>Create this file:</p>
+<pre><code>C:\AirflowLab\dags\airflow_ui_demo.py</code></pre>
+
+<pre><code>from __future__ import annotations
+
+from datetime import timedelta
+
+import pendulum
+from airflow.sdk import dag, task
+
+
+@dag(
+    dag_id="airflow_ui_demo",
+    schedule=None,
+    start_date=pendulum.datetime(2026, 1, 1, tz="UTC"),
+    catchup=False,
+    tags=["training", "ui-demo"],
+    default_args={
+        "retries": 1,
+        "retry_delay": timedelta(seconds=20),
+    },
+)
+def airflow_ui_demo():
+
+    @task
+    def extract() -> list[dict]:
+        records = [
+            {"order_id": 101, "amount": 120.50},
+            {"order_id": 102, "amount": 80.00},
+            {"order_id": 103, "amount": 220.25},
+        ]
+        print(f"Extracted {len(records)} orders")
+        return records
+
+    @task
+    def validate(records: list[dict]) -> dict:
+        if not records:
+            raise ValueError("No orders received")
+
+        for record in records:
+            if record["amount"] &lt; 0:
+                raise ValueError(
+                    f"Negative amount for order {record['order_id']}"
+                )
+
+        result = {
+            "records": records,
+            "row_count": len(records),
+            "quality_status": "PASS",
+        }
+        print(result)
+        return result
+
+    @task
+    def transform(validation_result: dict) -> dict:
+        total_amount = round(
+            sum(
+                record["amount"]
+                for record in validation_result["records"]
+            ),
+            2,
+        )
+        summary = {
+            "order_count": validation_result["row_count"],
+            "total_amount": total_amount,
+            "quality_status": validation_result["quality_status"],
+        }
+        print(summary)
+        return summary
+
+    @task
+    def load(summary: dict) -> str:
+        print(
+            "Pretending to load the following summary "
+            "into a warehouse:"
+        )
+        print(summary)
+        return "warehouse.daily_order_summary"
+
+    @task
+    def publish_report(table_name: str) -> None:
+        print(f"Dashboard can now read from {table_name}")
+
+    extracted = extract()
+    checked = validate(extracted)
+    transformed = transform(checked)
+    loaded_table = load(transformed)
+    publish_report(loaded_table)
+
+
+airflow_ui_demo()</code></pre>
+
+<h3>Confirm DAG discovery</h3>
+<pre><code>docker compose run --rm airflow-worker `
+  airflow dags list | Select-String "airflow_ui_demo"</code></pre>
+
+<h3>Check parsing errors</h3>
+<pre><code>docker compose run --rm airflow-worker `
+  airflow dags list-import-errors</code></pre>
+
+<div class="callout ok"><strong>What this DAG demonstrates:</strong> dependency flow, task states, logs, retries, XCom return values, task durations, code view, and run history.</div>
+</section>
+
+<section id="login" data-title="Login and UI Navigation">
+<h2>13. Login and Understand the Navigation</h2>
+<ol>
+<li>Open <code>http://localhost:8080</code>.</li>
+<li>Enter <code>airflow</code> for username and password.</li>
+<li>After login, the Airflow 3 Home page opens.</li>
+<li>Use the left/main navigation to move between Home, DAGs, Assets, Admin, and other pages available to your role.</li>
+<li>Use user settings in the lower corner to switch between light and dark themes.</li>
+</ol>
+<div class="callout"><strong>Browser requirement:</strong> Airflow 3 uses modern CSS features. Use an up-to-date browser when colors, layout, or controls appear incorrect.</div>
+</section>
+
+<section id="home" data-title="Airflow Home Page">
+<h2>14. Airflow Home Page</h2>
+<p>The Home page is the operations dashboard for the overall Airflow environment.</p>
+<div class="diagram">
+<svg viewBox="0 0 1050 520" width="100%" aria-label="Airflow UI home page conceptual diagram">
+<rect x="20" y="20" width="1010" height="480" rx="20" fill="#071725" stroke="#31536d"/>
+<rect x="45" y="45" width="190" height="430" rx="14" fill="#0d2b43" stroke="#416a87"/>
+<text x="140" y="80" text-anchor="middle" font-size="20">Navigation</text>
+<text x="80" y="125" font-size="16">Home</text><text x="80" y="160" font-size="16">DAGs</text>
+<text x="80" y="195" font-size="16">Assets</text><text x="80" y="230" font-size="16">Admin</text>
+
+<rect x="260" y="45" width="740" height="75" rx="14" fill="#10314a" stroke="#53e6d3"/>
+<text x="630" y="78" text-anchor="middle" font-size="20">System Health</text>
+<text x="630" y="104" text-anchor="middle" font-size="14">MetaDatabase • Scheduler • Triggerer • DAG Processor</text>
+
+<rect x="260" y="145" width="350" height="145" rx="14" fill="#0d2b43" stroke="#65b5ff"/>
+<text x="435" y="180" text-anchor="middle" font-size="19">DAG / Task History</text>
+<text x="435" y="215" text-anchor="middle" font-size="14">Success, failure, running counts</text>
+<text x="435" y="245" text-anchor="middle" font-size="14">Selectable time range</text>
+
+<rect x="650" y="145" width="350" height="145" rx="14" fill="#0d2b43" stroke="#ffd166"/>
+<text x="825" y="180" text-anchor="middle" font-size="19">Quick Filters</text>
+<text x="825" y="215" text-anchor="middle" font-size="14">Failed • Running • Active DAGs</text>
+<text x="825" y="245" text-anchor="middle" font-size="14">Fast incident navigation</text>
+
+<rect x="260" y="320" width="740" height="155" rx="14" fill="#0d2b43" stroke="#b9a1ff"/>
+<text x="630" y="360" text-anchor="middle" font-size="19">Recent Asset Events</text>
+<text x="630" y="397" text-anchor="middle" font-size="14">Materializations • event-triggered DAG runs • producer/consumer activity</text>
+<text x="630" y="432" text-anchor="middle" font-size="14">Use this area to understand data-aware orchestration</text>
+</svg>
+</div>
+<h3>What to check first every day</h3>
+<ol>
+<li>Are MetaDatabase, Scheduler, Triggerer, and DAG Processor healthy?</li>
+<li>Are failed DAG or task counts increasing?</li>
+<li>Are many tasks running or queued unusually long?</li>
+<li>Did expected asset events arrive?</li>
+</ol>
+</section>
+
+<section id="dags-list" data-title="DAG List View">
+<h2>15. DAG List View</h2>
+<p>Open <strong>DAGs</strong> from the main navigation. Each row summarizes one available DAG.</p>
+<table>
+<tr><th>Column/control</th><th>Meaning</th><th>Trainer demonstration</th></tr>
+<tr><td>DAG ID</td><td>Unique workflow identifier.</td><td>Search for <code>airflow_ui_demo</code>.</td></tr>
+<tr><td>Schedule / next run</td><td>When the DAG is expected to create scheduled runs.</td><td>The demo has no schedule and is manually triggered.</td></tr>
+<tr><td>Latest run state</td><td>Status of the most recent DAG run.</td><td>Compare before and after triggering.</td></tr>
+<tr><td>Recent-run chart</td><td>Compact history of recent run results.</td><td>Trigger multiple runs to create history.</td></tr>
+<tr><td>Tags</td><td>Classification and filtering labels.</td><td>Filter by <code>training</code> or <code>ui-demo</code>.</td></tr>
+<tr><td>Pause/resume</td><td>Controls scheduled execution.</td><td>Explain that pausing does not delete the DAG.</td></tr>
+<tr><td>Search/filter/sort</td><td>Find DAGs by status, schedule state, tags, or text.</td><td>Practice locating failed or active DAGs.</td></tr>
+</table>
+
+<h3>Trigger the demonstration DAG</h3>
+<ol>
+<li>Select <code>airflow_ui_demo</code>.</li>
+<li>Use the Trigger button.</li>
+<li>Select a single run.</li>
+<li>Open the new DAG run.</li>
+</ol>
+</section>
+
+<section id="dag-detail" data-title="DAG Details Page">
+<h2>16. DAG Details Page</h2>
+<p>The DAG Details page centralizes metadata, recent activity, task diagnostics, source code, and run history.</p>
+<table>
+<tr><th>Tab</th><th>Purpose</th><th>Question it answers</th></tr>
+<tr><td>Overview</td><td>Recent failures, counts, trends, and log previews.</td><td>“Is this DAG healthy?”</td></tr>
+<tr><td>Grid</td><td>Task state matrix across DAG runs.</td><td>“Which task failed in which run?”</td></tr>
+<tr><td>Graph</td><td>Dependency structure and run-specific task state.</td><td>“Why did downstream work not run?”</td></tr>
+<tr><td>Runs</td><td>Complete DAG-run history.</td><td>“When did it run and how long did it take?”</td></tr>
+<tr><td>Tasks</td><td>Aggregated task metadata and history.</td><td>“Which operator and trigger rule does this task use?”</td></tr>
+<tr><td>Events</td><td>Structured system and asset-related events.</td><td>“What event or change affected this DAG?”</td></tr>
+<tr><td>Code</td><td>Parsed DAG source and version.</td><td>“What code did Airflow parse?”</td></tr>
+<tr><td>Details</td><td>Schedule, source location, limits, IDs, and metadata.</td><td>“How is this DAG configured?”</td></tr>
+</table>
+
+<h3>Top action buttons</h3>
+<ul>
+<li><strong>Trigger:</strong> create a new manual run or perform a backfill where available.</li>
+<li><strong>Pause/resume:</strong> control scheduled run creation.</li>
+<li><strong>Reparse:</strong> request DAG reprocessing when available to your role.</li>
+</ul>
+</section>
+
+<section id="grid" data-title="Grid View">
+<h2>17. Grid View: Main Operations Screen</h2>
+<p>Grid View is the most useful screen for monitoring task instances over time.</p>
+<div class="diagram">
+<svg viewBox="0 0 1050 490" width="100%" aria-label="Grid view conceptual diagram">
+<rect x="20" y="20" width="1010" height="450" rx="18" fill="#071725" stroke="#31536d"/>
+<rect x="45" y="45" width="220" height="65" rx="10" fill="#11304a" stroke="#65b5ff"/>
+<text x="155" y="83" text-anchor="middle" font-size="18">Task / Run Matrix</text>
+<g font-size="14">
+<text x="350" y="80">Run 1</text><text x="495" y="80">Run 2</text><text x="640" y="80">Run 3</text><text x="785" y="80">Run 4</text><text x="930" y="80">Run 5</text>
+<text x="65" y="150">extract</text><text x="65" y="215">validate</text><text x="65" y="280">transform</text><text x="65" y="345">load</text><text x="65" y="410">publish_report</text>
+</g>
+<g>
+<rect x="320" y="120" width="90" height="40" rx="7" fill="#54dc91"/><rect x="465" y="120" width="90" height="40" rx="7" fill="#54dc91"/>
+<rect x="610" y="120" width="90" height="40" rx="7" fill="#54dc91"/><rect x="755" y="120" width="90" height="40" rx="7" fill="#54dc91"/>
+<rect x="900" y="120" width="90" height="40" rx="7" fill="#54dc91"/>
+
+<rect x="320" y="185" width="90" height="40" rx="7" fill="#54dc91"/><rect x="465" y="185" width="90" height="40" rx="7" fill="#ff6b83"/>
+<rect x="610" y="185" width="90" height="40" rx="7" fill="#54dc91"/><rect x="755" y="185" width="90" height="40" rx="7" fill="#ffd166"/>
+<rect x="900" y="185" width="90" height="40" rx="7" fill="#54dc91"/>
+
+<rect x="320" y="250" width="90" height="40" rx="7" fill="#54dc91"/><rect x="465" y="250" width="90" height="40" rx="7" fill="#91a4b7"/>
+<rect x="610" y="250" width="90" height="40" rx="7" fill="#54dc91"/><rect x="755" y="250" width="90" height="40" rx="7" fill="#65b5ff"/>
+<rect x="900" y="250" width="90" height="40" rx="7" fill="#54dc91"/>
+
+<rect x="320" y="315" width="90" height="40" rx="7" fill="#54dc91"/><rect x="465" y="315" width="90" height="40" rx="7" fill="#91a4b7"/>
+<rect x="610" y="315" width="90" height="40" rx="7" fill="#54dc91"/><rect x="755" y="315" width="90" height="40" rx="7" fill="#65b5ff"/>
+<rect x="900" y="315" width="90" height="40" rx="7" fill="#54dc91"/>
+
+<rect x="320" y="380" width="90" height="40" rx="7" fill="#54dc91"/><rect x="465" y="380" width="90" height="40" rx="7" fill="#91a4b7"/>
+<rect x="610" y="380" width="90" height="40" rx="7" fill="#54dc91"/><rect x="755" y="380" width="90" height="40" rx="7" fill="#65b5ff"/>
+<rect x="900" y="380" width="90" height="40" rx="7" fill="#54dc91"/>
+</g>
+</svg>
+</div>
+
+<h3>How to read the matrix</h3>
+<ul>
+<li>Each <strong>row</strong> is a task.</li>
+<li>Each <strong>column</strong> is a DAG run.</li>
+<li>Each cell is one <strong>task instance</strong>.</li>
+<li>Hover for state, time, attempt, and duration details.</li>
+<li>Click a cell to open logs, clear, mark state, or inspect metadata according to permission.</li>
+</ul>
+
+<h3>Common states</h3>
+<p>
+<span class="state"><span class="dot success"></span>Success</span>
+<span class="state"><span class="dot failed"></span>Failed</span>
+<span class="state"><span class="dot running"></span>Running / retry-related</span>
+<span class="state"><span class="dot queued"></span>Queued / scheduled</span>
+<span class="state"><span class="dot skipped"></span>Skipped</span>
+<span class="state"><span class="dot neutral"></span>None / upstream blocked</span>
+</p>
+<p class="muted small">Exact colors and appearance can vary by Airflow version and theme; rely on the displayed state name and tooltip.</p>
+
+<h3>Important Grid actions</h3>
+<table>
+<tr><th>Action</th><th>When to use</th><th>Risk</th></tr>
+<tr><td>View logs</td><td>First action after failure.</td><td>None.</td></tr>
+<tr><td>Clear task instance</td><td>Retry after fixing the cause.</td><td>May rerun downstream work; confirm idempotency.</td></tr>
+<tr><td>Mark success</td><td>Exceptional controlled recovery when work is already complete externally.</td><td>Can hide unprocessed data when misused.</td></tr>
+<tr><td>Mark failed</td><td>Force failure handling or test downstream rules.</td><td>Can trigger alerts and skip downstream tasks.</td></tr>
+</table>
+</section>
+
+<section id="graph" data-title="Graph View">
+<h2>18. Graph View: Dependencies and Failure Paths</h2>
+<div class="flow">
+<div class="node">extract</div><div class="arrow">→</div>
+<div class="node">validate</div><div class="arrow">→</div>
+<div class="node">transform</div><div class="arrow">→</div>
+<div class="node">load</div><div class="arrow">→</div>
+<div class="node">publish_report</div>
+</div>
+<p>Graph View answers how tasks are connected and which downstream tasks are blocked by an upstream condition.</p>
+<h3>Use Graph View to</h3>
+<ul>
+<li>Explain the DAG structure to trainees and business teams.</li>
+<li>Inspect upstream and downstream relationships.</li>
+<li>See branching and TaskGroups.</li>
+<li>Select a particular DAG run and overlay task states.</li>
+<li>Identify <code>upstream_failed</code>, <code>skipped</code>, or failed paths.</li>
+</ul>
+<div class="memory"><strong>Grid tells you when and where a task failed. Graph tells you how that failure affected the workflow path.</strong></div>
+</section>
+
+<section id="runs" data-title="Runs Tasks Events Code Details">
+<h2>19. Runs, Tasks, Events, Code, and Details Tabs</h2>
+<h3>Runs</h3>
+<p>Shows every DAG run with state, run type, duration, logical date, and DAG version. Open one row for run-specific information.</p>
+
+<h3>Tasks</h3>
+<p>Shows task definitions and aggregated history, including operator type, trigger rule, recent status, and run history.</p>
+
+<h3>Events</h3>
+<p>Shows structured events such as DAG triggers and version changes. Asset-triggered information may also appear.</p>
+
+<h3>Code</h3>
+<p>Displays the DAG source version parsed by Airflow. This is useful when the file on disk was changed and you need to know what Airflow actually loaded.</p>
+
+<h3>Details</h3>
+<p>Shows configuration metadata such as schedule, file location, concurrency limits, identifiers, and version information.</p>
+
+<h3>DAG Run Details</h3>
+<table>
+<tr><th>Field</th><th>Purpose</th></tr>
+<tr><td>Run ID</td><td>Unique identity of this DAG run.</td></tr>
+<tr><td>Trigger type</td><td>Manual, scheduled, backfill, asset, or another supported trigger.</td></tr>
+<tr><td>Logical date and data interval</td><td>Identifies the logical period processed by the run.</td></tr>
+<tr><td>Queued/start/end/duration</td><td>Helps diagnose scheduling delay and runtime.</td></tr>
+<tr><td>DAG version</td><td>Identifies the parsed code version used for the run.</td></tr>
+<tr><td>Run configuration</td><td>Parameters supplied when triggering.</td></tr>
+</table>
+</section>
+
+<section id="task-instance" data-title="Task Instance View and Logs">
+<h2>20. Task Instance View: Where You Debug Failures</h2>
+<p>Open a task cell or task instance row to inspect one task execution.</p>
+<table>
+<tr><th>Tab</th><th>What it contains</th><th>Industry use</th></tr>
+<tr><td>Logs</td><td>Program output, Airflow context, exceptions, traceback, retry information.</td><td>First place to investigate a failure.</td></tr>
+<tr><td>Rendered Templates</td><td>Final values of templated fields after macros and run context are applied.</td><td>Verify SQL dates, file paths, commands, and parameters.</td></tr>
+<tr><td>XCom</td><td>Small values returned or explicitly pushed by tasks.</td><td>Verify row counts, paths, IDs, and summaries passed downstream.</td></tr>
+<tr><td>Events</td><td>Events associated with this task execution.</td><td>Understand state transitions or external triggers.</td></tr>
+<tr><td>Code</td><td>DAG source code parsed for this execution.</td><td>Diagnose code-version drift.</td></tr>
+<tr><td>Details</td><td>State, run ID, try number, operator, duration, pool, slots, executor, and metadata.</td><td>Diagnose capacity, retry, and configuration issues.</td></tr>
+</table>
+
+<h3>Log-reading method</h3>
+<ol>
+<li>Start at the bottom and locate the final exception.</li>
+<li>Read the traceback upward to find your DAG function or operator call.</li>
+<li>Identify whether the failure is transient, data-related, permission-related, dependency-related, or code-related.</li>
+<li>Fix the root cause before clearing or retrying.</li>
+<li>Confirm the task is idempotent before rerun.</li>
+</ol>
+
+<h3>Explore XCom using the sample DAG</h3>
+<p>Open the successful <code>transform</code> task and select XCom. You should see a small summary similar to:</p>
+<pre><code>{
+  "order_count": 3,
+  "total_amount": 420.75,
+  "quality_status": "PASS"
+}</code></pre>
+</section>
+
+<section id="assets" data-title="Asset Views">
+<h2>21. Asset Views</h2>
+<p>Assets represent logical data objects such as files, tables, warehouse models, and reports. Airflow can track producer and consumer relationships.</p>
+<h3>Asset List</h3>
+<ul>
+<li>Lists known assets.</li>
+<li>Shows producing tasks.</li>
+<li>Shows consuming DAGs.</li>
+<li>Groups assets where configured.</li>
+</ul>
+
+<h3>Asset Graph</h3>
+<ul>
+<li>Shows upstream producers and downstream consumers.</li>
+<li>Displays recent asset events and triggered DAG runs.</li>
+<li>Supports understanding data lineage and data-aware scheduling.</li>
+</ul>
+
+<div class="flow">
+<div class="node">Sales ingestion DAG</div><div class="arrow">→</div>
+<div class="node">sales_daily asset</div><div class="arrow">→</div>
+<div class="node">Reporting DAG</div>
+</div>
+</section>
+
+<section id="admin" data-title="Admin Pages">
+<h2>22. Admin Pages</h2>
+<p>The Admin area is visible only to users with suitable role permissions.</p>
+<table>
+<tr><th>Page</th><th>Purpose</th><th>Example</th></tr>
+<tr><td>Variables</td><td>Store environment or workflow configuration key-value pairs.</td><td><code>sales_region=INDIA_SOUTH</code></td></tr>
+<tr><td>Connections</td><td>Define connection information for databases, APIs, clouds, and other systems.</td><td><code>postgres_reporting</code></td></tr>
+<tr><td>Pools</td><td>Limit concurrent tasks using a shared or quota-limited resource.</td><td>Allow only three heavy warehouse loads at once.</td></tr>
+<tr><td>Providers</td><td>View installed provider packages, operators, hooks, and sensors.</td><td>Confirm whether the Google, AWS, or Microsoft provider is installed.</td></tr>
+<tr><td>Plugins</td><td>Inspect registered custom Airflow extensions.</td><td>Verify a company-specific plugin loaded.</td></tr>
+<tr><td>Config</td><td>View effective configuration values.</td><td>Diagnose scheduler, logging, executor, or secrets behavior.</td></tr>
+</table>
+
+<div class="callout danger"><strong>Secrets warning:</strong> Do not place passwords or sensitive tokens in ordinary Variables. Use Connections with secure handling or an external secrets backend in production.</div>
+</section>
+
+<section id="daily-ops" data-title="Daily Industry Operations">
+<h2>23. Airflow UI Activities in a Real Project</h2>
+<table>
+<tr><th>Activity</th><th>UI path</th><th>Typical action</th></tr>
+<tr><td>Morning platform health check</td><td>Home</td><td>Check scheduler, database, triggerer, and DAG Processor health.</td></tr>
+<tr><td>Investigate pipeline failure</td><td>DAG → Grid → failed cell → Logs</td><td>Identify root cause and impacted downstream tasks.</td></tr>
+<tr><td>Rerun after a fix</td><td>Grid or DAG Run</td><td>Clear selected task instances, respecting dependencies.</td></tr>
+<tr><td>Confirm data period</td><td>DAG Run → Details</td><td>Verify logical date and data interval.</td></tr>
+<tr><td>Check code used by run</td><td>DAG Run → Code</td><td>Compare parsed source with deployed source.</td></tr>
+<tr><td>Check parameter rendering</td><td>Task Instance → Rendered Templates</td><td>Verify SQL, partition date, path, or command.</td></tr>
+<tr><td>Inspect metadata passed between tasks</td><td>Task Instance → XCom</td><td>Check row count, output path, ID, or status summary.</td></tr>
+<tr><td>Protect a database</td><td>Admin → Pools</td><td>Create or resize controlled concurrency.</td></tr>
+<tr><td>Configure an integration</td><td>Admin → Connections</td><td>Add a database/API/cloud connection.</td></tr>
+<tr><td>Review data dependencies</td><td>Assets</td><td>Trace producers, consumers, and triggering events.</td></tr>
+</table>
+
+<h3>Failure triage sequence</h3>
+<div class="flow">
+<div class="node">Home health</div><div class="arrow">→</div>
+<div class="node">DAG Grid</div><div class="arrow">→</div>
+<div class="node">Task logs</div><div class="arrow">→</div>
+<div class="node">Root cause</div><div class="arrow">→</div>
+<div class="node">Safe clear/retry</div><div class="arrow">→</div>
+<div class="node">Validate output</div>
+</div>
+</section>
+
+<section id="commands" data-title="Airflow Docker Commands">
+<h2>24. Important Daily Commands</h2>
+<h3>Start, stop, and inspect</h3>
+<pre><code># Start existing containers
+docker compose start
+
+# Start/create in background
+docker compose up -d
+
+# Show status
+docker compose ps
+
+# Stop without deleting containers
+docker compose stop
+
+# Stop and remove containers, preserving named volumes
+docker compose down
+
+# Full learning-lab reset: removes database volumes
+docker compose down --volumes --remove-orphans</code></pre>
+
+<h3>Logs</h3>
+<pre><code># All recent logs
+docker compose logs --tail 100
+
+# Follow scheduler
+docker compose logs -f airflow-scheduler
+
+# Follow DAG processor
+docker compose logs -f airflow-dag-processor
+
+# Follow worker
+docker compose logs -f airflow-worker</code></pre>
+
+<h3>Airflow CLI</h3>
+<pre><code># Version and environment
+docker compose run --rm airflow-worker airflow version
+docker compose run --rm airflow-worker airflow info
+
+# DAGs
+docker compose run --rm airflow-worker airflow dags list
+docker compose run --rm airflow-worker airflow dags list-import-errors
+docker compose run --rm airflow-worker airflow dags show airflow_ui_demo
+
+# Trigger a DAG
+docker compose run --rm airflow-worker `
+  airflow dags trigger airflow_ui_demo
+
+# List tasks
+docker compose run --rm airflow-worker `
+  airflow tasks list airflow_ui_demo</code></pre>
+
+<h3>Docker disk usage</h3>
+<pre><code>docker system df</code></pre>
+</section>
+
+<section id="automation-script" data-title="PowerShell Automatic Setup Script">
+<h2>25. PowerShell Script to Set Up the Airflow Project</h2>
+<p>This script assumes that WSL 2 and Docker Desktop are already installed and Docker is running.</p>
+<p>Create <code>C:\AirflowLab\setup-airflow.ps1</code>:</p>
+<pre><code>[CmdletBinding()]
+param(
+    [string]$ProjectPath = "C:\AirflowLab",
+    [string]$AirflowVersion = "3.3.0"
+)
+
+$ErrorActionPreference = "Stop"
+
+function Test-Command {
+    param([Parameter(Mandatory)][string]$Name)
+
+    if (-not (Get-Command $Name -ErrorAction SilentlyContinue)) {
+        throw "Required command '$Name' was not found."
+    }
+}
+
+Write-Host "Checking Docker..." -ForegroundColor Cyan
+Test-Command -Name "docker"
+
+docker info | Out-Null
+if ($LASTEXITCODE -ne 0) {
+    throw "Docker Engine is not running. Start Docker Desktop."
+}
+
+$composeVersion = docker compose version
+if ($LASTEXITCODE -ne 0) {
+    throw "Docker Compose v2 is unavailable."
+}
+Write-Host $composeVersion -ForegroundColor Green
+
+Write-Host "Creating Airflow project..." -ForegroundColor Cyan
+New-Item -ItemType Directory -Force $ProjectPath | Out-Null
+Set-Location $ProjectPath
+
+"dags", "logs", "plugins", "config" |
+    ForEach-Object {
+        New-Item -ItemType Directory -Force $_ | Out-Null
+    }
+
+$composeUrl =
+    "https://airflow.apache.org/docs/apache-airflow/" +
+    "$AirflowVersion/docker-compose.yaml"
+
+Write-Host "Downloading $composeUrl" -ForegroundColor Cyan
+Invoke-WebRequest `
+    -Uri $composeUrl `
+    -OutFile "docker-compose.yaml"
+
+'AIRFLOW_UID=50000' |
+    Set-Content -Encoding ascii ".env"
+
+Write-Host "Initializing Airflow..." -ForegroundColor Cyan
+docker compose up airflow-init
+if ($LASTEXITCODE -ne 0) {
+    throw "Airflow initialization failed."
+}
+
+Write-Host "Starting Airflow..." -ForegroundColor Cyan
+docker compose up -d
+if ($LASTEXITCODE -ne 0) {
+    throw "Airflow startup failed."
+}
+
+Write-Host "Container status:" -ForegroundColor Cyan
+docker compose ps
+
+Write-Host ""
+Write-Host "Airflow URL: http://localhost:8080" -ForegroundColor Green
+Write-Host "Username: airflow" -ForegroundColor Green
+Write-Host "Password: airflow" -ForegroundColor Green
+
+Start-Process "http://localhost:8080"</code></pre>
+
+<h3>Run it</h3>
+<pre><code>Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+C:\AirflowLab\setup-airflow.ps1</code></pre>
+</section>
+
+<section id="troubleshoot" data-title="Windows Airflow Troubleshooting">
+<h2>26. Troubleshooting</h2>
+
+<details><summary>Docker command is not recognized</summary><div>
+<p>Install Docker Desktop, close and reopen PowerShell, and confirm Docker Desktop is running. Check:</p>
+<pre><code>Get-Command docker
+docker --version</code></pre>
+</div></details>
+
+<details><summary>Docker Desktop says WSL update is required</summary><div>
+<pre><code>wsl --update
+wsl --shutdown</code></pre>
+<p>Restart Docker Desktop after the commands complete.</p>
+</div></details>
+
+<details><summary>Hardware-assisted virtualization is disabled</summary><div>
+<p>Enable Intel Virtualization Technology, VT-x, AMD-V, or SVM in BIOS/UEFI. The exact menu differs by manufacturer.</p>
+</div></details>
+
+<details><summary>Airflow containers keep restarting or become unhealthy</summary><div>
+<ul>
+<li>Confirm sufficient memory is available.</li>
+<li>Close memory-heavy applications.</li>
+<li>Run <code>docker compose ps</code>.</li>
+<li>Inspect API server, scheduler, PostgreSQL, and Redis logs.</li>
+<li>Restart WSL and Docker Desktop.</li>
+</ul>
+<pre><code>wsl --shutdown
+docker compose down
+docker compose up -d</code></pre>
+</div></details>
+
+<details><summary>Port 8080 is already in use</summary><div>
+<pre><code>Get-NetTCPConnection -LocalPort 8080 |
+  Select-Object LocalAddress, LocalPort, State, OwningProcess
+
+Get-Process -Id &lt;OwningProcessId&gt;</code></pre>
+<p>Stop the conflicting application or change the Airflow host port in <code>docker-compose.yaml</code> from <code>8080:8080</code> to another host port such as <code>8081:8080</code>. Then open <code>http://localhost:8081</code>.</p>
+</div></details>
+
+<details><summary>DAG does not appear</summary><div>
+<ol>
+<li>Confirm the file is under <code>C:\AirflowLab\dags</code>.</li>
+<li>Confirm it ends with <code>.py</code>.</li>
+<li>Run the import-error command.</li>
+<li>Inspect DAG Processor logs.</li>
+<li>Confirm the DAG factory function is called.</li>
+</ol>
+<pre><code>docker compose run --rm airflow-worker `
+  airflow dags list-import-errors
+
+docker compose logs --tail 200 airflow-dag-processor</code></pre>
+</div></details>
+
+<details><summary>ModuleNotFoundError in a DAG</summary><div>
+<p>The module must exist inside the Airflow image, not only on Windows. Build a custom Airflow image with a pinned <code>requirements.txt</code>. Keep the Airflow package version equal to the base image version.</p>
+</div></details>
+
+<details><summary>Task remains queued</summary><div>
+<ul>
+<li>Check worker and Redis health.</li>
+<li>Check pool availability.</li>
+<li>Check concurrency and parallelism.</li>
+<li>Inspect worker logs.</li>
+</ul>
+</div></details>
+
+<details><summary>Task cannot connect to a service on Windows localhost</summary><div>
+<p>Inside a container, <code>localhost</code> means the container itself. For a suitable service running on the Windows host, use <code>host.docker.internal</code> instead.</p>
+</div></details>
+
+<details><summary>PowerShell blocks setup-airflow.ps1</summary><div>
+<pre><code>Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass</code></pre>
+<p>This changes policy only for the current PowerShell process.</p>
+</div></details>
+
+<details><summary>Clean reset after a broken learning environment</summary><div>
+<div class="callout danger"><strong>This deletes the Airflow learning database and all run history.</strong></div>
+<pre><code>Set-Location C:\AirflowLab
+docker compose down --volumes --remove-orphans
+docker compose up airflow-init
+docker compose up -d</code></pre>
+</div></details>
+</section>
+
+<section id="production" data-title="Production Deployment Warning">
+<h2>27. Local Learning Setup Versus Production</h2>
+<table>
+<tr><th>Local Compose lab</th><th>Production requirement</th></tr>
+<tr><td>Default <code>airflow/airflow</code> login</td><td>Enterprise authentication, RBAC, strong credentials, and least privilege.</td></tr>
+<tr><td>Local browser access</td><td>TLS, private networking, firewall controls, and identity integration.</td></tr>
+<tr><td>Single workstation</td><td>High availability, scaling, backups, disaster recovery, and monitoring.</td></tr>
+<tr><td>Local logs</td><td>Remote centralized logs with retention and search.</td></tr>
+<tr><td>Learning Compose configuration</td><td>Managed Airflow or Kubernetes using the official Helm chart and platform engineering practices.</td></tr>
+<tr><td>Manually edited files</td><td>Git, CI tests, reviewed deployments, and environment promotion.</td></tr>
+<tr><td>Local secrets</td><td>External secrets manager and credential rotation.</td></tr>
+</table>
+<div class="callout warn"><strong>Official guidance:</strong> The Docker Compose quick-start is designed for learning and exploration and does not provide production security guarantees.</div>
+</section>
+
+<section id="exercises" data-title="Hands-on Exercises">
+<h2>28. Hands-on Exercises</h2>
+<ol>
+<li>Install WSL 2 and capture the output of <code>wsl -l -v</code>.</li>
+<li>Install Docker Desktop and successfully run <code>hello-world</code>.</li>
+<li>Start the Airflow Compose stack and identify every service.</li>
+<li>Create and trigger <code>airflow_ui_demo</code>.</li>
+<li>Use Grid View to inspect all five task instances.</li>
+<li>Use Graph View to explain upstream and downstream dependencies.</li>
+<li>Open <code>transform</code> and inspect its logs and XCom value.</li>
+<li>Change one sample amount to a negative value and observe validation failure and retry.</li>
+<li>Restore the value and clear only the failed task and downstream instances.</li>
+<li>Create a Variable in Admin and read it from a new task.</li>
+<li>Create a pool with one slot and assign two tasks to it.</li>
+<li>Use Code view to confirm the parsed DAG source.</li>
+<li>Use Details to identify the DAG file location.</li>
+<li>Stop and restart the environment without deleting the database.</li>
+<li>Perform a full cleanup and rebuild the lab.</li>
+</ol>
+
+<h3>50-mark practical assessment</h3>
+<table>
+<tr><th>Area</th><th>Marks</th></tr>
+<tr><td>Windows, WSL, and virtualization validation</td><td>6</td></tr>
+<tr><td>Docker Desktop installation and verification</td><td>7</td></tr>
+<tr><td>Airflow project and Compose initialization</td><td>8</td></tr>
+<tr><td>Service verification and command knowledge</td><td>6</td></tr>
+<tr><td>Sample DAG creation and successful run</td><td>8</td></tr>
+<tr><td>UI explanation: Grid, Graph, Runs, Logs, XCom</td><td>8</td></tr>
+<tr><td>Troubleshooting demonstration</td><td>4</td></tr>
+<tr><td>Cleanup and production-awareness explanation</td><td>3</td></tr>
+</table>
+</section>
+
+<section id="quiz" data-title="Airflow Windows and UI Quiz">
+<h2>29. Practice MCQ Quiz</h2>
+<div id="quizArea">
+<div class="quiz" data-a="b"><strong>1. What is the recommended Windows learning setup?</strong>
+<label><input type="radio" name="q1" value="a"> Native Windows service only</label>
+<label><input type="radio" name="q1" value="b"> WSL 2 + Docker Desktop + Linux containers</label>
+<label><input type="radio" name="q1" value="c"> Java application server</label>
+<label><input type="radio" name="q1" value="d"> Internet Information Services</label></div>
+
+<div class="quiz" data-a="c"><strong>2. Which command installs WSL and default Ubuntu?</strong>
+<label><input type="radio" name="q2" value="a"> docker install wsl</label>
+<label><input type="radio" name="q2" value="b"> winget airflow</label>
+<label><input type="radio" name="q2" value="c"> wsl --install</label>
+<label><input type="radio" name="q2" value="d"> pip install ubuntu</label></div>
+
+<div class="quiz" data-a="a"><strong>3. Which command initializes the Airflow database?</strong>
+<label><input type="radio" name="q3" value="a"> docker compose up airflow-init</label>
+<label><input type="radio" name="q3" value="b"> airflow docker init</label>
+<label><input type="radio" name="q3" value="c"> docker airflow database</label>
+<label><input type="radio" name="q3" value="d"> wsl airflow start</label></div>
+
+<div class="quiz" data-a="d"><strong>4. Which service parses DAG files?</strong>
+<label><input type="radio" name="q4" value="a"> Redis</label>
+<label><input type="radio" name="q4" value="b"> Browser</label>
+<label><input type="radio" name="q4" value="c"> PostgreSQL</label>
+<label><input type="radio" name="q4" value="d"> DAG Processor</label></div>
+
+<div class="quiz" data-a="b"><strong>5. What is the default learning UI address?</strong>
+<label><input type="radio" name="q5" value="a"> localhost:3000</label>
+<label><input type="radio" name="q5" value="b"> localhost:8080</label>
+<label><input type="radio" name="q5" value="c"> localhost:5432</label>
+<label><input type="radio" name="q5" value="d"> localhost:6379</label></div>
+
+<div class="quiz" data-a="c"><strong>6. Which view shows tasks as rows and DAG runs as columns?</strong>
+<label><input type="radio" name="q6" value="a"> Code</label>
+<label><input type="radio" name="q6" value="b"> Details</label>
+<label><input type="radio" name="q6" value="c"> Grid</label>
+<label><input type="radio" name="q6" value="d"> Connections</label></div>
+
+<div class="quiz" data-a="a"><strong>7. Which view best explains task dependencies?</strong>
+<label><input type="radio" name="q7" value="a"> Graph</label>
+<label><input type="radio" name="q7" value="b"> Variables</label>
+<label><input type="radio" name="q7" value="c"> Providers</label>
+<label><input type="radio" name="q7" value="d"> Home only</label></div>
+
+<div class="quiz" data-a="d"><strong>8. Where should you first investigate a failed task?</strong>
+<label><input type="radio" name="q8" value="a"> Docker download page</label>
+<label><input type="radio" name="q8" value="b"> Asset list</label>
+<label><input type="radio" name="q8" value="c"> Theme settings</label>
+<label><input type="radio" name="q8" value="d"> Task Instance Logs</label></div>
+
+<div class="quiz" data-a="b"><strong>9. Which admin feature limits concurrent use of a resource?</strong>
+<label><input type="radio" name="q9" value="a"> Plugins</label>
+<label><input type="radio" name="q9" value="b"> Pools</label>
+<label><input type="radio" name="q9" value="c"> Themes</label>
+<label><input type="radio" name="q9" value="d"> Tags</label></div>
+
+<div class="quiz" data-a="c"><strong>10. What should XCom normally contain?</strong>
+<label><input type="radio" name="q10" value="a"> A multi-gigabyte DataFrame</label>
+<label><input type="radio" name="q10" value="b"> Entire database backups</label>
+<label><input type="radio" name="q10" value="c"> Small metadata such as a path or row count</label>
+<label><input type="radio" name="q10" value="d"> Docker images</label></div>
+
+<div class="quiz" data-a="a"><strong>11. Which command preserves containers while stopping them?</strong>
+<label><input type="radio" name="q11" value="a"> docker compose stop</label>
+<label><input type="radio" name="q11" value="b"> docker compose down --volumes</label>
+<label><input type="radio" name="q11" value="c"> docker system prune -a</label>
+<label><input type="radio" name="q11" value="d"> wsl --unregister Ubuntu</label></div>
+
+<div class="quiz" data-a="d"><strong>12. Why use host.docker.internal?</strong>
+<label><input type="radio" name="q12" value="a"> To install Ubuntu</label>
+<label><input type="radio" name="q12" value="b"> To rename a DAG</label>
+<label><input type="radio" name="q12" value="c"> To open Grid View</label>
+<label><input type="radio" name="q12" value="d"> To reach a suitable service on the Windows host from a container</label></div>
+
+<div class="quiz" data-a="b"><strong>13. Which service stores operational metadata?</strong>
+<label><input type="radio" name="q13" value="a"> Redis only</label>
+<label><input type="radio" name="q13" value="b"> PostgreSQL</label>
+<label><input type="radio" name="q13" value="c"> VS Code</label>
+<label><input type="radio" name="q13" value="d"> Windows Terminal</label></div>
+
+<div class="quiz" data-a="c"><strong>14. Is the official Compose quick-start production secure?</strong>
+<label><input type="radio" name="q14" value="a"> Yes, without changes</label>
+<label><input type="radio" name="q14" value="b"> Yes, when using the default password</label>
+<label><input type="radio" name="q14" value="c"> No, it is intended for learning and exploration</label>
+<label><input type="radio" name="q14" value="d"> Only on port 8081</label></div>
+
+<div class="quiz" data-a="a"><strong>15. What identifies import errors?</strong>
+<label><input type="radio" name="q15" value="a"> airflow dags list-import-errors</label>
+<label><input type="radio" name="q15" value="b"> docker ui error</label>
+<label><input type="radio" name="q15" value="c"> wsl list dags</label>
+<label><input type="radio" name="q15" value="d"> git status airflow</label></div>
+</div>
+<button onclick="grade()">Calculate Score</button>
+<div id="score" class="result"></div>
+</section>
+
+<section id="interview" data-title="Interview Questions and Answers">
+<h2>30. Interview Questions and Answers</h2>
+<details><summary>1. Can Apache Airflow run natively on Windows?</summary><div><p>Airflow is designed for POSIX-compatible systems. On Windows, use WSL 2 or Linux containers. The Docker Desktop approach is recommended for this local learning lab.</p></div></details>
+<details><summary>2. Why is WSL 2 used with Docker Desktop?</summary><div><p>WSL 2 provides a real Linux kernel environment that Docker Desktop uses to run Linux containers efficiently on Windows.</p></div></details>
+<details><summary>3. Why are Python and PostgreSQL not installed separately?</summary><div><p>The official Compose stack provides Airflow, Python runtime, PostgreSQL, Redis, and Airflow services inside containers.</p></div></details>
+<details><summary>4. What is the purpose of docker-compose.yaml?</summary><div><p>It declaratively defines the containers, networks, volumes, ports, environment variables, health checks, and dependencies required for the local Airflow stack.</p></div></details>
+<details><summary>5. What does airflow-init do?</summary><div><p>It performs initialization, database migrations, and creation of the default learning account before the normal services start.</p></div></details>
+<details><summary>6. Why is PostgreSQL required?</summary><div><p>It stores Airflow metadata such as DAG runs, task-instance states, configuration metadata, and operational history.</p></div></details>
+<details><summary>7. Why is Redis included?</summary><div><p>The local Compose stack uses CeleryExecutor, and Redis acts as the message broker that carries queued task work to the worker.</p></div></details>
+<details><summary>8. What is the API server in Airflow 3?</summary><div><p>It provides the web UI and REST API endpoint, exposed locally on port 8080 in this lab.</p></div></details>
+<details><summary>9. Scheduler versus worker?</summary><div><p>The Scheduler decides which task instances are ready and queues them. The Worker executes the task code.</p></div></details>
+<details><summary>10. What is the DAG Processor?</summary><div><p>It imports, parses, and serializes DAG definitions so Airflow knows their structure and configuration.</p></div></details>
+<details><summary>11. Grid View versus Graph View?</summary><div><p>Grid View compares task states across runs. Graph View displays dependency structure and failure propagation within a selected run.</p></div></details>
+<details><summary>12. Where do you inspect task errors?</summary><div><p>Open the task instance and read the Logs tab, beginning with the final exception and traceback.</p></div></details>
+<details><summary>13. What is Rendered Templates?</summary><div><p>It shows templated operator fields after Airflow substitutes logical dates, parameters, macros, and runtime context.</p></div></details>
+<details><summary>14. What is XCom?</summary><div><p>XCom is a mechanism for exchanging small metadata values between tasks. Large datasets should be stored externally.</p></div></details>
+<details><summary>15. What is a Pool?</summary><div><p>A Pool limits the number of concurrent task slots assigned to a constrained resource such as a database or API.</p></div></details>
+<details><summary>16. Why does localhost fail from inside a container?</summary><div><p>Inside a container, localhost identifies that container. Use the Compose service name for another container or host.docker.internal for an appropriate Windows-host service.</p></div></details>
+<details><summary>17. How do you diagnose a DAG that does not appear?</summary><div><p>Check the mounted DAG folder, file extension, DAG factory invocation, DAG Processor logs, and <code>airflow dags list-import-errors</code>.</p></div></details>
+<details><summary>18. Why can a task remain queued?</summary><div><p>The worker, executor, Redis, pool, queue, parallelism, or concurrency capacity may prevent execution.</p></div></details>
+<details><summary>19. What happens when you clear a task?</summary><div><p>Its state is reset so Airflow can schedule it again. Depending on the selection, downstream or upstream instances may also be cleared.</p></div></details>
+<details><summary>20. Why should tasks be idempotent?</summary><div><p>Retries and manual clears are normal. Re-execution must not duplicate data or corrupt output.</p></div></details>
+<details><summary>21. How do you stop Airflow without deleting history?</summary><div><p>Use <code>docker compose stop</code> or <code>docker compose down</code> without deleting named volumes.</p></div></details>
+<details><summary>22. How do you completely reset the learning environment?</summary><div><p>Use <code>docker compose down --volumes --remove-orphans</code>, then initialize and start the stack again. This deletes local run history.</p></div></details>
+<details><summary>23. Is this Compose environment suitable for production?</summary><div><p>No. It is intended for learning and exploration and does not provide the security and high availability expected in production.</p></div></details>
+<details><summary>24. What is an Asset in Airflow?</summary><div><p>An Asset is a logical data object that tasks can produce or consume, enabling lineage views and data-aware scheduling.</p></div></details>
+<details><summary>25. How do teams deploy DAGs in production?</summary><div><p>DAGs are version-controlled, statically checked, import-tested, reviewed, and deployed through CI/CD into a secured managed or self-operated Airflow platform.</p></div></details>
+</section>
+
+<section id="tracker" data-title="Learning Progress Tracker">
+<h2>31. Preparation Tracker</h2>
+<div class="checklist" id="checks">
+<label><input type="checkbox" data-k="a1"> I checked Windows, RAM, disk, and virtualization.</label>
+<label><input type="checkbox" data-k="a2"> I installed and verified WSL 2.</label>
+<label><input type="checkbox" data-k="a3"> I installed and verified Docker Desktop.</label>
+<label><input type="checkbox" data-k="a4"> I downloaded and initialized Airflow.</label>
+<label><input type="checkbox" data-k="a5"> All Airflow services are healthy.</label>
+<label><input type="checkbox" data-k="a6"> I logged in to the Airflow UI.</label>
+<label><input type="checkbox" data-k="a7"> I created and triggered the sample DAG.</label>
+<label><input type="checkbox" data-k="a8"> I can explain Home, DAG List, Grid, and Graph.</label>
+<label><input type="checkbox" data-k="a9"> I can inspect Logs, Rendered Templates, and XCom.</label>
+<label><input type="checkbox" data-k="a10"> I can use Variables, Connections, and Pools.</label>
+<label><input type="checkbox" data-k="a11"> I can diagnose a missing DAG and queued task.</label>
+<label><input type="checkbox" data-k="a12"> I understand local versus production deployment.</label>
+</div>
+<div id="trackResult" class="result"></div>
+</section>
+
+<section id="references" data-title="Official References">
+<h2>32. Official References</h2>
+<p>This tutorial was prepared using the Apache Airflow 3.3.0 documentation and current official Windows, WSL, Docker, VS Code, Git, and Windows Terminal guidance available on July 29, 2026.</p>
+<ul>
+<li><a href="https://airflow.apache.org/docs/apache-airflow/stable/installation/prerequisites.html">Airflow installation prerequisites and Windows guidance</a></li>
+<li><a href="https://airflow.apache.org/docs/apache-airflow/stable/howto/docker-compose/index.html">Official Airflow Docker Compose quick-start</a></li>
+<li><a href="https://airflow.apache.org/docs/apache-airflow/stable/ui.html">Airflow 3 UI overview</a></li>
+<li><a href="https://learn.microsoft.com/en-us/windows/wsl/install">Microsoft WSL installation guide</a></li>
+<li><a href="https://docs.docker.com/desktop/setup/install/windows-install/">Docker Desktop installation for Windows</a></li>
+<li><a href="https://code.visualstudio.com/docs/setup/windows">VS Code installation on Windows</a></li>
+<li><a href="https://git-scm.com/download/win">Git for Windows</a></li>
+<li><a href="https://learn.microsoft.com/en-us/windows/terminal/install">Windows Terminal installation</a></li>
+</ul>
+<div class="callout ok"><strong>Final lab cleanup:</strong> After training, run <code>docker compose stop</code> to release CPU and memory while preserving the lab. Use the volume-removal command only when you intentionally want to delete all Airflow history.</div>
+</section>
+
+<footer>Apache Airflow on Windows • Complete Setup and Airflow 3 UI Tutorial</footer>
+</main>
+</div>
+
+<div class="note" id="note">
+<strong>Personal Note</strong>
+<p id="snippet" class="muted small"></p>
+<textarea id="noteText" placeholder="Type your note..."></textarea>
+<div style="margin-top:9px;display:flex;gap:8px">
+<button onclick="saveNote()">Save</button><button onclick="closeNote()">Close</button>
+</div>
+</div>
+
+<script>
+document.querySelectorAll('pre').forEach(pre=>{
+ const btn=document.createElement('button');btn.className='copy';btn.textContent='Copy';
+ btn.onclick=async()=>{const clone=pre.cloneNode(true);clone.querySelectorAll('button').forEach(x=>x.remove());
+ await navigator.clipboard.writeText(clone.innerText);btn.textContent='Copied';setTimeout(()=>btn.textContent='Copy',1000)};
+ pre.appendChild(btn);
+});
+const secs=[...document.querySelectorAll('main section')], links=[...document.querySelectorAll('#toc a')];
+const obs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)links.forEach(a=>a.classList.toggle('active',a.hash==='#'+e.target.id))}),{rootMargin:'-35% 0px -55% 0px'});
+secs.forEach(s=>obs.observe(s));
+window.addEventListener('scroll',()=>{
+ const d=document.documentElement,max=d.scrollHeight-d.clientHeight,p=max?Math.round(d.scrollTop/max*100):0;
+ document.getElementById('bar').style.width=p+'%';document.getElementById('pct').textContent=p+'%';
+});
+document.getElementById('search').addEventListener('input',e=>{
+ const q=e.target.value.trim().toLowerCase();
+ secs.forEach(s=>s.classList.toggle('hidden',q&&!s.innerText.toLowerCase().includes(q)&&!s.dataset.title.toLowerCase().includes(q)));
+});
+function grade(){
+ let total=0,answered=0;
+ document.querySelectorAll('.quiz').forEach(q=>{q.style.borderColor='var(--border)';const c=q.querySelector('input:checked');
+ if(c){answered++;if(c.value===q.dataset.a){total++;q.style.borderColor='var(--green)'}else q.style.borderColor='var(--red)'}});
+ document.getElementById('score').textContent=`Score: ${total}/15 • Answered: ${answered}/15`;
+}
+document.querySelectorAll('#checks input').forEach(c=>{
+ c.checked=localStorage.getItem(c.dataset.k)==='1';
+ c.onchange=()=>{localStorage.setItem(c.dataset.k,c.checked?'1':'0');updateTrack()}
+});
+function updateTrack(){const c=[...document.querySelectorAll('#checks input')],n=c.filter(x=>x.checked).length;
+ document.getElementById('trackResult').textContent=`Completed ${n} of ${c.length} learning goals.`}
+updateTrack();
+let selected='';
+document.querySelectorAll('main p,main li').forEach(e=>e.ondblclick=()=>{
+ selected=window.getSelection().toString().trim()||e.innerText.trim();document.getElementById('snippet').textContent=selected.slice(0,180);
+ document.getElementById('noteText').value=localStorage.getItem('note:'+selected)||'';document.getElementById('note').style.display='block'
+});
+function saveNote(){localStorage.setItem('note:'+selected,document.getElementById('noteText').value);closeNote()}
+function closeNote(){document.getElementById('note').style.display='none'}
+let sparkle=true;document.getElementById('sparkToggle').onclick=()=>{sparkle=!sparkle;document.getElementById('sparkToggle').textContent='Sparkle cursor: '+(sparkle?'On':'Off')};
+document.addEventListener('mousemove',e=>{if(!sparkle||Math.random()>.25)return;const s=document.createElement('i');s.className='spark';
+s.style.left=e.clientX+'px';s.style.top=e.clientY+'px';document.body.appendChild(s);setTimeout(()=>s.remove(),650)});
+</script>
+</body>
+</html>

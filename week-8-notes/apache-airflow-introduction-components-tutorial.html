@@ -1,0 +1,1511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Apache Airflow: Basic to Advanced Trainer Tutorial</title>
+<meta name="description" content="Trainer-ready Apache Airflow tutorial covering introduction, traditional approaches, architecture, DAGs, Operators, Tasks, Scheduler, industry examples, Docker setup, labs, MCQs and interview questions.">
+<style>
+:root{
+  --bg:#07111f;--panel:#0d1b2d;--panel2:#11243a;--text:#eaf2ff;--muted:#a9bad0;
+  --accent:#5eead4;--accent2:#60a5fa;--warn:#fbbf24;--danger:#fb7185;--ok:#4ade80;
+  --border:#29415d;--code:#030a13;--shadow:0 18px 50px rgba(0,0,0,.28);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:linear-gradient(135deg,#07111f,#0a1728 45%,#07111f);color:var(--text);
+font-family:Inter,Segoe UI,Arial,sans-serif;line-height:1.65}
+a{color:#8bd5ff}
+header{position:relative;overflow:hidden;padding:64px 28px 46px;border-bottom:1px solid var(--border);
+background:radial-gradient(circle at 80% 10%,rgba(96,165,250,.18),transparent 35%),
+radial-gradient(circle at 15% 30%,rgba(94,234,212,.14),transparent 35%)}
+header .wrap{max-width:1180px;margin:auto}
+.badge{display:inline-block;padding:6px 12px;border:1px solid #3e607e;border-radius:999px;color:#b8dcff;
+background:rgba(15,35,57,.72);font-size:.88rem;margin:4px}
+h1{font-size:clamp(2.2rem,5vw,4.7rem);line-height:1.05;margin:18px 0 12px;letter-spacing:-.045em}
+.subtitle{font-size:1.15rem;max-width:900px;color:#c7d7ea}
+.hero-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:28px}
+.hero-card{background:rgba(13,27,45,.84);border:1px solid var(--border);border-radius:18px;padding:18px;box-shadow:var(--shadow)}
+.hero-card strong{display:block;font-size:1.1rem;color:var(--accent)}
+.layout{display:grid;grid-template-columns:290px minmax(0,1fr);max-width:1500px;margin:auto}
+aside{position:sticky;top:0;height:100vh;overflow:auto;padding:24px 18px;border-right:1px solid var(--border);
+background:rgba(6,15,27,.94);backdrop-filter:blur(10px)}
+aside h3{margin-top:0}
+#search{width:100%;padding:11px 12px;border-radius:10px;border:1px solid var(--border);background:#081523;color:white;margin-bottom:14px}
+nav a{display:block;padding:8px 10px;border-radius:9px;text-decoration:none;color:#b7c9de;font-size:.92rem}
+nav a:hover,nav a.active{background:#142b45;color:white}
+.progress-wrap{margin:18px 0}
+.progress-bar{height:8px;background:#15283d;border-radius:10px;overflow:hidden}
+.progress-fill{height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent2))}
+main{padding:34px clamp(20px,4vw,58px) 90px;min-width:0}
+section{max-width:1120px;margin:0 auto 34px;padding:28px;border:1px solid var(--border);border-radius:22px;background:rgba(13,27,45,.78);box-shadow:var(--shadow);transition:.25s}
+section:hover{border-color:#3d6388;transform:translateY(-1px)}
+h2{font-size:clamp(1.55rem,3vw,2.35rem);margin-top:0;letter-spacing:-.025em}
+h3{margin-top:28px;color:#c8e8ff}
+h4{color:#a7f3d0}
+p,li{color:#d7e2ef}
+.muted{color:var(--muted)}
+.callout{padding:16px 18px;border-left:4px solid var(--accent2);background:#0a1829;border-radius:10px;margin:16px 0}
+.callout.warn{border-color:var(--warn)}
+.callout.danger{border-color:var(--danger)}
+.callout.ok{border-color:var(--ok)}
+.grid2,.grid3,.grid4{display:grid;gap:16px}
+.grid2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.grid3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.grid4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.card{border:1px solid var(--border);background:#0a1829;border-radius:16px;padding:18px}
+.card h3,.card h4{margin-top:0}
+.memory{font-size:1.1rem;padding:18px;border:1px dashed #4d759a;border-radius:14px;background:#0b1a2c}
+table{width:100%;border-collapse:collapse;margin:18px 0;font-size:.94rem;display:block;overflow:auto}
+th,td{border:1px solid #2c4561;padding:11px 12px;text-align:left;vertical-align:top}
+th{background:#132a43;color:#d8f4ff}
+tr:nth-child(even){background:rgba(14,33,54,.48)}
+pre{position:relative;background:var(--code);border:1px solid #243d57;border-radius:14px;padding:18px;overflow:auto;white-space:pre;line-height:1.5}
+code{font-family:Consolas,Monaco,monospace;color:#d9f5ff}
+.copy-btn{position:absolute;right:8px;top:8px;border:1px solid #375774;background:#10243a;color:#d9eeff;padding:6px 9px;border-radius:8px;cursor:pointer}
+.diagram{background:#06111f;border:1px solid #2d4d6b;border-radius:18px;padding:20px;overflow:auto}
+.flow{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;margin:18px 0}
+.node{padding:14px 16px;border:1px solid #477295;border-radius:12px;background:#10243a;min-width:135px;text-align:center}
+.arrow{font-size:1.6rem;color:var(--accent)}
+.arch{min-width:850px}
+.arch text{font-family:Segoe UI,Arial,sans-serif;fill:#e9f4ff}
+details{border:1px solid var(--border);border-radius:12px;margin:10px 0;background:#0a1829}
+summary{padding:13px 15px;cursor:pointer;font-weight:700;color:#d9f0ff}
+details>div{padding:0 15px 15px}
+.quiz-question{padding:16px;border:1px solid var(--border);border-radius:14px;margin:14px 0;background:#091727}
+.quiz-question label{display:block;padding:6px 8px;border-radius:8px;cursor:pointer}
+.quiz-question label:hover{background:#102842}
+button{border:1px solid #3b6387;background:#12304d;color:white;padding:10px 14px;border-radius:10px;cursor:pointer}
+button:hover{background:#19446c}
+.result{margin-top:14px;font-weight:700}
+.checklist label{display:block;padding:8px 0}
+.note-pop{position:fixed;right:18px;bottom:18px;z-index:20;width:min(390px,calc(100vw - 36px));padding:16px;border:1px solid #4a7397;
+background:#071524;border-radius:14px;box-shadow:var(--shadow);display:none}
+.note-pop textarea{width:100%;height:100px;background:#020b14;color:white;border:1px solid #35536d;border-radius:8px;padding:10px}
+.spark{position:fixed;width:7px;height:7px;border-radius:50%;pointer-events:none;background:var(--accent);box-shadow:0 0 14px var(--accent);z-index:9999;animation:fade .7s forwards}
+@keyframes fade{to{opacity:0;transform:scale(0) translateY(-12px)}}
+kbd{background:#14283d;border:1px solid #39546f;border-bottom-width:3px;border-radius:6px;padding:2px 6px}
+.tag{display:inline-block;border:1px solid #3a5f82;border-radius:999px;padding:4px 9px;margin:3px;color:#bfe8ff;font-size:.82rem}
+.timeline{border-left:3px solid #325777;padding-left:22px}
+.timeline>div{position:relative;margin:20px 0}
+.timeline>div:before{content:"";position:absolute;left:-30px;top:7px;width:12px;height:12px;background:var(--accent);border-radius:50%}
+.two-col-list{columns:2;column-gap:30px}
+.source-list li{margin:8px 0}
+.footer{text-align:center;color:#91a6bd;padding:30px}
+.hidden-by-search{display:none!important}
+@media(max-width:1050px){
+ .layout{grid-template-columns:1fr} aside{position:relative;height:auto;border-right:0;border-bottom:1px solid var(--border)}
+ nav{columns:2}.hero-grid,.grid4{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:720px){
+ header{padding:42px 18px}.hero-grid,.grid2,.grid3,.grid4{grid-template-columns:1fr}
+ nav{columns:1} main{padding:20px 12px 70px} section{padding:20px}.two-col-list{columns:1}
+}
+@media print{
+ aside,.copy-btn,.note-pop,#sparkleToggle{display:none!important}.layout{display:block}body{background:white;color:black}
+ section{box-shadow:none;break-inside:avoid;background:white;color:black}p,li,h1,h2,h3,h4,td,th{color:black}
+}
+</style>
+</head>
+<body>
+<header>
+<div class="wrap">
+  <div>
+    <span class="badge">Trainer-ready notes</span>
+    <span class="badge">Basic → Advanced</span>
+    <span class="badge">Airflow 3.3-oriented</span>
+    <span class="badge">Windows + Docker lab</span>
+  </div>
+  <h1>Apache Airflow<br>Workflow Orchestration</h1>
+  <p class="subtitle">A complete classroom tutorial on Airflow introduction, traditional approaches, architecture, DAGs, Operators, Tasks, Scheduler, production practices, and an end-to-end retail data pipeline.</p>
+  <div class="hero-grid">
+    <div class="hero-card"><strong>What?</strong>Programmatic workflow orchestration</div>
+    <div class="hero-card"><strong>Why?</strong>Reliable, observable, repeatable pipelines</div>
+    <div class="hero-card"><strong>How?</strong>Python-defined DAGs and scheduled tasks</div>
+    <div class="hero-card"><strong>Outcome</strong>Build and operate an industry-style DAG</div>
+  </div>
+</div>
+</header>
+
+<div class="layout">
+<aside>
+  <h3>Course Navigation</h3>
+  <input id="search" placeholder="Search topics...">
+  <div class="progress-wrap">
+    <small>Reading progress: <span id="progressText">0%</span></small>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  </div>
+  <nav id="toc">
+    <a href="#roadmap">1. Learning Roadmap</a>
+    <a href="#workflow">2. Workflow Basics</a>
+    <a href="#traditional">3. Traditional Approach</a>
+    <a href="#airflow-intro">4. Airflow Introduction</a>
+    <a href="#benefits">5. Benefits & Fit</a>
+    <a href="#architecture">6. Architecture</a>
+    <a href="#dags">7. DAGs</a>
+    <a href="#operators">8. Operators</a>
+    <a href="#tasks">9. Tasks</a>
+    <a href="#scheduler">10. Scheduler</a>
+    <a href="#executors">11. Executors</a>
+    <a href="#supporting">12. Supporting Concepts</a>
+    <a href="#industry">13. Industry Activities</a>
+    <a href="#retail-design">14. Retail Case Study</a>
+    <a href="#installation">15. Docker Installation</a>
+    <a href="#lab">16. Complete Hands-on Lab</a>
+    <a href="#advanced">17. Advanced Patterns</a>
+    <a href="#production">18. Production Standards</a>
+    <a href="#comparison">19. Tool Comparison</a>
+    <a href="#troubleshooting">20. Troubleshooting</a>
+    <a href="#best-practices">21. Best Practices</a>
+    <a href="#exercises">22. Exercises</a>
+    <a href="#quiz">23. MCQ Quiz</a>
+    <a href="#interview">24. Interview Q&A</a>
+    <a href="#tracker">25. Preparation Tracker</a>
+    <a href="#references">26. References</a>
+  </nav>
+  <p class="muted"><small>Double-click any paragraph to save a personal note.</small></p>
+  <button id="sparkleToggle">Sparkle cursor: On</button>
+</aside>
+
+<main>
+<section id="roadmap" data-title="Learning Roadmap">
+<h2>1. Learning Roadmap</h2>
+<div class="grid3">
+  <div class="card"><h3>Foundation</h3><p>Workflow, pipeline, dependency, scheduling, retry, backfill, orchestration.</p></div>
+  <div class="card"><h3>Core Airflow</h3><p>DAGs, Operators, Tasks, Scheduler, Executor, workers, metadata database.</p></div>
+  <div class="card"><h3>Industry Readiness</h3><p>Idempotency, observability, secrets, scaling, pools, testing, deployment, incident handling.</p></div>
+</div>
+<h3>Learning outcomes</h3>
+<ul>
+  <li>Explain why workflow orchestration is different from writing a Python script.</li>
+  <li>Describe exactly how a DAG becomes task instances executed by workers.</li>
+  <li>Build, run, monitor, retry, and troubleshoot a realistic data pipeline.</li>
+  <li>Choose between Cron, Airflow, cloud orchestrators, n8n, Kafka, and Spark Streaming.</li>
+</ul>
+<div class="memory"><strong>Memory formula:</strong> Airflow = <em>Author + Schedule + Orchestrate + Monitor</em> workflows as code.</div>
+</section>
+
+<section id="workflow" data-title="Workflow and Pipeline Basics">
+<h2>2. Before Airflow: What Is a Workflow?</h2>
+<p>A <strong>workflow</strong> is an ordered set of activities that together achieve a business outcome. A <strong>data pipeline</strong> is a workflow that moves or transforms data. Orchestration coordinates these activities: what runs, when it runs, what must finish first, what happens after failure, and how operators observe the result.</p>
+<div class="flow">
+ <div class="node">Source system</div><div class="arrow">→</div>
+ <div class="node">Extract</div><div class="arrow">→</div>
+ <div class="node">Validate</div><div class="arrow">→</div>
+ <div class="node">Transform</div><div class="arrow">→</div>
+ <div class="node">Warehouse</div><div class="arrow">→</div>
+ <div class="node">Report</div>
+</div>
+<h3>Orchestration versus execution</h3>
+<table>
+<tr><th>Responsibility</th><th>Example tool</th><th>Meaning</th></tr>
+<tr><td>Orchestration</td><td>Airflow</td><td>Coordinates task dependencies, schedules, retries, state, alerts, and observability.</td></tr>
+<tr><td>Data processing</td><td>Spark, SQL, dbt, Python</td><td>Performs transformations and computation.</td></tr>
+<tr><td>Streaming transport</td><td>Kafka / Pub/Sub</td><td>Moves events continuously between producers and consumers.</td></tr>
+<tr><td>Storage</td><td>S3, ADLS, GCS, warehouse</td><td>Persists input, intermediate, and output data.</td></tr>
+</table>
+<div class="callout warn"><strong>Important:</strong> Airflow is normally the conductor, not the entire orchestra. Heavy processing should run in a suitable compute engine instead of inside the scheduler.</div>
+</section>
+
+<section id="traditional" data-title="Traditional Approaches and Drawbacks">
+<h2>3. Traditional Approaches: What Existed Before Airflow?</h2>
+<div class="grid2">
+<div class="card">
+<h3>Common traditional approaches</h3>
+<ul>
+<li>Manual execution by an operator.</li>
+<li>Operating-system Cron jobs or Windows Task Scheduler.</li>
+<li>Large shell or PowerShell scripts.</li>
+<li>Database stored procedures triggered by SQL Agent.</li>
+<li>Custom Python scheduler loops.</li>
+<li>Enterprise batch schedulers maintained by a central operations team.</li>
+</ul>
+</div>
+<div class="card">
+<h3>Why they initially worked</h3>
+<ul>
+<li>Easy for one script and one schedule.</li>
+<li>Already available with the operating system.</li>
+<li>Low setup effort.</li>
+<li>Suitable for a small team with few dependencies.</li>
+</ul>
+</div>
+</div>
+
+<h3>Traditional nightly pipeline example</h3>
+<pre><code># Pseudo batch script
+python download_sales.py
+if errorlevel 1 exit /b 1
+
+python clean_sales.py
+if errorlevel 1 exit /b 1
+
+python load_warehouse.py
+if errorlevel 1 exit /b 1
+
+python send_report.py</code></pre>
+
+<h3>Drawbacks as the system grows</h3>
+<table>
+<tr><th>Problem</th><th>Traditional impact</th><th>How Airflow helps</th></tr>
+<tr><td>Hidden dependencies</td><td>Order exists only inside scripts or human knowledge.</td><td>DAG graph explicitly represents upstream and downstream relationships.</td></tr>
+<tr><td>Poor retry control</td><td>Whole script reruns even when only one step failed.</td><td>Retry or clear an individual task instance.</td></tr>
+<tr><td>Weak observability</td><td>Logs are scattered across servers.</td><td>Central UI shows DAG runs, task states, logs, duration, and history.</td></tr>
+<tr><td>No backfill model</td><td>Operators manually calculate missed dates.</td><td>Scheduled logical dates and controlled historical runs.</td></tr>
+<tr><td>Configuration sprawl</td><td>Passwords and paths are hard-coded.</td><td>Connections, variables, environment configuration, and secrets backends.</td></tr>
+<tr><td>Scaling difficulty</td><td>One server becomes a bottleneck.</td><td>Pluggable executors and distributed workers.</td></tr>
+<tr><td>Change risk</td><td>Scripts changed directly on servers.</td><td>DAGs are source-controlled Python code.</td></tr>
+<tr><td>Resource contention</td><td>Too many jobs hit the same database.</td><td>Pools, concurrency settings, priorities, and queues.</td></tr>
+</table>
+
+<div class="memory"><strong>Analogy:</strong> Cron is an alarm clock. Airflow is an operations control room that knows the full plan, dependencies, status, retry rules, and history.</div>
+</section>
+
+<section id="airflow-intro" data-title="Airflow Introduction">
+<h2>4. Apache Airflow Introduction</h2>
+<p>Apache Airflow is an open-source platform for programmatically authoring, scheduling, and monitoring workflows. Workflows are expressed as Python code, making them easier to version, review, test, and reuse.</p>
+<h3>What Airflow does</h3>
+<div class="grid4">
+<div class="card"><h4>Author</h4><p>Define workflow structure and configuration in Python.</p></div>
+<div class="card"><h4>Schedule</h4><p>Run by time, timetable, asset update, API trigger, or external event pattern.</p></div>
+<div class="card"><h4>Execute</h4><p>Submit runnable task instances through an executor to workers.</p></div>
+<div class="card"><h4>Monitor</h4><p>Inspect states, logs, duration, retries, dependencies, and failures.</p></div>
+</div>
+
+<h3>What Airflow is not</h3>
+<ul>
+<li>It is not primarily a real-time stream-processing engine.</li>
+<li>It is not a data warehouse or database.</li>
+<li>It is not a replacement for Spark, Kafka, dbt, or cloud storage.</li>
+<li>It is not ideal for millisecond event processing.</li>
+<li>It should not be used to pass large datasets through XCom.</li>
+</ul>
+
+<h3>Typical users</h3>
+<p>Data engineers, analytics engineers, ML engineers, platform engineers, DevOps teams, and application teams use Airflow to coordinate multi-step work across databases, cloud services, APIs, containers, data lakes, warehouses, and reporting platforms.</p>
+</section>
+
+<section id="benefits" data-title="Benefits and When to Use Airflow">
+<h2>5. Benefits, Good Fit, and Poor Fit</h2>
+<div class="grid3">
+<div class="card"><h3>Maintainability</h3><p>Workflow code can be modular, reviewed, versioned, and tested.</p></div>
+<div class="card"><h3>Reliability</h3><p>Retries, timeouts, dependency checks, trigger rules, and idempotent reruns.</p></div>
+<div class="card"><h3>Visibility</h3><p>Graph, Grid, task logs, run history, and operational state.</p></div>
+<div class="card"><h3>Scalability</h3><p>Local, Celery, Kubernetes, and other executor models.</p></div>
+<div class="card"><h3>Extensibility</h3><p>Providers, hooks, operators, sensors, custom plugins, REST API.</p></div>
+<div class="card"><h3>Governance</h3><p>Central control of schedules, access, connections, pools, and deployments.</p></div>
+</div>
+
+<h3>Use Airflow when</h3>
+<ul>
+<li>The workflow has multiple dependent steps.</li>
+<li>Failures must be retried or investigated at task level.</li>
+<li>Historical runs and reruns matter.</li>
+<li>Many tools must be coordinated.</li>
+<li>Teams require central visibility and operational standards.</li>
+</ul>
+
+<h3>Do not choose Airflow as the main engine when</h3>
+<ul>
+<li>You need sub-second continuous event processing.</li>
+<li>You only have one simple command with no dependency or observability requirement.</li>
+<li>A product-specific scheduler already fully solves the use case.</li>
+<li>You intend to run large in-memory transformation workloads directly inside Airflow processes.</li>
+</ul>
+</section>
+
+<section id="architecture" data-title="Airflow Architecture">
+<h2>6. Airflow Architecture</h2>
+<div class="diagram">
+<svg class="arch" viewBox="0 0 1040 610" width="100%" role="img" aria-label="Apache Airflow architecture diagram">
+<defs>
+ <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+  <polygon points="0 0, 10 3.5, 0 7" fill="#60a5fa"/>
+ </marker>
+</defs>
+<rect x="20" y="30" width="220" height="90" rx="16" fill="#12304d" stroke="#5eead4"/>
+<text x="130" y="66" text-anchor="middle" font-size="20">DAG Files</text>
+<text x="130" y="93" text-anchor="middle" font-size="14">Python workflow definitions</text>
+
+<rect x="310" y="30" width="220" height="90" rx="16" fill="#12304d" stroke="#60a5fa"/>
+<text x="420" y="66" text-anchor="middle" font-size="20">DAG Processor</text>
+<text x="420" y="93" text-anchor="middle" font-size="14">Parses and serializes DAGs</text>
+
+<rect x="600" y="30" width="220" height="90" rx="16" fill="#12304d" stroke="#60a5fa"/>
+<text x="710" y="66" text-anchor="middle" font-size="20">Scheduler</text>
+<text x="710" y="93" text-anchor="middle" font-size="14">Finds runnable tasks</text>
+
+<rect x="310" y="205" width="220" height="100" rx="16" fill="#132a43" stroke="#fbbf24"/>
+<text x="420" y="242" text-anchor="middle" font-size="20">Metadata Database</text>
+<text x="420" y="270" text-anchor="middle" font-size="14">DAG runs, task state, config</text>
+
+<rect x="600" y="205" width="220" height="100" rx="16" fill="#132a43" stroke="#5eead4"/>
+<text x="710" y="242" text-anchor="middle" font-size="20">Executor</text>
+<text x="710" y="270" text-anchor="middle" font-size="14">Dispatch mechanism</text>
+
+<rect x="850" y="205" width="170" height="100" rx="16" fill="#132a43" stroke="#4ade80"/>
+<text x="935" y="242" text-anchor="middle" font-size="20">Workers</text>
+<text x="935" y="270" text-anchor="middle" font-size="14">Execute tasks</text>
+
+<rect x="20" y="205" width="220" height="100" rx="16" fill="#132a43" stroke="#60a5fa"/>
+<text x="130" y="242" text-anchor="middle" font-size="20">API Server / UI</text>
+<text x="130" y="270" text-anchor="middle" font-size="14">Users and REST clients</text>
+
+<rect x="600" y="390" width="220" height="100" rx="16" fill="#132a43" stroke="#fb7185"/>
+<text x="710" y="427" text-anchor="middle" font-size="20">Triggerer</text>
+<text x="710" y="455" text-anchor="middle" font-size="14">Async waiting / deferral</text>
+
+<rect x="850" y="390" width="170" height="100" rx="16" fill="#132a43" stroke="#60a5fa"/>
+<text x="935" y="427" text-anchor="middle" font-size="20">External Systems</text>
+<text x="935" y="455" text-anchor="middle" font-size="14">DB, cloud, APIs, Spark</text>
+
+<line x1="240" y1="75" x2="310" y2="75" stroke="#60a5fa" stroke-width="3" marker-end="url(#arrowhead)"/>
+<line x1="530" y1="75" x2="600" y2="75" stroke="#60a5fa" stroke-width="3" marker-end="url(#arrowhead)"/>
+<line x1="420" y1="120" x2="420" y2="205" stroke="#60a5fa" stroke-width="3" marker-end="url(#arrowhead)"/>
+<line x1="710" y1="120" x2="710" y2="205" stroke="#60a5fa" stroke-width="3" marker-end="url(#arrowhead)"/>
+<line x1="530" y1="255" x2="600" y2="255" stroke="#60a5fa" stroke-width="3" marker-end="url(#arrowhead)"/>
+<line x1="820" y1="255" x2="850" y2="255" stroke="#60a5fa" stroke-width="3" marker-end="url(#arrowhead)"/>
+<line x1="240" y1="255" x2="310" y2="255" stroke="#60a5fa" stroke-width="3" marker-end="url(#arrowhead)"/>
+<line x1="710" y1="305" x2="710" y2="390" stroke="#60a5fa" stroke-width="3" marker-end="url(#arrowhead)"/>
+<line x1="935" y1="305" x2="935" y2="390" stroke="#60a5fa" stroke-width="3" marker-end="url(#arrowhead)"/>
+<line x1="820" y1="440" x2="850" y2="440" stroke="#60a5fa" stroke-width="3" marker-end="url(#arrowhead)"/>
+<text x="520" y="570" text-anchor="middle" font-size="18">Logs and task output are stored in local or remote logging systems.</text>
+</svg>
+</div>
+
+<h3>Component responsibilities</h3>
+<table>
+<tr><th>Component</th><th>Responsibility</th><th>Industry note</th></tr>
+<tr><td>DAG Processor</td><td>Reads Python DAG files and produces parsed/serialized workflow definitions.</td><td>Keep top-level DAG code lightweight to reduce parsing load.</td></tr>
+<tr><td>Scheduler</td><td>Creates runs and identifies task instances whose dependencies and scheduling conditions are satisfied.</td><td>Persistent service; production setups monitor heartbeats and health.</td></tr>
+<tr><td>Metadata database</td><td>Stores operational state such as DAG runs, task instances, configuration metadata, and history.</td><td>Use a production-supported database and maintain backups.</td></tr>
+<tr><td>Executor</td><td>Determines how runnable tasks are dispatched.</td><td>Executor choice affects scale, isolation, cost, and operations.</td></tr>
+<tr><td>Worker</td><td>Runs task code.</td><td>Tasks may run on different machines; avoid local-only assumptions.</td></tr>
+<tr><td>API server / UI</td><td>Provides web interaction and API access.</td><td>Secure through authentication, authorization, TLS, and network controls.</td></tr>
+<tr><td>Triggerer</td><td>Runs lightweight asynchronous triggers for deferrable tasks.</td><td>Prevents long waits from occupying expensive worker slots.</td></tr>
+</table>
+
+<h3>End-to-end lifecycle</h3>
+<div class="timeline">
+<div><strong>1. Author:</strong> A developer places a Python DAG file in the DAG location.</div>
+<div><strong>2. Parse:</strong> The DAG Processor imports and serializes the workflow definition.</div>
+<div><strong>3. Schedule:</strong> The Scheduler determines whether a DAG run should be created.</div>
+<div><strong>4. Evaluate:</strong> Dependencies, trigger rules, pools, concurrency, and task state are checked.</div>
+<div><strong>5. Queue:</strong> Runnable task instances are handed to the configured Executor.</div>
+<div><strong>6. Execute:</strong> A Worker runs the task and records logs and status.</div>
+<div><strong>7. Continue:</strong> Downstream tasks become runnable when conditions are satisfied.</div>
+<div><strong>8. Observe:</strong> Users inspect state through UI, API, metrics, alerts, and logs.</div>
+</div>
+</section>
+
+<section id="dags" data-title="DAGs">
+<h2>7. DAGs: Directed Acyclic Graphs</h2>
+<p>A DAG is the model of a workflow. It contains tasks, their dependencies, schedule, callbacks, and operational configuration.</p>
+<div class="grid3">
+<div class="card"><h4>Directed</h4><p>Dependencies point from upstream to downstream.</p></div>
+<div class="card"><h4>Acyclic</h4><p>The graph cannot loop back to an earlier task.</p></div>
+<div class="card"><h4>Graph</h4><p>Tasks are nodes; dependency relationships are edges.</p></div>
+</div>
+
+<h3>Simple DAG structure</h3>
+<div class="flow">
+<div class="node">extract</div><div class="arrow">→</div>
+<div class="node">validate</div><div class="arrow">→</div>
+<div class="node">transform</div><div class="arrow">→</div>
+<div class="node">load</div>
+</div>
+
+<h3>TaskFlow DAG example</h3>
+<pre><code>import pendulum
+from airflow.sdk import dag, task
+
+@dag(
+    dag_id="hello_airflow",
+    schedule=None,
+    start_date=pendulum.datetime(2026, 1, 1, tz="UTC"),
+    catchup=False,
+    tags=["training"],
+)
+def hello_airflow():
+
+    @task
+    def greet():
+        return "Hello from Apache Airflow"
+
+    @task
+    def display(message: str):
+        print(message)
+
+    display(greet())
+
+hello_airflow()</code></pre>
+
+<h3>Key DAG parameters</h3>
+<table>
+<tr><th>Parameter</th><th>Purpose</th><th>Recommendation</th></tr>
+<tr><td><code>dag_id</code></td><td>Unique logical workflow name.</td><td>Use stable, descriptive, lowercase names.</td></tr>
+<tr><td><code>schedule</code></td><td>Defines when or under what condition the DAG runs.</td><td>Use explicit schedules and document business timezone.</td></tr>
+<tr><td><code>start_date</code></td><td>Beginning of scheduling calculation.</td><td>Use a fixed, timezone-aware date, not dynamic “now”.</td></tr>
+<tr><td><code>catchup</code></td><td>Controls creation of historical scheduled runs.</td><td>Usually disable during learning; enable deliberately for backfills.</td></tr>
+<tr><td><code>tags</code></td><td>Classifies DAGs in the UI.</td><td>Tag by team, domain, environment, or business function.</td></tr>
+<tr><td><code>default_args</code></td><td>Reusable task defaults such as retries.</td><td>Use consistent operational policies.</td></tr>
+</table>
+
+<h3>Dependency syntax</h3>
+<pre><code>extract >> validate >> transform >> load
+
+# Fan-out
+extract >> [validate_schema, validate_quality]
+
+# Fan-in
+[load_customers, load_orders] >> publish_report</code></pre>
+
+<div class="callout"><strong>DAG definition versus DAG run:</strong> The DAG is the blueprint. A DAG run is one execution of that blueprint for a specific logical time or trigger.</div>
+</section>
+
+<section id="operators" data-title="Operators">
+<h2>8. Operators: Reusable Task Templates</h2>
+<p>An Operator represents a predefined kind of work. When an Operator is placed in a DAG, it becomes a task definition.</p>
+<h3>Main categories</h3>
+<table>
+<tr><th>Category</th><th>Purpose</th><th>Examples</th></tr>
+<tr><td>Action operators</td><td>Perform work.</td><td>Python task, Bash task, SQL execution, cloud job submission.</td></tr>
+<tr><td>Transfer operators</td><td>Move data between systems.</td><td>Object storage to warehouse, database to cloud storage.</td></tr>
+<tr><td>Sensors</td><td>Wait until a condition is true.</td><td>File arrival, external task completion, object existence.</td></tr>
+<tr><td>Branching operators</td><td>Select a path based on logic.</td><td>Quality pass/fail, weekday/weekend, threshold routing.</td></tr>
+<tr><td>Human-in-the-loop</td><td>Pause for an explicit human decision.</td><td>Approval before production release or financial publication.</td></tr>
+</table>
+
+<h3>Classic BashOperator example for Airflow 3</h3>
+<pre><code>from airflow.providers.standard.operators.bash import BashOperator
+
+print_date = BashOperator(
+    task_id="print_date",
+    bash_command="date",
+)</code></pre>
+
+<h3>Operator versus TaskFlow</h3>
+<table>
+<tr><th>Classic Operator style</th><th>TaskFlow style</th></tr>
+<tr><td>Explicit Operator object.</td><td>Python function decorated with <code>@task</code>.</td></tr>
+<tr><td>Dependencies commonly use <code>&gt;&gt;</code>.</td><td>Dependencies can be inferred from function arguments.</td></tr>
+<tr><td>Manual XCom handling may be required.</td><td>Function return values are passed through XCom automatically.</td></tr>
+<tr><td>Excellent for provider-specific integrations.</td><td>Excellent for readable Python-centric workflows.</td></tr>
+</table>
+
+<div class="callout ok"><strong>Industry pattern:</strong> Prefer existing provider operators and hooks before writing a custom integration. Create a custom Operator when the behavior is reusable across many DAGs and has a clear interface.</div>
+</section>
+
+<section id="tasks" data-title="Tasks">
+<h2>9. Tasks and Task Instances</h2>
+<p>A <strong>task</strong> is a unit of work defined in a DAG. A <strong>task instance</strong> is that task running—or waiting to run—inside a specific DAG run.</p>
+<h3>Blueprint analogy</h3>
+<div class="grid2">
+<div class="card"><h4>Task definition</h4><p>“Validate today’s sales file.” This is part of the workflow blueprint.</p></div>
+<div class="card"><h4>Task instance</h4><p>“Validate the sales file for the July 29, 2026 DAG run.” This has a state, attempt number, logs, and duration.</p></div>
+</div>
+
+<h3>Common task states</h3>
+<table>
+<tr><th>State</th><th>Meaning</th><th>Operator action</th></tr>
+<tr><td>scheduled</td><td>Scheduler has determined the task should run.</td><td>Usually wait.</td></tr>
+<tr><td>queued</td><td>Waiting for executor/worker capacity.</td><td>Check pools, queues, workers, and concurrency if delayed.</td></tr>
+<tr><td>running</td><td>Worker is executing the task.</td><td>Inspect live logs and duration.</td></tr>
+<tr><td>success</td><td>Completed successfully.</td><td>No action.</td></tr>
+<tr><td>failed</td><td>Execution failed.</td><td>Inspect logs, fix root cause, retry or clear safely.</td></tr>
+<tr><td>up_for_retry</td><td>Failed but retry policy allows another attempt.</td><td>Check whether the error is transient.</td></tr>
+<tr><td>skipped</td><td>Not selected due to branching or trigger logic.</td><td>Confirm expected path.</td></tr>
+<tr><td>deferred</td><td>Waiting asynchronously through the Triggerer.</td><td>Check trigger conditions and triggerer health.</td></tr>
+<tr><td>upstream_failed</td><td>Could not run because an upstream dependency failed.</td><td>Fix the upstream failure first.</td></tr>
+</table>
+
+<h3>Retries and timeout example</h3>
+<pre><code>from datetime import timedelta
+from airflow.sdk import task
+
+@task(
+    retries=3,
+    retry_delay=timedelta(minutes=5),
+    execution_timeout=timedelta(minutes=30),
+)
+def call_partner_api():
+    # Raise an exception on failure.
+    # Airflow records the attempt and applies retry policy.
+    pass</code></pre>
+
+<div class="callout warn"><strong>Idempotency:</strong> A task should produce the same correct result when safely rerun for the same logical input. For example, overwrite a date partition or use an upsert instead of blindly appending duplicates.</div>
+</section>
+
+<section id="scheduler" data-title="Scheduler">
+<h2>10. Scheduler Deep Dive</h2>
+<p>The Scheduler continuously monitors DAGs and task state. It creates scheduled runs and triggers task instances after their dependencies and resource conditions are satisfied. The configured Executor performs the dispatch.</p>
+
+<h3>Scheduler decision checklist</h3>
+<ol>
+<li>Is the DAG active and due to run?</li>
+<li>Does a DAG run exist for the logical interval?</li>
+<li>Are all required upstream task states acceptable?</li>
+<li>Does the task’s trigger rule allow execution?</li>
+<li>Are DAG and task concurrency limits available?</li>
+<li>Does the assigned pool have free slots?</li>
+<li>Is the task queue and priority eligible?</li>
+<li>Can the Executor accept more work?</li>
+</ol>
+
+<h3>Schedule concepts</h3>
+<table>
+<tr><th>Concept</th><th>Explanation</th></tr>
+<tr><td>Logical date</td><td>The logical label for a DAG run. It is not simply “the exact wall-clock time the task began.”</td></tr>
+<tr><td>Data interval</td><td>The time range of data that the run is expected to process.</td></tr>
+<tr><td>Catchup</td><td>Creates missed scheduled intervals from the start date to the current schedule, when enabled.</td></tr>
+<tr><td>Backfill</td><td>Intentional execution of historical intervals.</td></tr>
+<tr><td>Manual trigger</td><td>A user or API explicitly creates a run.</td></tr>
+<tr><td>Asset/event trigger</td><td>A data or external event causes a run rather than only a clock schedule.</td></tr>
+</table>
+
+<h3>Cron examples</h3>
+<table>
+<tr><th>Expression</th><th>Meaning</th></tr>
+<tr><td><code>0 6 * * *</code></td><td>Every day at 06:00.</td></tr>
+<tr><td><code>0 */4 * * *</code></td><td>Every four hours.</td></tr>
+<tr><td><code>30 8 * * 1-5</code></td><td>Weekdays at 08:30.</td></tr>
+<tr><td><code>0 2 1 * *</code></td><td>First day of each month at 02:00.</td></tr>
+</table>
+
+<div class="callout danger"><strong>Common scheduling mistake:</strong> Using a dynamic <code>start_date</code> such as the current timestamp can prevent predictable scheduling. Use a fixed timezone-aware start date.</div>
+</section>
+
+<section id="executors" data-title="Executors and Scaling">
+<h2>11. Executors and Scaling</h2>
+<p>The Executor is the mechanism that runs task instances. It influences where tasks execute and how the platform scales.</p>
+<table>
+<tr><th>Executor pattern</th><th>Best fit</th><th>Trade-offs</th></tr>
+<tr><td>Local execution</td><td>Learning, development, smaller single-node deployments.</td><td>Simple, but limited isolation and horizontal scaling.</td></tr>
+<tr><td>Celery-based distributed workers</td><td>Long-running worker fleet and mixed workloads.</td><td>Scales horizontally but requires broker, workers, and operational management.</td></tr>
+<tr><td>Kubernetes-based task pods</td><td>Cloud-native isolation and elastic workloads.</td><td>Strong isolation and elasticity; Kubernetes complexity and startup overhead.</td></tr>
+<tr><td>Managed Airflow service</td><td>Teams that want reduced platform operations.</td><td>Convenience and support versus service constraints and cost.</td></tr>
+</table>
+<h3>Scaling controls beyond the executor</h3>
+<ul>
+<li>Global parallelism.</li>
+<li>DAG-level active run limits.</li>
+<li>Task concurrency controls.</li>
+<li>Pools and pool slots.</li>
+<li>Queue routing.</li>
+<li>Worker autoscaling.</li>
+<li>Priority weights.</li>
+</ul>
+<div class="memory"><strong>Queue delay diagnosis:</strong> Runnable but queued usually points to capacity, pool, executor, worker, or concurrency constraints—not necessarily faulty task code.</div>
+</section>
+
+<section id="supporting" data-title="Supporting Airflow Concepts">
+<h2>12. Supporting Concepts You Need in Real Projects</h2>
+
+<h3>Sensors and deferrable tasks</h3>
+<p>Sensors wait for conditions such as a file, object, partition, or external task. Traditional “poke” mode holds a worker slot while waiting. Reschedule mode releases the slot between checks. Deferrable operators suspend themselves and move waiting logic to the Triggerer, freeing workers.</p>
+
+<h3>XCom</h3>
+<p>XCom is task-to-task metadata exchange. It is designed for small values such as IDs, counts, paths, and compact dictionaries—not full DataFrames or large files.</p>
+<pre><code>@task
+def extract() -> dict:
+    return {"file_path": "/data/orders.csv", "row_count": 25000}
+
+@task
+def validate(metadata: dict):
+    print(metadata["row_count"])</code></pre>
+
+<h3>Variables, Connections, and secrets</h3>
+<table>
+<tr><th>Feature</th><th>Use</th><th>Guideline</th></tr>
+<tr><td>Variables</td><td>Runtime configuration values.</td><td>Do not read many Variables in top-level DAG parsing code.</td></tr>
+<tr><td>Connections</td><td>External service endpoints and credentials.</td><td>Reference by connection ID through hooks/operators.</td></tr>
+<tr><td>Secrets backend</td><td>Central secret manager integration.</td><td>Prefer it for production credentials.</td></tr>
+</table>
+
+<h3>Pools</h3>
+<p>Pools limit concurrent access to constrained resources. Example: a legacy database supports only five parallel heavy queries, so tasks use a pool with five slots.</p>
+
+<h3>Trigger rules</h3>
+<table>
+<tr><th>Rule idea</th><th>Use case</th></tr>
+<tr><td>All upstream succeeded</td><td>Normal sequential processing.</td></tr>
+<tr><td>At least one upstream succeeded</td><td>Join after optional branches.</td></tr>
+<tr><td>All upstream completed</td><td>Cleanup task must run after success or failure.</td></tr>
+<tr><td>One upstream failed</td><td>Failure notification or compensating action.</td></tr>
+</table>
+
+<h3>TaskGroups</h3>
+<p>TaskGroups visually group related tasks without creating a separate scheduler boundary. Use them to simplify a large graph, such as grouping bronze, silver, and gold activities.</p>
+
+<h3>Assets</h3>
+<p>An asset represents a logical data object. Producer tasks can update assets, and downstream DAGs can be scheduled from those updates. This makes data-aware orchestration clearer than only using clock schedules.</p>
+
+<h3>Dynamic task mapping</h3>
+<p>Dynamic mapping creates task instances at runtime based on upstream data. Example: discover 20 customer files, then create 20 parallel processing task instances with <code>expand()</code>.</p>
+</section>
+
+<section id="industry" data-title="Real-time Industry Activities">
+<h2>13. What Activities Can Airflow Perform in Industry?</h2>
+<table>
+<tr><th>Domain</th><th>Industry activity</th><th>Typical workflow</th></tr>
+<tr><td>Retail</td><td>Daily sales consolidation</td><td>Wait for store files → validate → load lake → aggregate → refresh dashboard → notify.</td></tr>
+<tr><td>Banking</td><td>Regulatory report</td><td>Extract transactions → reconcile → quality checks → approval → publish report → archive evidence.</td></tr>
+<tr><td>Healthcare</td><td>Claims processing</td><td>Receive files → decrypt → validate codes → enrich → load warehouse → exception report.</td></tr>
+<tr><td>Telecom</td><td>Usage billing</td><td>Ingest call records → deduplicate → tariff calculation → invoice dataset → audit totals.</td></tr>
+<tr><td>E-commerce</td><td>Customer 360</td><td>Orders + web events + CRM → identity matching → features → warehouse model.</td></tr>
+<tr><td>Machine learning</td><td>Model training pipeline</td><td>Prepare data → train → evaluate → approval → register → deploy → monitor.</td></tr>
+<tr><td>DevOps</td><td>Environment maintenance</td><td>Backup → patch → smoke test → report → cleanup.</td></tr>
+<tr><td>Cloud cost</td><td>FinOps reporting</td><td>Collect billing exports → allocate tags → aggregate → anomaly detection → team reports.</td></tr>
+<tr><td>Data quality</td><td>Warehouse validation</td><td>Freshness → row count → null checks → reconciliation → publish quality score.</td></tr>
+<tr><td>Cross-cloud</td><td>Data exchange</td><td>Export from one cloud → checksum → encrypted transfer → import → reconciliation.</td></tr>
+</table>
+
+<div class="callout"><strong>“Real-time industry standard” clarification:</strong> Airflow can orchestrate near-real-time or event-triggered workflows, but continuous low-latency record processing is normally handled by Kafka, Flink, Spark Structured Streaming, or a cloud streaming service. Airflow can coordinate those jobs.</div>
+</section>
+
+<section id="retail-design" data-title="Retail Case Study Design">
+<h2>14. Industry Case Study: Retail Daily Sales Pipeline</h2>
+<h3>Business requirement</h3>
+<p>Every morning, consolidate store sales, validate the input, calculate category totals, save a warehouse-ready result, perform quality checks, and publish a management report.</p>
+
+<h3>Design</h3>
+<div class="flow">
+<div class="node">Generate/receive sales</div><div class="arrow">→</div>
+<div class="node">Validate rows</div><div class="arrow">→</div>
+<div class="node">Aggregate</div><div class="arrow">→</div>
+<div class="node">Quality check</div><div class="arrow">→</div>
+<div class="node">Publish report</div>
+</div>
+
+<h3>Input columns</h3>
+<table>
+<tr><th>Column</th><th>Example</th><th>Validation</th></tr>
+<tr><td>sale_id</td><td>S1001</td><td>Required and unique.</td></tr>
+<tr><td>store_id</td><td>BLR-01</td><td>Required.</td></tr>
+<tr><td>category</td><td>Electronics</td><td>Required and normalized.</td></tr>
+<tr><td>quantity</td><td>2</td><td>Positive integer.</td></tr>
+<tr><td>unit_price</td><td>499.50</td><td>Non-negative decimal.</td></tr>
+</table>
+
+<h3>Operational requirements</h3>
+<ul>
+<li>Retry transient failures twice.</li>
+<li>Fail fast on invalid schema or values.</li>
+<li>Use XCom only for small metadata and summary dictionaries.</li>
+<li>Write task output to a mounted folder.</li>
+<li>Ensure reruns overwrite the same logical output rather than duplicate it.</li>
+<li>Expose task-level logs and row counts.</li>
+</ul>
+</section>
+
+<section id="installation" data-title="Airflow Docker Installation on Windows">
+<h2>15. Step-by-Step Airflow Installation Using Docker on Windows</h2>
+<div class="callout warn"><strong>Scope:</strong> This Docker Compose setup is suitable for learning and local exploration. It is not a production-secure deployment.</div>
+
+<h3>Prerequisites</h3>
+<ul>
+<li>Windows 10 or Windows 11.</li>
+<li>Docker Desktop with WSL 2 backend enabled.</li>
+<li>Docker Engine memory allocation of at least 4 GB; 8 GB is more comfortable.</li>
+<li>Docker Compose v2.14 or newer.</li>
+<li>PowerShell.</li>
+</ul>
+
+<h3>Step 1: Verify Docker</h3>
+<pre><code>docker --version
+docker compose version
+docker info</code></pre>
+
+<h3>Step 2: Create the project folder</h3>
+<pre><code>mkdir C:\AirflowLab
+cd C:\AirflowLab
+
+mkdir dags
+mkdir logs
+mkdir plugins
+mkdir config</code></pre>
+
+<h3>Step 3: Download the Airflow 3.3 Docker Compose file</h3>
+<pre><code>Invoke-WebRequest `
+  -Uri "https://airflow.apache.org/docs/apache-airflow/3.3.0/docker-compose.yaml" `
+  -OutFile "docker-compose.yaml"</code></pre>
+
+<h3>Step 4: Create the Windows environment file</h3>
+<pre><code>'AIRFLOW_UID=50000' | Set-Content -Encoding ascii .env</code></pre>
+
+<h3>Step 5: Initialize Airflow</h3>
+<pre><code>docker compose up airflow-init</code></pre>
+<p>Wait until the initialization container exits successfully. The local learning credentials are:</p>
+<ul><li>Username: <code>airflow</code></li><li>Password: <code>airflow</code></li></ul>
+
+<h3>Step 6: Start all services</h3>
+<pre><code>docker compose up -d</code></pre>
+
+<h3>Step 7: Verify containers</h3>
+<pre><code>docker compose ps
+docker ps</code></pre>
+<p>Important services include the API server, scheduler, DAG processor, worker, triggerer, PostgreSQL, and Redis.</p>
+
+<h3>Step 8: Open the UI</h3>
+<pre><code>Start-Process "http://localhost:8080"</code></pre>
+
+<h3>Step 9: Useful lifecycle commands</h3>
+<pre><code># See logs
+docker compose logs -f airflow-scheduler
+
+# Stop without deleting data
+docker compose stop
+
+# Start again
+docker compose start
+
+# Stop and remove containers
+docker compose down
+
+# Full cleanup including volumes
+docker compose down --volumes --remove-orphans</code></pre>
+</section>
+
+<section id="lab" data-title="Complete Hands-on Retail DAG">
+<h2>16. Complete Hands-on Lab</h2>
+<h3>Step 1: Create the DAG file</h3>
+<p>Create <code>C:\AirflowLab\dags\retail_sales_pipeline.py</code> and paste the following code.</p>
+
+<pre><code>from __future__ import annotations
+
+import csv
+import json
+from collections import defaultdict
+from datetime import timedelta
+from decimal import Decimal, InvalidOperation
+from pathlib import Path
+
+import pendulum
+from airflow.sdk import dag, task
+
+BASE_DIR = Path("/opt/airflow/logs/retail_demo")
+RAW_FILE = BASE_DIR / "raw_sales.csv"
+SUMMARY_FILE = BASE_DIR / "daily_summary.json"
+REPORT_FILE = BASE_DIR / "management_report.txt"
+
+
+@dag(
+    dag_id="retail_daily_sales_pipeline",
+    schedule=None,  # Change to "0 6 * * *" after testing.
+    start_date=pendulum.datetime(2026, 1, 1, tz="UTC"),
+    catchup=False,
+    tags=["training", "retail", "etl"],
+    default_args={
+        "retries": 2,
+        "retry_delay": timedelta(minutes=1),
+    },
+)
+def retail_daily_sales_pipeline():
+
+    @task
+    def create_sample_input() -> str:
+        """Simulate the arrival of a store-sales file."""
+        BASE_DIR.mkdir(parents=True, exist_ok=True)
+
+        rows = [
+            ["S1001", "BLR-01", "Electronics", 2, "499.50"],
+            ["S1002", "BLR-01", "Grocery", 5, "12.25"],
+            ["S1003", "CHN-01", "Electronics", 1, "799.00"],
+            ["S1004", "CHN-01", "Home", 3, "85.40"],
+            ["S1005", "HYD-01", "Grocery", 8, "9.75"],
+            ["S1006", "HYD-01", "Home", 2, "120.00"],
+        ]
+
+        # Opening in write mode makes this task idempotent for reruns.
+        with RAW_FILE.open("w", newline="", encoding="utf-8") as handle:
+            writer = csv.writer(handle)
+            writer.writerow(
+                ["sale_id", "store_id", "category", "quantity", "unit_price"]
+            )
+            writer.writerows(rows)
+
+        print(f"Created input file: {RAW_FILE}")
+        return str(RAW_FILE)
+
+    @task
+    def validate_input(file_path: str) -> dict:
+        """Validate schema, uniqueness, quantity, and price."""
+        required_columns = {
+            "sale_id", "store_id", "category", "quantity", "unit_price"
+        }
+        seen_sale_ids = set()
+        valid_rows = 0
+
+        with Path(file_path).open(newline="", encoding="utf-8") as handle:
+            reader = csv.DictReader(handle)
+
+            if set(reader.fieldnames or []) != required_columns:
+                raise ValueError(
+                    f"Invalid schema. Received: {reader.fieldnames}"
+                )
+
+            for line_number, row in enumerate(reader, start=2):
+                sale_id = row["sale_id"].strip()
+                store_id = row["store_id"].strip()
+                category = row["category"].strip()
+
+                if not sale_id or not store_id or not category:
+                    raise ValueError(f"Blank mandatory field at line {line_number}")
+
+                if sale_id in seen_sale_ids:
+                    raise ValueError(f"Duplicate sale_id: {sale_id}")
+                seen_sale_ids.add(sale_id)
+
+                try:
+                    quantity = int(row["quantity"])
+                    unit_price = Decimal(row["unit_price"])
+                except (ValueError, InvalidOperation) as exc:
+                    raise ValueError(
+                        f"Invalid numeric value at line {line_number}"
+                    ) from exc
+
+                if quantity &lt;= 0 or unit_price &lt; 0:
+                    raise ValueError(
+                        f"Quantity/price rule failed at line {line_number}"
+                    )
+
+                valid_rows += 1
+
+        metadata = {"file_path": file_path, "valid_rows": valid_rows}
+        print(f"Validation succeeded: {metadata}")
+        return metadata
+
+    @task
+    def transform_and_load(metadata: dict) -> dict:
+        """Aggregate revenue by category and write warehouse-ready JSON."""
+        category_summary = defaultdict(
+            lambda: {"quantity": 0, "revenue": Decimal("0.00")}
+        )
+
+        with Path(metadata["file_path"]).open(
+            newline="", encoding="utf-8"
+        ) as handle:
+            reader = csv.DictReader(handle)
+            for row in reader:
+                category = row["category"].strip().title()
+                quantity = int(row["quantity"])
+                unit_price = Decimal(row["unit_price"])
+                category_summary[category]["quantity"] += quantity
+                category_summary[category]["revenue"] += (
+                    quantity * unit_price
+                )
+
+        result = {
+            category: {
+                "quantity": values["quantity"],
+                "revenue": str(values["revenue"].quantize(Decimal("0.01"))),
+            }
+            for category, values in sorted(category_summary.items())
+        }
+
+        with SUMMARY_FILE.open("w", encoding="utf-8") as handle:
+            json.dump(result, handle, indent=2)
+
+        total_revenue = sum(
+            Decimal(values["revenue"]) for values in result.values()
+        )
+
+        summary_metadata = {
+            "summary_file": str(SUMMARY_FILE),
+            "category_count": len(result),
+            "source_rows": metadata["valid_rows"],
+            "total_revenue": str(total_revenue.quantize(Decimal("0.01"))),
+        }
+        print(json.dumps(summary_metadata, indent=2))
+        return summary_metadata
+
+    @task
+    def quality_check(summary_metadata: dict) -> dict:
+        """Check that output exists and totals are reasonable."""
+        summary_path = Path(summary_metadata["summary_file"])
+        if not summary_path.exists():
+            raise FileNotFoundError(summary_path)
+
+        if summary_metadata["source_rows"] &lt; 1:
+            raise ValueError("No valid source rows")
+
+        if Decimal(summary_metadata["total_revenue"]) &lt;= 0:
+            raise ValueError("Total revenue must be positive")
+
+        quality = {
+            "status": "PASS",
+            "checked_file": str(summary_path),
+            "source_rows": summary_metadata["source_rows"],
+        }
+        print(quality)
+        return quality
+
+    @task
+    def publish_report(summary_metadata: dict, quality: dict) -> str:
+        """Write a small management report."""
+        report = (
+            "RETAIL DAILY SALES REPORT\n"
+            "=========================\n"
+            f"Quality status : {quality['status']}\n"
+            f"Source rows    : {summary_metadata['source_rows']}\n"
+            f"Categories     : {summary_metadata['category_count']}\n"
+            f"Total revenue  : ${summary_metadata['total_revenue']}\n"
+            f"Summary file   : {summary_metadata['summary_file']}\n"
+        )
+        REPORT_FILE.write_text(report, encoding="utf-8")
+        print(report)
+        return str(REPORT_FILE)
+
+    raw_path = create_sample_input()
+    validated = validate_input(raw_path)
+    summary = transform_and_load(validated)
+    quality = quality_check(summary)
+    publish_report(summary, quality)
+
+
+retail_daily_sales_pipeline()</code></pre>
+
+<h3>Step 2: Confirm Airflow discovered the DAG</h3>
+<pre><code>docker compose exec airflow-scheduler airflow dags list | Select-String retail</code></pre>
+
+<h3>Step 3: Trigger from the UI</h3>
+<ol>
+<li>Open <code>http://localhost:8080</code>.</li>
+<li>Log in with the local training account.</li>
+<li>Search for <code>retail_daily_sales_pipeline</code>.</li>
+<li>Unpause the DAG if required.</li>
+<li>Select <strong>Trigger DAG</strong>.</li>
+<li>Open the Grid or Graph view.</li>
+<li>Open each task instance and inspect logs.</li>
+</ol>
+
+<h3>Step 4: Trigger from CLI</h3>
+<pre><code>docker compose exec airflow-scheduler `
+  airflow dags trigger retail_daily_sales_pipeline</code></pre>
+
+<h3>Step 5: View generated files on Windows</h3>
+<pre><code>Get-ChildItem C:\AirflowLab\logs\retail_demo
+Get-Content C:\AirflowLab\logs\retail_demo\management_report.txt
+Get-Content C:\AirflowLab\logs\retail_demo\daily_summary.json</code></pre>
+
+<h3>Expected management report</h3>
+<pre><code>RETAIL DAILY SALES REPORT
+=========================
+Quality status : PASS
+Source rows    : 6
+Categories     : 3
+Total revenue  : $2433.45</code></pre>
+
+<h3>Step 6: Convert to a daily schedule</h3>
+<p>After successful manual testing, change:</p>
+<pre><code>schedule=None</code></pre>
+<p>to:</p>
+<pre><code>schedule="0 6 * * *"</code></pre>
+
+<h3>Step 7: Test failure and retry behavior</h3>
+<ol>
+<li>Change one quantity from <code>2</code> to <code>0</code>.</li>
+<li>Trigger the DAG.</li>
+<li>Observe <code>validate_input</code> fail.</li>
+<li>Inspect retry attempts and task logs.</li>
+<li>Restore the valid value.</li>
+<li>Clear only the failed task instance and rerun downstream work.</li>
+</ol>
+</section>
+
+<section id="advanced" data-title="Advanced Airflow Patterns">
+<h2>17. Advanced Patterns</h2>
+
+<h3>17.1 Branching</h3>
+<pre><code>from airflow.sdk import task
+
+@task.branch
+def choose_path(row_count: int) -> str:
+    if row_count == 0:
+        return "skip_processing"
+    return "process_data"</code></pre>
+
+<h3>17.2 Dynamic task mapping</h3>
+<pre><code>from airflow.sdk import task
+
+@task
+def discover_files():
+    return ["store_01.csv", "store_02.csv", "store_03.csv"]
+
+@task
+def process_file(file_name: str):
+    print(f"Processing {file_name}")
+
+process_file.expand(file_name=discover_files())</code></pre>
+
+<h3>17.3 Asset-aware scheduling</h3>
+<pre><code>from airflow.sdk import Asset, task
+
+sales_asset = Asset("s3://company-data/sales/daily/")
+
+@task(outlets=[sales_asset])
+def publish_sales():
+    ...
+
+# A downstream DAG can use the asset as its schedule.</code></pre>
+
+<h3>17.4 Setup and teardown tasks</h3>
+<p>Use setup and teardown relationships for temporary infrastructure, sessions, or resources. The teardown should run even when normal processing fails, subject to its trigger behavior.</p>
+
+<h3>17.5 Custom Operator</h3>
+<p>Create a custom Operator when many DAGs need the same reusable action with standardized logging, templating, validation, and connection handling.</p>
+
+<h3>17.6 Event-driven and message queue patterns</h3>
+<p>Airflow 3 supports event-oriented patterns, including external events and poll-based message queue triggers. Use them when the workflow reacts to meaningful events but still benefits from task-level orchestration. Use a streaming engine when every individual event must be processed with very low latency.</p>
+
+<h3>17.7 Task isolation</h3>
+<ul>
+<li>Virtual environment tasks for dependency isolation.</li>
+<li>External Python tasks for a prebuilt interpreter.</li>
+<li>Container or Kubernetes tasks for strong runtime isolation.</li>
+<li>Remote Spark, Databricks, EMR, Dataproc, or warehouse jobs for heavy compute.</li>
+</ul>
+</section>
+
+<section id="production" data-title="Production Standards">
+<h2>18. Production-Grade Airflow Standards</h2>
+
+<h3>Architecture checklist</h3>
+<ul class="two-col-list">
+<li>Production-supported metadata database.</li>
+<li>Database backups and maintenance.</li>
+<li>High-availability scheduler where required.</li>
+<li>Remote logging and log retention.</li>
+<li>Secrets backend.</li>
+<li>TLS and network restrictions.</li>
+<li>RBAC and least privilege.</li>
+<li>Executor and worker sizing.</li>
+<li>Health checks and alerting.</li>
+<li>Metrics for scheduler, workers, queues, and DAGs.</li>
+<li>Automated DAG deployment.</li>
+<li>Disaster recovery plan.</li>
+</ul>
+
+<h3>DAG engineering standards</h3>
+<table>
+<tr><th>Standard</th><th>Why</th></tr>
+<tr><td>Idempotent tasks</td><td>Retries and reruns must not corrupt data or duplicate results.</td></tr>
+<tr><td>Atomic tasks</td><td>Smaller independent tasks are easier to retry and troubleshoot.</td></tr>
+<tr><td>Explicit data intervals</td><td>Each run should clearly know which data partition it owns.</td></tr>
+<tr><td>No heavy top-level code</td><td>DAG files are parsed frequently; expensive imports or network calls slow scheduling.</td></tr>
+<tr><td>Small XCom values</td><td>Large payloads overload the metadata layer.</td></tr>
+<tr><td>Externalized secrets</td><td>Credentials must not live in source code.</td></tr>
+<tr><td>Timeouts and retries</td><td>Prevent tasks from hanging forever and handle transient faults.</td></tr>
+<tr><td>Resource pools</td><td>Protect fragile or quota-limited dependencies.</td></tr>
+<tr><td>Meaningful alerts</td><td>Alerts should include DAG, task, run, attempt, error, and support link.</td></tr>
+<tr><td>Automated tests</td><td>Detect import errors and logic regressions before deployment.</td></tr>
+</table>
+
+<h3>Testing layers</h3>
+<ol>
+<li><strong>Static checks:</strong> formatting, linting, secret scanning.</li>
+<li><strong>DAG import test:</strong> verify every DAG parses without errors.</li>
+<li><strong>Unit test:</strong> test Python business logic separately.</li>
+<li><strong>Task test:</strong> execute a task for a controlled date.</li>
+<li><strong>Integration test:</strong> validate external systems in a non-production environment.</li>
+<li><strong>End-to-end test:</strong> run a representative full DAG.</li>
+</ol>
+
+<h3>Operational metrics</h3>
+<ul>
+<li>DAG success rate and failure rate.</li>
+<li>Task duration percentiles.</li>
+<li>Scheduler heartbeat and scheduling delay.</li>
+<li>Queued task count and queue age.</li>
+<li>Worker utilization and failures.</li>
+<li>Pool saturation.</li>
+<li>Metadata database health.</li>
+<li>Data freshness and quality outcomes.</li>
+</ul>
+</section>
+
+<section id="comparison" data-title="Airflow Comparisons">
+<h2>19. Airflow Versus Other Approaches</h2>
+<table>
+<tr><th>Tool / approach</th><th>Best for</th><th>Compared with Airflow</th></tr>
+<tr><td>Cron / Task Scheduler</td><td>One simple command on one machine.</td><td>Lower setup, but weak dependency modeling and observability.</td></tr>
+<tr><td>n8n</td><td>Low-code application automation, APIs, notifications, SaaS integration.</td><td>Airflow is more code-first and data-pipeline oriented; n8n is often faster for visual business automation.</td></tr>
+<tr><td>Azure Data Factory</td><td>Managed Azure data integration and visual pipelines.</td><td>ADF is managed and Azure-centric; Airflow is code-first and highly extensible across platforms.</td></tr>
+<tr><td>Google Cloud Composer</td><td>Managed Airflow on Google Cloud.</td><td>It is Airflow with managed infrastructure and cloud integration.</td></tr>
+<tr><td>Amazon MWAA</td><td>Managed Airflow on AWS.</td><td>Reduces platform operations but introduces service-specific constraints.</td></tr>
+<tr><td>Databricks Workflows</td><td>Databricks-centric jobs, notebooks, and lakehouse pipelines.</td><td>Airflow provides broader cross-system orchestration.</td></tr>
+<tr><td>dbt orchestration</td><td>SQL transformation project execution.</td><td>Airflow can orchestrate dbt together with ingestion, quality, ML, and reporting.</td></tr>
+<tr><td>Kafka</td><td>Durable event streaming and message transport.</td><td>Kafka moves events; Airflow coordinates workflows.</td></tr>
+<tr><td>Spark Structured Streaming</td><td>Continuous scalable stream processing.</td><td>Spark processes data; Airflow may deploy, monitor, or restart the job.</td></tr>
+</table>
+
+<h3>Decision guide</h3>
+<div class="grid2">
+<div class="card"><h4>Choose Airflow</h4><p>Multi-step, dependency-rich, observable workflows with task-level retries and historical runs.</p></div>
+<div class="card"><h4>Choose something simpler</h4><p>One lightweight command with no complex dependency, scale, backfill, or visibility needs.</p></div>
+<div class="card"><h4>Choose streaming</h4><p>Continuous low-latency event processing.</p></div>
+<div class="card"><h4>Choose managed orchestration</h4><p>Your team wants Airflow capabilities without operating the platform itself.</p></div>
+</div>
+</section>
+
+<section id="troubleshooting" data-title="Troubleshooting">
+<h2>20. Troubleshooting Guide</h2>
+<details><summary>DAG does not appear in the UI</summary><div>
+<ul>
+<li>Confirm the file is inside the mounted <code>dags</code> folder.</li>
+<li>Check import errors: <code>docker compose exec airflow-scheduler airflow dags list-import-errors</code>.</li>
+<li>Check DAG Processor and Scheduler logs.</li>
+<li>Ensure the Python module imports exist in the Airflow image.</li>
+<li>Verify the DAG function is invoked.</li>
+</ul></div></details>
+
+<details><summary>Task remains queued</summary><div>
+<ul>
+<li>Check worker health and executor configuration.</li>
+<li>Check pool slots and task queue.</li>
+<li>Check DAG concurrency and global parallelism.</li>
+<li>Check whether workers can access required images or dependencies.</li>
+</ul></div></details>
+
+<details><summary>Task fails with ModuleNotFoundError</summary><div>
+<ul>
+<li>The package is not installed inside the Airflow container.</li>
+<li>Build a custom image using a Dockerfile and pinned requirements.</li>
+<li>Keep Airflow at the same version while installing additional dependencies.</li>
+</ul></div></details>
+
+<details><summary>Windows path works on host but not inside container</summary><div>
+<p>Containers use Linux paths. A mounted host folder such as <code>C:\AirflowLab\dags</code> appears inside the container as <code>/opt/airflow/dags</code>. Use the container path in DAG code.</p>
+</div></details>
+
+<details><summary>Connection to a service on the Windows host fails</summary><div>
+<p>Inside a container, <code>localhost</code> refers to that container. Use <code>host.docker.internal</code> when connecting to an appropriate host service, and ensure the host service accepts external/container connections.</p>
+</div></details>
+
+<details><summary>Scheduler or API server is unhealthy</summary><div>
+<ul>
+<li>Run <code>docker compose ps</code>.</li>
+<li>Inspect component logs.</li>
+<li>Check Docker memory.</li>
+<li>Check PostgreSQL and Redis health.</li>
+<li>Use the Airflow health endpoint and scheduler heartbeat diagnostics.</li>
+</ul>
+</div></details>
+
+<details><summary>Duplicate data after retry</summary><div>
+<p>The task is not idempotent. Write into a deterministic date partition, use merge/upsert logic, or delete and replace the run’s owned output before writing.</p>
+</div></details>
+</section>
+
+<section id="best-practices" data-title="Best Practices">
+<h2>21. Best Practices and Anti-Patterns</h2>
+<div class="grid2">
+<div class="card">
+<h3>Do</h3>
+<ul>
+<li>Keep DAG structure simple and readable.</li>
+<li>Use fixed timezone-aware dates.</li>
+<li>Design tasks for safe retries.</li>
+<li>Pass paths and metadata through XCom.</li>
+<li>Store large data externally.</li>
+<li>Use provider hooks and operators.</li>
+<li>Set retries, timeouts, and alerts intentionally.</li>
+<li>Protect shared systems with pools.</li>
+<li>Document ownership and support procedures.</li>
+<li>Test before deployment.</li>
+</ul>
+</div>
+<div class="card">
+<h3>Avoid</h3>
+<ul>
+<li>Network calls at DAG parse time.</li>
+<li>Hard-coded credentials.</li>
+<li>One enormous Python task for the entire pipeline.</li>
+<li>Large DataFrames in XCom.</li>
+<li>Blind append on every retry.</li>
+<li>Unbounded parallelism.</li>
+<li>Ignoring timezone and data interval semantics.</li>
+<li>Using local worker disk as durable shared storage.</li>
+<li>Production use of the learning Compose file.</li>
+<li>Alerting without actionable context.</li>
+</ul>
+</div>
+</div>
+
+<h3>Code review checklist</h3>
+<ul class="two-col-list">
+<li>Clear DAG and task names.</li>
+<li>Owner/team tags.</li>
+<li>Fixed start date.</li>
+<li>Correct schedule and timezone.</li>
+<li>Catchup decision documented.</li>
+<li>Retries appropriate for failure type.</li>
+<li>Execution timeout set.</li>
+<li>Idempotent writes.</li>
+<li>No secret in source.</li>
+<li>No large XCom.</li>
+<li>Pool for constrained system.</li>
+<li>Failure alert contains support details.</li>
+</ul>
+</section>
+
+<section id="exercises" data-title="Hands-on Exercises">
+<h2>22. Hands-on Exercises</h2>
+<ol>
+<li>Modify the retail DAG to add a <code>discount</code> column and calculate net revenue.</li>
+<li>Add a quality rule that rejects unknown categories.</li>
+<li>Split validation into schema validation and business validation tasks.</li>
+<li>Add a branch: publish a “no data” report when row count is zero.</li>
+<li>Use dynamic task mapping to process one file per store.</li>
+<li>Create a pool called <code>warehouse_pool</code> with two slots and assign the load task.</li>
+<li>Add a deliberate transient failure and verify retries.</li>
+<li>Make the report task run after all upstream tasks finish and include failure status.</li>
+<li>Replace local JSON output with a database table or cloud object storage.</li>
+<li>Create a second DAG that is triggered by the summary asset.</li>
+</ol>
+
+<h3>Trainer lab evaluation rubric — 50 marks</h3>
+<table>
+<tr><th>Area</th><th>Marks</th></tr>
+<tr><td>DAG structure and naming</td><td>8</td></tr>
+<tr><td>Validation logic</td><td>8</td></tr>
+<tr><td>Transformation correctness</td><td>8</td></tr>
+<tr><td>Dependencies and scheduling</td><td>8</td></tr>
+<tr><td>Retry, timeout, and idempotency</td><td>6</td></tr>
+<tr><td>Observability and logs</td><td>5</td></tr>
+<tr><td>Documentation and explanation</td><td>4</td></tr>
+<tr><td>Cleanup and cost awareness</td><td>3</td></tr>
+</table>
+</section>
+
+<section id="quiz" data-title="MCQ Quiz">
+<h2>23. Practice MCQ Quiz</h2>
+<p>Select answers and calculate your score.</p>
+<div id="quizBox">
+<div class="quiz-question" data-answer="b"><strong>1. What is the main purpose of Airflow?</strong>
+<label><input type="radio" name="q1" value="a"> Store large datasets</label>
+<label><input type="radio" name="q1" value="b"> Author, schedule, and monitor workflows</label>
+<label><input type="radio" name="q1" value="c"> Replace every processing engine</label>
+<label><input type="radio" name="q1" value="d"> Stream every event with millisecond latency</label></div>
+
+<div class="quiz-question" data-answer="c"><strong>2. What does acyclic mean in DAG?</strong>
+<label><input type="radio" name="q2" value="a"> Tasks cannot fail</label>
+<label><input type="radio" name="q2" value="b"> Tasks run only once</label>
+<label><input type="radio" name="q2" value="c"> Dependencies cannot form a cycle</label>
+<label><input type="radio" name="q2" value="d"> The graph has no direction</label></div>
+
+<div class="quiz-question" data-answer="a"><strong>3. Which component finds runnable task instances?</strong>
+<label><input type="radio" name="q3" value="a"> Scheduler</label>
+<label><input type="radio" name="q3" value="b"> XCom</label>
+<label><input type="radio" name="q3" value="c"> Pool</label>
+<label><input type="radio" name="q3" value="d"> Variable</label></div>
+
+<div class="quiz-question" data-answer="d"><strong>4. What is an Operator?</strong>
+<label><input type="radio" name="q4" value="a"> A database table</label>
+<label><input type="radio" name="q4" value="b"> A task log</label>
+<label><input type="radio" name="q4" value="c"> A worker machine</label>
+<label><input type="radio" name="q4" value="d"> A reusable template for a kind of task</label></div>
+
+<div class="quiz-question" data-answer="b"><strong>5. Which value is appropriate for XCom?</strong>
+<label><input type="radio" name="q5" value="a"> A 20 GB DataFrame</label>
+<label><input type="radio" name="q5" value="b"> A file path and row count</label>
+<label><input type="radio" name="q5" value="c"> An entire data lake</label>
+<label><input type="radio" name="q5" value="d"> A full video archive</label></div>
+
+<div class="quiz-question" data-answer="c"><strong>6. Why use a pool?</strong>
+<label><input type="radio" name="q6" value="a"> Create Python packages</label>
+<label><input type="radio" name="q6" value="b"> Encrypt a DAG file</label>
+<label><input type="radio" name="q6" value="c"> Limit concurrent use of a constrained resource</label>
+<label><input type="radio" name="q6" value="d"> Replace the metadata database</label></div>
+
+<div class="quiz-question" data-answer="a"><strong>7. What is idempotency?</strong>
+<label><input type="radio" name="q7" value="a"> Safe rerun produces the same correct result</label>
+<label><input type="radio" name="q7" value="b"> A task never retries</label>
+<label><input type="radio" name="q7" value="c"> Every run appends duplicate rows</label>
+<label><input type="radio" name="q7" value="d"> The scheduler stops after one run</label></div>
+
+<div class="quiz-question" data-answer="d"><strong>8. Which component handles asynchronous waiting for deferrable tasks?</strong>
+<label><input type="radio" name="q8" value="a"> Metadata variable</label>
+<label><input type="radio" name="q8" value="b"> TaskGroup</label>
+<label><input type="radio" name="q8" value="c"> Report server</label>
+<label><input type="radio" name="q8" value="d"> Triggerer</label></div>
+
+<div class="quiz-question" data-answer="b"><strong>9. Which is a poor top-level DAG practice?</strong>
+<label><input type="radio" name="q9" value="a"> Define task dependencies</label>
+<label><input type="radio" name="q9" value="b"> Perform a slow external API call during parsing</label>
+<label><input type="radio" name="q9" value="c"> Add tags</label>
+<label><input type="radio" name="q9" value="d"> Use a fixed start date</label></div>
+
+<div class="quiz-question" data-answer="c"><strong>10. What is a task instance?</strong>
+<label><input type="radio" name="q10" value="a"> The Airflow source repository</label>
+<label><input type="radio" name="q10" value="b"> A DAG file directory</label>
+<label><input type="radio" name="q10" value="c"> A task for a specific DAG run</label>
+<label><input type="radio" name="q10" value="d"> A provider package</label></div>
+</div>
+<button onclick="gradeQuiz()">Calculate Score</button>
+<div id="quizResult" class="result"></div>
+</section>
+
+<section id="interview" data-title="Interview Questions and Answers">
+<h2>24. Interview Questions and Answers</h2>
+<details><summary>1. What problem does Airflow solve?</summary><div><p>It orchestrates multi-step workflows by defining dependencies, schedules, retries, state, and observability as code.</p></div></details>
+<details><summary>2. What is the difference between a DAG and a task?</summary><div><p>A DAG is the workflow blueprint; a task is one unit of work inside it.</p></div></details>
+<details><summary>3. What is the difference between a task and a task instance?</summary><div><p>A task is a definition. A task instance is that definition for a particular DAG run and has a state, attempt, logs, and timing.</p></div></details>
+<details><summary>4. What does the Scheduler do?</summary><div><p>It creates eligible DAG runs, evaluates dependencies and constraints, and sends runnable task instances to the Executor.</p></div></details>
+<details><summary>5. What does the Executor do?</summary><div><p>It implements how task instances are dispatched and run, such as locally, on distributed workers, or in Kubernetes pods.</p></div></details>
+<details><summary>6. Why should Airflow tasks be idempotent?</summary><div><p>Because failures, retries, reruns, and backfills are normal. Idempotency prevents duplicate or inconsistent output.</p></div></details>
+<details><summary>7. What is XCom and what should not be stored in it?</summary><div><p>XCom carries small task-to-task metadata. Large datasets, DataFrames, and files should be stored externally and referenced by path or ID.</p></div></details>
+<details><summary>8. What is catchup?</summary><div><p>Catchup creates scheduled DAG runs for historical intervals between a fixed start date and the current schedule.</p></div></details>
+<details><summary>9. What is backfill?</summary><div><p>Backfill is intentional execution of historical logical intervals, often after code changes or missed processing.</p></div></details>
+<details><summary>10. Why use pools?</summary><div><p>Pools limit parallel access to constrained services such as a small database, partner API, or licensed system.</p></div></details>
+<details><summary>11. Sensor poke mode versus reschedule mode?</summary><div><p>Poke mode occupies a worker while sleeping. Reschedule mode releases the worker between checks. Deferrable operators can move waiting to the Triggerer.</p></div></details>
+<details><summary>12. Why avoid dynamic current time as start_date?</summary><div><p>It continuously moves the scheduling boundary and makes schedule calculation unpredictable. Use a fixed timezone-aware date.</p></div></details>
+<details><summary>13. How do you troubleshoot a queued task?</summary><div><p>Check executor and worker health, pool slots, queues, concurrency settings, priority, and available capacity.</p></div></details>
+<details><summary>14. How should credentials be managed?</summary><div><p>Use Airflow Connections integrated with a secrets backend or secure environment mechanism. Never hard-code credentials in DAGs.</p></div></details>
+<details><summary>15. How do you handle heavy Spark processing?</summary><div><p>Use Airflow to submit and monitor a Spark job on suitable compute. Do not run a huge Spark workload inside the Scheduler process.</p></div></details>
+<details><summary>16. Airflow versus Cron?</summary><div><p>Cron is suitable for simple time triggers. Airflow adds dependency graphs, task-level state, retries, history, backfill, scaling, and central observability.</p></div></details>
+<details><summary>17. Airflow versus Kafka?</summary><div><p>Kafka is an event streaming platform. Airflow is a workflow orchestrator. They frequently work together.</p></div></details>
+<details><summary>18. What is dynamic task mapping?</summary><div><p>It creates task instances at runtime based on upstream data using mapping operations such as <code>expand()</code>.</p></div></details>
+<details><summary>19. What is asset-aware scheduling?</summary><div><p>It schedules downstream workflows based on updates to logical data assets instead of relying only on clock time.</p></div></details>
+<details><summary>20. What makes an Airflow deployment production ready?</summary><div><p>Secure access, supported metadata database, backups, secrets, monitoring, remote logs, scalable execution, tested DAG delivery, health checks, and operational ownership.</p></div></details>
+</section>
+
+<section id="tracker" data-title="Preparation Tracker">
+<h2>25. Preparation Tracker</h2>
+<div class="checklist" id="checklist">
+<label><input type="checkbox" data-key="p1"> I can explain orchestration versus processing.</label>
+<label><input type="checkbox" data-key="p2"> I can compare Cron and Airflow.</label>
+<label><input type="checkbox" data-key="p3"> I can draw the Airflow architecture.</label>
+<label><input type="checkbox" data-key="p4"> I can explain DAG, Operator, Task, and Task Instance.</label>
+<label><input type="checkbox" data-key="p5"> I can explain the Scheduler and Executor lifecycle.</label>
+<label><input type="checkbox" data-key="p6"> I installed Airflow using Docker Compose.</label>
+<label><input type="checkbox" data-key="p7"> I ran and troubleshot the retail DAG.</label>
+<label><input type="checkbox" data-key="p8"> I understand retries, idempotency, and pools.</label>
+<label><input type="checkbox" data-key="p9"> I understand XCom, Connections, Variables, and secrets.</label>
+<label><input type="checkbox" data-key="p10"> I can explain advanced patterns and production standards.</label>
+</div>
+<p id="trackerResult" class="result"></p>
+</section>
+
+<section id="references" data-title="Official References">
+<h2>26. Official References and Version Note</h2>
+<p>This tutorial was prepared against the Apache Airflow 3.3.0 documentation available on July 29, 2026. Provider packages have independent versions, so check the provider documentation when using a specific operator.</p>
+<ul class="source-list">
+<li><a href="https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/overview.html">Architecture Overview</a></li>
+<li><a href="https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/dags.html">DAGs</a></li>
+<li><a href="https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/tasks.html">Tasks</a></li>
+<li><a href="https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/operators.html">Operators</a></li>
+<li><a href="https://airflow.apache.org/docs/apache-airflow/stable/administration-and-deployment/scheduler.html">Scheduler</a></li>
+<li><a href="https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/executor/index.html">Executors</a></li>
+<li><a href="https://airflow.apache.org/docs/apache-airflow/stable/howto/docker-compose/index.html">Running Airflow in Docker</a></li>
+<li><a href="https://airflow.apache.org/docs/apache-airflow/stable/tutorial/taskflow.html">TaskFlow Tutorial</a></li>
+<li><a href="https://airflow.apache.org/docs/apache-airflow/stable/best-practices.html">Best Practices</a></li>
+<li><a href="https://airflow.apache.org/docs/apache-airflow/stable/authoring-and-scheduling/dynamic-task-mapping.html">Dynamic Task Mapping</a></li>
+<li><a href="https://airflow.apache.org/docs/apache-airflow/stable/authoring-and-scheduling/assets.html">Assets</a></li>
+<li><a href="https://airflow.apache.org/docs/apache-airflow/stable/authoring-and-scheduling/deferring.html">Deferrable Operators and Triggers</a></li>
+</ul>
+<div class="callout ok"><strong>Cleanup reminder:</strong> For the local Docker lab, stop services after practice. Use <code>docker compose down</code> to remove containers, or add <code>--volumes</code> when you deliberately want to delete the lab database state.</div>
+</section>
+
+<div class="footer">Apache Airflow Basic-to-Advanced Trainer Tutorial • Single-file HTML</div>
+</main>
+</div>
+
+<div class="note-pop" id="notePop">
+<strong>Personal Note</strong>
+<p class="muted" id="selectedText"></p>
+<textarea id="noteText" placeholder="Write your note..."></textarea>
+<div style="margin-top:10px;display:flex;gap:8px">
+<button onclick="saveNote()">Save</button>
+<button onclick="closeNote()">Close</button>
+</div>
+</div>
+
+<script>
+document.querySelectorAll('pre').forEach(pre=>{
+  const b=document.createElement('button');
+  b.className='copy-btn';b.textContent='Copy';
+  b.onclick=async()=>{await navigator.clipboard.writeText(pre.innerText.replace(/^Copy\s*/,''));
+    b.textContent='Copied';setTimeout(()=>b.textContent='Copy',1200)};
+  pre.appendChild(b);
+});
+
+const sections=[...document.querySelectorAll('main section')];
+const links=[...document.querySelectorAll('#toc a')];
+const observer=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      links.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+e.target.id));
+    }
+  })
+},{rootMargin:'-35% 0px -55% 0px'});
+sections.forEach(s=>observer.observe(s));
+
+window.addEventListener('scroll',()=>{
+  const doc=document.documentElement;
+  const max=doc.scrollHeight-doc.clientHeight;
+  const pct=max?Math.round((doc.scrollTop/max)*100):0;
+  document.getElementById('progressFill').style.width=pct+'%';
+  document.getElementById('progressText').textContent=pct+'%';
+});
+
+document.getElementById('search').addEventListener('input',e=>{
+  const q=e.target.value.toLowerCase().trim();
+  sections.forEach(s=>{
+    const hit=!q||s.innerText.toLowerCase().includes(q)||s.dataset.title.toLowerCase().includes(q);
+    s.classList.toggle('hidden-by-search',!hit);
+  });
+});
+
+function gradeQuiz(){
+  let score=0,answered=0;
+  document.querySelectorAll('.quiz-question').forEach(q=>{
+    q.style.borderColor='var(--border)';
+    const chosen=q.querySelector('input:checked');
+    if(chosen){answered++; if(chosen.value===q.dataset.answer){score++;q.style.borderColor='var(--ok)'}else{q.style.borderColor='var(--danger)'}}
+  });
+  document.getElementById('quizResult').textContent=`Score: ${score}/10 • Answered: ${answered}/10`;
+}
+
+document.querySelectorAll('#checklist input').forEach(cb=>{
+  cb.checked=localStorage.getItem(cb.dataset.key)==='1';
+  cb.addEventListener('change',()=>{
+    localStorage.setItem(cb.dataset.key,cb.checked?'1':'0');updateTracker();
+  })
+});
+function updateTracker(){
+ const all=[...document.querySelectorAll('#checklist input')];
+ const done=all.filter(x=>x.checked).length;
+ document.getElementById('trackerResult').textContent=`Completed ${done} of ${all.length} learning goals.`;
+}
+updateTracker();
+
+let selectedSnippet='';
+document.querySelectorAll('main p, main li').forEach(el=>{
+  el.addEventListener('dblclick',()=>{
+    selectedSnippet=window.getSelection().toString().trim()||el.innerText.trim();
+    document.getElementById('selectedText').textContent=selectedSnippet.slice(0,180);
+    document.getElementById('noteText').value=localStorage.getItem('note:'+selectedSnippet)||'';
+    document.getElementById('notePop').style.display='block';
+  });
+});
+function saveNote(){
+ localStorage.setItem('note:'+selectedSnippet,document.getElementById('noteText').value);
+ closeNote();
+}
+function closeNote(){document.getElementById('notePop').style.display='none'}
+
+let sparkle=true;
+document.getElementById('sparkleToggle').onclick=()=>{
+ sparkle=!sparkle;
+ document.getElementById('sparkleToggle').textContent='Sparkle cursor: '+(sparkle?'On':'Off');
+};
+document.addEventListener('mousemove',e=>{
+ if(!sparkle||Math.random()>.25)return;
+ const s=document.createElement('span');s.className='spark';
+ s.style.left=e.clientX+'px';s.style.top=e.clientY+'px';
+ document.body.appendChild(s);setTimeout(()=>s.remove(),700);
+});
+</script>
+</body>
+</html>
