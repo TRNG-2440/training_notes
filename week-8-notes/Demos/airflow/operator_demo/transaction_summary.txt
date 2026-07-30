@@ -1,0 +1,5 @@
+BANK TRANSACTION PROCESSING SUMMARY
+===================================
+Valid transactions : 3
+Invalid transactions: 0
+Valid total amount : 3950.0

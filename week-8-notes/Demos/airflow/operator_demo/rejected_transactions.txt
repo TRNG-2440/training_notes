@@ -1,0 +1,2 @@
+Invalid transactions were detected.
+Review the validation task logs.

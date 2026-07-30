@@ -1,0 +1,4 @@
+transaction_id,customer_name,amount,status
+TXN-1001,Asha,1500.00,SUCCESS
+TXN-1002,Rahul,2200.00,SUCCESS
+TXN-1003,Meena,-250.00,SUCCESS
