@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pub/Sub Messaging – Complete Fresher Tutorial</title>
+<style>
+:root{--bg:#f5f7fb;--card:#fff;--text:#172033;--muted:#5d697a;--p:#1769e0;--g:#16834a;--o:#d97706;--r:#c43d3d;--v:#7c3aed;--b:#dbe3ef;--code:#111827}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.65}a{color:var(--p)}
+header{background:linear-gradient(135deg,#082b5c,#1769e0);color:#fff;padding:42px 24px}.hero{max-width:1280px;margin:auto;display:grid;grid-template-columns:1.3fr .7fr;gap:25px;align-items:center}.hero h1{font-size:clamp(2rem,4vw,3.5rem);line-height:1.12;margin:0 0 12px}.hero p{font-size:1.12rem;color:#eaf2ff}.hero-box{background:#ffffff18;border:1px solid #ffffff44;border-radius:18px;padding:18px}.hn{background:#fff;color:#172033;padding:10px;border-radius:10px;text-align:center;font-weight:700;margin:7px}.ha{text-align:center;color:#ffd166;font-size:1.5rem}
+.layout{max-width:1420px;margin:auto;display:grid;grid-template-columns:245px minmax(0,1fr) 210px;gap:22px;padding:25px 18px 60px}nav,aside{position:sticky;top:15px;align-self:start;background:#fff;border:1px solid var(--b);border-radius:15px;padding:15px;max-height:calc(100vh - 30px);overflow:auto;box-shadow:0 10px 28px #20345b16}nav h3,aside h3{margin:0 0 10px}nav a{display:block;text-decoration:none;color:var(--text);padding:7px 8px;border-radius:8px;font-size:.9rem}nav a:hover,nav a.active{background:#edf4ff;color:var(--p);font-weight:700}
+main{min-width:0}section{background:var(--card);border:1px solid var(--b);border-radius:17px;padding:26px;margin-bottom:22px;box-shadow:0 10px 28px #20345b12;transition:.2s}section:hover{transform:translateY(-2px);border-color:#afc6ec}h2{margin-top:0;border-bottom:2px solid #edf4ff;padding-bottom:9px}h3{margin-top:23px}.lead{font-size:1.08rem;color:#344054}
+.grid2,.grid3{display:grid;gap:15px}.grid2{grid-template-columns:repeat(2,minmax(0,1fr))}.grid3{grid-template-columns:repeat(3,minmax(0,1fr))}.card{border:1px solid var(--b);border-radius:13px;padding:16px}.card h3{margin-top:0}.call{border-left:5px solid var(--p);background:#edf4ff;padding:14px 16px;border-radius:9px;margin:15px 0}.ok{border-left-color:var(--g);background:#eefaf2}.warn{border-left-color:var(--o);background:#fff7e8}.bad{border-left-color:var(--r);background:#fff1f1}.memory{border:2px dashed var(--o);background:#fffaf0;border-radius:12px;padding:14px;margin:15px 0;font-weight:600}
+.table{overflow:auto}table{width:100%;border-collapse:collapse;min-width:690px}th,td{border:1px solid var(--b);padding:11px;text-align:left;vertical-align:top}th{background:#eaf2ff;color:#17366f}tr:nth-child(even) td{background:#fbfcff}
+pre{background:var(--code);color:#edf4ff;padding:18px;border-radius:12px;overflow:auto;position:relative;line-height:1.5}code{font-family:Consolas,monospace}.copy{position:absolute;right:8px;top:8px;border:0;border-radius:7px;padding:6px 9px;background:#334155;color:#fff;cursor:pointer}
+.diagram{border:1px solid var(--b);background:#fbfdff;border-radius:15px;padding:12px;overflow:auto}.diagram svg{display:block;width:100%;height:auto;min-width:680px}.t{font:700 19px Segoe UI;fill:#172033}.l{font:650 14px Segoe UI;fill:#172033}.s{font:12px Segoe UI;fill:#455164}.nb{fill:#e3efff;stroke:#1769e0;stroke-width:2}.ng{fill:#e8f8ee;stroke:#16834a;stroke-width:2}.no{fill:#fff0d4;stroke:#d97706;stroke-width:2}.nv{fill:#f1e8ff;stroke:#7c3aed;stroke-width:2}.nr{fill:#ffe9e9;stroke:#c43d3d;stroke-width:2}.arr{stroke:#536176;stroke-width:2.5;fill:none;marker-end:url(#a)}
+.step{border-left:4px solid var(--p);padding-left:17px;margin:21px 0}.step h3{margin-top:0}.small{font-size:.9rem;color:var(--muted)}details{border:1px solid var(--b);border-radius:11px;padding:10px 13px;margin:9px 0}summary{font-weight:700;cursor:pointer}
+.quiz{border:1px solid var(--b);border-radius:12px;padding:14px;margin:12px 0;background:#fbfcff}.quiz label{display:block;margin:6px}.btn{border:0;border-radius:9px;padding:10px 14px;background:var(--p);color:#fff;font-weight:700;cursor:pointer;margin:4px}.btn.gray{background:#526079}.result{display:none;padding:13px;border-radius:9px;font-weight:800;margin-top:10px}.notes{width:100%;min-height:90px;border:1px solid var(--b);border-radius:9px;padding:9px;font:inherit}.progress{height:10px;background:#e5eaf2;border-radius:999px;overflow:hidden}.bar{height:100%;width:0;background:var(--p)}aside label{display:block;margin:7px 0}.side{border:1px solid var(--b);border-radius:10px;padding:10px;margin-top:12px;background:#fbfcff}footer{max-width:1400px;margin:0 auto 25px;padding:0 20px;color:var(--muted);font-size:.9rem}
+@media(max-width:1100px){.layout{grid-template-columns:220px minmax(0,1fr)}aside{display:none}}@media(max-width:780px){.hero{grid-template-columns:1fr}.layout{display:block;padding:13px}nav{position:relative;top:auto;max-height:none;margin-bottom:15px}.grid2,.grid3{grid-template-columns:1fr}section{padding:19px}}@media print{nav,aside,.copy,.btn{display:none!important}.layout{display:block}section{box-shadow:none}}
+</style>
+</head>
+<body>
+<header><div class="hero"><div><h1>Pub/Sub Messaging</h1><p>Topics, subscriptions, push and pull delivery, Kafka comparison, and complete Google Cloud hands-on execution for freshers.</p></div><div class="hero-box"><div class="hn">Publisher</div><div class="ha">↓</div><div class="hn">Topic</div><div class="ha">↓ subscriptions</div><div class="hn">Pull worker + Push endpoint</div></div></div></header>
+
+<div class="layout">
+<nav><h3>Contents</h3>
+<a href="#obj">1. Objectives</a><a href="#basic">2. Messaging Basics</a><a href="#what">3. What is Pub/Sub?</a><a href="#why">4. Why Use It?</a><a href="#arch">5. Architecture</a><a href="#concepts">6. Concepts</a><a href="#topic-sub">7. Topic vs Subscription</a><a href="#work">8. How It Works</a><a href="#pushpull">9. Push vs Pull</a><a href="#ack">10. ACK & Redelivery</a><a href="#compare">11. Kafka vs Pub/Sub</a><a href="#choose">12. Which to Choose?</a><a href="#case">13. Retail Use Case</a><a href="#setup">14. Setup</a><a href="#console">15. Console Demo</a><a href="#pull">16. Pull Demo</a><a href="#push">17. Push Demo</a><a href="#python">18. Python Demo</a><a href="#verify">19. Verification</a><a href="#trouble">20. Troubleshooting</a><a href="#best">21. Best Practices</a><a href="#cleanup">22. Cleanup</a><a href="#interview">23. Interview Q&A</a><a href="#quiz">24. Quiz</a><a href="#refs">25. References</a>
+</nav>
+
+<main>
+<section id="obj"><h2>1. Learning Objectives</h2><div class="grid2"><div class="card">Explain asynchronous publish/subscribe messaging.</div><div class="card">Differentiate a topic and subscription.</div><div class="card">Choose push or pull delivery.</div><div class="card">Compare Kafka with Google Cloud Pub/Sub.</div><div class="card">Create and test pull subscriptions.</div><div class="card">Deploy and test a Cloud Run push subscriber.</div></div><div class="memory">Publisher sends → Topic accepts → Subscription delivers and tracks → Subscriber processes → ACK confirms success.</div></section>
+
+<section id="basic"><h2>2. Messaging Basics</h2><p class="lead">Messaging lets applications exchange data through an intermediary instead of directly depending on one another.</p><div class="grid2"><div class="card"><h3>Synchronous</h3><p>Checkout calls Inventory and waits. If Inventory is slow, Checkout also waits.</p></div><div class="card"><h3>Asynchronous</h3><p>Checkout publishes an event and continues. Inventory processes it independently.</p></div></div><div class="call"><strong>Event:</strong> A record that something happened, such as “Order O-1001 was created.”</div></section>
+
+<section id="what"><h2>3. What is Pub/Sub?</h2><p><strong>Publish/subscribe</strong> is a messaging pattern in which publishers send messages to a topic and subscribers receive them through subscriptions.</p><ul><li>Publisher does not need to know all receivers.</li><li>One topic can feed multiple independent subscriptions.</li><li>Subscribers process messages at their own pace.</li></ul><div class="call ok"><strong>Google Cloud Pub/Sub</strong> is a fully managed real-time messaging service. Google manages messaging servers, scaling and availability.</div><div class="call warn">Pub/Sub programmatic access uses Google Cloud credentials such as gcloud credentials, Application Default Credentials or service identities—not a normal API key.</div></section>
+
+<section id="why"><h2>4. Why Use Pub/Sub?</h2><div class="grid3"><div class="card"><h3>Loose coupling</h3><p>Publisher and subscriber can change independently.</p></div><div class="card"><h3>Fan-out</h3><p>One event can reach warehouse, analytics and notification systems.</p></div><div class="card"><h3>Buffering</h3><p>Messages can wait in a subscription while a consumer catches up.</p></div><div class="card"><h3>Failure isolation</h3><p>A failed subscriber does not require the publisher to stop.</p></div><div class="card"><h3>Independent scale</h3><p>Each application scales according to its workload.</p></div><div class="card"><h3>Event-driven design</h3><p>Services react to business events instead of constant polling.</p></div></div></section>
+
+<section id="arch"><h2>5. Architecture</h2>
+<div class="diagram"><svg viewBox="0 0 1100 570" role="img" aria-label="Pub Sub architecture">
+<defs><marker id="a" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#536176"/></marker></defs>
+<text x="550" y="30" text-anchor="middle" class="t">One Topic, Three Independent Subscriptions</text>
+<rect x="35" y="220" width="190" height="85" rx="14" class="ng"/><text x="130" y="252" text-anchor="middle" class="l">Checkout Service</text><text x="130" y="278" text-anchor="middle" class="s">Publisher</text>
+<rect x="330" y="205" width="250" height="115" rx="16" class="nv"/><text x="455" y="245" text-anchor="middle" class="l">Topic</text><text x="455" y="276" text-anchor="middle" class="l">retail-orders</text><text x="455" y="301" text-anchor="middle" class="s">Receives messages</text>
+<rect x="735" y="50" width="250" height="80" rx="13" class="nb"/><text x="860" y="82" text-anchor="middle" class="l">warehouse-pull-sub</text><text x="860" y="106" text-anchor="middle" class="s">Warehouse worker</text>
+<rect x="735" y="215" width="250" height="80" rx="13" class="nb"/><text x="860" y="247" text-anchor="middle" class="l">analytics-pull-sub</text><text x="860" y="271" text-anchor="middle" class="s">Analytics worker</text>
+<rect x="735" y="380" width="250" height="80" rx="13" class="no"/><text x="860" y="412" text-anchor="middle" class="l">notification-push-sub</text><text x="860" y="436" text-anchor="middle" class="s">Cloud Run endpoint</text>
+<path d="M225 262 L330 262" class="arr"/><path d="M580 235 C650 160 680 90 735 90" class="arr"/><path d="M580 262 L735 255" class="arr"/><path d="M580 288 C650 350 680 420 735 420" class="arr"/>
+<text x="640" y="330" text-anchor="middle" class="s">Each subscription receives its own copy</text>
+</svg></div><div class="call ok"><strong>Important:</strong> Applications receive messages through subscriptions. The subscription owns delivery and acknowledgment state.</div></section>
+
+<section id="concepts"><h2>6. Core Concepts</h2><div class="table"><table><thead><tr><th>Concept</th><th>Meaning</th><th>Example</th></tr></thead><tbody>
+<tr><td>Publisher</td><td>Application that sends messages.</td><td>Checkout service</td></tr>
+<tr><td>Message</td><td>Business event data plus metadata.</td><td>Order-created JSON</td></tr>
+<tr><td>Topic</td><td>Named feed that accepts messages.</td><td><code>retail-orders</code></td></tr>
+<tr><td>Subscription</td><td>Independent delivery path and backlog.</td><td><code>warehouse-pull-sub</code></td></tr>
+<tr><td>Subscriber</td><td>Application that processes messages.</td><td>Warehouse worker</td></tr>
+<tr><td>ACK</td><td>Success confirmation after processing.</td><td><code>message.ack()</code> or HTTP 204</td></tr>
+<tr><td>Ack deadline</td><td>Processing time before possible redelivery.</td><td>Subscriber must finish or extend</td></tr>
+<tr><td>Dead-letter topic</td><td>Optional destination for repeatedly failing messages.</td><td>Invalid-order-events</td></tr>
+</tbody></table></div></section>
+
+<section id="topic-sub"><h2>7. Topic vs Subscription</h2><div class="grid2"><div class="card"><h3>Topic</h3><p>Publisher-facing named message stream.</p><ul><li>Receives published events.</li><li>Can have many subscriptions.</li><li>Does not represent one consuming application.</li></ul></div><div class="card"><h3>Subscription</h3><p>Subscriber-facing delivery stream.</p><ul><li>Connected to one topic.</li><li>Tracks delivery and ACK state.</li><li>Can use pull or push.</li></ul></div></div>
+<div class="table"><table><thead><tr><th>Aspect</th><th>Topic</th><th>Subscription</th></tr></thead><tbody><tr><td>Side</td><td>Publisher</td><td>Subscriber</td></tr><tr><td>Purpose</td><td>Accept/category</td><td>Deliver/track</td></tr><tr><td>Relationship</td><td>One-to-many subscriptions</td><td>Belongs to one topic</td></tr><tr><td>State</td><td>Source stream configuration</td><td>Backlog and acknowledgment</td></tr><tr><td>Example</td><td><code>orders</code></td><td><code>fraud-service-sub</code></td></tr></tbody></table></div>
+<div class="call warn">Create a subscription before publishing messages that it must receive. A new standard subscription normally receives later messages unless a separate retention/replay design is configured.</div></section>
+
+<section id="work"><h2>8. How It Works</h2><ol><li>Publisher creates an event.</li><li>Publisher sends it to the topic.</li><li>Pub/Sub makes it available to attached subscriptions.</li><li>Pull subscriber requests it, or Pub/Sub pushes it to an HTTPS endpoint.</li><li>Subscriber processes the event.</li><li>Subscriber acknowledges success.</li><li>No ACK or failure can cause redelivery.</li></ol><div class="memory">Acknowledging a message on one subscription does not acknowledge it on another subscription.</div></section>
+
+<section id="pushpull"><h2>9. Push vs Pull</h2>
+<div class="diagram"><svg viewBox="0 0 1100 420" role="img" aria-label="Push versus pull">
+<defs><marker id="ap" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#536176"/></marker></defs>
+<rect x="40" y="50" width="480" height="315" rx="17" fill="#f4f9ff" stroke="#1769e0" stroke-width="2"/><text x="280" y="87" text-anchor="middle" class="l">PULL</text>
+<rect x="80" y="135" width="165" height="75" rx="12" class="nb"/><text x="162" y="166" text-anchor="middle" class="l">Pub/Sub</text>
+<rect x="330" y="135" width="150" height="75" rx="12" class="ng"/><text x="405" y="166" text-anchor="middle" class="l">Subscriber</text>
+<path d="M330 155 L245 155" stroke="#536176" stroke-width="2.5" marker-end="url(#ap)"/><text x="286" y="141" text-anchor="middle" class="s">request</text><path d="M245 195 L330 195" stroke="#536176" stroke-width="2.5" marker-end="url(#ap)"/><text x="286" y="224" text-anchor="middle" class="s">messages</text><text x="280" y="280" text-anchor="middle" class="l">Subscriber starts</text><text x="280" y="312" text-anchor="middle" class="s">Good for workers and flow control</text>
+<rect x="580" y="50" width="480" height="315" rx="17" fill="#fff9ef" stroke="#d97706" stroke-width="2"/><text x="820" y="87" text-anchor="middle" class="l">PUSH</text>
+<rect x="620" y="135" width="165" height="75" rx="12" class="no"/><text x="702" y="166" text-anchor="middle" class="l">Pub/Sub</text>
+<rect x="870" y="135" width="150" height="75" rx="12" class="ng"/><text x="945" y="160" text-anchor="middle" class="l">HTTPS</text><text x="945" y="184" text-anchor="middle" class="s">endpoint</text>
+<path d="M785 165 L870 165" stroke="#536176" stroke-width="2.5" marker-end="url(#ap)"/><text x="827" y="150" text-anchor="middle" class="s">POST</text><path d="M870 200 L785 200" stroke="#16834a" stroke-width="2.5" marker-end="url(#ap)"/><text x="827" y="226" text-anchor="middle" class="s">2xx ACK</text><text x="820" y="280" text-anchor="middle" class="l">Pub/Sub starts</text><text x="820" y="312" text-anchor="middle" class="s">Good for webhooks and Cloud Run</text>
+</svg></div>
+<div class="table"><table><thead><tr><th>Aspect</th><th>Pull</th><th>Push</th></tr></thead><tbody>
+<tr><td>Initiator</td><td>Subscriber requests messages.</td><td>Pub/Sub sends HTTPS POST.</td></tr>
+<tr><td>Flow control</td><td>Subscriber controls receive flow.</td><td>Pub/Sub adapts push rate.</td></tr>
+<tr><td>ACK</td><td>Client library or acknowledge command.</td><td>Supported HTTP success response.</td></tr>
+<tr><td>Best for</td><td>Background workers and data processing.</td><td>Webhooks and serverless endpoints.</td></tr>
+<tr><td>Payload</td><td>Message object from API/client.</td><td>Default wrapped JSON with base64 data.</td></tr>
+<tr><td>Fresher start</td><td>Easiest first lab.</td><td>Requires endpoint and security understanding.</td></tr>
+</tbody></table></div><div class="memory">Pull = subscriber asks. Push = Pub/Sub posts.</div></section>
+
+<section id="ack"><h2>10. ACK, Retry and Redelivery</h2><p>A message is successfully processed only when acknowledged.</p><div class="grid3"><div class="card"><h3>ACK</h3><p>Processing succeeded.</p></div><div class="card"><h3>NACK/failure</h3><p>Processing failed and delivery may retry.</p></div><div class="card"><h3>Deadline expiry</h3><p>No timely ACK, so redelivery may occur.</p></div></div><div class="call bad"><strong>Design for duplicates:</strong> Store a processed message/event ID or enforce a unique business operation. ACK only after durable processing succeeds.</div></section>
+
+<section id="compare"><h2>11. Kafka vs Google Cloud Pub/Sub</h2><div class="table"><table><thead><tr><th>Aspect</th><th>Apache Kafka</th><th>Google Cloud Pub/Sub</th></tr></thead><tbody>
+<tr><td>Model</td><td>Open-source distributed event-streaming platform.</td><td>Fully managed Google Cloud messaging service.</td></tr>
+<tr><td>Structure</td><td>Topics divided into partitions.</td><td>Topics connected to subscriptions.</td></tr>
+<tr><td>Infrastructure</td><td>Brokers store partition replicas.</td><td>Broker infrastructure is managed and hidden.</td></tr>
+<tr><td>Consumers</td><td>Consumer groups share partitions.</td><td>A separate subscription commonly represents each independent workload.</td></tr>
+<tr><td>Progress</td><td>Offsets per partition.</td><td>Acknowledgment/delivery state per subscription.</td></tr>
+<tr><td>Delivery</td><td>Consumers normally fetch.</td><td>Pull or push delivery.</td></tr>
+<tr><td>Ordering</td><td>Per-partition ordering.</td><td>Ordering keys when enabled; no user-managed Kafka-style partitions.</td></tr>
+<tr><td>Scaling</td><td>Plan partitions, brokers, replicas and storage.</td><td>Managed service scaling without user brokers.</td></tr>
+<tr><td>Replay</td><td>Move offsets over retained logs.</td><td>Use retention, seek and snapshots where configured.</td></tr>
+<tr><td>Portability</td><td>Runs across clouds and on-premises.</td><td>Native Google Cloud service.</td></tr>
+</tbody></table></div><div class="call warn"><strong>Do not map Pub/Sub subscription to Kafka partition.</strong> Subscription is closer to an independent consumer workload. Kafka partition is an ordered data shard.</div></section>
+
+<section id="choose"><h2>12. Which Should You Choose?</h2><div class="grid2"><div class="card"><h3>Choose Pub/Sub</h3><ul><li>Google Cloud-native systems</li><li>Minimal infrastructure management</li><li>Cloud Run/Dataflow/BigQuery integration</li><li>Push or managed pull delivery</li></ul></div><div class="card"><h3>Choose Kafka</h3><ul><li>Cross-cloud or on-premises portability</li><li>Explicit partition control</li><li>Kafka Streams/ecosystem requirements</li><li>Long-lived log and offset-centric replay</li></ul></div></div></section>
+
+<section id="case"><h2>13. Retail Use Case</h2><p>Checkout publishes order events to <code>retail-orders</code>. Warehouse and analytics pull independently. Notification receives push requests.</p><pre><button class="copy">Copy</button><code>{
+  "eventType": "ORDER_CREATED",
+  "orderId": "O-1001",
+  "customerId": "C-52",
+  "amount": 125.50,
+  "currency": "USD",
+  "createdAt": "2026-07-29T08:30:00Z"
+}</code></pre><div class="call ok">One publish produces one eligible copy for every attached subscription. ACK state remains independent.</div></section>
+
+<section id="setup"><h2>14. Lab Prerequisites and Setup</h2><div class="call warn">Use a training project, keep volume tiny and perform cleanup. Cloud Run source deployment requires billing and appropriate IAM permissions.</div>
+<div class="step"><h3>Step 1 – Open Cloud Shell</h3><p>In Google Cloud Console, select your project and click <strong>Activate Cloud Shell</strong>.</p></div>
+<div class="step"><h3>Step 2 – Verify project</h3><pre><button class="copy">Copy</button><code>gcloud config get-value project
+gcloud projects list
+gcloud config set project YOUR_PROJECT_ID</code></pre></div>
+<div class="step"><h3>Step 3 – Variables</h3><pre><button class="copy">Copy</button><code>export PROJECT_ID="$(gcloud config get-value project)"
+export REGION="asia-south1"
+export TOPIC="retail-orders"
+export WAREHOUSE_SUB="warehouse-pull-sub"
+export ANALYTICS_SUB="analytics-pull-sub"
+export PUSH_SUB="notification-push-sub"
+export RUN_SERVICE="pubsub-push-receiver"
+
+echo "$PROJECT_ID"
+echo "$REGION"</code></pre></div>
+<div class="step"><h3>Step 4 – Enable APIs</h3><pre><button class="copy">Copy</button><code>gcloud services enable \
+  pubsub.googleapis.com \
+  run.googleapis.com \
+  cloudbuild.googleapis.com \
+  artifactregistry.googleapis.com</code></pre></div></section>
+
+<section id="console"><h2>15. Simple Console Demo</h2><ol><li>Go to <strong>Pub/Sub → Topics → Create topic</strong>.</li><li>Topic ID: <code>retail-orders-console</code>.</li><li>Go to <strong>Subscriptions → Create subscription</strong>.</li><li>ID: <code>warehouse-console-sub</code>; select the topic; choose Pull.</li><li>Open the topic → Messages → Publish message.</li><li>Publish <code>{"orderId":"O-CONSOLE-1","status":"CREATED"}</code>.</li><li>Open the subscription → Messages → Pull.</li></ol><div class="call">At very low volume, the first console Pull can return no message. Click Pull again.</div></section>
+
+<section id="pull"><h2>16. End-to-End Pull Demo</h2>
+<div class="step"><h3>1. Create topic</h3><pre><button class="copy">Copy</button><code>gcloud pubsub topics create "$TOPIC"</code></pre></div>
+<div class="step"><h3>2. Create two subscriptions before publishing</h3><pre><button class="copy">Copy</button><code>gcloud pubsub subscriptions create "$WAREHOUSE_SUB" --topic="$TOPIC"
+gcloud pubsub subscriptions create "$ANALYTICS_SUB" --topic="$TOPIC"</code></pre></div>
+<div class="step"><h3>3. Publish messages</h3><pre><button class="copy">Copy</button><code>gcloud pubsub topics publish "$TOPIC" \
+ --message='{"eventType":"ORDER_CREATED","orderId":"O-1001","amount":125.50,"currency":"USD"}' \
+ --attribute=source=checkout,environment=training
+
+gcloud pubsub topics publish "$TOPIC" \
+ --message='{"eventType":"ORDER_CREATED","orderId":"O-1002","amount":89.99,"currency":"USD"}' \
+ --attribute=source=mobile,environment=training</code></pre></div>
+<div class="step"><h3>4. Pull and ACK warehouse copies</h3><pre><button class="copy">Copy</button><code>gcloud pubsub subscriptions pull "$WAREHOUSE_SUB" \
+ --limit=10 \
+ --auto-ack</code></pre></div>
+<div class="step"><h3>5. Pull analytics copies</h3><pre><button class="copy">Copy</button><code>gcloud pubsub subscriptions pull "$ANALYTICS_SUB" \
+ --limit=10 \
+ --auto-ack</code></pre></div>
+<div class="call ok">Warehouse ACK did not remove the independent analytics copies.</div></section>
+
+<section id="push"><h2>17. End-to-End Push Demo with Cloud Run</h2><div class="call bad"><strong>Training simplification:</strong> The first demo allows public access. Production push should use authenticated delivery with a dedicated service account and identity-token verification.</div>
+<div class="step"><h3>1. Create files</h3><pre><button class="copy">Copy</button><code>mkdir -p ~/pubsub-push-demo
+cd ~/pubsub-push-demo
+
+cat &gt; main.py &lt;&lt;'PY'
+import base64
+import json
+import os
+from flask import Flask, request
+
+app = Flask(__name__)
+
+@app.get("/")
+def health():
+    return "Pub/Sub push receiver is running", 200
+
+@app.post("/")
+def receive():
+    envelope = request.get_json(silent=True)
+    if not envelope or "message" not in envelope:
+        return "Invalid Pub/Sub envelope", 400
+
+    message = envelope["message"]
+    encoded = message.get("data", "")
+
+    try:
+        decoded = base64.b64decode(encoded).decode("utf-8") if encoded else ""
+    except Exception:
+        return "Invalid base64 data", 400
+
+    try:
+        event = json.loads(decoded) if decoded else {}
+    except json.JSONDecodeError:
+        event = {"rawText": decoded}
+
+    record = {
+        "messageId": message.get("messageId") or message.get("message_id"),
+        "attributes": message.get("attributes", {}),
+        "subscription": envelope.get("subscription"),
+        "event": event,
+    }
+    print("PUSH_MESSAGE_RECEIVED " + json.dumps(record), flush=True)
+
+    # 204 acknowledges successful push processing.
+    return "", 204
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", "8080")))
+PY
+
+cat &gt; requirements.txt &lt;&lt;'REQ'
+Flask~=3.0
+gunicorn~=23.0
+Werkzeug~=3.0
+REQ</code></pre></div>
+<div class="step"><h3>2. Deploy from source</h3><pre><button class="copy">Copy</button><code>gcloud run deploy "$RUN_SERVICE" \
+ --source=. \
+ --region="$REGION" \
+ --allow-unauthenticated</code></pre></div>
+<div class="step"><h3>3. Capture and test URL</h3><pre><button class="copy">Copy</button><code>export SERVICE_URL="$(gcloud run services describe "$RUN_SERVICE" \
+ --region="$REGION" \
+ --format='value(status.url)')"
+
+echo "$SERVICE_URL"
+curl "$SERVICE_URL"</code></pre></div>
+<div class="step"><h3>4. Create push subscription</h3><pre><button class="copy">Copy</button><code>gcloud pubsub subscriptions create "$PUSH_SUB" \
+ --topic="$TOPIC" \
+ --push-endpoint="$SERVICE_URL/"</code></pre></div>
+<div class="step"><h3>5. Publish push test</h3><pre><button class="copy">Copy</button><code>gcloud pubsub topics publish "$TOPIC" \
+ --message='{"eventType":"ORDER_CREATED","orderId":"O-PUSH-1","email":"learner@example.com"}' \
+ --attribute=source=push-demo</code></pre></div>
+<div class="step"><h3>6. View logs</h3><pre><button class="copy">Copy</button><code>gcloud run services logs read "$RUN_SERVICE" \
+ --region="$REGION" \
+ --limit=50</code></pre><p>Find <code>PUSH_MESSAGE_RECEIVED</code>.</p></div>
+<div class="call ok">Default wrapped push sends JSON and stores message bytes in <code>message.data</code> as base64. Returning 204 acknowledges success.</div></section>
+
+<section id="python"><h2>18. Optional Python Pull Subscriber</h2>
+<div class="step"><h3>1. Install library</h3><pre><button class="copy">Copy</button><code>mkdir -p ~/pubsub-python-demo
+cd ~/pubsub-python-demo
+python3 -m venv .venv
+source .venv/bin/activate
+pip install google-cloud-pubsub</code></pre></div>
+<div class="step"><h3>2. Create subscriber.py</h3><pre><button class="copy">Copy</button><code>cat &gt; subscriber.py &lt;&lt;'PY'
+import os
+from concurrent.futures import TimeoutError
+from google.cloud import pubsub_v1
+
+project_id = os.environ["PROJECT_ID"]
+subscription_id = os.environ["WAREHOUSE_SUB"]
+
+client = pubsub_v1.SubscriberClient()
+path = client.subscription_path(project_id, subscription_id)
+
+def callback(message):
+    print("Data:", message.data.decode("utf-8"))
+    print("Attributes:", dict(message.attributes))
+    print("Message ID:", message.message_id)
+    message.ack()
+
+future = client.subscribe(path, callback=callback)
+print(f"Listening on {path}. Press Ctrl+C to stop.")
+
+with client:
+    try:
+        future.result(timeout=120)
+    except TimeoutError:
+        future.cancel()
+        future.result()
+    except KeyboardInterrupt:
+        future.cancel()
+PY
+
+python subscriber.py</code></pre></div>
+<p>Publish a fresh message in another Cloud Shell tab because earlier CLI pulls already acknowledged previous warehouse copies.</p><div class="call">Cloud Shell already provides normal credentials. On a local computer, use <code>gcloud auth application-default login</code>.</div></section>
+
+<section id="verify"><h2>19. Verification</h2><div class="table"><table><thead><tr><th>Check</th><th>Command</th><th>Expected</th></tr></thead><tbody>
+<tr><td>Project</td><td><code>gcloud config get-value project</code></td><td>Training project</td></tr>
+<tr><td>Topic</td><td><code>gcloud pubsub topics describe "$TOPIC"</code></td><td>Resource details</td></tr>
+<tr><td>Subscriptions</td><td><code>gcloud pubsub subscriptions list</code></td><td>Three lab subscriptions</td></tr>
+<tr><td>Cloud Run health</td><td><code>curl "$SERVICE_URL"</code></td><td>Receiver is running</td></tr>
+<tr><td>Push logs</td><td><code>gcloud run services logs read "$RUN_SERVICE" --region="$REGION"</code></td><td>PUSH_MESSAGE_RECEIVED</td></tr>
+</tbody></table></div></section>
+
+<section id="trouble"><h2>20. Troubleshooting</h2>
+<details><summary>API disabled</summary><p>Run <code>gcloud services enable pubsub.googleapis.com</code>. Enable Run, Build and Artifact Registry for the push lab.</p></details>
+<details><summary>PERMISSION_DENIED</summary><p>Check <code>gcloud auth list</code> and <code>gcloud config get-value project</code>. Ask an administrator for required minimum IAM roles.</p></details>
+<details><summary>Pull returns no message</summary><p>The subscription may have been created after publish, another client may have ACKed it, or you may be in the wrong project. Publish a fresh message and retry.</p></details>
+<details><summary>Push returns 403</summary><p>The Cloud Run service requires authentication. For this lab redeploy with public access. For production configure authenticated push properly.</p></details>
+<details><summary>Unreadable push data</summary><p>Decode the base64 string in <code>message.data</code>.</p></details>
+<details><summary>Repeated messages</summary><p>The endpoint may return non-success, time out or crash before ACK. Check logs and use idempotent processing.</p></details>
+<details><summary>Python authentication failure</summary><p>Cloud Shell normally needs no extra login. Locally run <code>gcloud auth application-default login</code>. Never hard-code service-account keys.</p></details>
+</section>
+
+<section id="best"><h2>21. Best Practices</h2><div class="grid2"><div class="card"><h3>Events</h3><ul><li>Use business-oriented names.</li><li>Include event type, ID, timestamp and schema version.</li><li>Do not place secrets in messages.</li></ul></div><div class="card"><h3>Subscriptions</h3><ul><li>One subscription per independent workload.</li><li>Configure retry, retention and dead-letter handling.</li><li>Monitor backlog and oldest unacked message.</li></ul></div><div class="card"><h3>Subscribers</h3><ul><li>Make handlers idempotent.</li><li>ACK after durable success.</li><li>Use bounded concurrency and error classification.</li></ul></div><div class="card"><h3>Security</h3><ul><li>Use least-privilege IAM.</li><li>Prefer service identities.</li><li>Use authenticated push in production.</li></ul></div></div></section>
+
+<section id="cleanup"><h2>22. Cleanup</h2><div class="call bad">Review names carefully in shared projects.</div>
+<pre><button class="copy">Copy</button><code>gcloud pubsub subscriptions delete "$WAREHOUSE_SUB" --quiet
+gcloud pubsub subscriptions delete "$ANALYTICS_SUB" --quiet
+gcloud pubsub subscriptions delete "$PUSH_SUB" --quiet
+
+gcloud pubsub topics delete "$TOPIC" --quiet
+
+gcloud run services delete "$RUN_SERVICE" \
+ --region="$REGION" \
+ --quiet
+
+gcloud artifacts repositories list --location="$REGION"</code></pre><p>Source deployment can store a container image in Artifact Registry. Delete a repository only when it belongs solely to this lab.</p><pre><button class="copy">Copy</button><code>gcloud pubsub topics list
+gcloud pubsub subscriptions list
+gcloud run services list --region="$REGION"</code></pre></section>
+
+<section id="interview"><h2>23. Interview Questions and Answers</h2>
+<details><summary>1. What is Pub/Sub messaging?</summary><p>A pattern where publishers send messages to topics and subscribers receive them through independent subscriptions.</p></details>
+<details><summary>2. What is Google Cloud Pub/Sub?</summary><p>A fully managed Google Cloud real-time asynchronous messaging service.</p></details>
+<details><summary>3. Topic vs subscription?</summary><p>Topic accepts publisher messages. Subscription delivers and tracks messages for a subscriber workload.</p></details>
+<details><summary>4. Can one topic have multiple subscriptions?</summary><p>Yes. Each receives its own eligible copy.</p></details>
+<details><summary>5. Does one subscription ACK affect another?</summary><p>No. ACK state is independent.</p></details>
+<details><summary>6. What is pull delivery?</summary><p>The subscriber requests messages.</p></details>
+<details><summary>7. What is push delivery?</summary><p>Pub/Sub sends HTTPS requests to the configured endpoint.</p></details>
+<details><summary>8. How does push ACK work?</summary><p>The endpoint returns a supported HTTP success response, commonly 200 or 204.</p></details>
+<details><summary>9. Why base64 in push?</summary><p>Message bytes are represented safely inside the default wrapped JSON body.</p></details>
+<details><summary>10. What causes redelivery?</summary><p>No ACK, NACK, processing failure or acknowledgment deadline expiry.</p></details>
+<details><summary>11. Why idempotency?</summary><p>A message can be delivered more than once.</p></details>
+<details><summary>12. Kafka vs Pub/Sub?</summary><p>Kafka exposes brokers, partitions and offsets. Pub/Sub hides broker infrastructure and uses managed topics, subscriptions and ACK state.</p></details>
+<details><summary>13. Is a subscription a Kafka partition?</summary><p>No. A subscription is an independent delivery stream; a Kafka partition is an ordered shard.</p></details>
+<details><summary>14. Closest Pub/Sub concept to Kafka consumer group?</summary><p>A separate subscription is often closest for one independent consuming application, but the architectures are not identical.</p></details>
+<details><summary>15. When should ACK happen?</summary><p>After successful durable processing.</p></details>
+<details><summary>16. Does Pub/Sub use API keys?</summary><p>No. Use Google Cloud authentication such as ADC or service identities.</p></details>
+<details><summary>17. What is a dead-letter topic?</summary><p>An optional destination for repeatedly undeliverable messages.</p></details>
+<details><summary>18. When choose pull?</summary><p>For workers needing direct flow and concurrency control.</p></details>
+<details><summary>19. When choose push?</summary><p>For reachable HTTPS services, webhooks and serverless handlers.</p></details>
+<details><summary>20. How to prevent duplicate orders?</summary><p>Use idempotency keys, unique constraints or a processed-events table.</p></details>
+</section>
+
+<section id="quiz"><h2>24. Practice Quiz</h2><div id="qbox">
+<div class="quiz" data-a="b"><strong>1. Publishers send messages to:</strong><label><input type="radio" name="q1" value="a"> Subscription</label><label><input type="radio" name="q1" value="b"> Topic</label><label><input type="radio" name="q1" value="c"> ACK deadline</label></div>
+<div class="quiz" data-a="c"><strong>2. Independent delivery state belongs to:</strong><label><input type="radio" name="q2" value="a"> Publisher</label><label><input type="radio" name="q2" value="b"> Project</label><label><input type="radio" name="q2" value="c"> Subscription</label></div>
+<div class="quiz" data-a="a"><strong>3. Pull is initiated by:</strong><label><input type="radio" name="q3" value="a"> Subscriber</label><label><input type="radio" name="q3" value="b"> Topic</label><label><input type="radio" name="q3" value="c"> Publisher</label></div>
+<div class="quiz" data-a="b"><strong>4. Push commonly sends:</strong><label><input type="radio" name="q4" value="a"> SQL query</label><label><input type="radio" name="q4" value="b"> HTTPS POST</label><label><input type="radio" name="q4" value="c"> Kafka offset</label></div>
+<div class="quiz" data-a="c"><strong>5. Why use idempotency?</strong><label><input type="radio" name="q5" value="a"> Create topics</label><label><input type="radio" name="q5" value="b"> Disable IAM</label><label><input type="radio" name="q5" value="c"> Handle duplicate delivery safely</label></div>
+<div class="quiz" data-a="a"><strong>6. Kafka ordering is primarily within:</strong><label><input type="radio" name="q6" value="a"> Partition</label><label><input type="radio" name="q6" value="b"> Cloud Run service</label><label><input type="radio" name="q6" value="c"> Pub/Sub project</label></div>
+<div class="quiz" data-a="b"><strong>7. HTTP 204 in the push demo means:</strong><label><input type="radio" name="q7" value="a"> Failure</label><label><input type="radio" name="q7" value="b"> Successful ACK</label><label><input type="radio" name="q7" value="c"> Topic deletion</label></div>
+<div class="quiz" data-a="c"><strong>8. After the lab:</strong><label><input type="radio" name="q8" value="a"> Leave resources forever</label><label><input type="radio" name="q8" value="b"> Publish millions</label><label><input type="radio" name="q8" value="c"> Clean up resources</label></div>
+<button class="btn" id="grade">Submit</button><button class="btn gray" id="reset">Reset</button><div id="res" class="result"></div></div>
+<h3>Trainer Notes</h3><textarea id="notes" class="notes" placeholder="Type classroom notes..."></textarea><button class="btn" id="save">Save Notes</button><button class="btn gray" id="clear">Clear</button><span id="status" class="small"></span>
+</section>
+
+<section id="refs"><h2>25. Official References</h2><p>Aligned with official documentation available July 29, 2026.</p><ul>
+<li><a href="https://docs.cloud.google.com/pubsub/docs/overview" target="_blank">Pub/Sub Overview</a></li>
+<li><a href="https://docs.cloud.google.com/pubsub/docs/pubsub-basics" target="_blank">Pub/Sub Basics</a></li>
+<li><a href="https://docs.cloud.google.com/pubsub/docs/subscription-overview" target="_blank">Subscriptions</a></li>
+<li><a href="https://docs.cloud.google.com/pubsub/docs/pull" target="_blank">Pull Subscriptions</a></li>
+<li><a href="https://docs.cloud.google.com/pubsub/docs/push" target="_blank">Push Subscriptions</a></li>
+<li><a href="https://docs.cloud.google.com/pubsub/docs/publish-receive-messages-gcloud" target="_blank">gcloud Quickstart</a></li>
+<li><a href="https://docs.cloud.google.com/pubsub/docs/authentication" target="_blank">Authentication</a></li>
+<li><a href="https://docs.cloud.google.com/run/docs/quickstarts/build-and-deploy/deploy-python-service" target="_blank">Cloud Run Python Deployment</a></li>
+<li><a href="https://kafka.apache.org/documentation/" target="_blank">Apache Kafka Documentation</a></li>
+</ul></section>
+</main>
+
+<aside><h3>Progress</h3><label><input class="ck" type="checkbox" data-k="basic"> Basics</label><label><input class="ck" type="checkbox" data-k="topics"> Topics</label><label><input class="ck" type="checkbox" data-k="delivery"> Push/Pull</label><label><input class="ck" type="checkbox" data-k="kafka"> Kafka</label><label><input class="ck" type="checkbox" data-k="pull"> Pull lab</label><label><input class="ck" type="checkbox" data-k="push"> Push lab</label><label><input class="ck" type="checkbox" data-k="clean"> Cleanup</label><div class="progress"><div id="bar" class="bar"></div></div><p id="pct" class="small">0% complete</p><div class="side"><strong>Fast recall</strong><p class="small">Topic accepts.<br>Subscription delivers.<br>Pull asks.<br>Push posts.<br>ACK succeeds.</p></div></aside>
+</div>
+
+<footer>Trainer-ready tutorial. IAM and console options can vary by organization policy; verify them in the classroom project.</footer>
+<script>
+const st={g:(k,d)=>{try{let v=localStorage.getItem(k);return v===null?d:JSON.parse(v)}catch(e){return d}},s:(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));return true}catch(e){return false}},r:k=>{try{localStorage.removeItem(k)}catch(e){}}};
+document.querySelectorAll('.copy').forEach(b=>b.addEventListener('click',async()=>{let t=b.parentElement.querySelector('code').innerText;try{await navigator.clipboard.writeText(t);b.textContent='Copied';setTimeout(()=>b.textContent='Copy',1000)}catch(e){b.textContent='Select'}}));
+const ls=[...document.querySelectorAll('nav a')],secs=[...document.querySelectorAll('main section')];new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)ls.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+e.target.id))}),{rootMargin:'-35% 0px -55% 0px'}).observe(secs[0]);const ob=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)ls.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+e.target.id))}),{rootMargin:'-35% 0px -55% 0px'});secs.forEach(s=>ob.observe(s));
+const cks=[...document.querySelectorAll('.ck')],sv=st.g('psprog',{});function prog(){let o={};cks.forEach(c=>o[c.dataset.k]=c.checked);st.s('psprog',o);let n=cks.filter(c=>c.checked).length,p=Math.round(n/cks.length*100);document.getElementById('bar').style.width=p+'%';document.getElementById('pct').textContent=p+'% complete'}cks.forEach(c=>{c.checked=!!sv[c.dataset.k];c.addEventListener('change',prog)});prog();
+document.getElementById('grade').addEventListener('click',()=>{let q=[...document.querySelectorAll('.quiz')],n=0;q.forEach(x=>{let s=x.querySelector('input:checked'),ok=s&&s.value===x.dataset.a;if(ok)n++;x.style.borderColor=ok?'#16834a':'#c43d3d';x.style.background=ok?'#eefaf2':'#fff1f1'});let p=Math.round(n/q.length*100),r=document.getElementById('res');r.style.display='block';r.style.background=p>=70?'#eefaf2':'#fff7e8';r.textContent=`Score: ${n}/${q.length} (${p}%). ${p>=75?'Good work!':'Review topics, subscriptions and delivery modes.'}`});
+document.getElementById('reset').addEventListener('click',()=>{document.querySelectorAll('.quiz input').forEach(i=>i.checked=false);document.querySelectorAll('.quiz').forEach(q=>{q.style.borderColor='';q.style.background=''});document.getElementById('res').style.display='none'});
+const note=document.getElementById('notes');note.value=st.g('psnotes','');document.getElementById('save').addEventListener('click',()=>{document.getElementById('status').textContent=st.s('psnotes',note.value)?' Saved.':' Storage unavailable.'});document.getElementById('clear').addEventListener('click',()=>{note.value='';st.r('psnotes');document.getElementById('status').textContent=' Cleared.'});
+</script>
+</body>
+</html>
