@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Apache Beam Unified Model, Windowing, Watermarks, Pub/Sub, Dataflow and BigQuery</title>
+<meta name="description" content="Trainer-ready tutorial from basic to advanced with a complete Pub/Sub to Dataflow to BigQuery Apache Beam streaming lab.">
+<style>
+:root{--bg:#06101c;--panel:#0c1b2c;--panel2:#10253b;--text:#eef6ff;--muted:#aabdd0;--line:#29465f;--aqua:#57e3d1;--blue:#68b5ff;--green:#52dc8a;--yellow:#ffd166;--red:#ff6f87;--purple:#b7a3ff;--shadow:0 18px 55px rgba(0,0,0,.3)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:radial-gradient(circle at 8% 2%,rgba(87,227,209,.12),transparent 27%),radial-gradient(circle at 92% 5%,rgba(104,181,255,.13),transparent 28%),linear-gradient(145deg,#050d17,#081624 50%,#050d17);color:var(--text);font-family:Inter,Segoe UI,Arial,sans-serif;line-height:1.65}
+a{color:#9dd8ff}header{padding:64px 28px 48px;border-bottom:1px solid var(--line)}.wrap{max-width:1240px;margin:auto}
+.pill{display:inline-block;padding:6px 11px;border:1px solid #3c6382;border-radius:999px;background:#0d2235;color:#caeaff;font-size:.86rem;margin:3px}
+h1{font-size:clamp(2.2rem,5vw,4.9rem);line-height:1.03;letter-spacing:-.05em;margin:18px 0 12px}.lead{font-size:1.17rem;max-width:950px;color:#c9dae9}
+.hero{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:28px}.card{padding:18px;border:1px solid var(--line);border-radius:16px;background:#081a2a}.card strong{display:block;color:var(--aqua)}
+.layout{display:grid;grid-template-columns:310px minmax(0,1fr);max-width:1580px;margin:auto}aside{position:sticky;top:0;height:100vh;overflow:auto;padding:22px 17px;border-right:1px solid var(--line);background:rgba(4,13,23,.96)}aside h3{margin-top:0}
+#search{width:100%;padding:11px;border:1px solid var(--line);border-radius:10px;background:#071725;color:white}nav a{display:block;padding:7px 9px;border-radius:8px;text-decoration:none;color:#b3c8da;font-size:.9rem}nav a:hover,nav a.active{background:#12304a;color:#fff}
+.progress{height:8px;background:#13283b;border-radius:9px;overflow:hidden;margin:8px 0 15px}.progress div{height:100%;width:0;background:linear-gradient(90deg,var(--aqua),var(--blue))}
+main{min-width:0;padding:32px clamp(18px,4vw,58px) 80px}section{max-width:1170px;margin:0 auto 32px;padding:28px;border:1px solid var(--line);border-radius:22px;background:rgba(12,27,44,.82);box-shadow:var(--shadow)}section:hover{border-color:#3d6687}
+h2{font-size:clamp(1.55rem,3vw,2.38rem);margin-top:0;letter-spacing:-.025em}h3{color:#d0ecff;margin-top:28px}h4{color:#b8f5e8}p,li{color:#d9e5ef}.muted{color:var(--muted)}
+.grid2,.grid3,.grid4{display:grid;gap:15px}.grid2{grid-template-columns:repeat(2,minmax(0,1fr))}.grid3{grid-template-columns:repeat(3,minmax(0,1fr))}.grid4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.callout{margin:17px 0;padding:16px 18px;border-left:4px solid var(--blue);border-radius:10px;background:#071725}.callout.ok{border-color:var(--green)}.callout.warn{border-color:var(--yellow)}.callout.danger{border-color:var(--red)}.memory{padding:17px;border:1px dashed #4e7898;border-radius:14px;background:#071827;font-size:1.07rem}
+table{width:100%;border-collapse:collapse;margin:17px 0;display:block;overflow:auto}th,td{padding:11px 12px;border:1px solid #2b4a62;text-align:left;vertical-align:top}th{background:#12304a}tr:nth-child(even){background:rgba(10,32,51,.42)}
+pre{position:relative;background:#020912;border:1px solid #213e55;border-radius:14px;padding:18px;overflow:auto;line-height:1.5}code{font-family:Consolas,Monaco,monospace;color:#def6ff}.copy{position:absolute;right:8px;top:8px;border:1px solid #3c6381;background:#0f2a41;color:#fff;padding:6px 9px;border-radius:8px;cursor:pointer}
+.diagram{overflow:auto;background:#04111e;border:1px solid #2f5069;border-radius:18px;padding:18px}.diagram svg{min-width:880px}.diagram text{fill:#eef8ff;font-family:Segoe UI,Arial,sans-serif}
+.flow{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;margin:18px 0}.node{min-width:140px;text-align:center;padding:13px;border:1px solid #477391;background:#0d2a42;border-radius:12px}.arrow{font-size:1.6rem;color:var(--aqua)}
+details{border:1px solid var(--line);border-radius:12px;background:#071827;margin:10px 0}summary{padding:13px 15px;cursor:pointer;font-weight:700}details>div{padding:0 15px 15px}
+.step{display:grid;grid-template-columns:54px 1fr;gap:14px;margin:19px 0}.num{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:#133c5b;border:1px solid #5d99c2;font-weight:800}
+.quiz{padding:16px;border:1px solid var(--line);border-radius:14px;background:#071827;margin:13px 0}.quiz label{display:block;padding:5px 8px;border-radius:7px}button{padding:10px 14px;border:1px solid #3b6686;border-radius:10px;background:#113653;color:white;cursor:pointer}.result{font-weight:800;margin-top:14px}
+.checklist label{display:block;padding:7px}.hidden{display:none!important}footer{text-align:center;color:#93aabd;padding:25px}
+@media(max-width:1050px){.layout{grid-template-columns:1fr}aside{position:relative;height:auto;border-right:0;border-bottom:1px solid var(--line)}nav{columns:2}.hero,.grid4{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:720px){header{padding:42px 18px}.hero,.grid2,.grid3,.grid4{grid-template-columns:1fr}nav{columns:1}main{padding:18px 11px 70px}section{padding:20px}}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+<span class="pill">Basic → Advanced</span><span class="pill">Apache Beam 2.75</span><span class="pill">Python</span><span class="pill">Pub/Sub → Dataflow → BigQuery</span>
+<h1>Apache Beam Unified Model<br>Windowing, Watermarks and GCP Streaming</h1>
+<p class="lead">A complete trainer-ready tutorial explaining traditional approaches, Beam’s unified model, event time, watermarks, triggers, Pub/Sub ingestion, Dataflow execution, BigQuery storage, production practices, and a ready-to-run end-to-end retail streaming project.</p>
+<div class="hero"><div class="card"><strong>Source</strong>Google Cloud Pub/Sub</div><div class="card"><strong>Processing</strong>Apache Beam on Dataflow</div><div class="card"><strong>Time model</strong>Windows, watermarks and panes</div><div class="card"><strong>Sink</strong>BigQuery raw, aggregate and DLQ tables</div></div>
+</div></header>
+<div class="layout">
+<aside><h3>Course Navigation</h3><input id="search" placeholder="Search topics..."><small>Progress: <span id="pct">0%</span></small><div class="progress"><div id="bar"></div></div>
+<nav id="toc">
+<a href="#objectives">1. Objectives</a><a href="#problem">2. Business Problem</a><a href="#traditional">3. Traditional Approaches</a><a href="#beam">4. Apache Beam</a><a href="#unified">5. Unified Model</a><a href="#core">6. Core Components</a><a href="#bounded">7. Bounded vs Unbounded</a><a href="#time">8. Event vs Processing Time</a><a href="#windows">9. Windowing</a><a href="#watermarks">10. Watermarks</a><a href="#triggers">11. Triggers and Panes</a><a href="#late">12. Late Data</a><a href="#services">13. GCP Services</a><a href="#architecture">14. Architecture</a><a href="#industry">15. Industry Activities</a><a href="#design">16. Lab Design</a><a href="#prereq">17. Prerequisites</a><a href="#tree">18. Project Files</a><a href="#setup">19. Setup Steps</a><a href="#local">20. Local Demo</a><a href="#pipeline">21. Pipeline Code</a><a href="#publisher">22. Publisher Code</a><a href="#sql">23. BigQuery SQL</a><a href="#run">24. Run End to End</a><a href="#monitor">25. Monitoring</a><a href="#results">26. Results</a><a href="#advanced">27. Advanced Patterns</a><a href="#production">28. Production Standards</a><a href="#comparison">29. Comparison</a><a href="#troubleshoot">30. Troubleshooting</a><a href="#cleanup">31. Cleanup</a><a href="#exercises">32. Exercises</a><a href="#quiz">33. Quiz</a><a href="#interview">34. Interview Q&A</a><a href="#tracker">35. Tracker</a><a href="#references">36. References</a>
+</nav></aside>
+<main>
+<section id="objectives" data-title="Objectives"><h2>1. Learning Objectives</h2><ul><li>Explain why batch and streaming were traditionally implemented as separate systems.</li><li>Describe Beam’s portable unified programming model.</li><li>Distinguish event time, processing time, windows, watermarks, triggers, panes and allowed lateness.</li><li>Build a Pub/Sub → Dataflow → BigQuery pipeline.</li><li>Place every file correctly, launch the job, publish messages, monitor it and query results.</li><li>Apply dead-letter handling, partitioning, clustering, dedicated service accounts and cleanup.</li></ul></section>
+
+<section id="problem" data-title="Business Problem"><h2>2. The Real Business Problem</h2><p>A retailer receives sales continuously from stores. Management wants near-real-time totals by store and category, while data engineers must preserve raw events, reject invalid records, tolerate out-of-order delivery and update earlier totals when delayed events arrive.</p>
+<div class="flow"><div class="node">Store systems</div><div class="arrow">→</div><div class="node">Events</div><div class="arrow">→</div><div class="node">Validate</div><div class="arrow">→</div><div class="node">Window</div><div class="arrow">→</div><div class="node">Aggregate</div><div class="arrow">→</div><div class="node">Analytics</div></div>
+<div class="callout warn"><strong>Why this is difficult:</strong> Messages do not always arrive in event-time order. Network delay, mobile disconnection, retries and regional outages can make an old event arrive after newer events.</div></section>
+
+<section id="traditional" data-title="Traditional Approaches"><h2>3. Traditional Approaches and Drawbacks</h2>
+<table><tr><th>Traditional method</th><th>Benefit</th><th>Drawback</th><th>Beam improvement</th></tr>
+<tr><td>Cron job reads a database every five minutes</td><td>Simple</td><td>Polling delay, repeated scans, difficult state and duplicates</td><td>Continuous unbounded source with runner-managed checkpoints</td></tr>
+<tr><td>Separate batch and stream programs</td><td>Each system optimized independently</td><td>Duplicate business logic and inconsistent results</td><td>One model and transforms for bounded and unbounded data</td></tr>
+<tr><td>Processing-time buckets</td><td>Easy to implement</td><td>Late events enter the wrong business period</td><td>Event-time windowing and watermarks</td></tr>
+<tr><td>Application writes directly to warehouse</td><td>Few components</td><td>Tight coupling, no backpressure, transformation or DLQ</td><td>Pub/Sub decoupling and managed processing</td></tr>
+<tr><td>Large custom consumer service</td><td>Maximum control</td><td>Team manages scaling, retries, checkpointing and state</td><td>Dataflow manages distributed execution and autoscaling</td></tr></table>
+<div class="memory"><strong>Traditional Lambda architecture:</strong> one speed layer + one batch layer + a serving layer. Beam’s goal is to express the logic once and choose a suitable runner.</div></section>
+
+<section id="beam" data-title="Apache Beam"><h2>4. What Is Apache Beam?</h2><p>Apache Beam is an open-source unified programming model for defining batch and streaming data-parallel pipelines. The program describes a logical pipeline; a runner such as Direct Runner, Dataflow, Flink or Spark executes it.</p>
+<div class="grid4"><div class="card"><strong>Portable</strong>Change runner without rewriting core logic where supported.</div><div class="card"><strong>Unified</strong>Bounded and unbounded collections share the same model.</div><div class="card"><strong>Time-aware</strong>Event time, windows, watermarks, triggers and late data.</div><div class="card"><strong>Scalable</strong>Runner distributes work, state and shuffles.</div></div>
+<h3>Benefits</h3><ul><li>One codebase for historical reprocessing and live data.</li><li>Correct handling of out-of-order event streams.</li><li>Portable SDKs and multiple runners.</li><li>Reusable transforms, connectors and testing utilities.</li><li>Separation of business logic from execution infrastructure.</li></ul></section>
+
+<section id="unified" data-title="Unified Model"><h2>5. Beam Unified Model</h2>
+<div class="diagram"><svg viewBox="0 0 1050 540" width="100%"><rect x="20" y="20" width="1010" height="500" rx="22" fill="#071725" stroke="#31536d"/>
+<rect x="65" y="190" width="190" height="150" rx="16" fill="#10314a" stroke="#53e6d3"/><text x="160" y="230" text-anchor="middle" font-size="20">Sources</text><text x="160" y="270" text-anchor="middle" font-size="15">Pub/Sub</text><text x="160" y="300" text-anchor="middle" font-size="15">Files / BigQuery</text>
+<rect x="330" y="140" width="390" height="250" rx="20" fill="#123852" stroke="#ffd166"/><text x="525" y="180" text-anchor="middle" font-size="22">Beam Programming Model</text><text x="525" y="220" text-anchor="middle" font-size="16">PCollection</text><text x="525" y="255" text-anchor="middle" font-size="16">PTransform / ParDo / GroupByKey</text><text x="525" y="290" text-anchor="middle" font-size="16">Windows / Watermarks / Triggers</text><text x="525" y="325" text-anchor="middle" font-size="16">State / Timers / Schemas</text>
+<rect x="795" y="70" width="190" height="120" rx="16" fill="#10314a" stroke="#68b5ff"/><text x="890" y="110" text-anchor="middle" font-size="20">Runners</text><text x="890" y="145" text-anchor="middle" font-size="15">Dataflow / Flink</text>
+<rect x="795" y="345" width="190" height="120" rx="16" fill="#10314a" stroke="#52dc8a"/><text x="890" y="385" text-anchor="middle" font-size="20">Sinks</text><text x="890" y="420" text-anchor="middle" font-size="15">BigQuery / Files</text>
+<line x1="255" y1="265" x2="330" y2="265" stroke="#68b5ff" stroke-width="4"/><line x1="720" y1="215" x2="795" y2="140" stroke="#68b5ff" stroke-width="4"/><line x1="720" y1="315" x2="795" y2="400" stroke="#68b5ff" stroke-width="4"/></svg></div>
+<h3>The four semantic questions</h3><table><tr><th>Question</th><th>Beam mechanism</th><th>Lab answer</th></tr><tr><td>What is calculated?</td><td>Transforms such as CombinePerKey</td><td>Quantity, revenue and event count</td></tr><tr><td>Where in event time?</td><td>Windowing</td><td>Fixed 60-second windows</td></tr><tr><td>When is output emitted?</td><td>Triggers and watermark</td><td>Early, on-time and late panes</td></tr><tr><td>How are repeated results related?</td><td>Accumulation mode</td><td>Accumulating panes</td></tr></table></section>
+
+<section id="core" data-title="Core Components"><h2>6. Core Beam Components</h2><table><tr><th>Component</th><th>Meaning</th><th>Example</th></tr><tr><td>Pipeline</td><td>Complete logical workflow</td><td>Pub/Sub to BigQuery</td></tr><tr><td>PCollection</td><td>Distributed bounded or unbounded collection</td><td>Valid sales events</td></tr><tr><td>PTransform</td><td>Operation from one or more PCollections to new PCollections</td><td>WindowInto, CombinePerKey</td></tr><tr><td>ParDo / DoFn</td><td>General per-element processing</td><td>Parse and validate JSON</td></tr><tr><td>Key</td><td>Groups related elements for stateful aggregation</td><td>(store_id, category)</td></tr><tr><td>Runner</td><td>Execution backend</td><td>Google Cloud Dataflow</td></tr><tr><td>I/O connector</td><td>Source or sink integration</td><td>ReadFromPubSub, WriteToBigQuery</td></tr></table></section>
+
+<section id="bounded" data-title="Bounded and Unbounded"><h2>7. Bounded Versus Unbounded Data</h2><div class="grid2"><div class="card"><h3>Bounded</h3><p>Finite input with a known end, such as yesterday’s files. Often called batch.</p></div><div class="card"><h3>Unbounded</h3><p>Input can continue indefinitely, such as Pub/Sub events. Often called streaming.</p></div></div><p>Beam uses PCollection for both. The major difference is that unbounded aggregation requires windowing or another finite grouping strategy.</p></section>
+
+<section id="time" data-title="Event and Processing Time"><h2>8. Event Time Versus Processing Time</h2><table><tr><th>Time</th><th>Definition</th><th>Example</th></tr><tr><td>Event time</td><td>When the business event actually occurred</td><td>Sale happened at 10:01:25</td></tr><tr><td>Publish time</td><td>When Pub/Sub accepted the message</td><td>Device reconnects at 10:03:00</td></tr><tr><td>Processing time</td><td>When a worker handles the element</td><td>Dataflow processes at 10:03:02</td></tr></table><div class="callout ok"><strong>Lab design:</strong> publisher sends event time in the <code>event_timestamp</code> attribute. <code>ReadFromPubSub</code> assigns that value as the Beam element timestamp.</div></section>
+
+<section id="windows" data-title="Windowing"><h2>9. Windowing</h2><p>A window groups an unbounded stream into finite event-time regions.</p><table><tr><th>Window</th><th>Behavior</th><th>Industry example</th></tr><tr><td>Fixed / tumbling</td><td>Non-overlapping equal intervals</td><td>Sales per minute</td></tr><tr><td>Sliding</td><td>Overlapping intervals emitted at a smaller period</td><td>Five-minute average every minute</td></tr><tr><td>Session</td><td>Activity separated by inactivity gaps</td><td>User browsing session</td></tr><tr><td>Global</td><td>All data in one window</td><td>Requires a non-default trigger for unbounded grouping</td></tr></table>
+<div class="diagram"><svg viewBox="0 0 1050 430" width="100%"><line x1="70" y1="330" x2="980" y2="330" stroke="#aabdd0" stroke-width="3"/><g fill="#eef8ff" font-size="15"><text x="70" y="365">0</text><text x="355" y="365">60s</text><text x="650" y="365">120s</text><text x="940" y="365">180s</text></g>
+<rect x="70" y="90" width="285" height="70" rx="12" fill="#123852" stroke="#53e6d3"/><rect x="355" y="90" width="295" height="70" rx="12" fill="#123852" stroke="#53e6d3"/><rect x="650" y="90" width="290" height="70" rx="12" fill="#123852" stroke="#53e6d3"/><text x="212" y="132" text-anchor="middle">Fixed window 1</text><text x="502" y="132" text-anchor="middle">Fixed window 2</text><text x="795" y="132" text-anchor="middle">Fixed window 3</text>
+<rect x="70" y="200" width="440" height="60" rx="12" fill="#18344f" stroke="#68b5ff"/><rect x="220" y="250" width="440" height="60" rx="12" fill="#18344f" stroke="#68b5ff"/><rect x="370" y="200" width="440" height="60" rx="12" fill="#18344f" stroke="#68b5ff"/><text x="290" y="238" text-anchor="middle">Sliding windows overlap</text></svg></div></section>
+
+<section id="watermarks" data-title="Watermarks"><h2>10. Watermarks</h2><p>A watermark is the runner’s estimate of event-time progress. When it passes a window end, the runner believes most earlier events have arrived. Any later-arriving element with an older timestamp is late for that window.</p>
+<div class="diagram"><svg viewBox="0 0 1050 400" width="100%"><line x1="80" y1="270" x2="970" y2="270" stroke="#aabdd0" stroke-width="3"/><line x1="650" y1="70" x2="650" y2="315" stroke="#ffd166" stroke-width="5"/><text x="650" y="50" text-anchor="middle" font-size="20">Watermark = 60s</text><circle cx="170" cy="210" r="15" fill="#52dc8a"/><text x="170" y="190" text-anchor="middle">event 10s</text><circle cx="360" cy="150" r="15" fill="#52dc8a"/><text x="360" y="130" text-anchor="middle">event 35s</text><circle cx="830" cy="190" r="15" fill="#68b5ff"/><text x="830" y="170" text-anchor="middle">event 75s</text><circle cx="760" cy="330" r="15" fill="#ff6f87"/><text x="760" y="365" text-anchor="middle">arrives now but event time 25s → late</text></svg></div>
+<div class="callout warn"><strong>Watermark is not a promise:</strong> it is an estimate, not “all earlier data is guaranteed complete.” Allowed lateness and late triggers define how corrections are accepted.</div></section>
+
+<section id="triggers" data-title="Triggers and Panes"><h2>11. Triggers, Panes and Accumulation</h2><p>A trigger decides when a window emits a result. Every emission is a pane.</p><table><tr><th>Pane</th><th>Why emitted</th><th>Use</th></tr><tr><td>Early</td><td>Processing-time or element-count condition before watermark</td><td>Low-latency provisional dashboard</td></tr><tr><td>On-time</td><td>Watermark passes window end</td><td>Main expected result</td></tr><tr><td>Late</td><td>Accepted delayed elements arrive afterward</td><td>Correct earlier totals</td></tr></table>
+<h3>Accumulation modes</h3><table><tr><th>Mode</th><th>Pane contains</th><th>Example</th></tr><tr><td>Discarding</td><td>Only elements since previous firing</td><td>Incremental downstream addition</td></tr><tr><td>Accumulating</td><td>All accepted elements so far</td><td>Replacement snapshot; used in this lab</td></tr></table></section>
+
+<section id="late" data-title="Late Data"><h2>12. Allowed Lateness and Data Completeness</h2><p><code>allowed_lateness=300</code> keeps window state available for five minutes after the watermark passes the window end. A late record inside that period can produce another pane. A record beyond the retention boundary may be dropped from that aggregation.</p><div class="memory"><strong>Accuracy–latency–cost trade-off:</strong> longer allowed lateness increases completeness but retains state longer and delays finality.</div></section>
+
+<section id="services" data-title="Google Cloud Services"><h2>13. Pub/Sub, Dataflow and BigQuery</h2><div class="grid3"><div class="card"><h3>Pub/Sub</h3><p>Asynchronous messaging that decouples publishers from subscribers. The subscription owns delivery state for Dataflow.</p></div><div class="card"><h3>Dataflow</h3><p>Managed runner for Beam. It provisions workers, performs shuffles, checkpointing, autoscaling and monitoring.</p></div><div class="card"><h3>BigQuery</h3><p>Analytical warehouse storing raw, aggregate and invalid-event tables for SQL analysis.</p></div></div>
+<h3>When a direct BigQuery subscription may be enough</h3><p>Use Pub/Sub’s BigQuery subscription or a provided Dataflow template for simple schema-matching JSON ingestion. Use a custom Beam pipeline when you need event-time windowing, custom validation, enrichment, branching, multi-sink output or specialized error handling.</p></section>
+
+<section id="architecture" data-title="Cloud Architecture"><h2>14. End-to-End Architecture</h2>
+<div class="diagram"><svg viewBox="0 0 1150 610" width="100%"><defs><marker id="ar" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0,10 3.5,0 7" fill="#68b5ff"/></marker></defs>
+<rect x="35" y="220" width="170" height="100" rx="16" fill="#123852" stroke="#53e6d3"/><text x="120" y="260" text-anchor="middle" font-size="19">Publisher</text><text x="120" y="290" text-anchor="middle" font-size="14">JSON + attributes</text>
+<rect x="260" y="220" width="180" height="100" rx="16" fill="#123852" stroke="#68b5ff"/><text x="350" y="260" text-anchor="middle" font-size="19">Pub/Sub</text><text x="350" y="290" text-anchor="middle" font-size="14">Topic + subscription</text>
+<rect x="500" y="100" width="270" height="340" rx="20" fill="#102d46" stroke="#ffd166"/><text x="635" y="140" text-anchor="middle" font-size="21">Dataflow / Apache Beam</text><text x="635" y="190" text-anchor="middle" font-size="15">Read with event timestamp</text><text x="635" y="230" text-anchor="middle" font-size="15">Parse + validate</text><text x="635" y="270" text-anchor="middle" font-size="15">Fixed windows</text><text x="635" y="310" text-anchor="middle" font-size="15">Watermark + triggers</text><text x="635" y="350" text-anchor="middle" font-size="15">Combine per key</text><text x="635" y="390" text-anchor="middle" font-size="15">Streaming BigQuery writes</text>
+<rect x="830" y="60" width="260" height="100" rx="16" fill="#123852" stroke="#52dc8a"/><text x="960" y="100" text-anchor="middle" font-size="18">Raw table</text><text x="960" y="130" text-anchor="middle" font-size="14">All valid events</text>
+<rect x="830" y="230" width="260" height="100" rx="16" fill="#123852" stroke="#52dc8a"/><text x="960" y="270" text-anchor="middle" font-size="18">Window aggregate table</text><text x="960" y="300" text-anchor="middle" font-size="14">Every pane</text>
+<rect x="830" y="400" width="260" height="100" rx="16" fill="#123852" stroke="#ff6f87"/><text x="960" y="440" text-anchor="middle" font-size="18">Dead-letter table</text><text x="960" y="470" text-anchor="middle" font-size="14">Invalid records</text>
+<line x1="205" y1="270" x2="260" y2="270" stroke="#68b5ff" stroke-width="4" marker-end="url(#ar)"/><line x1="440" y1="270" x2="500" y2="270" stroke="#68b5ff" stroke-width="4" marker-end="url(#ar)"/><line x1="770" y1="175" x2="830" y2="110" stroke="#68b5ff" stroke-width="4" marker-end="url(#ar)"/><line x1="770" y1="280" x2="830" y2="280" stroke="#68b5ff" stroke-width="4" marker-end="url(#ar)"/><line x1="770" y1="375" x2="830" y2="450" stroke="#68b5ff" stroke-width="4" marker-end="url(#ar)"/></svg></div></section>
+
+<section id="industry" data-title="Industry Activities"><h2>15. Real-Time Industry Activities</h2><table><tr><th>Industry</th><th>Activity</th><th>Window pattern</th></tr><tr><td>Retail</td><td>Sales, stock and payment aggregates</td><td>Fixed windows</td></tr><tr><td>Banking</td><td>Fraud features and transaction velocity</td><td>Sliding windows + state</td></tr><tr><td>Telecom</td><td>Network quality and call-event summaries</td><td>Fixed/sliding</td></tr><tr><td>E-commerce</td><td>Clickstream funnels and abandoned carts</td><td>Session windows</td></tr><tr><td>Logistics</td><td>Vehicle telemetry and late shipment alerts</td><td>Fixed + side inputs</td></tr><tr><td>IoT</td><td>Sensor thresholds, anomalies and device health</td><td>Fixed windows + timers</td></tr><tr><td>Gaming</td><td>Leaderboards and engagement</td><td>Early panes + final corrections</td></tr><tr><td>Cybersecurity</td><td>Login bursts and threat signatures</td><td>Sliding windows</td></tr></table></section>
+
+<section id="design" data-title="Lab Design"><h2>16. Simple End-to-End Lab Design</h2><h3>Input event</h3><pre><code>{"event_id":"E001","store_id":"BLR-01","product_id":"P100","category":"Electronics","quantity":1,"unit_price_usd":120.50,"event_time":"2026-07-29T10:01:05Z"}</code></pre>
+<h3>Pub/Sub attributes</h3><ul><li><code>event_timestamp</code>: event time used by Beam.</li><li><code>event_id</code>: unique source record ID for deduplication.</li></ul>
+<h3>Outputs</h3><ul><li><strong>Raw:</strong> every valid message.</li><li><strong>Aggregate:</strong> store/category totals for every emitted pane.</li><li><strong>Dead letter:</strong> payload and validation error.</li></ul></section>
+
+<section id="prereq" data-title="Prerequisites"><h2>17. Prerequisites and Downloads</h2><table><tr><th>Software/service</th><th>Purpose</th><th>Official link</th></tr><tr><td>Python 3.11 or 3.12</td><td>Local SDK and publisher</td><td><a href="https://www.python.org/downloads/">Python downloads</a></td></tr><tr><td>Google Cloud CLI</td><td>Authentication and resource commands</td><td><a href="https://cloud.google.com/sdk/docs/install">Install gcloud CLI</a></td></tr><tr><td>Visual Studio Code</td><td>Edit project files</td><td><a href="https://code.visualstudio.com/Download">VS Code</a></td></tr><tr><td>Google Cloud project</td><td>Pub/Sub, Dataflow, BigQuery and Storage</td><td><a href="https://console.cloud.google.com/">Cloud Console</a></td></tr></table>
+<div class="callout danger"><strong>Billing:</strong> Dataflow streaming runs continuously until cancelled. Perform the cleanup section immediately after training.</div></section>
+
+<section id="tree" data-title="Project Files"><h2>18. Where to Keep the Code</h2><p>Extract the ZIP to <code>C:\BeamStreamingLab\beam-pubsub-dataflow-bigquery-project</code>.</p><pre><code>beam-pubsub-dataflow-bigquery-project/
+├── README.md
+├── requirements.txt
+├── config.example.ps1
+├── src/
+│   ├── pipeline.py
+│   ├── publisher.py
+│   ├── local_window_demo.py
+│   └── sample_events.jsonl
+├── sql/
+│   ├── create_tables.sql
+│   └── validation_queries.sql
+├── scripts/
+│   ├── 00_setup_python.ps1
+│   ├── 01_enable_apis.ps1
+│   ├── 02_create_resources.ps1
+│   ├── 03_run_local_window_demo.ps1
+│   ├── 04_run_dataflow.ps1
+│   ├── 05_publish_events.ps1
+│   ├── 06_check_results.ps1
+│   └── 99_cleanup.ps1
+└── docs/
+    └── FILES_EXPLAINED.md</code></pre>
+<h3>File responsibilities</h3><table><tr><th>File</th><th>Purpose</th></tr><tr><td>pipeline.py</td><td>Cloud streaming pipeline</td></tr><tr><td>publisher.py</td><td>Publishes relative-time events</td></tr><tr><td>local_window_demo.py</td><td>Deterministic watermark demo</td></tr><tr><td>sample_events.jsonl</td><td>Test events, delayed event and bad event</td></tr><tr><td>create_tables.sql</td><td>Partitioned and clustered tables</td></tr><tr><td>PowerShell scripts</td><td>Setup, run, query and cleanup automation</td></tr></table></section>
+
+<section id="setup" data-title="Setup Steps"><h2>19. Step-by-Step Environment Setup</h2>
+<div class="step"><div class="num">1</div><div><h3>Create a GCP project and enable billing</h3><p>Console → project selector → New Project. Attach a billing account. Record the project ID.</p></div></div>
+<div class="step"><div class="num">2</div><div><h3>Extract and configure</h3><pre><code>cd C:\BeamStreamingLab\beam-pubsub-dataflow-bigquery-project
+Copy-Item config.example.ps1 config.ps1
+code config.ps1</code></pre><p>Replace the project ID and globally unique bucket.</p></div></div>
+<div class="step"><div class="num">3</div><div><h3>Authenticate</h3><pre><code>gcloud init
+gcloud auth application-default login
+gcloud config set project YOUR_PROJECT_ID</code></pre></div></div>
+<div class="step"><div class="num">4</div><div><h3>Create virtual environment</h3><pre><code>Set-ExecutionPolicy -Scope Process Bypass
+.\scripts\00_setup_python.ps1</code></pre></div></div>
+<div class="step"><div class="num">5</div><div><h3>Enable APIs and create resources</h3><pre><code>.\scripts\01_enable_apis.ps1
+.\scripts\02_create_resources.ps1</code></pre></div></div></section>
+
+<section id="local" data-title="Local Window Demo"><h2>20. Deterministic Local Watermark Demo</h2><p>Cloud watermarks are runner estimates. Use TestStream first so learners can deliberately advance the watermark and insert a late event.</p><pre><code>.\scripts\03_run_local_window_demo.ps1</code></pre>
+<h3>Complete file</h3><pre><code>&quot;&quot;&quot;Deterministic local demonstration of event time, watermarks, and panes.&quot;&quot;&quot;
+
+from __future__ import annotations
+
+import apache_beam as beam
+from apache_beam.options.pipeline_options import PipelineOptions, StandardOptions
+from apache_beam.testing.test_stream import TestStream
+from apache_beam.transforms.trigger import (
+    AccumulationMode,
+    AfterCount,
+    AfterProcessingTime,
+    AfterWatermark,
+)
+from apache_beam.transforms.window import FixedWindows, TimestampedValue
+
+
+class FormatPane(beam.DoFn):
+    def process(
+        self,
+        element,
+        window=beam.DoFn.WindowParam,
+        pane_info=beam.DoFn.PaneInfoParam,
+    ):
+        key, total = element
+        yield (
+            f&quot;key={key} total=${total:.2f} &quot;
+            f&quot;window=[{float(window.start):.0f},{float(window.end):.0f}) &quot;
+            f&quot;pane_index={pane_info.index} timing={pane_info.timing} &quot;
+            f&quot;first={pane_info.is_first} last={pane_info.is_last}&quot;
+        )
+
+
+def main() -&gt; None:
+    options = PipelineOptions()
+    options.view_as(StandardOptions).streaming = True
+
+    stream = (
+        TestStream()
+        .advance_watermark_to(0)
+        .add_elements(
+            [
+                TimestampedValue((&quot;BLR-01&quot;, 100.00), 5),
+                TimestampedValue((&quot;BLR-01&quot;, 50.00), 15),
+            ]
+        )
+        .advance_processing_time(6)
+        .add_elements(
+            [
+                TimestampedValue((&quot;BLR-01&quot;, 25.00), 35),
+            ]
+        )
+        .advance_watermark_to(60)
+        .add_elements(
+            [
+                # Event time 25 arrives after the watermark passed 60.
+                TimestampedValue((&quot;BLR-01&quot;, 10.00), 25),
+            ]
+        )
+        .advance_processing_time(1)
+        .advance_watermark_to_infinity()
+    )
+
+    pipeline = beam.Pipeline(options=options)
+
+    output = (
+        pipeline
+        | &quot;Deterministic input&quot; &gt;&gt; stream
+        | &quot;Fixed 60-second windows&quot;
+        &gt;&gt; beam.WindowInto(
+            FixedWindows(60),
+            trigger=AfterWatermark(
+                early=AfterProcessingTime(5),
+                late=AfterCount(1),
+            ),
+            accumulation_mode=AccumulationMode.ACCUMULATING,
+            allowed_lateness=120,
+        )
+        | &quot;Sum per store&quot; &gt;&gt; beam.CombinePerKey(sum)
+        | &quot;Format pane details&quot; &gt;&gt; beam.ParDo(FormatPane())
+    )
+
+    output | &quot;Print results&quot; &gt;&gt; beam.Map(print)
+    result = pipeline.run()
+    result.wait_until_finish()
+
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre></section>
+
+<section id="pipeline" data-title="Pipeline Code"><h2>21. Main Pipeline Code Explained</h2><h3>Important stages</h3><ol><li>Read Pub/Sub with message attributes and event timestamp.</li><li>Parse JSON and use a tagged output for invalid data.</li><li>Write valid raw events.</li><li>Apply fixed windows, watermark trigger, early/late firings and accumulating mode.</li><li>Key by store/category and combine.</li><li>Add window and pane metadata.</li><li>Write aggregate and dead-letter tables.</li></ol>
+<details><summary>Open complete src/pipeline.py</summary><div><pre><code>&quot;&quot;&quot;Streaming Apache Beam pipeline: Pub/Sub -&gt; Dataflow -&gt; BigQuery.
+
+The source uses Pub/Sub message attributes:
+  event_timestamp: RFC 3339 event-time value used by Beam.
+  event_id: unique ID used by the Pub/Sub connector for deduplication.
+
+The pipeline writes:
+  1. Valid raw events.
+  2. Fixed-window sales aggregates, including pane information.
+  3. Invalid messages to a dead-letter table.
+&quot;&quot;&quot;
+
+from __future__ import annotations
+
+import argparse
+import json
+import logging
+from datetime import datetime, timezone
+from typing import Any, Iterable
+
+import apache_beam as beam
+from apache_beam.io.gcp.bigquery import BigQueryDisposition, WriteToBigQuery
+from apache_beam.io.gcp.pubsub import PubsubMessage, ReadFromPubSub
+from apache_beam.options.pipeline_options import (
+    PipelineOptions,
+    SetupOptions,
+    StandardOptions,
+)
+from apache_beam.transforms.trigger import (
+    AccumulationMode,
+    AfterCount,
+    AfterProcessingTime,
+    AfterWatermark,
+)
+
+
+RAW_SCHEMA = (
+    &quot;event_id:STRING,store_id:STRING,product_id:STRING,category:STRING,&quot;
+    &quot;quantity:INTEGER,unit_price_usd:FLOAT,revenue_usd:FLOAT,&quot;
+    &quot;event_time:TIMESTAMP,pubsub_message_id:STRING,processed_at:TIMESTAMP&quot;
+)
+
+AGGREGATE_SCHEMA = (
+    &quot;store_id:STRING,category:STRING,window_start:TIMESTAMP,&quot;
+    &quot;window_end:TIMESTAMP,total_quantity:INTEGER,&quot;
+    &quot;total_revenue_usd:FLOAT,event_count:INTEGER,pane_index:INTEGER,&quot;
+    &quot;pane_timing:STRING,is_first:BOOLEAN,is_last:BOOLEAN,&quot;
+    &quot;processed_at:TIMESTAMP&quot;
+)
+
+DEAD_LETTER_SCHEMA = (
+    &quot;error_message:STRING,payload:STRING,pubsub_message_id:STRING,&quot;
+    &quot;processed_at:TIMESTAMP&quot;
+)
+
+
+def utc_now_text() -&gt; str:
+    &quot;&quot;&quot;Return an RFC 3339 UTC timestamp accepted by BigQuery.&quot;&quot;&quot;
+    return datetime.now(timezone.utc).isoformat().replace(&quot;+00:00&quot;, &quot;Z&quot;)
+
+
+def normalize_timestamp(value: str) -&gt; str:
+    &quot;&quot;&quot;Validate and normalize an RFC 3339 timestamp.&quot;&quot;&quot;
+    parsed = datetime.fromisoformat(value.replace(&quot;Z&quot;, &quot;+00:00&quot;))
+    if parsed.tzinfo is None:
+        raise ValueError(&quot;event_time must include a timezone&quot;)
+    return parsed.astimezone(timezone.utc).isoformat().replace(&quot;+00:00&quot;, &quot;Z&quot;)
+
+
+class ParseEventFn(beam.DoFn):
+    &quot;&quot;&quot;Parse JSON and separate invalid messages with a tagged output.&quot;&quot;&quot;
+
+    DEAD_LETTER_TAG = &quot;dead_letter&quot;
+
+    def process(self, message: PubsubMessage) -&gt; Iterable[dict[str, Any]]:
+        payload_text = &quot;&quot;
+        message_id = getattr(message, &quot;message_id&quot;, None) or &quot;&quot;
+
+        try:
+            payload_text = message.data.decode(&quot;utf-8&quot;)
+            event = json.loads(payload_text)
+
+            required = {
+                &quot;event_id&quot;,
+                &quot;store_id&quot;,
+                &quot;product_id&quot;,
+                &quot;category&quot;,
+                &quot;quantity&quot;,
+                &quot;unit_price_usd&quot;,
+                &quot;event_time&quot;,
+            }
+            missing = sorted(required - set(event))
+            if missing:
+                raise ValueError(f&quot;Missing fields: {missing}&quot;)
+
+            quantity = int(event[&quot;quantity&quot;])
+            unit_price = float(event[&quot;unit_price_usd&quot;])
+
+            if quantity &lt;= 0:
+                raise ValueError(&quot;quantity must be greater than zero&quot;)
+            if unit_price &lt; 0:
+                raise ValueError(&quot;unit_price_usd must not be negative&quot;)
+
+            event_time = normalize_timestamp(str(event[&quot;event_time&quot;]))
+
+            yield {
+                &quot;event_id&quot;: str(event[&quot;event_id&quot;]),
+                &quot;store_id&quot;: str(event[&quot;store_id&quot;]).strip(),
+                &quot;product_id&quot;: str(event[&quot;product_id&quot;]).strip(),
+                &quot;category&quot;: str(event[&quot;category&quot;]).strip().title(),
+                &quot;quantity&quot;: quantity,
+                &quot;unit_price_usd&quot;: unit_price,
+                &quot;revenue_usd&quot;: round(quantity * unit_price, 2),
+                &quot;event_time&quot;: event_time,
+                &quot;pubsub_message_id&quot;: message_id,
+                &quot;processed_at&quot;: utc_now_text(),
+            }
+
+        except Exception as exc:  # Send bad records aside; do not kill the job.
+            yield beam.pvalue.TaggedOutput(
+                self.DEAD_LETTER_TAG,
+                {
+                    &quot;error_message&quot;: f&quot;{type(exc).__name__}: {exc}&quot;,
+                    &quot;payload&quot;: payload_text,
+                    &quot;pubsub_message_id&quot;: message_id,
+                    &quot;processed_at&quot;: utc_now_text(),
+                },
+            )
+
+
+class SalesCombineFn(beam.CombineFn):
+    &quot;&quot;&quot;Combine quantity, revenue, and event count per key and window.&quot;&quot;&quot;
+
+    def create_accumulator(self) -&gt; tuple[int, float, int]:
+        return 0, 0.0, 0
+
+    def add_input(
+        self,
+        accumulator: tuple[int, float, int],
+        event: dict[str, Any],
+    ) -&gt; tuple[int, float, int]:
+        total_quantity, total_revenue, event_count = accumulator
+        return (
+            total_quantity + int(event[&quot;quantity&quot;]),
+            total_revenue + float(event[&quot;revenue_usd&quot;]),
+            event_count + 1,
+        )
+
+    def merge_accumulators(
+        self,
+        accumulators: Iterable[tuple[int, float, int]],
+    ) -&gt; tuple[int, float, int]:
+        quantity = 0
+        revenue = 0.0
+        count = 0
+        for accumulator in accumulators:
+            quantity += accumulator[0]
+            revenue += accumulator[1]
+            count += accumulator[2]
+        return quantity, revenue, count
+
+    def extract_output(
+        self,
+        accumulator: tuple[int, float, int],
+    ) -&gt; dict[str, Any]:
+        return {
+            &quot;total_quantity&quot;: accumulator[0],
+            &quot;total_revenue_usd&quot;: round(accumulator[1], 2),
+            &quot;event_count&quot;: accumulator[2],
+        }
+
+
+def pane_timing_name(pane_info: Any) -&gt; str:
+    &quot;&quot;&quot;Convert Beam&#x27;s pane timing value into an explanatory string.&quot;&quot;&quot;
+    raw = getattr(pane_info, &quot;timing&quot;, &quot;UNKNOWN&quot;)
+    text = str(raw).upper()
+    for name in (&quot;EARLY&quot;, &quot;ON_TIME&quot;, &quot;LATE&quot;, &quot;UNKNOWN&quot;):
+        if name in text:
+            return name
+
+    try:
+        return {
+            0: &quot;EARLY&quot;,
+            1: &quot;ON_TIME&quot;,
+            2: &quot;LATE&quot;,
+            3: &quot;UNKNOWN&quot;,
+        }.get(int(raw), &quot;UNKNOWN&quot;)
+    except (TypeError, ValueError):
+        return &quot;UNKNOWN&quot;
+
+
+def timestamp_to_text(timestamp: Any) -&gt; str:
+    return (
+        timestamp.to_utc_datetime()
+        .replace(tzinfo=timezone.utc)
+        .isoformat()
+        .replace(&quot;+00:00&quot;, &quot;Z&quot;)
+    )
+
+
+class FormatAggregateFn(beam.DoFn):
+    &quot;&quot;&quot;Add window and pane metadata required for analytical queries.&quot;&quot;&quot;
+
+    def process(
+        self,
+        element: tuple[tuple[str, str], dict[str, Any]],
+        window=beam.DoFn.WindowParam,
+        pane_info=beam.DoFn.PaneInfoParam,
+    ) -&gt; Iterable[dict[str, Any]]:
+        (store_id, category), summary = element
+        yield {
+            &quot;store_id&quot;: store_id,
+            &quot;category&quot;: category,
+            &quot;window_start&quot;: timestamp_to_text(window.start),
+            &quot;window_end&quot;: timestamp_to_text(window.end),
+            &quot;total_quantity&quot;: summary[&quot;total_quantity&quot;],
+            &quot;total_revenue_usd&quot;: summary[&quot;total_revenue_usd&quot;],
+            &quot;event_count&quot;: summary[&quot;event_count&quot;],
+            &quot;pane_index&quot;: int(pane_info.index),
+            &quot;pane_timing&quot;: pane_timing_name(pane_info),
+            &quot;is_first&quot;: bool(pane_info.is_first),
+            &quot;is_last&quot;: bool(pane_info.is_last),
+            &quot;processed_at&quot;: utc_now_text(),
+        }
+
+
+def write_rows(rows, table: str, schema: str, label: str):
+    &quot;&quot;&quot;Create a named streaming BigQuery sink.&quot;&quot;&quot;
+    return rows | label &gt;&gt; WriteToBigQuery(
+        table=table,
+        schema=schema,
+        create_disposition=BigQueryDisposition.CREATE_NEVER,
+        write_disposition=BigQueryDisposition.WRITE_APPEND,
+        method=WriteToBigQuery.Method.STREAMING_INSERTS,
+        with_auto_sharding=True,
+    )
+
+
+def build_pipeline(
+    pipeline: beam.Pipeline,
+    args: argparse.Namespace,
+) -&gt; None:
+    messages = (
+        pipeline
+        | &quot;Read PubSub events&quot;
+        &gt;&gt; ReadFromPubSub(
+            subscription=args.input_subscription,
+            with_attributes=True,
+            id_label=&quot;event_id&quot;,
+            timestamp_attribute=&quot;event_timestamp&quot;,
+        )
+    )
+
+    parsed = (
+        messages
+        | &quot;Parse and validate JSON&quot;
+        &gt;&gt; beam.ParDo(ParseEventFn()).with_outputs(
+            ParseEventFn.DEAD_LETTER_TAG,
+            main=&quot;valid&quot;,
+        )
+    )
+
+    valid_events = parsed.valid
+    dead_letter_events = parsed[ParseEventFn.DEAD_LETTER_TAG]
+
+    write_rows(
+        valid_events,
+        args.raw_table,
+        RAW_SCHEMA,
+        &quot;Write valid raw events&quot;,
+    )
+
+    write_rows(
+        dead_letter_events,
+        args.dead_letter_table,
+        DEAD_LETTER_SCHEMA,
+        &quot;Write dead letters&quot;,
+    )
+
+    windowed_events = (
+        valid_events
+        | &quot;Apply fixed event-time windows&quot;
+        &gt;&gt; beam.WindowInto(
+            beam.window.FixedWindows(args.window_size_sec),
+            trigger=AfterWatermark(
+                early=AfterProcessingTime(args.early_firing_sec),
+                late=AfterCount(1),
+            ),
+            accumulation_mode=AccumulationMode.ACCUMULATING,
+            allowed_lateness=args.allowed_lateness_sec,
+        )
+    )
+
+    aggregates = (
+        windowed_events
+        | &quot;Key by store and category&quot;
+        &gt;&gt; beam.Map(
+            lambda event: (
+                (event[&quot;store_id&quot;], event[&quot;category&quot;]),
+                event,
+            )
+        )
+        | &quot;Aggregate each window&quot; &gt;&gt; beam.CombinePerKey(SalesCombineFn())
+        | &quot;Add window and pane details&quot; &gt;&gt; beam.ParDo(FormatAggregateFn())
+    )
+
+    write_rows(
+        aggregates,
+        args.aggregate_table,
+        AGGREGATE_SCHEMA,
+        &quot;Write window aggregates&quot;,
+    )
+
+
+def parse_arguments(argv: list[str] | None = None):
+    parser = argparse.ArgumentParser(
+        description=&quot;Retail streaming pipeline using Apache Beam.&quot;
+    )
+    parser.add_argument(
+        &quot;--input_subscription&quot;,
+        required=True,
+        help=&quot;projects/PROJECT/subscriptions/SUBSCRIPTION&quot;,
+    )
+    parser.add_argument(
+        &quot;--raw_table&quot;,
+        required=True,
+        help=&quot;PROJECT:DATASET.TABLE&quot;,
+    )
+    parser.add_argument(
+        &quot;--aggregate_table&quot;,
+        required=True,
+        help=&quot;PROJECT:DATASET.TABLE&quot;,
+    )
+    parser.add_argument(
+        &quot;--dead_letter_table&quot;,
+        required=True,
+        help=&quot;PROJECT:DATASET.TABLE&quot;,
+    )
+    parser.add_argument(&quot;--window_size_sec&quot;, type=int, default=60)
+    parser.add_argument(&quot;--early_firing_sec&quot;, type=int, default=10)
+    parser.add_argument(&quot;--allowed_lateness_sec&quot;, type=int, default=300)
+    return parser.parse_known_args(argv)
+
+
+def run(argv: list[str] | None = None):
+    known_args, pipeline_args = parse_arguments(argv)
+
+    options = PipelineOptions(pipeline_args)
+    options.view_as(StandardOptions).streaming = True
+    options.view_as(SetupOptions).save_main_session = True
+
+    pipeline = beam.Pipeline(options=options)
+    build_pipeline(pipeline, known_args)
+    result = pipeline.run()
+
+    logging.info(
+        &quot;Pipeline submitted. Runner state: %s&quot;,
+        result.state,
+    )
+    return result
+
+
+if __name__ == &quot;__main__&quot;:
+    logging.getLogger().setLevel(logging.INFO)
+    run()
+</code></pre></div></details></section>
+
+<section id="publisher" data-title="Publisher Code"><h2>22. Publisher and Sample Events</h2><p>The publisher calculates timestamps relative to the previous minute so the example remains reusable. Slow mode delays one old event for 75 seconds.</p>
+<details><summary>Open src/publisher.py</summary><div><pre><code>&quot;&quot;&quot;Publish relative-time retail events to Pub/Sub.
+
+The script creates RFC 3339 event timestamps relative to a base minute.
+It publishes the timestamp and event ID as message attributes so that
+Apache Beam can use event time and source-level deduplication.
+&quot;&quot;&quot;
+
+from __future__ import annotations
+
+import argparse
+import json
+import time
+from datetime import datetime, timedelta, timezone
+from pathlib import Path
+from typing import Any
+
+from google.cloud import pubsub_v1
+
+
+def parse_args() -&gt; argparse.Namespace:
+    parser = argparse.ArgumentParser()
+    parser.add_argument(&quot;--project&quot;, required=True)
+    parser.add_argument(&quot;--topic&quot;, required=True)
+    parser.add_argument(
+        &quot;--events_file&quot;,
+        default=str(Path(__file__).with_name(&quot;sample_events.jsonl&quot;)),
+    )
+    parser.add_argument(
+        &quot;--slow_demo&quot;,
+        action=&quot;store_true&quot;,
+        help=&quot;Respect sleep_before_sec to demonstrate late arrival.&quot;,
+    )
+    return parser.parse_args()
+
+
+def base_event_time() -&gt; datetime:
+    &quot;&quot;&quot;Use the start of the previous minute as the demonstration base.&quot;&quot;&quot;
+    now = datetime.now(timezone.utc)
+    current_minute = now.replace(second=0, microsecond=0)
+    return current_minute - timedelta(minutes=1)
+
+
+def read_events(path: str) -&gt; list[dict[str, Any]]:
+    events: list[dict[str, Any]] = []
+    with Path(path).open(encoding=&quot;utf-8&quot;) as handle:
+        for line_number, line in enumerate(handle, start=1):
+            text = line.strip()
+            if not text or text.startswith(&quot;#&quot;):
+                continue
+            try:
+                events.append(json.loads(text))
+            except json.JSONDecodeError as exc:
+                raise ValueError(
+                    f&quot;Invalid JSON at line {line_number}: {exc}&quot;
+                ) from exc
+    return events
+
+
+def main() -&gt; None:
+    args = parse_args()
+    publisher = pubsub_v1.PublisherClient()
+    topic_path = publisher.topic_path(args.project, args.topic)
+    base_time = base_event_time()
+
+    print(f&quot;Publishing to: {topic_path}&quot;)
+    print(f&quot;Base event time: {base_time.isoformat()}&quot;)
+    print(&quot;Currency used in this lab: USD ($)&quot;)
+
+    for event in read_events(args.events_file):
+        delay = float(event.pop(&quot;sleep_before_sec&quot;, 0))
+        if args.slow_demo and delay &gt; 0:
+            print(
+                f&quot;Waiting {delay:.0f} seconds before publishing &quot;
+                f&quot;{event[&#x27;event_id&#x27;]}...&quot;
+            )
+            time.sleep(delay)
+
+        offset_seconds = int(event.pop(&quot;event_offset_sec&quot;))
+        event_time = base_time + timedelta(seconds=offset_seconds)
+        event[&quot;event_time&quot;] = (
+            event_time.isoformat().replace(&quot;+00:00&quot;, &quot;Z&quot;)
+        )
+
+        data = json.dumps(event, separators=(&quot;,&quot;, &quot;:&quot;)).encode(&quot;utf-8&quot;)
+        future = publisher.publish(
+            topic_path,
+            data=data,
+            event_timestamp=event[&quot;event_time&quot;],
+            event_id=str(event[&quot;event_id&quot;]),
+        )
+        message_id = future.result(timeout=60)
+
+        print(
+            f&quot;Published {event[&#x27;event_id&#x27;]} | &quot;
+            f&quot;event_time={event[&#x27;event_time&#x27;]} | &quot;
+            f&quot;message_id={message_id}&quot;
+        )
+
+    print(&quot;Finished publishing demonstration events.&quot;)
+
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre></div></details>
+<details><summary>Open src/sample_events.jsonl</summary><div><pre><code>{&quot;event_id&quot;: &quot;E001&quot;, &quot;store_id&quot;: &quot;BLR-01&quot;, &quot;product_id&quot;: &quot;P100&quot;, &quot;category&quot;: &quot;Electronics&quot;, &quot;quantity&quot;: 1, &quot;unit_price_usd&quot;: 120.5, &quot;event_offset_sec&quot;: 5, &quot;sleep_before_sec&quot;: 0}
+{&quot;event_id&quot;: &quot;E002&quot;, &quot;store_id&quot;: &quot;BLR-01&quot;, &quot;product_id&quot;: &quot;P200&quot;, &quot;category&quot;: &quot;Grocery&quot;, &quot;quantity&quot;: 3, &quot;unit_price_usd&quot;: 8.25, &quot;event_offset_sec&quot;: 15, &quot;sleep_before_sec&quot;: 0}
+{&quot;event_id&quot;: &quot;E003&quot;, &quot;store_id&quot;: &quot;CHN-01&quot;, &quot;product_id&quot;: &quot;P100&quot;, &quot;category&quot;: &quot;Electronics&quot;, &quot;quantity&quot;: 2, &quot;unit_price_usd&quot;: 120.5, &quot;event_offset_sec&quot;: 35, &quot;sleep_before_sec&quot;: 0}
+{&quot;event_id&quot;: &quot;E004&quot;, &quot;store_id&quot;: &quot;BLR-01&quot;, &quot;product_id&quot;: &quot;P300&quot;, &quot;category&quot;: &quot;Home&quot;, &quot;quantity&quot;: 1, &quot;unit_price_usd&quot;: 45.0, &quot;event_offset_sec&quot;: 25, &quot;sleep_before_sec&quot;: 0}
+{&quot;event_id&quot;: &quot;E005&quot;, &quot;store_id&quot;: &quot;BLR-01&quot;, &quot;product_id&quot;: &quot;P101&quot;, &quot;category&quot;: &quot;Electronics&quot;, &quot;quantity&quot;: 1, &quot;unit_price_usd&quot;: 75.0, &quot;event_offset_sec&quot;: 65, &quot;sleep_before_sec&quot;: 0}
+{&quot;event_id&quot;: &quot;E006&quot;, &quot;store_id&quot;: &quot;CHN-01&quot;, &quot;product_id&quot;: &quot;P201&quot;, &quot;category&quot;: &quot;Grocery&quot;, &quot;quantity&quot;: 4, &quot;unit_price_usd&quot;: 6.5, &quot;event_offset_sec&quot;: 75, &quot;sleep_before_sec&quot;: 0}
+{&quot;event_id&quot;: &quot;E007-LATE&quot;, &quot;store_id&quot;: &quot;BLR-01&quot;, &quot;product_id&quot;: &quot;P102&quot;, &quot;category&quot;: &quot;Electronics&quot;, &quot;quantity&quot;: 1, &quot;unit_price_usd&quot;: 30.0, &quot;event_offset_sec&quot;: 45, &quot;sleep_before_sec&quot;: 75}
+{&quot;event_id&quot;: &quot;BAD-001&quot;, &quot;store_id&quot;: &quot;BLR-01&quot;, &quot;product_id&quot;: &quot;P999&quot;, &quot;category&quot;: &quot;Electronics&quot;, &quot;quantity&quot;: -1, &quot;unit_price_usd&quot;: 10.0, &quot;event_offset_sec&quot;: 80, &quot;sleep_before_sec&quot;: 0}
+</code></pre></div></details></section>
+
+<section id="sql" data-title="BigQuery SQL"><h2>23. BigQuery Tables and Queries</h2><p>The raw and aggregate tables are partitioned by event/window date and clustered by store/category. This reduces data scanned when filters use those columns.</p>
+<details><summary>Open table creation SQL</summary><div><pre><code>-- Replace placeholders through scripts/02_create_resources.ps1.
+
+CREATE SCHEMA IF NOT EXISTS `{{PROJECT_ID}}.{{DATASET}}`
+OPTIONS(location = &#x27;{{REGION}}&#x27;);
+
+CREATE TABLE IF NOT EXISTS
+  `{{PROJECT_ID}}.{{DATASET}}.{{RAW_TABLE}}`
+(
+  event_id STRING NOT NULL,
+  store_id STRING NOT NULL,
+  product_id STRING NOT NULL,
+  category STRING NOT NULL,
+  quantity INT64 NOT NULL,
+  unit_price_usd FLOAT64 NOT NULL,
+  revenue_usd FLOAT64 NOT NULL,
+  event_time TIMESTAMP NOT NULL,
+  pubsub_message_id STRING,
+  processed_at TIMESTAMP NOT NULL
+)
+PARTITION BY DATE(event_time)
+CLUSTER BY store_id, category;
+
+CREATE TABLE IF NOT EXISTS
+  `{{PROJECT_ID}}.{{DATASET}}.{{AGG_TABLE}}`
+(
+  store_id STRING NOT NULL,
+  category STRING NOT NULL,
+  window_start TIMESTAMP NOT NULL,
+  window_end TIMESTAMP NOT NULL,
+  total_quantity INT64 NOT NULL,
+  total_revenue_usd FLOAT64 NOT NULL,
+  event_count INT64 NOT NULL,
+  pane_index INT64 NOT NULL,
+  pane_timing STRING NOT NULL,
+  is_first BOOL NOT NULL,
+  is_last BOOL NOT NULL,
+  processed_at TIMESTAMP NOT NULL
+)
+PARTITION BY DATE(window_start)
+CLUSTER BY store_id, category;
+
+CREATE TABLE IF NOT EXISTS
+  `{{PROJECT_ID}}.{{DATASET}}.{{DLQ_TABLE}}`
+(
+  error_message STRING NOT NULL,
+  payload STRING,
+  pubsub_message_id STRING,
+  processed_at TIMESTAMP NOT NULL
+)
+PARTITION BY DATE(processed_at);
+</code></pre></div></details>
+<details><summary>Open validation SQL</summary><div><pre><code>-- Query 1: Raw valid events.
+SELECT *
+FROM `{{PROJECT_ID}}.{{DATASET}}.{{RAW_TABLE}}`
+ORDER BY event_time, event_id;
+
+-- Query 2: Invalid events sent to the dead-letter table.
+SELECT *
+FROM `{{PROJECT_ID}}.{{DATASET}}.{{DLQ_TABLE}}`
+ORDER BY processed_at DESC;
+
+-- Query 3: Every emitted pane, including early/on-time/late revisions.
+SELECT
+  store_id,
+  category,
+  window_start,
+  window_end,
+  pane_index,
+  pane_timing,
+  total_quantity,
+  total_revenue_usd,
+  event_count,
+  processed_at
+FROM `{{PROJECT_ID}}.{{DATASET}}.{{AGG_TABLE}}`
+ORDER BY window_start, store_id, category, pane_index;
+
+-- Query 4: Latest known result for each key and window.
+SELECT * EXCEPT(row_number)
+FROM (
+  SELECT
+    *,
+    ROW_NUMBER() OVER (
+      PARTITION BY store_id, category, window_start, window_end
+      ORDER BY pane_index DESC, processed_at DESC
+    ) AS row_number
+  FROM `{{PROJECT_ID}}.{{DATASET}}.{{AGG_TABLE}}`
+)
+WHERE row_number = 1
+ORDER BY window_start, store_id, category;
+</code></pre></div></details></section>
+
+<section id="run" data-title="Run End to End"><h2>24. Run the Complete Flow</h2>
+<div class="step"><div class="num">1</div><div><h3>Submit Dataflow</h3><pre><code>.\scripts\04_run_dataflow.ps1</code></pre><p>Console → Dataflow → Jobs. Wait for <strong>Running</strong>.</p></div></div>
+<div class="step"><div class="num">2</div><div><h3>Publish events</h3><pre><code>.\scripts\05_publish_events.ps1
+
+# More likely to demonstrate late data
+.\scripts\05_publish_events.ps1 -SlowDemo</code></pre></div></div>
+<div class="step"><div class="num">3</div><div><h3>Query result</h3><pre><code>.\scripts\06_check_results.ps1</code></pre></div></div>
+<div class="callout warn"><strong>Do not run fast and slow modes with the same event IDs against the same subscription when testing deduplication.</strong> Change event IDs or reset resources when you need two independent runs.</div></section>
+
+<section id="monitor" data-title="Monitoring"><h2>25. Dataflow Monitoring</h2><p>Console → Dataflow → Jobs → select the job.</p><table><tr><th>Screen/metric</th><th>Meaning</th></tr><tr><td>Job graph</td><td>Transforms, fusion and stage relationships</td></tr><tr><td>System lag</td><td>How far processing trails the source</td></tr><tr><td>Data freshness</td><td>Age of the oldest unprocessed event-time data</td></tr><tr><td>Current watermark</td><td>Runner estimate of event-time progress</td></tr><tr><td>Throughput</td><td>Elements and bytes processed</td></tr><tr><td>Autoscaling</td><td>Worker count changes</td></tr><tr><td>Worker logs</td><td>Exceptions, sink errors and custom logs</td></tr><tr><td>Pub/Sub backlog</td><td>Undelivered messages for the subscription</td></tr></table></section>
+
+<section id="results" data-title="Understanding Results"><h2>26. Understanding BigQuery Results</h2><p>Because accumulating triggers may emit multiple snapshots, the aggregate table can contain multiple rows for one store/category/window. <code>pane_index</code> and <code>pane_timing</code> explain each revision.</p>
+<pre><code>SELECT * EXCEPT(row_number)
+FROM (
+  SELECT *,
+    ROW_NUMBER() OVER (
+      PARTITION BY store_id, category, window_start, window_end
+      ORDER BY pane_index DESC, processed_at DESC
+    ) AS row_number
+  FROM `PROJECT.beam_streaming_demo.sales_windowed`
+)
+WHERE row_number = 1;</code></pre>
+<p>The bad record with negative quantity should appear in <code>sales_dead_letter</code>, not crash the streaming job.</p></section>
+
+<section id="advanced" data-title="Advanced Patterns"><h2>27. Advanced Beam Patterns</h2><ul><li>Sliding windows for velocity and moving averages.</li><li>Session windows for customer behavior.</li><li>State and timers for per-key workflows.</li><li>Side inputs for small reference data.</li><li>BigQuery or external enrichment transforms.</li><li>Dynamic destinations for tenant-specific tables.</li><li>Storage Write API for higher-performance BigQuery streaming.</li><li>Schema-aware PCollections and Row types.</li><li>Flex Templates for repeatable deployments.</li><li>Dead-letter Pub/Sub topics and replay workflows.</li></ul></section>
+
+<section id="production" data-title="Production Standards"><h2>28. Production Standards</h2><table><tr><th>Standard</th><th>Why</th></tr><tr><td>Unique event ID</td><td>Supports deduplication and auditability</td></tr><tr><td>Event-time contract</td><td>Every producer sends a valid UTC timestamp</td></tr><tr><td>Schema management</td><td>Prevents incompatible payload deployment</td></tr><tr><td>Dedicated service account</td><td>Separates workload identity from developers</td></tr><tr><td>Least-privilege IAM</td><td>Limits impact of compromise</td></tr><tr><td>DLQ and replay</td><td>Bad data is isolated and recoverable</td></tr><tr><td>Partitioning and clustering</td><td>Improves query efficiency</td></tr><tr><td>Idempotent external side effects</td><td>Workers can retry code</td></tr><tr><td>Monitoring and alerts</td><td>Detect lag, backlog, errors and cost anomalies</td></tr><tr><td>CI/CD and templates</td><td>Repeatable versioned deployment</td></tr></table>
+<div class="callout"><strong>Exactly-once nuance:</strong> Dataflow’s streaming mode is exactly-once by default for pipeline results, but arbitrary external side effects in user code can occur more than once. Use idempotency keys and supported sinks.</div></section>
+
+<section id="comparison" data-title="Comparison"><h2>29. Beam, Dataflow, Pub/Sub and BigQuery: Do Not Confuse Them</h2><table><tr><th>Technology</th><th>Role</th></tr><tr><td>Apache Beam</td><td>Programming model and SDK</td></tr><tr><td>Dataflow</td><td>Managed Beam runner</td></tr><tr><td>Pub/Sub</td><td>Messaging source and decoupling layer</td></tr><tr><td>BigQuery</td><td>Analytical destination</td></tr><tr><td>Kafka</td><td>Alternative event-log/messaging platform</td></tr><tr><td>Spark Structured Streaming</td><td>Alternative processing engine and API</td></tr></table></section>
+
+<section id="troubleshoot" data-title="Troubleshooting"><h2>30. Troubleshooting</h2>
+<details><summary>Permission denied when launching Dataflow</summary><div><p>Confirm the active user can act as the worker service account, APIs are enabled and the worker has access to Pub/Sub, BigQuery and the staging bucket.</p></div></details>
+<details><summary>Job is running but no rows appear</summary><div><p>Confirm publisher project/topic, Dataflow subscription, Pub/Sub backlog, worker logs and BigQuery sink errors. Wait for the job to be fully Running before publishing.</p></div></details>
+<details><summary>Late pane is not shown</summary><div><p>Watermarks are estimated by the runner. Use the local TestStream for deterministic learning. For cloud testing, publish enough newer event-time data, wait, then send an older event within allowed lateness.</p></div></details>
+<details><summary>Duplicate or repeated aggregate rows</summary><div><p>Repeated pane rows are expected with accumulating triggers. Query the latest pane using ROW_NUMBER. Duplicate source IDs should be unique.</p></div></details>
+<details><summary>Python package build fails</summary><div><p>Use Python 3.11 or 3.12, upgrade pip/wheel and recreate the virtual environment.</p></div></details>
+<details><summary>Bucket name already exists</summary><div><p>Cloud Storage bucket names are global. Change <code>GCP_BUCKET</code> in config.ps1.</p></div></details></section>
+
+<section id="cleanup" data-title="Cleanup"><h2>31. Cleanup and Cost Control</h2><pre><code>.\scripts\99_cleanup.ps1 -DeleteServiceAccount</code></pre><p>The script cancels active Dataflow jobs, deletes Pub/Sub resources, removes the BigQuery dataset and deletes the Cloud Storage bucket.</p><div class="callout danger"><strong>Verify the Dataflow job state is Cancelled.</strong> A streaming job can continue generating cost when the laptop is shut down because it runs in Google Cloud.</div></section>
+
+<section id="exercises" data-title="Exercises"><h2>32. Hands-On Exercises</h2><ol><li>Change fixed windows from 60 to 120 seconds.</li><li>Change accumulating panes to discarding panes and compare output.</li><li>Add a sliding-window version.</li><li>Add a new validation rule for category values.</li><li>Send invalid JSON and inspect the DLQ.</li><li>Add region and payment_method fields.</li><li>Create a dashboard query that selects the latest pane.</li><li>Add a second Pub/Sub topic for dead-letter replay.</li><li>Replace streaming inserts with Storage Write API after reviewing support.</li><li>Create a Flex Template deployment.</li></ol><h3>50-mark evaluation</h3><table><tr><td>Concept explanation</td><td>10</td></tr><tr><td>Environment and resources</td><td>8</td></tr><tr><td>Pipeline correctness</td><td>12</td></tr><tr><td>Window/watermark demonstration</td><td>8</td></tr><tr><td>Monitoring and SQL validation</td><td>7</td></tr><tr><td>Cleanup and production practices</td><td>5</td></tr></table></section>
+
+<section id="quiz" data-title="Quiz"><h2>33. Practice MCQ Quiz</h2><div id="quizArea">
+<div class="quiz" data-a="b"><strong>1. Beam is primarily what?</strong><label><input type="radio" name="q1" value="a"> A warehouse</label><label><input type="radio" name="q1" value="b"> A unified pipeline programming model</label><label><input type="radio" name="q1" value="c"> A message broker only</label></div>
+<div class="quiz" data-a="c"><strong>2. What defines where an event belongs in time?</strong><label><input type="radio" name="q2" value="a"> Worker CPU</label><label><input type="radio" name="q2" value="b"> BigQuery partition only</label><label><input type="radio" name="q2" value="c"> Event timestamp and window function</label></div>
+<div class="quiz" data-a="a"><strong>3. What is a watermark?</strong><label><input type="radio" name="q3" value="a"> Estimate of event-time progress</label><label><input type="radio" name="q3" value="b"> Guaranteed final record</label><label><input type="radio" name="q3" value="c"> Storage quota</label></div>
+<div class="quiz" data-a="b"><strong>4. What creates an early pane?</strong><label><input type="radio" name="q4" value="a"> Dataset deletion</label><label><input type="radio" name="q4" value="b"> An early trigger</label><label><input type="radio" name="q4" value="c"> SQL clustering</label></div>
+<div class="quiz" data-a="c"><strong>5. Which service executes this Beam pipeline?</strong><label><input type="radio" name="q5" value="a"> Pub/Sub</label><label><input type="radio" name="q5" value="b"> BigQuery</label><label><input type="radio" name="q5" value="c"> Dataflow</label></div>
+<div class="quiz" data-a="a"><strong>6. Why use a subscription?</strong><label><input type="radio" name="q6" value="a"> It owns message delivery state for a consumer</label><label><input type="radio" name="q6" value="b"> It stores SQL tables</label><label><input type="radio" name="q6" value="c"> It compiles Python</label></div>
+<div class="quiz" data-a="b"><strong>7. What does accumulating mode emit?</strong><label><input type="radio" name="q7" value="a"> Only new elements</label><label><input type="radio" name="q7" value="b"> All accepted elements so far</label><label><input type="radio" name="q7" value="c"> No late data</label></div>
+<div class="quiz" data-a="c"><strong>8. Where does an invalid quantity go?</strong><label><input type="radio" name="q8" value="a"> Aggregate table</label><label><input type="radio" name="q8" value="b"> It stops Dataflow permanently</label><label><input type="radio" name="q8" value="c"> Dead-letter table</label></div>
+<div class="quiz" data-a="a"><strong>9. Why is TestStream useful?</strong><label><input type="radio" name="q9" value="a"> It controls event and watermark timing deterministically</label><label><input type="radio" name="q9" value="b"> It creates billing accounts</label><label><input type="radio" name="q9" value="c"> It replaces BigQuery</label></div>
+<div class="quiz" data-a="b"><strong>10. What must be stopped after the lab?</strong><label><input type="radio" name="q10" value="a"> VS Code only</label><label><input type="radio" name="q10" value="b"> The Dataflow streaming job</label><label><input type="radio" name="q10" value="c"> The browser only</label></div>
+</div><button onclick="grade()">Calculate Score</button><div id="score" class="result"></div></section>
+
+<section id="interview" data-title="Interview"><h2>34. Interview Questions and Answers</h2>
+<details><summary>1. Why is Beam called unified?</summary><div><p>The same programming model represents bounded batch data and unbounded streaming data, including common transforms and event-time semantics.</p></div></details>
+<details><summary>2. Beam versus Dataflow?</summary><div><p>Beam is the SDK/model; Dataflow is a managed runner that executes Beam pipelines.</p></div></details>
+<details><summary>3. Event time versus processing time?</summary><div><p>Event time is when the business event occurred. Processing time is when the worker handles it.</p></div></details>
+<details><summary>4. What is a watermark?</summary><div><p>A runner estimate of how complete the input is up to an event-time point.</p></div></details>
+<details><summary>5. What is a pane?</summary><div><p>One emitted result for a window. A window can emit early, on-time and late panes.</p></div></details>
+<details><summary>6. Why allowed lateness?</summary><div><p>It keeps state so delayed elements can revise a previously emitted window.</p></div></details>
+<details><summary>7. Fixed versus sliding versus session windows?</summary><div><p>Fixed windows do not overlap; sliding windows overlap; session windows merge activity separated by a configured inactivity gap.</p></div></details>
+<details><summary>8. What does id_label do for Pub/Sub input?</summary><div><p>It identifies a message attribute containing a unique record ID that the connector can use for deduplication.</p></div></details>
+<details><summary>9. Why pre-create BigQuery tables?</summary><div><p>It provides controlled schema, partitioning, clustering, governance and deployment validation.</p></div></details>
+<details><summary>10. Why multiple pane rows?</summary><div><p>Triggers emit revisions. Accumulating mode writes a new complete snapshot for each firing.</p></div></details>
+<details><summary>11. Why use a DLQ?</summary><div><p>Invalid data is isolated without terminating the continuous job and can later be corrected and replayed.</p></div></details>
+<details><summary>12. Is exactly-once enough for side effects?</summary><div><p>No. User code may be retried. External side effects need idempotency or a sink that provides suitable semantics.</p></div></details>
+<details><summary>13. Why partition and cluster BigQuery?</summary><div><p>Partitioning limits dates scanned; clustering improves pruning for frequently filtered dimensions.</p></div></details>
+<details><summary>14. What is system lag?</summary><div><p>How far the pipeline is behind the source in processing outstanding data.</p></div></details>
+<details><summary>15. When use a direct BigQuery subscription?</summary><div><p>For simple Pub/Sub JSON-to-BigQuery ingestion without complex custom event-time transformations.</p></div></details>
+<details><summary>16. Why use a dedicated worker service account?</summary><div><p>It gives the workload a controlled identity separate from individual developers.</p></div></details>
+<details><summary>17. What is transform fusion?</summary><div><p>A runner optimization that combines compatible transforms into execution stages.</p></div></details>
+<details><summary>18. What is GroupByKey significance?</summary><div><p>It brings values for the same key and window together and often introduces a distributed shuffle.</p></div></details>
+<details><summary>19. How do you test late data?</summary><div><p>Use TestStream for deterministic tests, then perform an integration test using delayed old event timestamps.</p></div></details>
+<details><summary>20. How do you stop cost?</summary><div><p>Cancel the Dataflow streaming job, then remove Pub/Sub, BigQuery and Storage resources when no longer needed.</p></div></details></section>
+
+<section id="tracker" data-title="Tracker"><h2>35. Preparation Tracker</h2><div class="checklist" id="checks">
+<label><input type="checkbox" data-k="b1"> I can explain Beam, runner and PCollection.</label><label><input type="checkbox" data-k="b2"> I can explain traditional drawbacks.</label><label><input type="checkbox" data-k="b3"> I understand event and processing time.</label><label><input type="checkbox" data-k="b4"> I understand fixed, sliding and session windows.</label><label><input type="checkbox" data-k="b5"> I can explain watermarks and late data.</label><label><input type="checkbox" data-k="b6"> I ran the TestStream demonstration.</label><label><input type="checkbox" data-k="b7"> I created GCP resources.</label><label><input type="checkbox" data-k="b8"> I launched Dataflow.</label><label><input type="checkbox" data-k="b9"> I published and queried events.</label><label><input type="checkbox" data-k="b10"> I cleaned up the streaming job.</label></div><div id="track" class="result"></div></section>
+
+<section id="references" data-title="References"><h2>36. Official References</h2><ul><li><a href="https://beam.apache.org/get-started/beam-overview/">Apache Beam overview</a></li><li><a href="https://beam.apache.org/documentation/programming-guide/">Beam programming guide</a></li><li><a href="https://beam.apache.org/documentation/basics/">Beam model basics</a></li><li><a href="https://beam.apache.org/releases/pydoc/current/apache_beam.io.gcp.pubsub.html">Beam Pub/Sub Python API</a></li><li><a href="https://beam.apache.org/releases/pydoc/current/apache_beam.io.gcp.bigquery.html">Beam BigQuery Python API</a></li><li><a href="https://cloud.google.com/dataflow/docs/guides/installing-beam-sdk">Install Beam for Dataflow</a></li><li><a href="https://cloud.google.com/dataflow/docs/concepts/streaming-with-cloud-pubsub">Streaming with Pub/Sub</a></li><li><a href="https://cloud.google.com/dataflow/docs/concepts/exactly-once">Dataflow exactly-once model</a></li><li><a href="https://cloud.google.com/pubsub/docs/overview">Pub/Sub overview</a></li><li><a href="https://cloud.google.com/bigquery/docs/datasets">BigQuery datasets</a></li><li><a href="https://cloud.google.com/dataflow/docs/guides/pubsub-bigquery-best-practices">Pub/Sub to BigQuery best practices</a></li></ul></section>
+<footer>Apache Beam Unified Streaming Tutorial • Trainer-ready single HTML + runnable project ZIP</footer>
+</main></div>
+<script>
+document.querySelectorAll('pre').forEach(pre=>{const b=document.createElement('button');b.className='copy';b.textContent='Copy';b.onclick=async()=>{const c=pre.cloneNode(true);c.querySelectorAll('button').forEach(x=>x.remove());await navigator.clipboard.writeText(c.innerText);b.textContent='Copied';setTimeout(()=>b.textContent='Copy',1000)};pre.appendChild(b)});
+const secs=[...document.querySelectorAll('main section')],links=[...document.querySelectorAll('#toc a')];
+const obs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)links.forEach(a=>a.classList.toggle('active',a.hash==='#'+e.target.id))}),{rootMargin:'-35% 0px -55% 0px'});secs.forEach(s=>obs.observe(s));
+window.addEventListener('scroll',()=>{const d=document.documentElement,m=d.scrollHeight-d.clientHeight,p=m?Math.round(d.scrollTop/m*100):0;document.getElementById('bar').style.width=p+'%';document.getElementById('pct').textContent=p+'%'});
+document.getElementById('search').addEventListener('input',e=>{const q=e.target.value.toLowerCase().trim();secs.forEach(s=>s.classList.toggle('hidden',q&&!s.innerText.toLowerCase().includes(q)))}); 
+function grade(){let n=0,a=0;document.querySelectorAll('.quiz').forEach(q=>{q.style.borderColor='var(--line)';const c=q.querySelector('input:checked');if(c){a++;if(c.value===q.dataset.a){n++;q.style.borderColor='var(--green)'}else q.style.borderColor='var(--red)'}});document.getElementById('score').textContent=`Score: ${n}/10 • Answered: ${a}/10`}
+document.querySelectorAll('#checks input').forEach(c=>{c.checked=localStorage.getItem(c.dataset.k)==='1';c.onchange=()=>{localStorage.setItem(c.dataset.k,c.checked?'1':'0');track()}});function track(){const c=[...document.querySelectorAll('#checks input')],n=c.filter(x=>x.checked).length;document.getElementById('track').textContent=`Completed ${n} of ${c.length} goals.`}track();
+</script>
+</body></html>

@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Apache Airflow DAG Design, Dependencies, Dynamic and Parameterized DAGs</title>
+<style>
+:root{
+  --bg:#07111f; --panel:#0d1b2d; --panel2:#12233a; --text:#edf6ff; --muted:#a9bdd2;
+  --accent:#54d2d2; --accent2:#ffcc66; --good:#6ee7a8; --bad:#ff7b7b; --line:#2b425d;
+}
+*{box-sizing:border-box} html{scroll-behavior:smooth}
+body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:linear-gradient(135deg,#07111f,#0b1930);color:var(--text);line-height:1.65}
+header{padding:52px 24px 34px;text-align:center;background:radial-gradient(circle at top,#16385c 0,#07111f 64%)}
+header h1{max-width:1000px;margin:auto;font-size:clamp(2rem,5vw,4rem);line-height:1.12}
+header p{max-width:900px;margin:18px auto;color:var(--muted);font-size:1.08rem}
+.badges{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.badge{background:#17304d;border:1px solid #335270;padding:7px 12px;border-radius:999px;color:#dff}
+.layout{display:grid;grid-template-columns:260px minmax(0,1fr);max-width:1400px;margin:auto}
+nav{position:sticky;top:0;height:100vh;overflow:auto;padding:24px 18px;background:#081523;border-right:1px solid var(--line)}
+nav a{display:block;color:#bdd3e8;text-decoration:none;padding:8px 10px;border-radius:8px;font-size:.92rem}
+nav a:hover{background:#17304d;color:white}
+main{padding:30px clamp(18px,4vw,56px);max-width:1100px}
+section{background:rgba(13,27,45,.86);border:1px solid var(--line);border-radius:18px;padding:26px;margin-bottom:24px}
+section:hover{border-color:#4f7194}
+h2{color:var(--accent);margin-top:0} h3{color:#d8ecff;margin-top:28px}
+h4{color:var(--accent2)}
+code{font-family:Consolas,monospace}
+pre{background:#030a12;color:#eaf5ff;padding:18px;border-radius:12px;overflow:auto;border:1px solid #27415e;position:relative}
+.copy{float:right;border:0;border-radius:7px;padding:5px 9px;background:#214769;color:white;cursor:pointer}
+.note,.tip,.warning{padding:14px 16px;border-left:5px solid var(--accent);background:#10273b;border-radius:10px;margin:16px 0}
+.tip{border-color:var(--good)} .warning{border-color:var(--accent2)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px}
+.card{background:var(--panel2);border:1px solid var(--line);padding:18px;border-radius:14px}
+.card h4{margin-top:0}
+table{width:100%;border-collapse:collapse;margin:16px 0;background:#0a1727}
+th,td{border:1px solid var(--line);padding:11px;text-align:left;vertical-align:top}
+th{background:#15304a;color:#dff}
+.diagram{background:#07101d;border:1px solid var(--line);border-radius:14px;padding:22px;overflow:auto}
+.flow{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap}
+.node{background:#173653;border:1px solid #4c7598;border-radius:12px;padding:13px 16px;min-width:125px;text-align:center}
+.arrow{font-size:1.5rem;color:var(--accent2)}
+.branch{display:grid;grid-template-columns:1fr auto 1fr;gap:12px;align-items:center}
+.tree{font-family:Consolas,monospace;white-space:pre;background:#06101b;padding:16px;border-radius:12px;color:#cce8ff}
+.steps{counter-reset:step}
+.step{counter-increment:step;padding:16px 16px 16px 62px;margin:12px 0;background:#102238;border-radius:12px;position:relative}
+.step:before{content:counter(step);position:absolute;left:16px;top:16px;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:var(--accent);color:#00131a;font-weight:700}
+.quiz-q{margin:16px 0;padding:16px;background:#102238;border-radius:12px}
+.quiz-q label{display:block;margin:7px 0}
+button.action{padding:10px 16px;border-radius:9px;border:0;background:var(--accent);color:#001a22;font-weight:700;cursor:pointer}
+.answer{display:none;margin-top:10px;padding:10px;background:#0a1d2b;border-left:4px solid var(--good)}
+footer{text-align:center;color:var(--muted);padding:35px}
+@media(max-width:900px){.layout{display:block}nav{position:relative;height:auto;border-right:0;border-bottom:1px solid var(--line);columns:2}main{padding:18px}}
+@media(max-width:560px){nav{columns:1}.branch{grid-template-columns:1fr}.arrow{transform:rotate(90deg)}}
+</style>
+</head>
+<body>
+<header>
+  <h1>Apache Airflow: DAG Design, Task Dependencies, Dynamic and Parameterized DAGs</h1>
+  <p>A practical, end-to-end tutorial using a retail sales ETL example. The main focus is how one Python configuration can generate multiple Airflow DAGs and how users can pass run-time parameters from the Airflow UI.</p>
+  <div class="badges"><span class="badge">Airflow 3.x style</span><span class="badge">TaskFlow API</span><span class="badge">Dynamic DAG Factory</span><span class="badge">UI Parameters</span><span class="badge">Windows + WSL friendly</span></div>
+</header>
+<div class="layout">
+<nav>
+<a href="#outcome">1. Learning outcome</a>
+<a href="#concepts">2. Core concepts</a>
+<a href="#dag-design">3. DAG design</a>
+<a href="#dependencies">4. Task dependencies</a>
+<a href="#dynamic">5. Dynamic DAGs</a>
+<a href="#parameterized">6. Parameterized DAGs</a>
+<a href="#difference">7. Dynamic vs parameterized</a>
+<a href="#scenario">8. Real-world scenario</a>
+<a href="#setup">9. Environment setup</a>
+<a href="#project">10. Project structure</a>
+<a href="#basic-code">11. Basic DAG</a>
+<a href="#factory-code">12. Dynamic DAG factory</a>
+<a href="#params-code">13. Run-time parameters</a>
+<a href="#run">14. Run and view</a>
+<a href="#observe">15. What to observe</a>
+<a href="#troubleshoot">16. Troubleshooting</a>
+<a href="#practices">17. Best practices</a>
+<a href="#interview">18. Interview Q&A</a>
+<a href="#quiz">19. Quiz</a>
+</nav>
+<main>
+
+<section id="outcome">
+<h2>1. Learning outcome</h2>
+<p>After completing this tutorial, you will be able to:</p>
+<div class="grid">
+<div class="card"><h4>Design a DAG</h4><p>Divide a business workflow into meaningful, reusable tasks.</p></div>
+<div class="card"><h4>Connect tasks</h4><p>Create sequential, parallel, fan-out and fan-in dependencies.</p></div>
+<div class="card"><h4>Generate DAGs</h4><p>Create several DAG objects from one configuration-driven Python file.</p></div>
+<div class="card"><h4>Pass parameters</h4><p>Trigger a DAG from the UI with values such as city, date and minimum order amount.</p></div>
+</div>
+</section>
+
+<section id="concepts">
+<h2>2. Core concepts</h2>
+<table>
+<tr><th>Concept</th><th>Simple meaning</th><th>Retail example</th></tr>
+<tr><td>DAG</td><td>The complete workflow definition.</td><td>Load, clean, summarize and publish sales data.</td></tr>
+<tr><td>Task</td><td>One unit of work.</td><td>Read Chennai sales records.</td></tr>
+<tr><td>Dependency</td><td>The required execution order.</td><td>Cleaning starts only after extraction.</td></tr>
+<tr><td>DAG Run</td><td>One execution of a DAG.</td><td>The sales workflow run for 31 July 2026.</td></tr>
+<tr><td>Task Instance</td><td>One task inside one DAG Run.</td><td>The clean task for the 31 July run.</td></tr>
+<tr><td>Dynamic DAG generation</td><td>Python creates the DAG structure from configuration while Airflow parses the file.</td><td>One configuration creates Chennai, Bengaluru and Hyderabad DAGs.</td></tr>
+<tr><td>Parameterized DAG</td><td>The same DAG accepts values when it is triggered.</td><td>User enters city=Chennai and min_amount=1000.</td></tr>
+</table>
+<div class="note"><b>Important:</b> Airflow orchestration code describes what should run, when it should run and in what order. Airflow is not itself the data transformation engine.</div>
+</section>
+
+<section id="dag-design">
+<h2>3. What is DAG design?</h2>
+<p>DAG design is the process of converting a business workflow into tasks, dependencies, schedules, retries, parameters and operational controls.</p>
+<h3>Bad design</h3>
+<div class="diagram flow">
+<div class="node">One giant task<br>does everything</div>
+</div>
+<p>A single large task is difficult to retry, monitor and debug.</p>
+<h3>Better design</h3>
+<div class="diagram flow">
+<div class="node">Extract</div><div class="arrow">→</div><div class="node">Validate</div><div class="arrow">→</div><div class="node">Transform</div><div class="arrow">→</div><div class="node">Load</div><div class="arrow">→</div><div class="node">Notify</div>
+</div>
+<h3>Design questions</h3>
+<div class="grid">
+<div class="card"><h4>Business boundary</h4><p>What complete outcome does this DAG own?</p></div>
+<div class="card"><h4>Task boundary</h4><p>Can each task be retried independently?</p></div>
+<div class="card"><h4>Data passing</h4><p>Should tasks pass only small metadata through XCom?</p></div>
+<div class="card"><h4>Failure behavior</h4><p>Which tasks should stop, retry or continue?</p></div>
+</div>
+</section>
+
+<section id="dependencies">
+<h2>4. Task dependencies</h2>
+<h3>4.1 Sequential</h3>
+<pre><button class="copy">Copy</button><code>extract >> transform >> load</code></pre>
+<div class="diagram flow"><div class="node">Extract</div><div class="arrow">→</div><div class="node">Transform</div><div class="arrow">→</div><div class="node">Load</div></div>
+
+<h3>4.2 Parallel fan-out</h3>
+<pre><button class="copy">Copy</button><code>extract >> [validate_schema, validate_quality]</code></pre>
+<div class="diagram flow"><div class="node">Extract</div><div class="arrow">→</div><div><div class="node">Validate schema</div><br><div class="node">Validate quality</div></div></div>
+
+<h3>4.3 Fan-in</h3>
+<pre><button class="copy">Copy</button><code>[validate_schema, validate_quality] >> load</code></pre>
+<div class="diagram flow"><div><div class="node">Validate schema</div><br><div class="node">Validate quality</div></div><div class="arrow">→</div><div class="node">Load</div></div>
+
+<h3>4.4 TaskFlow dependency inference</h3>
+<pre><button class="copy">Copy</button><code>@task
+def extract():
+    return {"rows": 100}
+
+@task
+def transform(metadata):
+    return metadata["rows"]
+
+result = extract()
+transform(result)</code></pre>
+<p>Because the output of <code>extract()</code> is supplied to <code>transform()</code>, Airflow automatically understands the dependency.</p>
+</section>
+
+<section id="dynamic">
+<h2>5. Dynamic DAG generation</h2>
+<p>Dynamic DAG generation means Python code creates DAG objects or tasks from a list, dictionary, environment variable or generated configuration during DAG parsing.</p>
+<div class="diagram flow">
+<div class="node">Configuration list</div><div class="arrow">→</div><div class="node">Python loop / factory</div><div class="arrow">→</div><div><div class="node">sales_chennai</div><br><div class="node">sales_bengaluru</div><br><div class="node">sales_hyderabad</div></div>
+</div>
+<h3>Why use it?</h3>
+<ul>
+<li>Avoid copying nearly identical DAG files.</li>
+<li>Apply the same standards to many customers, regions, tables or data sources.</li>
+<li>Add a new workflow by changing configuration instead of duplicating code.</li>
+<li>Reduce maintenance and inconsistency.</li>
+</ul>
+<div class="warning"><b>Do not confuse this with Dynamic Task Mapping.</b> Dynamic DAG generation creates the graph while Airflow parses the DAG file. Dynamic Task Mapping expands task instances at run time using upstream results.</div>
+</section>
+
+<section id="parameterized">
+<h2>6. Parameterized DAGs</h2>
+<p>A parameterized DAG has one fixed workflow structure but accepts different values for each run.</p>
+<div class="diagram flow">
+<div class="node">Trigger form</div><div class="arrow">→</div><div class="node">city = Chennai<br>min_amount = 1000</div><div class="arrow">→</div><div class="node">Same DAG logic</div><div class="arrow">→</div><div class="node">Filtered output</div>
+</div>
+<h3>Typical parameters</h3>
+<table>
+<tr><th>Parameter</th><th>Example</th><th>Purpose</th></tr>
+<tr><td>city</td><td>Chennai</td><td>Select the business region.</td></tr>
+<tr><td>processing_date</td><td>2026-07-31</td><td>Process one date or partition.</td></tr>
+<tr><td>min_amount</td><td>1000</td><td>Apply a configurable business threshold.</td></tr>
+<tr><td>full_refresh</td><td>false</td><td>Choose incremental or full processing.</td></tr>
+</table>
+</section>
+
+<section id="difference">
+<h2>7. Dynamic DAG vs parameterized DAG</h2>
+<table>
+<tr><th>Feature</th><th>Dynamic DAG generation</th><th>Parameterized DAG</th></tr>
+<tr><td>When it changes</td><td>During DAG-file parsing.</td><td>When a DAG Run is triggered.</td></tr>
+<tr><td>What changes</td><td>DAG objects or task structure.</td><td>Input values used by existing tasks.</td></tr>
+<tr><td>Example</td><td>Create one DAG per city.</td><td>Run one DAG for a chosen city/date.</td></tr>
+<tr><td>Best for</td><td>Many similar pipelines.</td><td>Reusable execution behavior.</td></tr>
+<tr><td>Visible in UI</td><td>Several DAG IDs.</td><td>One DAG ID with different run configurations.</td></tr>
+</table>
+</section>
+
+<section id="scenario">
+<h2>8. Real-world scenario</h2>
+<p>A retail company receives sales data for three cities. Every city follows the same process:</p>
+<div class="diagram flow">
+<div class="node">Start</div><div class="arrow">→</div><div class="node">Extract city sales</div><div class="arrow">→</div><div class="node">Filter by minimum amount</div><div class="arrow">→</div><div class="node">Calculate summary</div><div class="arrow">→</div><div class="node">Publish report</div>
+</div>
+<p>We will implement two alternatives:</p>
+<ol>
+<li><b>Dynamic DAG factory:</b> creates three DAGs—one per city.</li>
+<li><b>Parameterized DAG:</b> creates one DAG whose city and amount threshold are entered during triggering.</li>
+</ol>
+</section>
+
+<section id="setup">
+<h2>9. Environment setup</h2>
+<p>For a Windows laptop, run Airflow inside Ubuntu on WSL. The commands below assume Ubuntu, Python 3.11 or another Python version supported by the Airflow version you install.</p>
+<div class="steps">
+<div class="step"><b>Open Ubuntu/WSL</b><pre><button class="copy">Copy</button><code>wsl</code></pre></div>
+<div class="step"><b>Create the project</b><pre><button class="copy">Copy</button><code>mkdir -p ~/airflow_dynamic_demo
+cd ~/airflow_dynamic_demo
+python3 -m venv .venv
+source .venv/bin/activate</code></pre></div>
+<div class="step"><b>Set AIRFLOW_HOME</b><pre><button class="copy">Copy</button><code>export AIRFLOW_HOME=$HOME/airflow_dynamic_demo/airflow_home
+mkdir -p "$AIRFLOW_HOME/dags"</code></pre></div>
+<div class="step"><b>Install Airflow reproducibly</b><pre><button class="copy">Copy</button><code>AIRFLOW_VERSION=3.3.0
+PYTHON_VERSION="$(python -c 'import sys; print(f"{sys.version_info.major}.{sys.version_info.minor}")')"
+pip install "apache-airflow==${AIRFLOW_VERSION}" \
+  --constraint "https://raw.githubusercontent.com/apache/airflow/constraints-${AIRFLOW_VERSION}/constraints-${PYTHON_VERSION}.txt"</code></pre></div>
+<div class="step"><b>Start all local components</b><pre><button class="copy">Copy</button><code>airflow standalone</code></pre></div>
+</div>
+<div class="tip">Keep this terminal open. Airflow standalone initializes the metadata database, creates a user and starts the local Airflow components.</div>
+</section>
+
+<section id="project">
+<h2>10. Project structure</h2>
+<div class="tree">airflow_dynamic_demo/
+├── .venv/
+└── airflow_home/
+    ├── dags/
+    │   ├── 01_basic_dependency_dag.py
+    │   ├── 02_dynamic_city_dags.py
+    │   └── 03_parameterized_sales_dag.py
+    ├── airflow.cfg
+    ├── logs/
+    └── simple_auth_manager_passwords.json.generated</div>
+</section>
+
+<section id="basic-code">
+<h2>11. Example 1 — Basic DAG and dependencies</h2>
+<p>Create <code>$AIRFLOW_HOME/dags/01_basic_dependency_dag.py</code>.</p>
+<pre><button class="copy">Copy</button><code>from datetime import datetime
+from airflow.sdk import dag, task
+
+
+@dag(
+    dag_id="basic_sales_dependency_demo",
+    schedule=None,
+    start_date=datetime(2026, 1, 1),
+    catchup=False,
+    tags=["training", "dependencies"],
+)
+def basic_sales_dependency_demo():
+
+    @task
+    def extract():
+        print("Extracting sales")
+        return [500, 1200, 2000, 300]
+
+    @task
+    def validate(values):
+        if not values:
+            raise ValueError("No sales records")
+        print(f"Validated {len(values)} records")
+
+    @task
+    def transform(values):
+        result = [value for value in values if value >= 1000]
+        print(f"Filtered values: {result}")
+        return result
+
+    @task
+    def load(values):
+        print(f"Loading {len(values)} high-value sales")
+
+    sales = extract()
+    validation = validate(sales)
+    transformed = transform(sales)
+
+    # Fan-out: validate and transform both depend on extract.
+    # Fan-in: load waits for both validation and transform.
+    validation >> transformed
+    load(transformed)
+
+
+basic_sales_dependency_demo()</code></pre>
+<h3>Execution flow</h3>
+<div class="diagram flow"><div class="node">extract</div><div class="arrow">→</div><div class="node">validate</div><div class="arrow">→</div><div class="node">transform</div><div class="arrow">→</div><div class="node">load</div></div>
+</section>
+
+<section id="factory-code">
+<h2>12. Example 2 — Dynamic DAG factory</h2>
+<p>Create <code>$AIRFLOW_HOME/dags/02_dynamic_city_dags.py</code>.</p>
+<pre><button class="copy">Copy</button><code>from datetime import datetime
+from airflow.sdk import dag, task
+
+
+CITY_CONFIGS = [
+    {"city": "chennai", "min_amount": 1000},
+    {"city": "bengaluru", "min_amount": 1500},
+    {"city": "hyderabad", "min_amount": 1200},
+]
+
+
+def create_city_sales_dag(city: str, min_amount: int):
+
+    @dag(
+        dag_id=f"sales_etl_{city}",
+        schedule=None,
+        start_date=datetime(2026, 1, 1),
+        catchup=False,
+        tags=["dynamic-dag", city],
+        description=f"Sales ETL generated for {city}",
+    )
+    def city_sales_dag():
+
+        @task
+        def extract() -> list[dict]:
+            sample_data = {
+                "chennai": [
+                    {"order_id": 1, "amount": 800},
+                    {"order_id": 2, "amount": 1800},
+                ],
+                "bengaluru": [
+                    {"order_id": 3, "amount": 1600},
+                    {"order_id": 4, "amount": 900},
+                ],
+                "hyderabad": [
+                    {"order_id": 5, "amount": 1300},
+                    {"order_id": 6, "amount": 700},
+                ],
+            }
+            rows = sample_data[city]
+            print(f"Extracted {rows}")
+            return rows
+
+        @task
+        def filter_high_value(rows: list[dict]) -> list[dict]:
+            selected = [
+                row for row in rows
+                if row["amount"] >= min_amount
+            ]
+            print(f"{city}: threshold={min_amount}, selected={selected}")
+            return selected
+
+        @task
+        def summarize(rows: list[dict]) -> dict:
+            summary = {
+                "city": city,
+                "order_count": len(rows),
+                "total_amount": sum(row["amount"] for row in rows),
+            }
+            print(summary)
+            return summary
+
+        @task
+        def publish(summary: dict):
+            print(f"Published report: {summary}")
+
+        rows = extract()
+        filtered = filter_high_value(rows)
+        summary = summarize(filtered)
+        publish(summary)
+
+    return city_sales_dag()
+
+
+# Airflow imports this file. The loop creates three DAG objects.
+for config in CITY_CONFIGS:
+    dag_object = create_city_sales_dag(
+        city=config["city"],
+        min_amount=config["min_amount"],
+    )
+
+    # Register each generated DAG in the module's global namespace.
+    globals()[dag_object.dag_id] = dag_object</code></pre>
+
+<h3>How the file works</h3>
+<div class="steps">
+<div class="step"><code>CITY_CONFIGS</code> stores the differences between cities.</div>
+<div class="step"><code>create_city_sales_dag()</code> is a reusable DAG factory.</div>
+<div class="step">The loop calls the factory once per configuration entry.</div>
+<div class="step"><code>globals()</code> exposes each generated DAG object to Airflow.</div>
+<div class="step">The UI displays <code>sales_etl_chennai</code>, <code>sales_etl_bengaluru</code> and <code>sales_etl_hyderabad</code>.</div>
+</div>
+<div class="tip">Add another city by adding one dictionary to <code>CITY_CONFIGS</code>. You do not need to copy the complete DAG.</div>
+</section>
+
+<section id="params-code">
+<h2>13. Example 3 — Parameterized DAG</h2>
+<p>Create <code>$AIRFLOW_HOME/dags/03_parameterized_sales_dag.py</code>.</p>
+<pre><button class="copy">Copy</button><code>from datetime import datetime
+from airflow.sdk import dag, task
+from airflow.sdk.definitions.param import Param
+
+
+@dag(
+    dag_id="parameterized_sales_etl",
+    schedule=None,
+    start_date=datetime(2026, 1, 1),
+    catchup=False,
+    tags=["parameters", "training"],
+    params={
+        "city": Param(
+            default="chennai",
+            type="string",
+            enum=["chennai", "bengaluru", "hyderabad"],
+            title="City",
+        ),
+        "min_amount": Param(
+            default=1000,
+            type="integer",
+            minimum=0,
+            title="Minimum order amount",
+        ),
+        "processing_date": Param(
+            default="2026-07-31",
+            type="string",
+            format="date",
+            title="Processing date",
+        ),
+    },
+)
+def parameterized_sales_etl():
+
+    @task
+    def extract(**context) -> list[dict]:
+        city = context["params"]["city"]
+        processing_date = context["params"]["processing_date"]
+
+        sample_rows = [
+            {"order_id": 101, "city": city, "amount": 700},
+            {"order_id": 102, "city": city, "amount": 1400},
+            {"order_id": 103, "city": city, "amount": 2500},
+        ]
+
+        print(f"Date={processing_date}; city={city}")
+        return sample_rows
+
+    @task
+    def transform(rows: list[dict], **context) -> list[dict]:
+        min_amount = context["params"]["min_amount"]
+        result = [
+            row for row in rows
+            if row["amount"] >= min_amount
+        ]
+        print(f"Threshold={min_amount}; output={result}")
+        return result
+
+    @task
+    def publish(rows: list[dict], **context):
+        city = context["params"]["city"]
+        total = sum(row["amount"] for row in rows)
+        print({
+            "city": city,
+            "selected_orders": len(rows),
+            "total_amount": total,
+        })
+
+    rows = extract()
+    cleaned = transform(rows)
+    publish(cleaned)
+
+
+parameterized_sales_etl()</code></pre>
+
+<h3>Trigger values example</h3>
+<pre><button class="copy">Copy</button><code>{
+  "city": "chennai",
+  "min_amount": 1200,
+  "processing_date": "2026-07-31"
+}</code></pre>
+</section>
+
+<section id="run">
+<h2>14. How to run and view the DAGs</h2>
+<div class="steps">
+<div class="step"><b>Confirm that the files are present</b><pre><button class="copy">Copy</button><code>ls -l "$AIRFLOW_HOME/dags"</code></pre></div>
+<div class="step"><b>Check DAG parsing</b><pre><button class="copy">Copy</button><code>airflow dags list</code></pre></div>
+<div class="step"><b>Open the UI</b><p>In your Windows browser, open <code>http://localhost:8080</code>.</p></div>
+<div class="step"><b>Sign in</b><p>Use the username shown by <code>airflow standalone</code>. For Airflow 3.x local standalone mode, the generated password can be found in:</p><pre><button class="copy">Copy</button><code>cat "$AIRFLOW_HOME/simple_auth_manager_passwords.json.generated"</code></pre></div>
+<div class="step"><b>Locate the DAG</b><p>Search for <code>parameterized_sales_etl</code> or one of the generated city DAG IDs.</p></div>
+<div class="step"><b>Trigger a generated DAG</b><p>Open <code>sales_etl_chennai</code>, then click the Trigger button.</p></div>
+<div class="step"><b>Trigger the parameterized DAG</b><p>Open <code>parameterized_sales_etl</code>, click Trigger, enter the city, threshold and date, then confirm.</p></div>
+<div class="step"><b>View execution</b><p>Use the Grid view for task states, Graph view for dependencies, and task logs to inspect printed output.</p></div>
+</div>
+
+<h3>Useful CLI commands</h3>
+<pre><button class="copy">Copy</button><code># List DAGs
+airflow dags list
+
+# Show import errors
+airflow dags list-import-errors
+
+# Test one task without creating a normal scheduled run
+airflow tasks test parameterized_sales_etl extract 2026-07-31
+
+# Trigger a DAG with parameters
+airflow dags trigger parameterized_sales_etl \
+  --conf '{"city":"chennai","min_amount":1200,"processing_date":"2026-07-31"}'</code></pre>
+</section>
+
+<section id="observe">
+<h2>15. What to observe in the UI</h2>
+<table>
+<tr><th>UI area</th><th>What it teaches</th></tr>
+<tr><td>DAG list</td><td>The dynamic factory created three separate DAG IDs.</td></tr>
+<tr><td>Graph view</td><td>The dependencies form a directed graph with no cycles.</td></tr>
+<tr><td>Grid view</td><td>Each row/column shows task-instance status across runs.</td></tr>
+<tr><td>Trigger form</td><td>The <code>Param</code> definitions produce validated user inputs.</td></tr>
+<tr><td>Task log</td><td>You can verify the city, threshold, selected orders and summary.</td></tr>
+<tr><td>DAG Run details</td><td>Different runs of the same parameterized DAG can use different values.</td></tr>
+</table>
+</section>
+
+<section id="troubleshoot">
+<h2>16. Troubleshooting</h2>
+<table>
+<tr><th>Problem</th><th>Likely cause</th><th>Fix</th></tr>
+<tr><td>DAG is not visible</td><td>Syntax/import failure or wrong DAG folder.</td><td>Run <code>airflow dags list-import-errors</code> and inspect <code>airflow config get-value core dags_folder</code>.</td></tr>
+<tr><td>Only one generated DAG appears</td><td>The same DAG ID is reused in the loop.</td><td>Ensure each <code>dag_id</code> includes the city/customer/table name.</td></tr>
+<tr><td>Generated DAG order changes</td><td>Configuration data is not consistently ordered.</td><td>Sort configuration before generating tasks or DAGs.</td></tr>
+<tr><td>Parameter not found</td><td>Reading a value outside task run context.</td><td>Access <code>context["params"]</code> inside a task or use templating.</td></tr>
+<tr><td>UI opens but login fails</td><td>Wrong standalone password.</td><td>Read <code>simple_auth_manager_passwords.json.generated</code>.</td></tr>
+<tr><td>Airflow command not found</td><td>Virtual environment is not active.</td><td>Run <code>source .venv/bin/activate</code>.</td></tr>
+<tr><td>Cycle detected</td><td>Dependencies point back to an upstream task.</td><td>Redesign the workflow so every edge moves forward.</td></tr>
+</table>
+</section>
+
+<section id="practices">
+<h2>17. Best practices</h2>
+<ul>
+<li>Keep DAG IDs and task IDs stable between parses.</li>
+<li>Generate tasks from consistently sorted configuration.</li>
+<li>Avoid database calls, network requests and heavy computation at module import time.</li>
+<li>Keep large datasets in files, object storage, databases or warehouses—not in XCom.</li>
+<li>Use parameters for run-specific values and configuration files/environment variables for deployment-specific values.</li>
+<li>Make tasks idempotent: retrying the same task should not corrupt data.</li>
+<li>Use a factory function rather than copying complete DAG files.</li>
+<li>Add validation to parameters using type, enum, minimum and format rules.</li>
+<li>Test DAG files as production code.</li>
+</ul>
+</section>
+
+<section id="interview">
+<h2>18. Interview questions and answers</h2>
+<div class="grid">
+<div class="card"><h4>1. Why must a DAG be acyclic?</h4><p>A cycle would create an impossible circular dependency in which tasks wait on each other forever.</p></div>
+<div class="card"><h4>2. What does <code>A >> B</code> mean?</h4><p>Task A is upstream and task B is downstream. B waits for A according to its trigger rule.</p></div>
+<div class="card"><h4>3. Dynamic DAG or parameter?</h4><p>Use dynamic generation when you need separate DAGs or structures; use parameters when one structure should run with different values.</p></div>
+<div class="card"><h4>4. What is DAG parsing?</h4><p>Airflow imports the Python file and discovers the DAG objects defined by it.</p></div>
+<div class="card"><h4>5. Why avoid external API calls at parse time?</h4><p>DAG files are parsed repeatedly, so slow calls can delay discovery and overload services.</p></div>
+<div class="card"><h4>6. Dynamic DAG generation vs task mapping?</h4><p>Generation occurs while parsing; task mapping expands task instances during a DAG Run.</p></div>
+<div class="card"><h4>7. What is fan-out?</h4><p>One upstream task enables several downstream tasks to run, often in parallel.</p></div>
+<div class="card"><h4>8. What is fan-in?</h4><p>Several upstream branches converge into one downstream task.</p></div>
+<div class="card"><h4>9. What makes a task idempotent?</h4><p>Running it repeatedly with the same input produces the same safe result.</p></div>
+<div class="card"><h4>10. Why use Param validation?</h4><p>It prevents invalid run configuration and gives users a clearer trigger form.</p></div>
+<div class="card"><h4>11. Where do logs appear?</h4><p>Open the DAG Run, select a task instance and choose its log view.</p></div>
+<div class="card"><h4>12. What is catchup?</h4><p>It controls whether Airflow creates historical scheduled runs between the start date and current scheduling interval.</p></div>
+<div class="card"><h4>13. Why use schedule=None in labs?</h4><p>It avoids automatic runs and lets the learner trigger each example manually.</p></div>
+<div class="card"><h4>14. Can one Python file define several DAGs?</h4><p>Yes. Airflow can discover multiple DAG objects from one module.</p></div>
+<div class="card"><h4>15. Why sort dynamic configuration?</h4><p>Stable ordering keeps the generated task/DAG structure consistent in the UI and metadata.</p></div>
+</div>
+</section>
+
+<section id="quiz">
+<h2>19. Practice quiz</h2>
+<div class="quiz-q"><b>1. Which feature creates three separate DAG IDs from one configuration?</b>
+<label><input type="radio" name="q1" value="0"> XCom</label>
+<label><input type="radio" name="q1" value="1"> Dynamic DAG generation</label>
+<label><input type="radio" name="q1" value="0"> Retry</label></div>
+<div class="quiz-q"><b>2. Which feature should carry a city selected during triggering?</b>
+<label><input type="radio" name="q2" value="1"> DAG parameter</label>
+<label><input type="radio" name="q2" value="0"> Pool</label>
+<label><input type="radio" name="q2" value="0"> Executor</label></div>
+<div class="quiz-q"><b>3. What does <code>[A, B] >> C</code> represent?</b>
+<label><input type="radio" name="q3" value="0"> A cycle</label>
+<label><input type="radio" name="q3" value="1"> Fan-in</label>
+<label><input type="radio" name="q3" value="0"> Parameter validation</label></div>
+<div class="quiz-q"><b>4. When does dynamic DAG generation occur?</b>
+<label><input type="radio" name="q4" value="1"> During DAG parsing</label>
+<label><input type="radio" name="q4" value="0"> Only after task failure</label>
+<label><input type="radio" name="q4" value="0"> During log cleanup</label></div>
+<div class="quiz-q"><b>5. Which command helps diagnose an invisible DAG?</b>
+<label><input type="radio" name="q5" value="0"> airflow pools list</label>
+<label><input type="radio" name="q5" value="1"> airflow dags list-import-errors</label>
+<label><input type="radio" name="q5" value="0"> airflow version --delete</label></div>
+<button class="action" id="scoreBtn">Calculate score</button>
+<p id="score" aria-live="polite"></p>
+</section>
+
+<section>
+<h2>Final memory aid</h2>
+<div class="diagram">
+<p><b>DAG Design:</b> break the business flow into observable tasks.</p>
+<p><b>Dependencies:</b> define the safe order—sequential, fan-out and fan-in.</p>
+<p><b>Dynamic DAG:</b> configuration changes the generated DAGs/structure.</p>
+<p><b>Parameterized DAG:</b> trigger values change the behavior of one fixed DAG.</p>
+</div>
+</section>
+
+<section>
+<h2>Official references</h2>
+<ul>
+<li>Apache Airflow 3.3.0 — DAG core concepts</li>
+<li>Apache Airflow 3.3.0 — Tasks and dependency terminology</li>
+<li>Apache Airflow 3.3.0 — Dynamic DAG Generation</li>
+<li>Apache Airflow 3.3.0 — Quick Start and standalone mode</li>
+<li>Apache Airflow 3.3.0 — UI Overview and CLI usage</li>
+</ul>
+</section>
+</main>
+</div>
+<footer>Trainer-ready tutorial • Apache Airflow DAG Design and Dynamic Pipelines</footer>
+<script>
+document.querySelectorAll('.copy').forEach(btn=>{
+  btn.addEventListener('click', async ()=>{
+    const text=btn.parentElement.querySelector('code').innerText;
+    try{ await navigator.clipboard.writeText(text); btn.textContent='Copied'; setTimeout(()=>btn.textContent='Copy',1200);}
+    catch(e){btn.textContent='Select manually';}
+  });
+});
+document.getElementById('scoreBtn').addEventListener('click',()=>{
+  let score=0;
+  for(let i=1;i<=5;i++){
+    const x=document.querySelector(`input[name=q${i}]:checked`);
+    if(x) score += Number(x.value);
+  }
+  document.getElementById('score').textContent=`Score: ${score}/5 — ${score===5?'Excellent!':score>=3?'Good. Review the missed concepts.':'Revisit dynamic generation, parameters and dependencies.'}`;
+});
+</script>
+</body>
+</html>

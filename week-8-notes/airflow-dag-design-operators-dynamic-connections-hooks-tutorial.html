@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Airflow DAG Design, Operators, Dependencies, Dynamic DAGs, Connections and Hooks</title>
+<meta name="description" content="Trainer-ready Apache Airflow 3.3 tutorial with colorful diagrams and a complete retail project.">
+<style>
+:root{--bg:#06101c;--panel:#0c1b2c;--panel2:#10253b;--text:#eef6ff;--muted:#aabdd0;--line:#29465f;--aqua:#57e3d1;--blue:#68b5ff;--green:#52dc8a;--yellow:#ffd166;--red:#ff6f87;--purple:#b7a3ff;--orange:#ffac66;--shadow:0 18px 55px rgba(0,0,0,.3)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:radial-gradient(circle at 8% 2%,rgba(87,227,209,.12),transparent 27%),radial-gradient(circle at 92% 5%,rgba(104,181,255,.13),transparent 28%),linear-gradient(145deg,#050d17,#081624 50%,#050d17);color:var(--text);font-family:Inter,Segoe UI,Arial,sans-serif;line-height:1.65}
+a{color:#9dd8ff}header{padding:64px 28px 48px;border-bottom:1px solid var(--line)}.wrap{max-width:1240px;margin:auto}
+.pill{display:inline-block;padding:6px 11px;border:1px solid #3c6382;border-radius:999px;background:#0d2235;color:#caeaff;font-size:.86rem;margin:3px}
+h1{font-size:clamp(2.15rem,5vw,4.8rem);line-height:1.03;letter-spacing:-.05em;margin:18px 0 12px}.lead{font-size:1.17rem;max-width:980px;color:#c9dae9}
+.hero{display:grid;grid-template-columns:repeat(5,1fr);gap:13px;margin-top:28px}.card{padding:18px;border:1px solid var(--line);border-radius:16px;background:#081a2a}.card strong{display:block;color:var(--aqua)}
+.layout{display:grid;grid-template-columns:315px minmax(0,1fr);max-width:1600px;margin:auto}aside{position:sticky;top:0;height:100vh;overflow:auto;padding:22px 17px;border-right:1px solid var(--line);background:rgba(4,13,23,.96)}aside h3{margin-top:0}
+#search{width:100%;padding:11px;border:1px solid var(--line);border-radius:10px;background:#071725;color:white}nav a{display:block;padding:7px 9px;border-radius:8px;text-decoration:none;color:#b3c8da;font-size:.89rem}nav a:hover,nav a.active{background:#12304a;color:#fff}
+.progress{height:8px;background:#13283b;border-radius:9px;overflow:hidden;margin:8px 0 15px}.progress div{height:100%;width:0;background:linear-gradient(90deg,var(--aqua),var(--blue))}
+main{min-width:0;padding:32px clamp(18px,4vw,58px) 80px}section{max-width:1180px;margin:0 auto 32px;padding:28px;border:1px solid var(--line);border-radius:22px;background:rgba(12,27,44,.82);box-shadow:var(--shadow)}section:hover{border-color:#3d6687}
+h2{font-size:clamp(1.55rem,3vw,2.38rem);margin-top:0;letter-spacing:-.025em}h3{color:#d0ecff;margin-top:28px}h4{color:#b8f5e8}p,li{color:#d9e5ef}.muted{color:var(--muted)}
+.grid2,.grid3,.grid4,.grid5{display:grid;gap:15px}.grid2{grid-template-columns:repeat(2,minmax(0,1fr))}.grid3{grid-template-columns:repeat(3,minmax(0,1fr))}.grid4{grid-template-columns:repeat(4,minmax(0,1fr))}.grid5{grid-template-columns:repeat(5,minmax(0,1fr))}
+.callout{margin:17px 0;padding:16px 18px;border-left:4px solid var(--blue);border-radius:10px;background:#071725}.callout.ok{border-color:var(--green)}.callout.warn{border-color:var(--yellow)}.callout.danger{border-color:var(--red)}.memory{padding:17px;border:1px dashed #4e7898;border-radius:14px;background:#071827;font-size:1.07rem}
+table{width:100%;border-collapse:collapse;margin:17px 0;display:block;overflow:auto}th,td{padding:11px 12px;border:1px solid #2b4a62;text-align:left;vertical-align:top}th{background:#12304a}tr:nth-child(even){background:rgba(10,32,51,.42)}
+pre{position:relative;background:#020912;border:1px solid #213e55;border-radius:14px;padding:18px;overflow:auto;line-height:1.5}code{font-family:Consolas,Monaco,monospace;color:#def6ff}.copy{position:absolute;right:8px;top:8px;border:1px solid #3c6381;background:#0f2a41;color:#fff;padding:6px 9px;border-radius:8px;cursor:pointer}
+.diagram{overflow:auto;background:#04111e;border:1px solid #2f5069;border-radius:18px;padding:18px}.diagram svg{min-width:900px}.diagram text{fill:#eef8ff;font-family:Segoe UI,Arial,sans-serif}
+.flow{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;margin:18px 0}.node{min-width:135px;text-align:center;padding:13px;border:1px solid #477391;background:#0d2a42;border-radius:12px}.arrow{font-size:1.6rem;color:var(--aqua)}
+details{border:1px solid var(--line);border-radius:12px;background:#071827;margin:10px 0}summary{padding:13px 15px;cursor:pointer;font-weight:700}details>div{padding:0 15px 15px}
+.step{display:grid;grid-template-columns:54px 1fr;gap:14px;margin:19px 0}.num{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:#133c5b;border:1px solid #5d99c2;font-weight:800}
+.quiz{padding:16px;border:1px solid var(--line);border-radius:14px;background:#071827;margin:13px 0}.quiz label{display:block;padding:5px 8px;border-radius:7px}button{padding:10px 14px;border:1px solid #3b6686;border-radius:10px;background:#113653;color:white;cursor:pointer}.result{font-weight:800;margin-top:14px}
+.checklist label{display:block;padding:7px}.hidden{display:none!important}footer{text-align:center;color:#93aabd;padding:25px}
+@media(max-width:1100px){.layout{grid-template-columns:1fr}aside{position:relative;height:auto;border-right:0;border-bottom:1px solid var(--line)}nav{columns:2}.hero,.grid5{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:720px){header{padding:42px 18px}.hero,.grid2,.grid3,.grid4,.grid5{grid-template-columns:1fr}nav{columns:1}main{padding:18px 11px 70px}section{padding:20px}}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+<span class="pill">Basic → Advanced</span><span class="pill">Apache Airflow 3.3</span><span class="pill">Windows + Docker</span><span class="pill">Retail industry demo</span><span class="pill">Runnable ZIP</span>
+<h1>DAG Design, Operators,<br>Dependencies, Dynamic DAGs,<br>Connections and Hooks</h1>
+<p class="lead">A complete, visual and practical Apache Airflow tutorial showing how to design maintainable workflows, choose Operators, connect tasks, create parameterized and dynamic workflows, and safely integrate external systems through Connections and Hooks.</p>
+<div class="hero"><div class="card"><strong>Easy</strong>Operators and dependencies</div><div class="card"><strong>Intermediate</strong>Runtime Params and mapping</div><div class="card"><strong>Advanced</strong>Configuration-driven DAG factory</div><div class="card"><strong>Integration</strong>Connection + SqliteHook</div><div class="card"><strong>Outcome</strong>End-to-end retail pipeline</div></div>
+</div></header>
+<div class="layout">
+<aside><h3>Course Navigation</h3><input id="search" placeholder="Search topics..."><small>Progress: <span id="pct">0%</span></small><div class="progress"><div id="bar"></div></div>
+<nav id="toc">
+<a href="#objectives">1. Objectives</a><a href="#scenario">2. Scenario</a><a href="#traditional">3. Traditional Approach</a><a href="#dag">4. DAG Design</a><a href="#design-principles">5. Design Principles</a><a href="#operators">6. Operators</a><a href="#operator-types">7. Operator Types</a><a href="#taskflow">8. TaskFlow</a><a href="#dependencies">9. Dependencies</a><a href="#patterns">10. Dependency Patterns</a><a href="#dynamic-meaning">11. Dynamic Meanings</a><a href="#params">12. Parameterized DAGs</a><a href="#mapping">13. Dynamic Task Mapping</a><a href="#factory">14. Dynamic DAG Factory</a><a href="#connections">15. Connections</a><a href="#hooks">16. Hooks</a><a href="#layers">17. Integration Layers</a><a href="#architecture">18. Demo Architecture</a><a href="#project">19. Project Structure</a><a href="#setup">20. Setup</a><a href="#connection-setup">21. Connection Setup</a><a href="#easy">22. Easy DAG</a><a href="#intermediate">23. Intermediate DAG</a><a href="#advanced">24. Advanced Factory</a><a href="#utility">25. Shared Utility</a><a href="#sql">26. SQL</a><a href="#data">27. Input Data</a><a href="#run">28. Run Demo</a><a href="#ui">29. UI Observation</a><a href="#results">30. Results</a><a href="#testing">31. Testing</a><a href="#best">32. Best Practices</a><a href="#industry">33. Industry Activities</a><a href="#troubleshoot">34. Troubleshooting</a><a href="#cleanup">35. Cleanup</a><a href="#exercises">36. Exercises</a><a href="#quiz">37. Quiz</a><a href="#interview">38. Interview Q&A</a><a href="#tracker">39. Tracker</a><a href="#references">40. References</a>
+</nav></aside>
+<main>
+<section id="objectives"><h2>1. Learning Objectives</h2><ul><li>Design a DAG around business stages rather than a long script.</li><li>Understand Operator, TaskFlow task, task instance and Hook.</li><li>Build sequential, parallel, fan-out and fan-in dependencies.</li><li>Use typed Params to create a validated trigger form.</li><li>Distinguish dynamic DAG generation from Dynamic Task Mapping.</li><li>Create and use an Airflow Connection without hard-coding a database path.</li><li>Run three complete DAG examples and inspect their results.</li></ul></section>
+
+<section id="scenario"><h2>2. Real-World Scenario</h2><p>A retail company receives order files from North, South and East regions. Each file must be validated, enriched with total order value, loaded into a warehouse, quality-checked and reported. Different teams want different regions and minimum order thresholds.</p>
+<div class="flow"><div class="node">Regional CSV</div><div class="arrow">→</div><div class="node">Validate</div><div class="arrow">→</div><div class="node">Transform</div><div class="arrow">→</div><div class="node">Load</div><div class="arrow">→</div><div class="node">Quality check</div><div class="arrow">→</div><div class="node">Report</div></div></section>
+
+<section id="traditional"><h2>3. Traditional Approach and Drawbacks</h2><table><tr><th>Traditional design</th><th>Drawback</th><th>Airflow improvement</th></tr><tr><td>One 500-line Python script</td><td>One failure reruns everything</td><td>Independent tasks with task-level retry</td></tr><tr><td>Three copied scripts for regions</td><td>Code duplication and inconsistent fixes</td><td>Parameterized DAG or DAG factory</td></tr><tr><td>Database path and password in code</td><td>Security and environment change risk</td><td>Connection and secrets backend</td></tr><tr><td>Manual execution order</td><td>Hidden dependencies</td><td>Visible DAG graph</td></tr><tr><td>Custom low-level database connection code</td><td>Repeated authentication and driver logic</td><td>Provider Hook</td></tr><tr><td>Region list fixed in code</td><td>Deployment required for every run choice</td><td>Runtime Params and mapped tasks</td></tr></table></section>
+
+<section id="dag"><h2>4. What Is DAG Design?</h2><p>A DAG is the workflow blueprint. DAG design decides task boundaries, dependencies, schedule, runtime parameters, retries, resource controls, data contracts and observability.</p>
+<div class="diagram"><svg viewBox="0 0 1120 520" width="100%"><defs><marker id="a" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0,10 3.5,0 7" fill="#68b5ff"/></marker></defs>
+<rect x="35" y="205" width="145" height="90" rx="16" fill="#153b58" stroke="#57e3d1"/><text x="107" y="247" text-anchor="middle">Start</text>
+<rect x="230" y="205" width="170" height="90" rx="16" fill="#18344f" stroke="#68b5ff"/><text x="315" y="238" text-anchor="middle">Create tables</text><text x="315" y="267" text-anchor="middle" font-size="14">SQL Operator</text>
+<rect x="455" y="65" width="170" height="90" rx="16" fill="#1a3b50" stroke="#52dc8a"/><text x="540" y="105" text-anchor="middle">North file</text>
+<rect x="455" y="215" width="170" height="90" rx="16" fill="#1a3b50" stroke="#ffd166"/><text x="540" y="255" text-anchor="middle">South file</text>
+<rect x="455" y="365" width="170" height="90" rx="16" fill="#1a3b50" stroke="#ffac66"/><text x="540" y="405" text-anchor="middle">East file</text>
+<rect x="700" y="205" width="175" height="90" rx="16" fill="#18344f" stroke="#b7a3ff"/><text x="787" y="238" text-anchor="middle">Warehouse load</text><text x="787" y="267" text-anchor="middle" font-size="14">Hook</text>
+<rect x="925" y="205" width="160" height="90" rx="16" fill="#153b58" stroke="#52dc8a"/><text x="1005" y="238" text-anchor="middle">Quality report</text>
+<line x1="180" y1="250" x2="230" y2="250" stroke="#68b5ff" stroke-width="4" marker-end="url(#a)"/><line x1="400" y1="250" x2="455" y2="110" stroke="#68b5ff" stroke-width="4" marker-end="url(#a)"/><line x1="400" y1="250" x2="455" y2="260" stroke="#68b5ff" stroke-width="4" marker-end="url(#a)"/><line x1="400" y1="250" x2="455" y2="410" stroke="#68b5ff" stroke-width="4" marker-end="url(#a)"/><line x1="625" y1="110" x2="700" y2="235" stroke="#68b5ff" stroke-width="4" marker-end="url(#a)"/><line x1="625" y1="260" x2="700" y2="250" stroke="#68b5ff" stroke-width="4" marker-end="url(#a)"/><line x1="625" y1="410" x2="700" y2="270" stroke="#68b5ff" stroke-width="4" marker-end="url(#a)"/><line x1="875" y1="250" x2="925" y2="250" stroke="#68b5ff" stroke-width="4" marker-end="url(#a)"/></svg></div></section>
+
+<section id="design-principles"><h2>5. Good DAG Design Principles</h2><div class="grid3"><div class="card"><strong>Atomic</strong>One clear responsibility per task.</div><div class="card"><strong>Idempotent</strong>Safe retry produces the same correct state.</div><div class="card"><strong>Observable</strong>Useful task names, logs and metrics.</div><div class="card"><strong>Deterministic</strong>Same logical input produces predictable output.</div><div class="card"><strong>Resource-aware</strong>Use pools, concurrency and remote compute.</div><div class="card"><strong>Maintainable</strong>Shared functions and stable configuration.</div></div></section>
+
+<section id="operators"><h2>6. What Is an Operator?</h2><p>An Operator is a reusable template for a predefined kind of task. After an Operator is instantiated inside a DAG, it becomes a task definition.</p><div class="memory"><strong>Classroom analogy:</strong> Operator = job description. Task = that job placed in a workflow. Task instance = the job executed for one DAG run.</div></section>
+
+<section id="operator-types"><h2>7. Operator Types and Uses</h2><table><tr><th>Type</th><th>Purpose</th><th>Example</th></tr><tr><td>Action Operator</td><td>Runs work</td><td>BashOperator, SQLExecuteQueryOperator</td></tr><tr><td>Transfer Operator</td><td>Moves data between systems</td><td>Cloud storage to warehouse</td></tr><tr><td>Sensor</td><td>Waits for a condition</td><td>File or object arrival</td></tr><tr><td>Branching Operator</td><td>Selects a path</td><td>BranchPythonOperator</td></tr><tr><td>TaskFlow decorator</td><td>Turns a Python function into a task</td><td><code>@task</code></td></tr></table>
+<div class="callout warn"><strong>Airflow 3 note:</strong> commonly used Operators such as BashOperator and PythonOperator are delivered through the Standard Provider package.</div></section>
+
+<section id="taskflow"><h2>8. Classic Operators Versus TaskFlow</h2><table><tr><th>Classic Operator</th><th>TaskFlow</th></tr><tr><td>Declarative Operator object</td><td>Decorated Python function</td></tr><tr><td>Excellent for provider integrations</td><td>Excellent for Python business logic</td></tr><tr><td>Dependencies use <code>&gt;&gt;</code> or <code>&lt;&lt;</code></td><td>Function arguments infer dependencies</td></tr><tr><td>May require explicit XCom use</td><td>Return values become XCom references</td></tr></table></section>
+
+<section id="dependencies"><h2>9. Task Dependencies</h2><pre><code>extract >> transform >> load
+
+extract.set_downstream(transform)
+load.set_upstream(transform)
+
+# TaskFlow dependency inferred through data passing
+rows = extract()
+cleaned = transform(rows)
+load(cleaned)</code></pre><p>Dependencies express ordering, not data movement by themselves. TaskFlow arguments can express both ordering and small metadata exchange.</p></section>
+
+<section id="patterns"><h2>10. Dependency Patterns</h2><div class="grid4"><div class="card"><h3>Sequence</h3><p>A → B → C</p></div><div class="card"><h3>Fan-out</h3><p>A → [B, C, D]</p></div><div class="card"><h3>Fan-in</h3><p>[B, C, D] → E</p></div><div class="card"><h3>Branch</h3><p>A chooses B or C</p></div></div>
+<pre><code># Fan-out
+extract >> [validate_schema, validate_quality]
+
+# Fan-in
+[load_orders, load_customers] >> publish_dashboard</code></pre></section>
+
+<section id="dynamic-meaning"><h2>11. “Dynamic” Has Two Different Meanings</h2><table><tr><th>Feature</th><th>When created</th><th>Task count across runs</th><th>Example</th></tr><tr><td>Dynamic DAG generation</td><td>DAG parsing time</td><td>Stable for each generated DAG</td><td>One DAG per region config</td></tr><tr><td>Dynamic Task Mapping</td><td>DAG run time</td><td>Can change for every run</td><td>One task instance per selected region</td></tr></table>
+<div class="callout danger"><strong>Do not confuse them:</strong> a DAG factory creates DAG objects. <code>expand()</code> creates mapped task instances inside a run.</div></section>
+
+<section id="params"><h2>12. Parameterized DAGs</h2><p>Params provide runtime configuration and JSON Schema validation. The Airflow UI builds a trigger form from the Param definitions.</p><pre><code>params={
+    "minimum_order_value_usd": Param(
+        0.0,
+        type="number",
+        minimum=0,
+    ),
+    "regions": Param(
+        ["north"],
+        type="array",
+        items={
+            "type": "string",
+            "enum": ["north", "south", "east"],
+        },
+    ),
+}</code></pre><p>Scheduled runs use default Param values. Manual users can override them when triggering, subject to validation.</p></section>
+
+<section id="mapping"><h2>13. Dynamic Task Mapping</h2><div class="flow"><div class="node">select_regions()</div><div class="arrow">→</div><div class="node">process_region[0]</div><div class="node">process_region[1]</div><div class="node">process_region[2]</div><div class="arrow">→</div><div class="node">summarize()</div></div>
+<pre><code>regions = select_regions()
+processed = process_region.expand(region=regions)
+loaded = load_region.expand(batch=processed)
+summarize(loaded)</code></pre></section>
+
+<section id="factory"><h2>14. Dynamic DAG Factory</h2><p>A factory reads stable deployment metadata and registers one DAG per configuration. The structure of each DAG remains stable between runs.</p><pre><code>for config in sorted(configs, key=lambda item: item["region"]):
+    build_region_dag(config)()</code></pre><div class="callout warn"><strong>Parsing rule:</strong> avoid network and metadata-database calls in top-level DAG code. Use local configuration or environment variables and generate tasks in a consistent order.</div></section>
+
+<section id="connections"><h2>15. Airflow Connections</h2><p>A Connection stores the parameters needed to reach an external system and is identified by a <code>conn_id</code>. It may contain host, login, password, schema, port and provider-specific extras.</p><table><tr><th>Storage</th><th>Visible in UI?</th><th>Recommended use</th></tr><tr><td>Metadata database</td><td>Yes</td><td>Local learning</td></tr><tr><td>Environment variable</td><td>No</td><td>Container/environment injection</td></tr><tr><td>Secrets backend</td><td>Usually resolved at runtime</td><td>Production credentials</td></tr></table>
+<p>This project creates <code>retail_sqlite</code> with Host set to <code>/opt/airflow/data/retail.db</code>.</p></section>
+
+<section id="hooks"><h2>16. Airflow Hooks</h2><p>A Hook is a high-level Python interface to an external platform. It uses a Connection to obtain connection information and hides repetitive driver/authentication logic.</p><pre><code>hook = SqliteHook(sqlite_conn_id="retail_sqlite")
+
+row = hook.get_first(
+    "SELECT COUNT(*) FROM sales_fact"
+)</code></pre></section>
+
+<section id="layers"><h2>17. Operator, Hook and Connection Relationship</h2>
+<div class="diagram"><svg viewBox="0 0 1050 520" width="100%"><rect x="80" y="55" width="890" height="95" rx="18" fill="#153b58" stroke="#57e3d1"/><text x="525" y="95" text-anchor="middle" font-size="22">DAG task</text><text x="525" y="125" text-anchor="middle">SQLExecuteQueryOperator or TaskFlow task</text>
+<rect x="160" y="210" width="730" height="95" rx="18" fill="#18344f" stroke="#68b5ff"/><text x="525" y="250" text-anchor="middle" font-size="22">Hook</text><text x="525" y="280" text-anchor="middle">SqliteHook handles database API calls</text>
+<rect x="245" y="365" width="560" height="95" rx="18" fill="#1a3b50" stroke="#ffd166"/><text x="525" y="405" text-anchor="middle" font-size="22">Connection: retail_sqlite</text><text x="525" y="435" text-anchor="middle">Host = /opt/airflow/data/retail.db</text>
+<line x1="525" y1="150" x2="525" y2="210" stroke="#68b5ff" stroke-width="5"/><line x1="525" y1="305" x2="525" y2="365" stroke="#68b5ff" stroke-width="5"/></svg></div>
+<p>Operators often use Hooks internally. A TaskFlow task can also instantiate a Hook directly when custom Python logic is needed.</p></section>
+
+<section id="architecture"><h2>18. Complete Demo Architecture</h2>
+<div class="diagram"><svg viewBox="0 0 1180 620" width="100%"><defs><marker id="b" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0,10 3.5,0 7" fill="#68b5ff"/></marker></defs>
+<rect x="35" y="220" width="180" height="110" rx="16" fill="#153b58" stroke="#57e3d1"/><text x="125" y="260" text-anchor="middle" font-size="19">Regional CSVs</text><text x="125" y="292" text-anchor="middle">North / South / East</text>
+<rect x="275" y="110" width="350" height="340" rx="20" fill="#102d46" stroke="#ffd166"/><text x="450" y="150" text-anchor="middle" font-size="22">Airflow DAGs</text><text x="450" y="195" text-anchor="middle">Operators</text><text x="450" y="235" text-anchor="middle">Task dependencies</text><text x="450" y="275" text-anchor="middle">Params</text><text x="450" y="315" text-anchor="middle">Dynamic mapping</text><text x="450" y="355" text-anchor="middle">DAG factory</text><text x="450" y="395" text-anchor="middle">Retries and logs</text>
+<rect x="700" y="65" width="205" height="105" rx="16" fill="#18344f" stroke="#b7a3ff"/><text x="802" y="105" text-anchor="middle" font-size="19">Connection</text><text x="802" y="135" text-anchor="middle">retail_sqlite</text>
+<rect x="700" y="240" width="205" height="105" rx="16" fill="#18344f" stroke="#68b5ff"/><text x="802" y="280" text-anchor="middle" font-size="19">SqliteHook</text><text x="802" y="310" text-anchor="middle">Driver interface</text>
+<rect x="700" y="415" width="205" height="105" rx="16" fill="#18344f" stroke="#52dc8a"/><text x="802" y="455" text-anchor="middle" font-size="19">SQLite</text><text x="802" y="485" text-anchor="middle">sales_fact</text>
+<rect x="970" y="240" width="180" height="105" rx="16" fill="#153b58" stroke="#ffac66"/><text x="1060" y="280" text-anchor="middle" font-size="19">JSON reports</text><text x="1060" y="310" text-anchor="middle">data/output</text>
+<line x1="215" y1="275" x2="275" y2="275" stroke="#68b5ff" stroke-width="4" marker-end="url(#b)"/><line x1="625" y1="180" x2="700" y2="117" stroke="#68b5ff" stroke-width="4" marker-end="url(#b)"/><line x1="625" y1="275" x2="700" y2="292" stroke="#68b5ff" stroke-width="4" marker-end="url(#b)"/><line x1="802" y1="170" x2="802" y2="240" stroke="#68b5ff" stroke-width="4" marker-end="url(#b)"/><line x1="802" y1="345" x2="802" y2="415" stroke="#68b5ff" stroke-width="4" marker-end="url(#b)"/><line x1="905" y1="292" x2="970" y2="292" stroke="#68b5ff" stroke-width="4" marker-end="url(#b)"/></svg></div></section>
+
+<section id="project"><h2>19. Project Structure and File Responsibilities</h2><p>Extract the ZIP to <code>C:\AirflowDAGLab\airflow-dag-design-operators-project</code>.</p><pre><code>airflow-dag-design-operators-project/
+├── Dockerfile
+├── requirements.txt
+├── .env.example
+├── docker-compose.override.yml
+├── README.md
+├── dags/
+│   ├── .airflowignore
+│   ├── 01_easy_operator_dependencies.py
+│   ├── 02_intermediate_dynamic_parameterized.py
+│   ├── 03_advanced_dynamic_dag_factory.py
+│   ├── common/
+│   │   ├── __init__.py
+│   │   └── retail_utils.py
+│   └── config/
+│       └── region_dags.json
+├── data/
+│   ├── input/
+│   │   ├── north_sales.csv
+│   │   ├── south_sales.csv
+│   │   └── east_sales.csv
+│   └── output/
+├── sql/
+│   └── create_retail_tables.sql
+├── scripts/
+│   ├── 00_prepare.ps1
+│   ├── 01_build_start.ps1
+│   ├── 02_create_connection.ps1
+│   ├── 03_trigger_examples.ps1
+│   ├── 04_show_results.ps1
+│   ├── 05_test_dags.ps1
+│   ├── query_results.py
+│   └── 99_cleanup.ps1
+└── docs/
+    └── FILES_EXPLAINED.md</code></pre>
+<table><tr><th>File group</th><th>What it does</th></tr><tr><td>Docker files</td><td>Build and start Airflow 3.3 with required providers</td></tr><tr><td>Three DAG files</td><td>Easy, intermediate and advanced examples</td></tr><tr><td>common</td><td>Reusable CSV validation functions</td></tr><tr><td>config</td><td>Stable metadata for generated DAGs</td></tr><tr><td>data</td><td>Regional input and generated reports/database</td></tr><tr><td>sql</td><td>Idempotent warehouse-table creation</td></tr><tr><td>scripts</td><td>Prepare, start, configure, trigger, query, test and clean up</td></tr></table></section>
+
+<section id="setup"><h2>20. End-to-End Setup on Windows</h2>
+<div class="step"><div class="num">1</div><div><h3>Prerequisites</h3><p>Install WSL 2 and Docker Desktop with Linux containers. Verify:</p><pre><code>docker --version
+docker compose version
+docker info</code></pre></div></div>
+<div class="step"><div class="num">2</div><div><h3>Extract and open</h3><pre><code>cd C:\AirflowDAGLab\airflow-dag-design-operators-project
+Set-ExecutionPolicy -Scope Process Bypass</code></pre></div></div>
+<div class="step"><div class="num">3</div><div><h3>Download Compose and prepare</h3><pre><code>.\scripts\00_prepare.ps1</code></pre></div></div>
+<div class="step"><div class="num">4</div><div><h3>Build and start</h3><pre><code>.\scripts\01_build_start.ps1</code></pre><p>Open <code>http://localhost:8080</code> and log in with <code>airflow / airflow</code>.</p></div></div></section>
+
+<section id="connection-setup"><h2>21. Create and Inspect the Connection</h2><pre><code>.\scripts\02_create_connection.ps1</code></pre>
+<h3>UI method</h3><ol><li>Admin → Connections.</li><li>Add Connection.</li><li>Connection ID: <code>retail_sqlite</code>.</li><li>Connection Type: SQLite.</li><li>Host: <code>/opt/airflow/data/retail.db</code>.</li><li>Save.</li></ol>
+<div class="callout ok"><strong>Result:</strong> DAG code only references <code>retail_sqlite</code>. The external-system location is separated from business logic.</div></section>
+
+<section id="easy"><h2>22. Easy Example: Operators and Dependencies</h2><div class="flow"><div class="node">Bash start</div><div class="arrow">→</div><div class="node">SQL create</div><div class="arrow">→</div><div class="node">Extract</div><div class="arrow">→</div><div class="node">Transform</div><div class="arrow">→</div><div class="node">Hook load</div><div class="arrow">→</div><div class="node">Quality</div><div class="arrow">→</div><div class="node">Bash finish</div></div>
+<h3>What each part teaches</h3><ul><li>BashOperator for operating-system commands.</li><li>SQLExecuteQueryOperator for SQL files.</li><li>TaskFlow for Python logic.</li><li>Explicit <code>&gt;&gt;</code> dependencies.</li><li>Inferred dependencies through function arguments.</li><li>SqliteHook for custom database logic.</li></ul>
+<details><summary>Open complete easy DAG</summary><div><pre><code>&quot;&quot;&quot;Easy DAG: Operators, TaskFlow tasks, Hooks, and dependencies.&quot;&quot;&quot;
+
+from __future__ import annotations
+
+import pendulum
+from airflow.providers.common.sql.operators.sql import (
+    SQLExecuteQueryOperator,
+)
+from airflow.providers.sqlite.hooks.sqlite import SqliteHook
+from airflow.providers.standard.operators.bash import BashOperator
+from airflow.sdk import dag, task
+
+from common.retail_utils import read_region_sales, rows_for_sqlite
+
+SQLITE_CONN_ID = &quot;retail_sqlite&quot;
+
+
+@dag(
+    dag_id=&quot;retail_easy_operator_dependencies&quot;,
+    description=&quot;Easy retail DAG showing operators and dependencies&quot;,
+    schedule=None,
+    start_date=pendulum.datetime(2026, 1, 1, tz=&quot;UTC&quot;),
+    catchup=False,
+    max_active_runs=1,
+    template_searchpath=[&quot;/opt/airflow/sql&quot;],
+    tags=[&quot;training&quot;, &quot;easy&quot;, &quot;operators&quot;, &quot;dependencies&quot;],
+)
+def retail_easy_operator_dependencies():
+
+    start = BashOperator(
+        task_id=&quot;start&quot;,
+        bash_command=(
+            &#x27;echo &quot;Starting easy retail DAG at $(date -u)&quot;&#x27;
+        ),
+    )
+
+    create_tables = SQLExecuteQueryOperator(
+        task_id=&quot;create_tables&quot;,
+        conn_id=SQLITE_CONN_ID,
+        sql=&quot;create_retail_tables.sql&quot;,
+        split_statements=True,
+        return_last=False,
+    )
+
+    @task
+    def extract_north_sales() -&gt; list[dict]:
+        &quot;&quot;&quot;Read the North CSV file from the mounted data folder.&quot;&quot;&quot;
+        rows = read_region_sales(&quot;north&quot;)
+        print(f&quot;Extracted {len(rows)} North-region orders&quot;)
+        return rows
+
+    @task
+    def transform_sales(rows: list[dict]) -&gt; list[dict]:
+        &quot;&quot;&quot;Apply a simple business classification.&quot;&quot;&quot;
+        transformed = []
+        for row in rows:
+            enriched = dict(row)
+            enriched[&quot;order_band&quot;] = (
+                &quot;HIGH&quot; if row[&quot;total_amount_usd&quot;] &gt;= 500 else &quot;STANDARD&quot;
+            )
+            transformed.append(enriched)
+
+        print(f&quot;Transformed {len(transformed)} orders&quot;)
+        return transformed
+
+    @task
+    def load_sales(rows: list[dict]) -&gt; dict:
+        &quot;&quot;&quot;Use SqliteHook to upsert rows into the warehouse table.&quot;&quot;&quot;
+        hook = SqliteHook(sqlite_conn_id=SQLITE_CONN_ID)
+        values = rows_for_sqlite(rows)
+
+        with hook.get_conn() as connection:
+            cursor = connection.cursor()
+            cursor.executemany(
+                &quot;&quot;&quot;
+                INSERT INTO sales_fact (
+                    order_id,
+                    region,
+                    customer_id,
+                    product,
+                    quantity,
+                    unit_price_usd,
+                    total_amount_usd
+                )
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+                ON CONFLICT(order_id) DO UPDATE SET
+                    region = excluded.region,
+                    customer_id = excluded.customer_id,
+                    product = excluded.product,
+                    quantity = excluded.quantity,
+                    unit_price_usd = excluded.unit_price_usd,
+                    total_amount_usd = excluded.total_amount_usd,
+                    loaded_at = CURRENT_TIMESTAMP
+                &quot;&quot;&quot;,
+                values,
+            )
+            connection.commit()
+
+        result = {&quot;region&quot;: &quot;north&quot;, &quot;records_loaded&quot;: len(values)}
+        print(result)
+        return result
+
+    @task
+    def quality_check(load_result: dict) -&gt; dict:
+        &quot;&quot;&quot;Use the same Connection through SqliteHook to verify output.&quot;&quot;&quot;
+        hook = SqliteHook(sqlite_conn_id=SQLITE_CONN_ID)
+        region = load_result[&quot;region&quot;]
+
+        row = hook.get_first(
+            &quot;&quot;&quot;
+            SELECT
+                COUNT(*) AS row_count,
+                ROUND(COALESCE(SUM(total_amount_usd), 0), 2)
+                    AS total_amount_usd
+            FROM sales_fact
+            WHERE region = ?
+            &quot;&quot;&quot;,
+            parameters=(region,),
+        )
+
+        result = {
+            &quot;region&quot;: region,
+            &quot;row_count&quot;: int(row[0]),
+            &quot;total_amount_usd&quot;: float(row[1]),
+        }
+
+        if result[&quot;row_count&quot;] &lt; load_result[&quot;records_loaded&quot;]:
+            raise ValueError(
+                f&quot;Quality check failed: {result}&quot;
+            )
+
+        print(f&quot;Quality check passed: {result}&quot;)
+        return result
+
+    finish = BashOperator(
+        task_id=&quot;finish&quot;,
+        bash_command=&#x27;echo &quot;Easy retail DAG completed successfully&quot;&#x27;,
+    )
+
+    extracted = extract_north_sales()
+    transformed = transform_sales(extracted)
+    loaded = load_sales(transformed)
+    checked = quality_check(loaded)
+
+    # Explicit dependencies around Operators.
+    start &gt;&gt; create_tables &gt;&gt; extracted
+
+    # The TaskFlow function arguments infer:
+    # extracted -&gt; transformed -&gt; loaded -&gt; checked
+    checked &gt;&gt; finish
+
+
+retail_easy_operator_dependencies()
+</code></pre></div></details></section>
+
+<section id="intermediate"><h2>23. Intermediate Example: Params and Dynamic Task Mapping</h2><p>At trigger time, choose regions and a minimum order value. Airflow validates the inputs and creates one task instance per selected region.</p>
+<div class="diagram"><svg viewBox="0 0 1100 470" width="100%"><rect x="30" y="180" width="180" height="90" rx="16" fill="#153b58" stroke="#57e3d1"/><text x="120" y="217" text-anchor="middle">Trigger form</text><text x="120" y="245" text-anchor="middle" font-size="14">regions + threshold</text><rect x="270" y="180" width="170" height="90" rx="16" fill="#18344f" stroke="#68b5ff"/><text x="355" y="225" text-anchor="middle">select_regions</text><rect x="510" y="40" width="180" height="80" rx="16" fill="#1a3b50" stroke="#52dc8a"/><text x="600" y="85" text-anchor="middle">process[north]</text><rect x="510" y="195" width="180" height="80" rx="16" fill="#1a3b50" stroke="#ffd166"/><text x="600" y="240" text-anchor="middle">process[south]</text><rect x="510" y="350" width="180" height="80" rx="16" fill="#1a3b50" stroke="#ffac66"/><text x="600" y="395" text-anchor="middle">process[east]</text><rect x="760" y="180" width="150" height="90" rx="16" fill="#18344f" stroke="#b7a3ff"/><text x="835" y="225" text-anchor="middle">summarize</text><rect x="960" y="180" width="120" height="90" rx="16" fill="#153b58" stroke="#52dc8a"/><text x="1020" y="225" text-anchor="middle">report</text><g stroke="#68b5ff" stroke-width="4"><line x1="210" y1="225" x2="270" y2="225"/><line x1="440" y1="225" x2="510" y2="80"/><line x1="440" y1="225" x2="510" y2="235"/><line x1="440" y1="225" x2="510" y2="390"/><line x1="690" y1="80" x2="760" y2="205"/><line x1="690" y1="235" x2="760" y2="225"/><line x1="690" y1="390" x2="760" y2="245"/><line x1="910" y1="225" x2="960" y2="225"/></g></svg></div>
+<details><summary>Open complete parameterized mapped DAG</summary><div><pre><code>&quot;&quot;&quot;Intermediate DAG: Params plus runtime Dynamic Task Mapping.&quot;&quot;&quot;
+
+from __future__ import annotations
+
+import json
+from pathlib import Path
+from typing import Any
+
+import pendulum
+from airflow.providers.common.sql.operators.sql import (
+    SQLExecuteQueryOperator,
+)
+from airflow.providers.sqlite.hooks.sqlite import SqliteHook
+from airflow.sdk import Param, dag, get_current_context, task
+
+from common.retail_utils import (
+    OUTPUT_DIR,
+    read_region_sales,
+    rows_for_sqlite,
+    safe_file_name,
+)
+
+SQLITE_CONN_ID = &quot;retail_sqlite&quot;
+
+
+@dag(
+    dag_id=&quot;retail_dynamic_parameterized&quot;,
+    description=(
+        &quot;Runtime parameters choose regions and create mapped tasks&quot;
+    ),
+    schedule=None,
+    start_date=pendulum.datetime(2026, 1, 1, tz=&quot;UTC&quot;),
+    catchup=False,
+    max_active_runs=1,
+    max_active_tasks=2,
+    render_template_as_native_obj=True,
+    template_searchpath=[&quot;/opt/airflow/sql&quot;],
+    params={
+        &quot;regions&quot;: Param(
+            [&quot;north&quot;, &quot;south&quot;],
+            type=&quot;array&quot;,
+            title=&quot;Regions to process&quot;,
+            description=(
+                &quot;Airflow creates one mapped task instance per region.&quot;
+            ),
+            items={
+                &quot;type&quot;: &quot;string&quot;,
+                &quot;enum&quot;: [&quot;north&quot;, &quot;south&quot;, &quot;east&quot;],
+            },
+            minItems=1,
+            uniqueItems=True,
+        ),
+        &quot;minimum_order_value_usd&quot;: Param(
+            0.0,
+            type=&quot;number&quot;,
+            minimum=0,
+            title=&quot;Minimum order value in USD&quot;,
+            description=(
+                &quot;Orders below this value are filtered before loading.&quot;
+            ),
+        ),
+        &quot;run_label&quot;: Param(
+            &quot;training-run&quot;,
+            type=&quot;string&quot;,
+            minLength=3,
+            maxLength=50,
+            title=&quot;Output report label&quot;,
+        ),
+    },
+    tags=[&quot;training&quot;, &quot;intermediate&quot;, &quot;params&quot;, &quot;dynamic-mapping&quot;],
+)
+def retail_dynamic_parameterized():
+
+    create_tables = SQLExecuteQueryOperator(
+        task_id=&quot;create_tables&quot;,
+        conn_id=SQLITE_CONN_ID,
+        sql=&quot;create_retail_tables.sql&quot;,
+        split_statements=True,
+        return_last=False,
+    )
+
+    @task
+    def select_regions() -&gt; list[str]:
+        &quot;&quot;&quot;Read runtime Params from the task context.&quot;&quot;&quot;
+        context = get_current_context()
+        requested = context[&quot;params&quot;][&quot;regions&quot;]
+        regions = sorted({str(region).lower() for region in requested})
+        print(f&quot;Regions selected at runtime: {regions}&quot;)
+        return regions
+
+    @task
+    def process_region(region: str) -&gt; dict[str, Any]:
+        &quot;&quot;&quot;One mapped task instance processes one regional CSV.&quot;&quot;&quot;
+        context = get_current_context()
+        minimum = float(
+            context[&quot;params&quot;][&quot;minimum_order_value_usd&quot;]
+        )
+        rows = read_region_sales(
+            region,
+            minimum_order_value_usd=minimum,
+        )
+        return {
+            &quot;region&quot;: region,
+            &quot;minimum_order_value_usd&quot;: minimum,
+            &quot;rows&quot;: rows,
+        }
+
+    @task
+    def load_region(batch: dict[str, Any]) -&gt; dict[str, Any]:
+        &quot;&quot;&quot;One mapped load task uses the configured SqliteHook.&quot;&quot;&quot;
+        hook = SqliteHook(sqlite_conn_id=SQLITE_CONN_ID)
+        values = rows_for_sqlite(batch[&quot;rows&quot;])
+
+        with hook.get_conn() as connection:
+            cursor = connection.cursor()
+            cursor.executemany(
+                &quot;&quot;&quot;
+                INSERT INTO sales_fact (
+                    order_id,
+                    region,
+                    customer_id,
+                    product,
+                    quantity,
+                    unit_price_usd,
+                    total_amount_usd
+                )
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+                ON CONFLICT(order_id) DO UPDATE SET
+                    region = excluded.region,
+                    customer_id = excluded.customer_id,
+                    product = excluded.product,
+                    quantity = excluded.quantity,
+                    unit_price_usd = excluded.unit_price_usd,
+                    total_amount_usd = excluded.total_amount_usd,
+                    loaded_at = CURRENT_TIMESTAMP
+                &quot;&quot;&quot;,
+                values,
+            )
+            connection.commit()
+
+        return {
+            &quot;region&quot;: batch[&quot;region&quot;],
+            &quot;records_loaded&quot;: len(values),
+        }
+
+    @task
+    def summarize(load_results: list[dict[str, Any]]) -&gt; dict:
+        &quot;&quot;&quot;Aggregate only the regions selected for this DAG run.&quot;&quot;&quot;
+        regions = sorted(
+            {result[&quot;region&quot;] for result in load_results}
+        )
+        placeholders = &quot;,&quot;.join(&quot;?&quot; for _ in regions)
+
+        hook = SqliteHook(sqlite_conn_id=SQLITE_CONN_ID)
+        rows = hook.get_records(
+            f&quot;&quot;&quot;
+            SELECT
+                region,
+                COUNT(*) AS row_count,
+                ROUND(SUM(total_amount_usd), 2) AS total_amount_usd
+            FROM sales_fact
+            WHERE region IN ({placeholders})
+            GROUP BY region
+            ORDER BY region
+            &quot;&quot;&quot;,
+            parameters=tuple(regions),
+        )
+
+        by_region = [
+            {
+                &quot;region&quot;: row[0],
+                &quot;row_count&quot;: int(row[1]),
+                &quot;total_amount_usd&quot;: float(row[2]),
+            }
+            for row in rows
+        ]
+        return {
+            &quot;regions&quot;: regions,
+            &quot;records_loaded_this_run&quot;: sum(
+                result[&quot;records_loaded&quot;]
+                for result in load_results
+            ),
+            &quot;warehouse_summary&quot;: by_region,
+            &quot;total_amount_usd&quot;: round(
+                sum(item[&quot;total_amount_usd&quot;] for item in by_region),
+                2,
+            ),
+        }
+
+    @task
+    def publish_report(summary: dict) -&gt; str:
+        &quot;&quot;&quot;Write a small JSON report to the mounted output folder.&quot;&quot;&quot;
+        context = get_current_context()
+        run_label = safe_file_name(
+            str(context[&quot;params&quot;][&quot;run_label&quot;])
+        )
+        report_path = OUTPUT_DIR / f&quot;{run_label}.json&quot;
+        OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+        report_path.write_text(
+            json.dumps(summary, indent=2),
+            encoding=&quot;utf-8&quot;,
+        )
+        print(json.dumps(summary, indent=2))
+        print(f&quot;Report written to {report_path}&quot;)
+        return str(report_path)
+
+    regions = select_regions()
+
+    # The task count is decided at run time from select_regions().
+    processed_batches = process_region.expand(region=regions)
+    loaded_regions = load_region.expand(batch=processed_batches)
+
+    summary = summarize(loaded_regions)
+    report = publish_report(summary)
+
+    create_tables &gt;&gt; regions
+    report
+
+
+retail_dynamic_parameterized()
+</code></pre></div></details></section>
+
+<section id="advanced"><h2>24. Advanced Example: Configuration-Driven DAG Factory</h2><p>The factory reads one local JSON file and creates three separately triggerable DAGs.</p>
+<pre><code>retail_factory_east
+retail_factory_north
+retail_factory_south</code></pre>
+<details><summary>Open region configuration</summary><div><pre><code>[
+  {
+    &quot;region&quot;: &quot;east&quot;,
+    &quot;schedule&quot;: null,
+    &quot;default_minimum_order_value_usd&quot;: 25.0,
+    &quot;owner&quot;: &quot;retail-east-team&quot;
+  },
+  {
+    &quot;region&quot;: &quot;north&quot;,
+    &quot;schedule&quot;: null,
+    &quot;default_minimum_order_value_usd&quot;: 50.0,
+    &quot;owner&quot;: &quot;retail-north-team&quot;
+  },
+  {
+    &quot;region&quot;: &quot;south&quot;,
+    &quot;schedule&quot;: null,
+    &quot;default_minimum_order_value_usd&quot;: 10.0,
+    &quot;owner&quot;: &quot;retail-south-team&quot;
+  }
+]
+</code></pre></div></details>
+<details><summary>Open complete DAG factory</summary><div><pre><code>&quot;&quot;&quot;Advanced example: generate one stable DAG per region configuration.&quot;&quot;&quot;
+
+from __future__ import annotations
+
+import json
+from pathlib import Path
+from typing import Any
+
+import pendulum
+from airflow.providers.common.sql.operators.sql import (
+    SQLExecuteQueryOperator,
+)
+from airflow.providers.sqlite.hooks.sqlite import SqliteHook
+from airflow.sdk import (
+    Param,
+    dag,
+    get_current_context,
+    get_parsing_context,
+    task,
+)
+
+from common.retail_utils import read_region_sales, rows_for_sqlite
+
+SQLITE_CONN_ID = &quot;retail_sqlite&quot;
+CONFIG_FILE = Path(__file__).with_name(&quot;config&quot;) / &quot;region_dags.json&quot;
+
+
+def load_configs() -&gt; list[dict[str, Any]]:
+    &quot;&quot;&quot;Read local deployment metadata without network or DB calls.&quot;&quot;&quot;
+    with CONFIG_FILE.open(encoding=&quot;utf-8&quot;) as handle:
+        configs = json.load(handle)
+
+    # Stable order avoids task/DAG ordering changes in the UI.
+    return sorted(configs, key=lambda item: item[&quot;region&quot;])
+
+
+def build_region_dag(config: dict[str, Any]):
+    region = config[&quot;region&quot;]
+    dag_id = f&quot;retail_factory_{region}&quot;
+
+    @dag(
+        dag_id=dag_id,
+        description=f&quot;Configuration-generated DAG for {region}&quot;,
+        schedule=config[&quot;schedule&quot;],
+        start_date=pendulum.datetime(2026, 1, 1, tz=&quot;UTC&quot;),
+        catchup=False,
+        max_active_runs=1,
+        template_searchpath=[&quot;/opt/airflow/sql&quot;],
+        default_args={&quot;owner&quot;: config[&quot;owner&quot;], &quot;retries&quot;: 1},
+        params={
+            &quot;minimum_order_value_usd&quot;: Param(
+                config[&quot;default_minimum_order_value_usd&quot;],
+                type=&quot;number&quot;,
+                minimum=0,
+                title=&quot;Minimum order value in USD&quot;,
+            )
+        },
+        tags=[&quot;training&quot;, &quot;advanced&quot;, &quot;dag-factory&quot;, region],
+    )
+    def generated_region_pipeline():
+
+        create_tables = SQLExecuteQueryOperator(
+            task_id=&quot;create_tables&quot;,
+            conn_id=SQLITE_CONN_ID,
+            sql=&quot;create_retail_tables.sql&quot;,
+            split_statements=True,
+            return_last=False,
+        )
+
+        @task
+        def extract_region() -&gt; list[dict]:
+            context = get_current_context()
+            minimum = float(
+                context[&quot;params&quot;][&quot;minimum_order_value_usd&quot;]
+            )
+            rows = read_region_sales(
+                region,
+                minimum_order_value_usd=minimum,
+            )
+            print(
+                f&quot;Region={region}; minimum=${minimum:.2f}; &quot;
+                f&quot;rows={len(rows)}&quot;
+            )
+            return rows
+
+        @task
+        def load_region(rows: list[dict]) -&gt; dict:
+            hook = SqliteHook(sqlite_conn_id=SQLITE_CONN_ID)
+            values = rows_for_sqlite(rows)
+
+            with hook.get_conn() as connection:
+                cursor = connection.cursor()
+                cursor.executemany(
+                    &quot;&quot;&quot;
+                    INSERT INTO sales_fact (
+                        order_id,
+                        region,
+                        customer_id,
+                        product,
+                        quantity,
+                        unit_price_usd,
+                        total_amount_usd
+                    )
+                    VALUES (?, ?, ?, ?, ?, ?, ?)
+                    ON CONFLICT(order_id) DO UPDATE SET
+                        region = excluded.region,
+                        customer_id = excluded.customer_id,
+                        product = excluded.product,
+                        quantity = excluded.quantity,
+                        unit_price_usd = excluded.unit_price_usd,
+                        total_amount_usd = excluded.total_amount_usd,
+                        loaded_at = CURRENT_TIMESTAMP
+                    &quot;&quot;&quot;,
+                    values,
+                )
+                connection.commit()
+
+            return {&quot;region&quot;: region, &quot;records_loaded&quot;: len(values)}
+
+        @task
+        def report_region(load_result: dict) -&gt; dict:
+            hook = SqliteHook(sqlite_conn_id=SQLITE_CONN_ID)
+            row = hook.get_first(
+                &quot;&quot;&quot;
+                SELECT
+                    COUNT(*),
+                    ROUND(COALESCE(SUM(total_amount_usd), 0), 2)
+                FROM sales_fact
+                WHERE region = ?
+                &quot;&quot;&quot;,
+                parameters=(region,),
+            )
+            report = {
+                &quot;region&quot;: region,
+                &quot;records_loaded_this_run&quot;: (
+                    load_result[&quot;records_loaded&quot;]
+                ),
+                &quot;warehouse_row_count&quot;: int(row[0]),
+                &quot;warehouse_total_amount_usd&quot;: float(row[1]),
+            }
+            print(report)
+            return report
+
+        extracted = extract_region()
+        loaded = load_region(extracted)
+        report_region(loaded)
+
+        create_tables &gt;&gt; extracted
+
+    return generated_region_pipeline
+
+
+current_dag_id = get_parsing_context().dag_id
+
+for region_config in load_configs():
+    generated_dag_id = f&quot;retail_factory_{region_config[&#x27;region&#x27;]}&quot;
+
+    # During task execution, avoid constructing unrelated generated DAGs.
+    if current_dag_id and current_dag_id != generated_dag_id:
+        continue
+
+    build_region_dag(region_config)()
+</code></pre></div></details></section>
+
+<section id="utility"><h2>25. Shared Utility File</h2><p>The helper module prevents duplicated CSV validation and conversion logic. It is ignored as a DAG file through <code>.airflowignore</code>.</p>
+<details><summary>Open retail_utils.py</summary><div><pre><code>&quot;&quot;&quot;Reusable retail functions shared by the training DAGs.&quot;&quot;&quot;
+
+from __future__ import annotations
+
+import csv
+import re
+from decimal import Decimal, InvalidOperation
+from pathlib import Path
+from typing import Any
+
+INPUT_DIR = Path(&quot;/opt/airflow/data/input&quot;)
+OUTPUT_DIR = Path(&quot;/opt/airflow/data/output&quot;)
+ALLOWED_REGIONS = {&quot;north&quot;, &quot;south&quot;, &quot;east&quot;}
+
+
+def validate_region(region: str) -&gt; str:
+    normalized = region.strip().lower()
+    if normalized not in ALLOWED_REGIONS:
+        raise ValueError(
+            f&quot;Unsupported region {region!r}. &quot;
+            f&quot;Allowed values: {sorted(ALLOWED_REGIONS)}&quot;
+        )
+    return normalized
+
+
+def read_region_sales(
+    region: str,
+    minimum_order_value_usd: float = 0.0,
+) -&gt; list[dict[str, Any]]:
+    &quot;&quot;&quot;Read, validate, enrich, and optionally filter one regional CSV.&quot;&quot;&quot;
+    normalized_region = validate_region(region)
+    file_path = INPUT_DIR / f&quot;{normalized_region}_sales.csv&quot;
+
+    if not file_path.exists():
+        raise FileNotFoundError(f&quot;Input file does not exist: {file_path}&quot;)
+
+    results: list[dict[str, Any]] = []
+    seen_order_ids: set[str] = set()
+
+    with file_path.open(newline=&quot;&quot;, encoding=&quot;utf-8&quot;) as handle:
+        reader = csv.DictReader(handle)
+        expected_columns = {
+            &quot;order_id&quot;,
+            &quot;region&quot;,
+            &quot;customer_id&quot;,
+            &quot;product&quot;,
+            &quot;quantity&quot;,
+            &quot;unit_price_usd&quot;,
+        }
+
+        if set(reader.fieldnames or []) != expected_columns:
+            raise ValueError(
+                f&quot;Invalid schema in {file_path}. &quot;
+                f&quot;Received: {reader.fieldnames}&quot;
+            )
+
+        for line_number, row in enumerate(reader, start=2):
+            order_id = row[&quot;order_id&quot;].strip()
+            row_region = validate_region(row[&quot;region&quot;])
+            customer_id = row[&quot;customer_id&quot;].strip()
+            product = row[&quot;product&quot;].strip()
+
+            if row_region != normalized_region:
+                raise ValueError(
+                    f&quot;Region mismatch at line {line_number}: &quot;
+                    f&quot;file={normalized_region}, row={row_region}&quot;
+                )
+            if not order_id or not customer_id or not product:
+                raise ValueError(
+                    f&quot;Blank mandatory value at line {line_number}&quot;
+                )
+            if order_id in seen_order_ids:
+                raise ValueError(f&quot;Duplicate order_id: {order_id}&quot;)
+
+            try:
+                quantity = int(row[&quot;quantity&quot;])
+                unit_price = Decimal(row[&quot;unit_price_usd&quot;])
+            except (ValueError, InvalidOperation) as exc:
+                raise ValueError(
+                    f&quot;Invalid numeric value at line {line_number}&quot;
+                ) from exc
+
+            if quantity &lt;= 0:
+                raise ValueError(
+                    f&quot;quantity must be positive at line {line_number}&quot;
+                )
+            if unit_price &lt; 0:
+                raise ValueError(
+                    f&quot;unit_price_usd cannot be negative at line {line_number}&quot;
+                )
+
+            total_amount = (unit_price * quantity).quantize(
+                Decimal(&quot;0.01&quot;)
+            )
+            if total_amount &lt; Decimal(str(minimum_order_value_usd)):
+                continue
+
+            seen_order_ids.add(order_id)
+            results.append(
+                {
+                    &quot;order_id&quot;: order_id,
+                    &quot;region&quot;: row_region,
+                    &quot;customer_id&quot;: customer_id,
+                    &quot;product&quot;: product,
+                    &quot;quantity&quot;: quantity,
+                    &quot;unit_price_usd&quot;: float(unit_price),
+                    &quot;total_amount_usd&quot;: float(total_amount),
+                }
+            )
+
+    return results
+
+
+def rows_for_sqlite(
+    rows: list[dict[str, Any]],
+) -&gt; list[tuple[Any, ...]]:
+    &quot;&quot;&quot;Convert dictionaries into the sales_fact table column order.&quot;&quot;&quot;
+    return [
+        (
+            row[&quot;order_id&quot;],
+            row[&quot;region&quot;],
+            row[&quot;customer_id&quot;],
+            row[&quot;product&quot;],
+            row[&quot;quantity&quot;],
+            row[&quot;unit_price_usd&quot;],
+            row[&quot;total_amount_usd&quot;],
+        )
+        for row in rows
+    ]
+
+
+def safe_file_name(value: str) -&gt; str:
+    &quot;&quot;&quot;Create a predictable output-file name from a run label.&quot;&quot;&quot;
+    clean = re.sub(r&quot;[^A-Za-z0-9_.-]+&quot;, &quot;-&quot;, value.strip())
+    return clean.strip(&quot;-&quot;) or &quot;airflow-run&quot;
+</code></pre></div></details></section>
+
+<section id="sql"><h2>26. SQL File</h2><p>The SQL task uses <code>template_searchpath=["/opt/airflow/sql"]</code>. The script is idempotent because it uses <code>CREATE TABLE IF NOT EXISTS</code>.</p>
+<details><summary>Open create_retail_tables.sql</summary><div><pre><code>PRAGMA journal_mode = WAL;
+
+CREATE TABLE IF NOT EXISTS sales_fact (
+    order_id TEXT PRIMARY KEY,
+    region TEXT NOT NULL,
+    customer_id TEXT NOT NULL,
+    product TEXT NOT NULL,
+    quantity INTEGER NOT NULL,
+    unit_price_usd REAL NOT NULL,
+    total_amount_usd REAL NOT NULL,
+    loaded_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS pipeline_audit (
+    audit_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    dag_id TEXT NOT NULL,
+    run_label TEXT NOT NULL,
+    region TEXT,
+    records_loaded INTEGER NOT NULL,
+    total_amount_usd REAL NOT NULL,
+    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+</code></pre></div></details></section>
+
+<section id="data"><h2>27. Input Files</h2><p>Each region has four orders. Values are in USD.</p>
+<div class="grid3"><div class="card"><h3>North</h3><pre><code>order_id,region,customer_id,product,quantity,unit_price_usd
+N1001,north,C001,Laptop Stand,2,45.00
+N1002,north,C002,Monitor,1,280.00
+N1003,north,C003,Laptop,1,950.00
+N1004,north,C001,Keyboard,3,65.00
+</code></pre></div><div class="card"><h3>South</h3><pre><code>order_id,region,customer_id,product,quantity,unit_price_usd
+S2001,south,C010,Office Chair,1,240.00
+S2002,south,C011,Mouse,4,28.00
+S2003,south,C012,Webcam,2,85.00
+S2004,south,C013,Desk,1,420.00
+</code></pre></div><div class="card"><h3>East</h3><pre><code>order_id,region,customer_id,product,quantity,unit_price_usd
+E3001,east,C020,Headset,2,72.50
+E3002,east,C021,USB Hub,3,35.00
+E3003,east,C022,Tablet,1,560.00
+E3004,east,C023,Cable,5,12.00
+</code></pre></div></div></section>
+
+<section id="run"><h2>28. Run the End-to-End Demo</h2><h3>UI route</h3><ol><li>Trigger <code>retail_easy_operator_dependencies</code>.</li><li>Open Grid and Graph views.</li><li>Trigger <code>retail_dynamic_parameterized</code>.</li><li>Select <code>north</code> and <code>east</code>.</li><li>Set minimum order value to <code>50</code>.</li><li>Set report label to <code>manual-demo</code>.</li><li>Observe mapped task indexes.</li><li>Trigger one generated regional DAG.</li></ol>
+<h3>PowerShell route</h3><pre><code>.\scripts\03_trigger_examples.ps1</code></pre></section>
+
+<section id="ui"><h2>29. What to Observe in Airflow UI</h2><table><tr><th>View</th><th>Observation</th></tr><tr><td>Graph</td><td>Operators, TaskFlow tasks and dependency path</td></tr><tr><td>Grid</td><td>Mapped task indexes and states</td></tr><tr><td>Trigger form</td><td>Param fields generated from JSON Schema</td></tr><tr><td>Task logs</td><td>Selected regions, row counts and USD totals</td></tr><tr><td>Rendered Templates</td><td>SQL file and templated values</td></tr><tr><td>XCom</td><td>Small row collections and summary dictionaries</td></tr><tr><td>Admin → Connections</td><td>retail_sqlite metadata</td></tr></table></section>
+
+<section id="results"><h2>30. Verify Results</h2><pre><code>.\scripts\04_show_results.ps1</code></pre><p>Example output after all region files are loaded:</p><pre><code>REGION | ORDER COUNT | TOTAL USD
+--------------------------------------
+east   |           4 | $870.00
+north  |           4 | $1,515.00
+south  |           4 | $942.00</code></pre><p>Parameterized JSON reports are written to <code>data\output</code>.</p></section>
+
+<section id="testing"><h2>31. DAG Testing</h2><pre><code>.\scripts\05_test_dags.ps1</code></pre><p>This checks import errors and runs the easy DAG for a controlled logical date. Production CI should also lint code, detect secrets and test pure business functions separately.</p></section>
+
+<section id="best"><h2>32. Best Practices and Anti-Patterns</h2><table><tr><th>Do</th><th>Avoid</th></tr><tr><td>Use stable task IDs</td><td>Task IDs based on random values</td></tr><tr><td>Sort dynamic configuration</td><td>Unstable UI ordering</td></tr><tr><td>Use local config/environment at parse time</td><td>Database/API calls during parsing</td></tr><tr><td>Use Params for run choices</td><td>Changing DAG structure from manual input</td></tr><tr><td>Use Connections and secrets</td><td>Credentials in source code</td></tr><tr><td>Use Hook methods or provider Operators</td><td>Repeated low-level driver code</td></tr><tr><td>Pass small XCom metadata</td><td>Large DataFrames in XCom</td></tr><tr><td>Design idempotent loads</td><td>Blind duplicate append on retry</td></tr></table></section>
+
+<section id="industry"><h2>33. Industry Activities</h2><table><tr><th>Industry</th><th>DAG activity</th><th>Useful feature</th></tr><tr><td>Retail</td><td>One regional pipeline per market</td><td>DAG factory</td></tr><tr><td>Banking</td><td>Country-specific regulatory runs</td><td>Params + Connections</td></tr><tr><td>Healthcare</td><td>One mapped task per incoming hospital file</td><td>Dynamic Task Mapping</td></tr><tr><td>Telecom</td><td>Parallel network-region checks</td><td>Fan-out/fan-in</td></tr><tr><td>Cloud operations</td><td>Environment-specific deployment DAGs</td><td>Configuration generation</td></tr><tr><td>Machine learning</td><td>One mapped training task per model configuration</td><td>expand()</td></tr></table></section>
+
+<section id="troubleshoot"><h2>34. Troubleshooting</h2>
+<details><summary>DAGs do not appear</summary><div><p>Run <code>airflow dags list-import-errors</code>, inspect DAG Processor logs and verify files are in the project <code>dags</code> folder.</p></div></details>
+<details><summary>SQLite Connection type is missing</summary><div><p>Rebuild the custom image and confirm the SQLite provider is installed.</p></div></details>
+<details><summary>No such table: sales_fact</summary><div><p>Create the Connection and ensure <code>create_tables</code> succeeded before the Hook task.</p></div></details>
+<details><summary>Database is locked</summary><div><p>SQLite is for learning. Reduce concurrent writes or use PostgreSQL in a realistic multi-worker environment.</p></div></details>
+<details><summary>Mapped task count is wrong</summary><div><p>Open <code>select_regions</code> XCom and confirm the runtime Param values.</p></div></details>
+<details><summary>Generated DAG order changes</summary><div><p>Sort the configuration before generating DAGs and tasks.</p></div></details></section>
+
+<section id="cleanup"><h2>35. Cleanup</h2><pre><code># Remove containers and Airflow metadata volumes
+.\scripts\99_cleanup.ps1
+
+# Also delete the training SQLite database and reports
+.\scripts\99_cleanup.ps1 -DeleteDatabase</code></pre><div class="callout warn"><strong>Local cost:</strong> stopping Docker releases CPU and memory. The host SQLite file remains unless the delete switch is used.</div></section>
+
+<section id="exercises"><h2>36. Practice Exercises</h2><ol><li>Add a West region CSV and factory configuration.</li><li>Add a Param for allowed products.</li><li>Add a Branch task for high-value reports.</li><li>Add a Sensor that waits for a regional file.</li><li>Replace SQLite with PostgreSQL and PostgresHook.</li><li>Add a pool to limit database loads.</li><li>Add retries and an execution timeout.</li><li>Add an audit-row insert after every region load.</li><li>Change report output from JSON to CSV.</li><li>Create a custom Hook wrapper for retail reporting.</li></ol></section>
+
+<section id="quiz"><h2>37. Practice MCQ Quiz</h2><div id="quizArea">
+<div class="quiz" data-a="b"><strong>1. What is a DAG?</strong><label><input type="radio" name="q1" value="a"> A password store</label><label><input type="radio" name="q1" value="b"> A workflow blueprint with dependencies</label><label><input type="radio" name="q1" value="c"> A database driver</label></div>
+<div class="quiz" data-a="c"><strong>2. What is an Operator?</strong><label><input type="radio" name="q2" value="a"> A DAG run</label><label><input type="radio" name="q2" value="b"> A connection password</label><label><input type="radio" name="q2" value="c"> A reusable task template</label></div>
+<div class="quiz" data-a="a"><strong>3. What does <code>A >> B</code> mean?</strong><label><input type="radio" name="q3" value="a"> B is downstream of A</label><label><input type="radio" name="q3" value="b"> A and B are databases</label><label><input type="radio" name="q3" value="c"> B deletes A</label></div>
+<div class="quiz" data-a="b"><strong>4. Which feature creates task instances at runtime?</strong><label><input type="radio" name="q4" value="a"> DAG factory</label><label><input type="radio" name="q4" value="b"> Dynamic Task Mapping</label><label><input type="radio" name="q4" value="c"> Connection UI</label></div>
+<div class="quiz" data-a="c"><strong>5. What validates runtime Params?</strong><label><input type="radio" name="q5" value="a"> SQL schema</label><label><input type="radio" name="q5" value="b"> Docker network</label><label><input type="radio" name="q5" value="c"> JSON Schema</label></div>
+<div class="quiz" data-a="a"><strong>6. What does a Connection store?</strong><label><input type="radio" name="q6" value="a"> External-system connection metadata</label><label><input type="radio" name="q6" value="b"> Full DataFrames</label><label><input type="radio" name="q6" value="c"> DAG graph images</label></div>
+<div class="quiz" data-a="b"><strong>7. What is a Hook?</strong><label><input type="radio" name="q7" value="a"> A schedule expression</label><label><input type="radio" name="q7" value="b"> A high-level external-system interface</label><label><input type="radio" name="q7" value="c"> A task state</label></div>
+<div class="quiz" data-a="c"><strong>8. Why sort dynamic configuration?</strong><label><input type="radio" name="q8" value="a"> To encrypt it</label><label><input type="radio" name="q8" value="b"> To create more workers</label><label><input type="radio" name="q8" value="c"> To keep stable generated ordering</label></div>
+<div class="quiz" data-a="a"><strong>9. Where should production passwords be stored?</strong><label><input type="radio" name="q9" value="a"> A secure Connection/secrets backend</label><label><input type="radio" name="q9" value="b"> The DAG task ID</label><label><input type="radio" name="q9" value="c"> The CSV header</label></div>
+<div class="quiz" data-a="b"><strong>10. Why is an upsert useful?</strong><label><input type="radio" name="q10" value="a"> It creates random duplicates</label><label><input type="radio" name="q10" value="b"> It supports idempotent retries</label><label><input type="radio" name="q10" value="c"> It removes dependencies</label></div>
+</div><button onclick="grade()">Calculate Score</button><div id="score" class="result"></div></section>
+
+<section id="interview"><h2>38. Interview Questions and Answers</h2>
+<details><summary>1. What makes a good task boundary?</summary><div><p>A task should perform one observable, retryable and preferably idempotent unit of work.</p></div></details>
+<details><summary>2. Operator versus task instance?</summary><div><p>An Operator defines a task template. A task instance is that task for one DAG run.</p></div></details>
+<details><summary>3. Explicit versus inferred dependency?</summary><div><p>Explicit dependencies use operators such as <code>&gt;&gt;</code>. TaskFlow infers dependencies when one task’s XComArg is passed to another.</p></div></details>
+<details><summary>4. What is fan-out and fan-in?</summary><div><p>Fan-out starts multiple downstream tasks from one upstream task. Fan-in joins multiple upstream paths into one downstream task.</p></div></details>
+<details><summary>5. Dynamic DAG generation versus mapping?</summary><div><p>Generation creates DAG structures at parse time. Mapping creates task instances at run time from upstream data.</p></div></details>
+<details><summary>6. Why avoid Airflow Variables in top-level factory code?</summary><div><p>They can cause metadata-database calls during frequent DAG parsing and add latency/load.</p></div></details>
+<details><summary>7. What is a Param?</summary><div><p>A typed runtime input with defaults and JSON Schema validation, also used to build the trigger form.</p></div></details>
+<details><summary>8. How do scheduled DAGs use Params?</summary><div><p>They use the default values defined in the DAG.</p></div></details>
+<details><summary>9. What is a Connection ID?</summary><div><p>A stable logical name used by tasks and Hooks to resolve external-system metadata.</p></div></details>
+<details><summary>10. Connection versus Variable?</summary><div><p>Connections are designed for external-service connection metadata. Variables are general runtime configuration.</p></div></details>
+<details><summary>11. Hook versus Operator?</summary><div><p>An Operator is a task template. A Hook is a reusable Python interface that talks to an external system, often used inside an Operator.</p></div></details>
+<details><summary>12. Why use provider packages?</summary><div><p>Providers independently deliver integrations, including Operators, Hooks, sensors and connection types.</p></div></details>
+<details><summary>13. Why is SQLite only for this learning demo?</summary><div><p>Concurrent multi-worker writes can lock a file database. Production usually uses a network database or warehouse.</p></div></details>
+<details><summary>14. How does the demo remain idempotent?</summary><div><p>Table creation uses IF NOT EXISTS and loads use upsert keyed by order ID.</p></div></details>
+<details><summary>15. What is wrong with a huge single task?</summary><div><p>It has poor retry granularity, observability and parallelism and makes root-cause analysis difficult.</p></div></details>
+<details><summary>16. Why stable task IDs?</summary><div><p>Airflow history and task instances are associated with task IDs; unstable IDs make operations confusing.</p></div></details>
+<details><summary>17. How do you test a DAG?</summary><div><p>Check import errors, unit-test pure functions, use <code>airflow dags test</code>, and run integration tests against non-production systems.</p></div></details>
+<details><summary>18. Why not place large data in XCom?</summary><div><p>XCom is metadata exchange through the Airflow control plane, not bulk data transport.</p></div></details>
+<details><summary>19. How are credentials handled in production?</summary><div><p>Use a secrets backend, least privilege, rotation, TLS and restricted network access.</p></div></details>
+<details><summary>20. When should you create a custom Hook?</summary><div><p>When many DAGs need the same external-system interface and no suitable provider Hook exists.</p></div></details></section>
+
+<section id="tracker"><h2>39. Preparation Tracker</h2><div class="checklist" id="checks">
+<label><input type="checkbox" data-k="c1"> I can design atomic DAG tasks.</label><label><input type="checkbox" data-k="c2"> I can explain Operators and TaskFlow.</label><label><input type="checkbox" data-k="c3"> I can create dependencies.</label><label><input type="checkbox" data-k="c4"> I understand Params.</label><label><input type="checkbox" data-k="c5"> I understand Dynamic Task Mapping.</label><label><input type="checkbox" data-k="c6"> I understand DAG factories.</label><label><input type="checkbox" data-k="c7"> I created the SQLite Connection.</label><label><input type="checkbox" data-k="c8"> I used SqliteHook.</label><label><input type="checkbox" data-k="c9"> I ran all three example levels.</label><label><input type="checkbox" data-k="c10"> I tested and cleaned up the lab.</label></div><div id="track" class="result"></div></section>
+
+<section id="references"><h2>40. Official References</h2><ul><li><a href="https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/dags.html">DAGs</a></li><li><a href="https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/tasks.html">Tasks and dependencies</a></li><li><a href="https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/operators.html">Operators</a></li><li><a href="https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/params.html">Params</a></li><li><a href="https://airflow.apache.org/docs/apache-airflow/stable/authoring-and-scheduling/dynamic-task-mapping.html">Dynamic Task Mapping</a></li><li><a href="https://airflow.apache.org/docs/apache-airflow/stable/howto/dynamic-dag-generation.html">Dynamic DAG Generation</a></li><li><a href="https://airflow.apache.org/docs/apache-airflow/stable/authoring-and-scheduling/connections.html">Connections and Hooks</a></li><li><a href="https://airflow.apache.org/docs/apache-airflow/stable/howto/connection.html">Managing Connections</a></li><li><a href="https://airflow.apache.org/docs/apache-airflow-providers-sqlite/stable/operators.html">SQLite SQL Operator</a></li><li><a href="https://airflow.apache.org/docs/apache-airflow-providers-sqlite/stable/_api/airflow/providers/sqlite/hooks/sqlite/index.html">SqliteHook</a></li><li><a href="https://airflow.apache.org/docs/apache-airflow/stable/best-practices.html">Best Practices</a></li></ul></section>
+<footer>Apache Airflow DAG Design Tutorial • Single-file HTML + ready-to-run project ZIP</footer>
+</main></div>
+<script>
+document.querySelectorAll('pre').forEach(pre=>{const b=document.createElement('button');b.className='copy';b.textContent='Copy';b.onclick=async()=>{const c=pre.cloneNode(true);c.querySelectorAll('button').forEach(x=>x.remove());await navigator.clipboard.writeText(c.innerText);b.textContent='Copied';setTimeout(()=>b.textContent='Copy',1000)};pre.appendChild(b)});
+const secs=[...document.querySelectorAll('main section')],links=[...document.querySelectorAll('#toc a')];const obs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)links.forEach(a=>a.classList.toggle('active',a.hash==='#'+e.target.id))}),{rootMargin:'-35% 0px -55% 0px'});secs.forEach(s=>obs.observe(s));
+window.addEventListener('scroll',()=>{const d=document.documentElement,m=d.scrollHeight-d.clientHeight,p=m?Math.round(d.scrollTop/m*100):0;document.getElementById('bar').style.width=p+'%';document.getElementById('pct').textContent=p+'%'});
+document.getElementById('search').addEventListener('input',e=>{const q=e.target.value.toLowerCase().trim();secs.forEach(s=>s.classList.toggle('hidden',q&&!s.innerText.toLowerCase().includes(q)))});function grade(){let n=0,a=0;document.querySelectorAll('.quiz').forEach(q=>{q.style.borderColor='var(--line)';const c=q.querySelector('input:checked');if(c){a++;if(c.value===q.dataset.a){n++;q.style.borderColor='var(--green)'}else q.style.borderColor='var(--red)'}});document.getElementById('score').textContent=`Score: ${n}/10 • Answered: ${a}/10`}
+document.querySelectorAll('#checks input').forEach(c=>{c.checked=localStorage.getItem(c.dataset.k)==='1';c.onchange=()=>{localStorage.setItem(c.dataset.k,c.checked?'1':'0');track()}});function track(){const c=[...document.querySelectorAll('#checks input')],n=c.filter(x=>x.checked).length;document.getElementById('track').textContent=`Completed ${n} of ${c.length} goals.`}track();
+</script>
+</body></html>
