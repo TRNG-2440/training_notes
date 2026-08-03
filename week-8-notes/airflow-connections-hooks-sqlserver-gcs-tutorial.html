@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Apache Airflow Connections and Hooks — SQL Server & Google Cloud Storage</title>
+<style>
+:root{--bg:#f6f8fc;--card:#fff;--ink:#172033;--muted:#5c6780;--brand:#2563eb;--accent:#7c3aed;--ok:#0f9d58;--warn:#b45309;--bad:#b91c1c;--line:#dce3ef;--code:#111827}
+*{box-sizing:border-box} body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.65}
+header{background:linear-gradient(120deg,#0f172a,#1d4ed8 62%,#7c3aed);color:#fff;padding:42px 24px}
+header .wrap,.layout{max-width:1320px;margin:auto}.eyebrow{font-weight:700;letter-spacing:.08em;text-transform:uppercase;opacity:.8}.hero h1{font-size:clamp(2rem,4vw,3.7rem);line-height:1.08;margin:.3rem 0}.hero p{max-width:900px;font-size:1.08rem;opacity:.92}
+.layout{display:grid;grid-template-columns:270px minmax(0,1fr);gap:24px;padding:24px}.toc{position:sticky;top:12px;align-self:start;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;max-height:calc(100vh - 24px);overflow:auto}.toc a{display:block;color:#334155;text-decoration:none;padding:7px 9px;border-radius:8px;font-size:.92rem}.toc a:hover{background:#eaf0ff;color:#1d4ed8}.content{min-width:0}
+section{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:24px;margin-bottom:22px;box-shadow:0 8px 24px rgba(15,23,42,.04)}section:hover{box-shadow:0 12px 35px rgba(37,99,235,.10);border-color:#b8c8ee}h2{margin-top:0;font-size:1.65rem}h3{margin-top:1.6rem;color:#1e40af}.lead{font-size:1.08rem;color:#334155}.note,.warning,.success{padding:14px 16px;border-radius:12px;margin:15px 0}.note{background:#eef4ff;border-left:5px solid var(--brand)}.warning{background:#fff7ed;border-left:5px solid #f59e0b}.success{background:#ecfdf5;border-left:5px solid var(--ok)}
+.diagram{background:#f8fafc;border:1px dashed #9fb0ca;border-radius:14px;padding:18px;text-align:center;font-family:Consolas,monospace;white-space:pre-wrap;overflow:auto}.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center}.node{padding:10px 13px;border:1px solid #b8c5d9;background:#fff;border-radius:10px;font-weight:700}.arrow{font-size:1.4rem;color:var(--brand)}
+pre{background:var(--code);color:#e5e7eb;padding:17px;border-radius:13px;overflow:auto;position:relative}code{font-family:Consolas,"Courier New",monospace;font-size:.9rem}.copy{position:absolute;right:9px;top:9px;background:#374151;color:#fff;border:0;border-radius:7px;padding:5px 9px;cursor:pointer}table{width:100%;border-collapse:collapse;margin:14px 0;display:block;overflow-x:auto}th,td{border:1px solid var(--line);padding:10px 12px;text-align:left;vertical-align:top}th{background:#eaf0ff}.pill{display:inline-block;padding:3px 9px;background:#e9e5ff;color:#5b21b6;border-radius:999px;font-size:.82rem;font-weight:700}.steps{counter-reset:step}.step{counter-increment:step;padding:14px 15px 14px 55px;margin:12px 0;border:1px solid var(--line);border-radius:12px;position:relative}.step:before{content:counter(step);position:absolute;left:14px;top:13px;width:29px;height:29px;display:grid;place-items:center;border-radius:50%;background:var(--brand);color:white;font-weight:800}.quiz-q{border-top:1px solid var(--line);padding:15px 0}.quiz-q:first-child{border-top:0}.quiz-q label{display:block;padding:7px;border-radius:8px;cursor:pointer}.quiz-q label:hover{background:#f1f5f9}.answer{display:none;margin-top:8px;padding:9px;border-radius:8px}.answer.good{background:#dcfce7;color:#166534}.answer.bad{background:#fee2e2;color:#991b1b}.btn{background:var(--brand);color:#fff;border:0;border-radius:9px;padding:10px 16px;font-weight:700;cursor:pointer}.checklist label{display:block;padding:8px}.small{font-size:.9rem;color:var(--muted)}footer{text-align:center;padding:30px;color:var(--muted)}
+@media(max-width:900px){.layout{grid-template-columns:1fr}.toc{position:relative;max-height:none}}
+.spark{position:fixed;pointer-events:none;width:7px;height:7px;border-radius:50%;background:#8b5cf6;animation:pop .6s forwards}@keyframes pop{to{transform:translateY(-18px) scale(0);opacity:0}}
+</style>
+</head>
+<body>
+<header><div class="wrap hero"><div class="eyebrow">Trainer-ready practical tutorial</div><h1>Apache Airflow Connections and Hooks</h1><p>Understand how Airflow securely stores connection information, how Hooks use that information inside DAG tasks, and how to build working examples for Microsoft SQL Server and Google Cloud Storage.</p></div></header>
+<div class="layout">
+<nav class="toc"><strong>Contents</strong>
+<a href="#outcomes">1. Learning outcomes</a><a href="#big-picture">2. Big picture</a><a href="#connections">3. Airflow Connections</a><a href="#hooks">4. Airflow Hooks</a><a href="#difference">5. Connection vs Hook</a><a href="#create">6. Create connections</a><a href="#simple">7. Simple HTTP example</a><a href="#sql">8. SQL Server example</a><a href="#windows-auth">9. Windows Authentication</a><a href="#gcs">10. Google Cloud Storage</a><a href="#security">11. Security practices</a><a href="#troubleshooting">12. Troubleshooting</a><a href="#interview">13. Interview Q&amp;A</a><a href="#quiz">14. MCQ quiz</a><a href="#lab">15. Lab checklist</a><a href="#sources">16. References</a>
+</nav>
+<main class="content">
+<section id="outcomes"><h2>1. Learning outcomes</h2><p>After completing this tutorial, you will be able to:</p><ul><li>Explain why credentials should not be hard-coded in a DAG.</li><li>Create and test Airflow Connections using the UI, CLI, and environment variables.</li><li>Use Hooks in Python tasks to communicate with external systems.</li><li>Read and write SQL Server data from a DAG.</li><li>Understand the practical limitation of Windows Integrated Authentication when Airflow runs in WSL2 or Linux containers.</li><li>Download a CSV from Google Cloud Storage, process it, and upload the result.</li></ul></section>
+
+<section id="big-picture"><h2>2. The big picture</h2><div class="flow"><div class="node">DAG Task</div><div class="arrow">→</div><div class="node">Hook</div><div class="arrow">→</div><div class="node">Connection ID</div><div class="arrow">→</div><div class="node">External System</div></div><div class="diagram">PythonOperator / @task
+        |
+        | creates MsSqlHook(mssql_conn_id="sqlserver_lab")
+        v
+      MsSqlHook
+        |
+        | asks Airflow for connection ID: sqlserver_lab
+        v
+Airflow Connection record
+(host, database, login, password, extras)
+        |
+        v
+Microsoft SQL Server</div><p class="lead"><strong>Memory aid:</strong> A <em>Connection</em> stores the address and authentication details. A <em>Hook</em> is Python code that uses those details to communicate with the system.</p></section>
+
+<section id="connections"><h2>3. What is an Airflow Connection?</h2><p>An Airflow Connection is a named configuration record for an external service. Common fields include connection type, host, schema/database, login, password, port, and an <code>Extra</code> JSON field.</p><table><tr><th>Field</th><th>Meaning</th><th>SQL Server example</th><th>GCS example</th></tr><tr><td>Connection ID</td><td>Unique name used in DAG code</td><td><code>sqlserver_lab</code></td><td><code>google_cloud_default</code></td></tr><tr><td>Connection Type</td><td>Provider/protocol</td><td>Microsoft SQL Server or ODBC</td><td>Google Cloud</td></tr><tr><td>Host</td><td>Server name/IP</td><td><code>host.docker.internal</code>, IP, or SQL host</td><td>Usually blank</td></tr><tr><td>Schema</td><td>Database or logical schema</td><td><code>AirflowLabDB</code></td><td>Usually blank</td></tr><tr><td>Login/Password</td><td>Credentials</td><td>SQL login or service account setup</td><td>Usually service-account JSON/ADC</td></tr><tr><td>Extra</td><td>Provider-specific options</td><td>Driver, encryption, trust options</td><td>Project ID, key path/JSON, scopes</td></tr></table><div class="note"><strong>Important:</strong> The DAG refers to the Connection ID—not the password. Airflow resolves the actual record at runtime.</div><h3>Where Connections can be stored</h3><ul><li>Airflow metadata database through the web UI or CLI.</li><li>Environment variables such as <code>AIRFLOW_CONN_SQLSERVER_LAB</code>.</li><li>A Secrets Backend such as HashiCorp Vault, AWS Secrets Manager, Google Secret Manager, or Azure Key Vault.</li></ul></section>
+
+<section id="hooks"><h2>4. What is an Airflow Hook?</h2><p>A Hook is a reusable Python interface for communicating with an external platform. It normally retrieves an Airflow Connection by its ID, creates a client/connection, and provides convenient methods.</p><table><tr><th>Hook</th><th>External service</th><th>Typical methods</th></tr><tr><td><code>MsSqlHook</code></td><td>Microsoft SQL Server</td><td><code>get_conn()</code>, <code>get_records()</code>, <code>run()</code></td></tr><tr><td><code>OdbcHook</code></td><td>ODBC data sources</td><td><code>get_conn()</code>, <code>get_df()</code>, <code>run()</code></td></tr><tr><td><code>GCSHook</code></td><td>Google Cloud Storage</td><td><code>download()</code>, <code>download_as_bytes()</code>, <code>upload()</code>, <code>list()</code></td></tr><tr><td><code>HttpHook</code></td><td>REST APIs</td><td><code>run()</code>, <code>get_conn()</code></td></tr></table><pre><button class="copy">Copy</button><code>from airflow.providers.microsoft.mssql.hooks.mssql import MsSqlHook
+
+hook = MsSqlHook(mssql_conn_id="sqlserver_lab")
+rows = hook.get_records("SELECT TOP 5 * FROM dbo.sales")</code></pre></section>
+
+<section id="difference"><h2>5. Connection vs Hook vs Operator</h2><table><tr><th>Concept</th><th>Purpose</th><th>Analogy</th></tr><tr><td>Connection</td><td>Stores configuration and credentials</td><td>Saved contact card</td></tr><tr><td>Hook</td><td>Python client used to communicate</td><td>Phone used to call the contact</td></tr><tr><td>Operator</td><td>Defines a complete Airflow task</td><td>A scheduled activity such as “call customer”</td></tr></table><div class="success"><strong>Rule:</strong> Use an Operator when a ready-made task already does what you need. Use a Hook inside Python code when you need custom logic.</div></section>
+
+<section id="create"><h2>6. Creating Connections</h2><h3>Method A — Airflow UI</h3><div class="steps"><div class="step">Open Airflow UI.</div><div class="step">Go to <strong>Admin → Connections</strong> (in some Airflow 3 interfaces: <strong>Assets/Administration → Connections</strong> depending on deployment and permissions).</div><div class="step">Click <strong>+</strong> or <strong>Add Connection</strong>.</div><div class="step">Enter Connection ID, type, host, database/schema, credentials, port, and Extra JSON.</div><div class="step">Save, then use that Connection ID in the DAG.</div></div><h3>Method B — CLI</h3><pre><button class="copy">Copy</button><code>airflow connections add 'sqlserver_lab' \
+  --conn-type 'mssql' \
+  --conn-host '192.168.1.20' \
+  --conn-schema 'AirflowLabDB' \
+  --conn-login 'airflow_user' \
+  --conn-password 'StrongPasswordHere' \
+  --conn-port '1433'</code></pre><h3>Method C — environment variable</h3><pre><button class="copy">Copy</button><code>export AIRFLOW_CONN_SQLSERVER_LAB='mssql://airflow_user:password@192.168.1.20:1433/AirflowLabDB'</code></pre><div class="warning">Do not commit credentials to Git. For production, prefer a secrets backend or environment-injected secret.</div></section>
+
+<section id="simple"><h2>7. Simple Hook example: test a public HTTP API</h2><p>This example demonstrates the pattern before introducing databases and cloud credentials.</p><h3>Install provider</h3><pre><button class="copy">Copy</button><code>pip install apache-airflow-providers-http</code></pre><h3>Create connection</h3><p>Connection ID: <code>weather_api</code>, type: HTTP, host: <code>https://api.open-meteo.com</code>.</p><h3>DAG</h3><pre><button class="copy">Copy</button><code>from datetime import datetime
+from airflow import DAG
+from airflow.operators.python import PythonOperator
+from airflow.providers.http.hooks.http import HttpHook
+
+
+def read_weather():
+    hook = HttpHook(method="GET", http_conn_id="weather_api")
+    response = hook.run(
+        endpoint="/v1/forecast",
+        data={"latitude": 11.0168, "longitude": 76.9558,
+              "current": "temperature_2m"},
+    )
+    print(response.json())
+
+with DAG(
+    dag_id="hook_http_demo",
+    start_date=datetime(2025, 1, 1),
+    schedule=None,
+    catchup=False,
+    tags=["connections", "hooks"],
+) as dag:
+    read_api = PythonOperator(task_id="read_weather", python_callable=read_weather)</code></pre></section>
+
+<section id="sql"><h2>8. SQL Server practical example</h2><h3>Architecture</h3><div class="diagram">Airflow (WSL2 / Linux container)
+        |
+        | TCP 1433
+        v
+SQL Server running on Windows
+        |
+        v
+AirflowLabDB.dbo.sales_orders</div><h3>8.1 Create the database objects in SSMS</h3><pre><button class="copy">Copy</button><code>CREATE DATABASE AirflowLabDB;
+GO
+USE AirflowLabDB;
+GO
+
+CREATE TABLE dbo.sales_orders (
+    order_id INT PRIMARY KEY,
+    customer_name VARCHAR(100),
+    city VARCHAR(60),
+    amount DECIMAL(12,2),
+    order_date DATE
+);
+
+INSERT INTO dbo.sales_orders VALUES
+(1, 'Asha', 'Chennai', 1500.00, '2026-08-01'),
+(2, 'Rahul', 'Coimbatore', 850.00, '2026-08-01'),
+(3, 'Meena', 'Chennai', 2200.00, '2026-08-02'),
+(4, 'David', 'Bengaluru', 1250.00, '2026-08-02');
+
+CREATE TABLE dbo.city_sales_summary (
+    city VARCHAR(60) PRIMARY KEY,
+    total_amount DECIMAL(14,2),
+    refreshed_at DATETIME2
+);</code></pre><h3>8.2 Recommended local-lab authentication for WSL2/Docker: SQL login</h3><pre><button class="copy">Copy</button><code>USE master;
+GO
+CREATE LOGIN airflow_user WITH PASSWORD = 'ChangeThis_Strong#2026';
+GO
+USE AirflowLabDB;
+GO
+CREATE USER airflow_user FOR LOGIN airflow_user;
+ALTER ROLE db_datareader ADD MEMBER airflow_user;
+ALTER ROLE db_datawriter ADD MEMBER airflow_user;
+GRANT SELECT, INSERT, UPDATE, DELETE ON dbo.sales_orders TO airflow_user;
+GRANT SELECT, INSERT, UPDATE, DELETE ON dbo.city_sales_summary TO airflow_user;</code></pre><h3>8.3 Install provider</h3><pre><button class="copy">Copy</button><code>pip install apache-airflow-providers-microsoft-mssql</code></pre><h3>8.4 Create Airflow connection</h3><table><tr><th>Field</th><th>Value</th></tr><tr><td>Connection ID</td><td><code>sqlserver_lab</code></td></tr><tr><td>Connection Type</td><td>Microsoft SQL Server</td></tr><tr><td>Host</td><td>Windows host IP, DNS name, or <code>host.docker.internal</code> for supported Docker arrangements</td></tr><tr><td>Schema</td><td><code>AirflowLabDB</code></td></tr><tr><td>Login</td><td><code>airflow_user</code></td></tr><tr><td>Password</td><td>Your SQL login password</td></tr><tr><td>Port</td><td><code>1433</code></td></tr></table><h3>8.5 DAG: read, aggregate, and write summary</h3><pre><button class="copy">Copy</button><code>from datetime import datetime
+from airflow import DAG
+from airflow.operators.python import PythonOperator
+from airflow.providers.microsoft.mssql.hooks.mssql import MsSqlHook
+
+CONN_ID = "sqlserver_lab"
+
+
+def check_connection():
+    hook = MsSqlHook(mssql_conn_id=CONN_ID)
+    row = hook.get_first("SELECT DB_NAME(), SYSTEM_USER, GETDATE()")
+    print(f"database={row[0]}, user={row[1]}, server_time={row[2]}")
+
+
+def refresh_city_summary():
+    hook = MsSqlHook(mssql_conn_id=CONN_ID)
+    sql = """
+    MERGE dbo.city_sales_summary AS target
+    USING (
+        SELECT city, SUM(amount) AS total_amount
+        FROM dbo.sales_orders
+        GROUP BY city
+    ) AS source
+    ON target.city = source.city
+    WHEN MATCHED THEN
+        UPDATE SET total_amount = source.total_amount,
+                   refreshed_at = SYSDATETIME()
+    WHEN NOT MATCHED THEN
+        INSERT (city, total_amount, refreshed_at)
+        VALUES (source.city, source.total_amount, SYSDATETIME());
+    """
+    hook.run(sql)
+
+
+def print_summary():
+    hook = MsSqlHook(mssql_conn_id=CONN_ID)
+    rows = hook.get_records(
+        "SELECT city, total_amount, refreshed_at "
+        "FROM dbo.city_sales_summary ORDER BY total_amount DESC"
+    )
+    for row in rows:
+        print(row)
+
+with DAG(
+    dag_id="sqlserver_sales_summary",
+    start_date=datetime(2025, 1, 1),
+    schedule=None,
+    catchup=False,
+    tags=["sqlserver", "hooks"],
+) as dag:
+    t1 = PythonOperator(task_id="check_connection", python_callable=check_connection)
+    t2 = PythonOperator(task_id="refresh_city_summary", python_callable=refresh_city_summary)
+    t3 = PythonOperator(task_id="print_summary", python_callable=print_summary)
+    t1 >> t2 >> t3</code></pre><h3>8.6 Run and verify</h3><ol><li>Save as <code>sqlserver_sales_summary.py</code> inside your Airflow <code>dags</code> directory.</li><li>Wait for the DAG to appear, unpause it, and click <strong>Trigger DAG</strong>.</li><li>Open task logs and verify the database/user and summary rows.</li><li>In SSMS run: <code>SELECT * FROM AirflowLabDB.dbo.city_sales_summary;</code></li></ol></section>
+
+<section id="windows-auth"><h2>9. Connecting to SQL Server with Windows Authentication</h2><div class="warning"><strong>Critical distinction:</strong> Your SSMS screenshot shows that <em>SSMS</em> is using your Windows desktop identity. That authentication token is not automatically inherited by Airflow when Airflow runs inside WSL2 or a Linux Docker container.</div><h3>When Integrated Authentication can work</h3><ul><li>The Airflow task process runs under a Windows account that SQL Server trusts, using a compatible ODBC driver; or</li><li>The Linux/WSL Airflow environment is configured for Active Directory/Kerberos and can obtain a valid ticket; or</li><li>A managed identity/domain service setup is available in an enterprise environment.</li></ul><p>Official Airflow deployments are Linux-oriented; Windows users normally run Airflow through WSL2 or Linux containers. Therefore, SQL authentication is the easiest reliable choice for a local lab.</p><h3>ODBC connection pattern for Integrated Authentication</h3><p>Use this only when the Airflow worker environment genuinely supports the Windows/Kerberos identity.</p><h4>Install packages</h4><pre><button class="copy">Copy</button><code>pip install apache-airflow-providers-odbc pyodbc</code></pre><p>Also install Microsoft ODBC Driver 18 for SQL Server in the environment where the Airflow task executes.</p><h4>Airflow Connection</h4><table><tr><th>Field</th><th>Example</th></tr><tr><td>Connection ID</td><td><code>sqlserver_windows_auth</code></td></tr><tr><td>Connection Type</td><td>ODBC</td></tr><tr><td>Host</td><td><code>LAPTOP-0TBPBTEL\SQLEXPRESS</code> or reachable host</td></tr><tr><td>Schema</td><td><code>AirflowLabDB</code></td></tr><tr><td>Login/Password</td><td>Blank for true integrated authentication</td></tr><tr><td>Extra</td><td><code>{"driver":"ODBC Driver 18 for SQL Server","Trusted_Connection":"yes","Encrypt":"yes","TrustServerCertificate":"yes"}</code></td></tr></table><h4>DAG test</h4><pre><button class="copy">Copy</button><code>from datetime import datetime
+from airflow import DAG
+from airflow.operators.python import PythonOperator
+from airflow.providers.odbc.hooks.odbc import OdbcHook
+
+
+def test_windows_auth():
+    hook = OdbcHook(odbc_conn_id="sqlserver_windows_auth")
+    with hook.get_conn() as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT SYSTEM_USER, ORIGINAL_LOGIN(), DB_NAME()")
+        print(cursor.fetchone())
+
+with DAG(
+    dag_id="sqlserver_windows_auth_test",
+    start_date=datetime(2025, 1, 1),
+    schedule=None,
+    catchup=False,
+) as dag:
+    PythonOperator(task_id="test_windows_auth", python_callable=test_windows_auth)</code></pre><div class="note"><strong>Named instance note:</strong> <code>SQLEXPRESS</code> frequently uses a dynamic port. For Airflow, a fixed TCP port such as 1433 is easier. Enable TCP/IP in SQL Server Configuration Manager, assign a static port, restart SQL Server, and allow the port through Windows Firewall.</div><h3>Recommended decision table</h3><table><tr><th>Airflow location</th><th>Recommended authentication</th></tr><tr><td>WSL2 on personal laptop</td><td>SQL login for the lab; Kerberos only for advanced domain setup</td></tr><tr><td>Docker Desktop</td><td>SQL login; connect through reachable host/port</td></tr><tr><td>Enterprise Linux joined to AD</td><td>Kerberos integrated authentication may be used</td></tr><tr><td>Native Windows experimental setup</td><td>ODBC trusted connection may work, but native Windows is not the supported Airflow deployment path</td></tr></table></section>
+
+<section id="gcs"><h2>10. Google Cloud Storage example</h2><div class="note"><strong>Terminology:</strong> The service is <strong>Google Cloud Storage (GCS)</strong>. In GCP, a storage account is normally called a <strong>Cloud Storage bucket</strong>.</div><h3>Use case</h3><p>Read <code>input/sales.csv</code> from a GCS bucket, keep records with <code>amount &gt;= 1000</code>, calculate totals by city, and upload <code>output/city_sales_summary.csv</code>.</p><div class="diagram">gs://airflow-training-bucket/input/sales.csv
+              |
+              v
+       GCSHook downloads bytes
+              |
+              v
+       Python CSV processing
+              |
+              v
+gs://airflow-training-bucket/output/city_sales_summary.csv</div><h3>10.1 Sample CSV</h3><pre><button class="copy">Copy</button><code>order_id,customer_name,city,amount,order_date
+1,Asha,Chennai,1500,2026-08-01
+2,Rahul,Coimbatore,850,2026-08-01
+3,Meena,Chennai,2200,2026-08-02
+4,David,Bengaluru,1250,2026-08-02</code></pre><h3>10.2 GCP setup</h3><div class="steps"><div class="step">Create or select a GCP project.</div><div class="step">Enable the Cloud Storage API.</div><div class="step">Create a bucket, for example <code>airflow-training-bucket</code>.</div><div class="step">Upload the CSV as <code>input/sales.csv</code>.</div><div class="step">Create a service account for Airflow.</div><div class="step">Grant minimum required roles. For this lab, Storage Object Viewer plus Storage Object Creator is enough when overwriting is not required; use Object Admin only for a temporary learning environment.</div><div class="step">Create a JSON key only when needed for a local lab. In production, prefer Application Default Credentials, Workload Identity, or a secrets backend.</div></div><h3>10.3 Install provider</h3><pre><button class="copy">Copy</button><code>pip install apache-airflow-providers-google</code></pre><h3>10.4 Create Airflow Google Cloud connection</h3><table><tr><th>Field</th><th>Value</th></tr><tr><td>Connection ID</td><td><code>google_cloud_default</code></td></tr><tr><td>Connection Type</td><td>Google Cloud</td></tr><tr><td>Project ID</td><td>Your project ID</td></tr><tr><td>Keyfile Path</td><td>Path visible inside WSL/container, for example <code>/opt/airflow/secrets/gcp-key.json</code></td></tr><tr><td>Alternative</td><td>Paste key JSON in the supported keyfile JSON field or use ADC</td></tr></table><div class="warning">A Windows path such as <code>C:\keys\gcp.json</code> is not automatically visible inside a Linux container. Mount the file and use the container path.</div><h3>10.5 Complete DAG</h3><pre><button class="copy">Copy</button><code>from __future__ import annotations
+
+import csv
+import io
+from collections import defaultdict
+from datetime import datetime
+
+from airflow import DAG
+from airflow.operators.python import PythonOperator
+from airflow.providers.google.cloud.hooks.gcs import GCSHook
+
+GCP_CONN_ID = "google_cloud_default"
+BUCKET = "airflow-training-bucket"   # change this
+INPUT_OBJECT = "input/sales.csv"
+OUTPUT_OBJECT = "output/city_sales_summary.csv"
+
+
+def process_gcs_csv():
+    hook = GCSHook(gcp_conn_id=GCP_CONN_ID)
+
+    # 1. Download the object as bytes.
+    raw_bytes = hook.download_as_bytes(
+        bucket_name=BUCKET,
+        object_name=INPUT_OBJECT,
+    )
+    text = raw_bytes.decode("utf-8-sig")
+
+    # 2. Read and validate the CSV.
+    reader = csv.DictReader(io.StringIO(text))
+    required = {"city", "amount"}
+    missing = required - set(reader.fieldnames or [])
+    if missing:
+        raise ValueError(f"Missing required columns: {sorted(missing)}")
+
+    # 3. Filter and aggregate.
+    totals = defaultdict(float)
+    accepted_rows = 0
+    for row_number, row in enumerate(reader, start=2):
+        try:
+            amount = float(row["amount"])
+        except (TypeError, ValueError) as exc:
+            raise ValueError(
+                f"Invalid amount at CSV row {row_number}: {row.get('amount')}"
+            ) from exc
+
+        if amount >= 1000:
+            totals[row["city"].strip()] += amount
+            accepted_rows += 1
+
+    # 4. Create output CSV in memory.
+    output = io.StringIO()
+    writer = csv.writer(output, lineterminator="\n")
+    writer.writerow(["city", "total_amount"])
+    for city, total in sorted(totals.items()):
+        writer.writerow([city, f"{total:.2f}"])
+
+    # 5. Upload processed data.
+    hook.upload(
+        bucket_name=BUCKET,
+        object_name=OUTPUT_OBJECT,
+        data=output.getvalue(),
+        mime_type="text/csv",
+    )
+
+    print(f"Accepted rows: {accepted_rows}")
+    print(f"Uploaded: gs://{BUCKET}/{OUTPUT_OBJECT}")
+
+
+with DAG(
+    dag_id="gcs_read_process_upload",
+    start_date=datetime(2025, 1, 1),
+    schedule=None,
+    catchup=False,
+    tags=["gcs", "hooks", "csv"],
+) as dag:
+    PythonOperator(
+        task_id="process_gcs_csv",
+        python_callable=process_gcs_csv,
+    )</code></pre><h3>10.6 Optional production improvement: wait for file</h3><pre><button class="copy">Copy</button><code>from airflow.providers.google.cloud.sensors.gcs import GCSObjectExistenceSensor
+
+wait_for_file = GCSObjectExistenceSensor(
+    task_id="wait_for_sales_csv",
+    bucket=BUCKET,
+    object=INPUT_OBJECT,
+    google_cloud_conn_id=GCP_CONN_ID,
+)
+
+wait_for_file >> process_task</code></pre><h3>10.7 Verify</h3><ol><li>Trigger the DAG.</li><li>Open the task log and check the accepted row count.</li><li>Open Cloud Storage → your bucket → <code>output/</code>.</li><li>Download <code>city_sales_summary.csv</code>.</li></ol><p>Expected output:</p><pre><code>city,total_amount
+Bengaluru,1250.00
+Chennai,3700.00</code></pre></section>
+
+<section id="security"><h2>11. Security and design best practices</h2><ul><li><strong>Never hard-code secrets</strong> in DAG Python files.</li><li>Give service accounts and SQL users only the permissions required by the task.</li><li>Use a Secrets Backend for production.</li><li>Rotate credentials and avoid long-lived service-account keys where workload identity is available.</li><li>Keep heavy business logic in tested Python modules, not a very large DAG file.</li><li>Make tasks idempotent. Re-running a DAG should not create duplicate results.</li><li>Set network timeouts, retries, and meaningful error messages.</li><li>Do not return large datasets through XCom; use storage/database objects and pass only references.</li></ul></section>
+
+<section id="troubleshooting"><h2>12. Troubleshooting guide</h2><table><tr><th>Problem</th><th>Likely cause</th><th>Fix</th></tr><tr><td>Connection type missing in UI</td><td>Provider package not installed in scheduler/webserver environment</td><td>Install the provider and restart Airflow components.</td></tr><tr><td>SQL timeout</td><td>TCP/IP disabled, firewall, wrong host, dynamic port</td><td>Enable TCP/IP, configure static port, test with <code>nc</code>/<code>telnet</code>.</td></tr><tr><td><code>localhost</code> fails from Docker</td><td>Inside container, localhost means the container</td><td>Use reachable host DNS/IP such as <code>host.docker.internal</code> where supported.</td></tr><tr><td>Windows Authentication login failure</td><td>WSL/container has no Windows desktop token</td><td>Use SQL login or configure Kerberos/domain authentication.</td></tr><tr><td>GCS 403</td><td>Missing IAM role or wrong project/service account</td><td>Check service-account identity and bucket IAM permissions.</td></tr><tr><td>GCS key file not found</td><td>Host path not mounted into container</td><td>Mount secret file and use the Linux/container path.</td></tr><tr><td>DAG not visible</td><td>Syntax/import error or wrong DAG folder</td><td>Run <code>python dag_file.py</code>, inspect scheduler logs, verify <code>dags_folder</code>.</td></tr></table><h3>Useful checks</h3><pre><button class="copy">Copy</button><code># List connections
+ airflow connections list
+
+# Inspect one connection without exposing secrets unnecessarily
+ airflow connections get sqlserver_lab
+
+# Check DAG import errors
+ airflow dags list-import-errors
+
+# Test task directly
+ airflow tasks test sqlserver_sales_summary check_connection 2026-08-03</code></pre></section>
+
+<section id="interview"><h2>13. Interview questions and answers</h2><h3>1. Why use Airflow Connections?</h3><p>They centralize external-system configuration and prevent credentials from being repeated in DAG code.</p><h3>2. What is a Hook?</h3><p>A provider-specific Python interface that creates a client or database connection and exposes reusable methods.</p><h3>3. How does a Hook find credentials?</h3><p>It receives a connection ID and asks Airflow to resolve the matching Connection from the configured secrets sources.</p><h3>4. Connection vs Operator?</h3><p>A Connection stores configuration. An Operator defines a task. An Operator may internally use a Hook.</p><h3>5. What is the Extra field?</h3><p>A JSON object for provider-specific values such as an ODBC driver, project ID, encryption flags, or key configuration.</p><h3>6. Can Connections be stored outside the metadata database?</h3><p>Yes. Environment variables and external Secrets Backends are supported.</p><h3>7. Why avoid large results in XCom?</h3><p>XCom is designed for small task metadata, not large datasets. Large data should remain in object storage or databases.</p><h3>8. Why might <code>localhost</code> be wrong in Docker?</h3><p>It points to the container itself, not the Windows host.</p><h3>9. Why does SSMS Windows Authentication work while Airflow fails?</h3><p>SSMS runs under the Windows user session. Airflow in Linux/WSL does not automatically possess that Windows access token.</p><h3>10. What is GCSHook used for?</h3><p>Listing, downloading, uploading, copying, deleting, and checking objects in Google Cloud Storage.</p><h3>11. What is least privilege?</h3><p>Granting only the minimum actions and resources needed for the workflow.</p><h3>12. How do you make a database task idempotent?</h3><p>Use deterministic keys and patterns such as MERGE/upsert, replace-partition, or delete-and-reload for a known scope.</p><h3>13. What happens if a provider is missing?</h3><p>The connection type and Hook imports may be unavailable, causing DAG import errors or missing UI options.</p><h3>14. What is a sensor in the GCS workflow?</h3><p>A task that waits until a condition is true, such as an object appearing in a bucket.</p><h3>15. What is the safest credential method on cloud infrastructure?</h3><p>Prefer workload identity/managed identity or short-lived credentials over downloaded long-lived key files.</p></section>
+
+<section id="quiz"><h2>14. Practice MCQ quiz</h2><div id="quizbox">
+<div class="quiz-q" data-answer="b"><strong>1. Which object stores host, login, and password?</strong><label><input type="radio" name="q1" value="a"> DAG</label><label><input type="radio" name="q1" value="b"> Connection</label><label><input type="radio" name="q1" value="c"> Sensor</label><div class="answer"></div></div>
+<div class="quiz-q" data-answer="c"><strong>2. Which component offers reusable Python methods for an external service?</strong><label><input type="radio" name="q2" value="a"> Scheduler</label><label><input type="radio" name="q2" value="b"> XCom</label><label><input type="radio" name="q2" value="c"> Hook</label><div class="answer"></div></div>
+<div class="quiz-q" data-answer="a"><strong>3. Which Hook is used for Google Cloud Storage?</strong><label><input type="radio" name="q3" value="a"> GCSHook</label><label><input type="radio" name="q3" value="b"> S3Hook</label><label><input type="radio" name="q3" value="c"> HttpHook</label><div class="answer"></div></div>
+<div class="quiz-q" data-answer="b"><strong>4. Why can Windows Authentication fail from WSL2?</strong><label><input type="radio" name="q4" value="a"> SQL Server has no tables</label><label><input type="radio" name="q4" value="b"> Linux process does not automatically inherit the Windows token</label><label><input type="radio" name="q4" value="c"> Airflow cannot read SQL</label><div class="answer"></div></div>
+<div class="quiz-q" data-answer="c"><strong>5. Best place for a large processed dataset?</strong><label><input type="radio" name="q5" value="a"> XCom</label><label><input type="radio" name="q5" value="b"> DAG description</label><label><input type="radio" name="q5" value="c"> Object storage or database</label><div class="answer"></div></div>
+</div><button class="btn" onclick="gradeQuiz()">Check score</button> <strong id="score"></strong></section>
+
+<section id="lab"><h2>15. Hands-on completion checklist</h2><div class="checklist" id="checks"><label><input type="checkbox"> I installed the MSSQL/ODBC provider.</label><label><input type="checkbox"> I created <code>AirflowLabDB</code> and sample tables.</label><label><input type="checkbox"> I created and tested <code>sqlserver_lab</code>.</label><label><input type="checkbox"> I triggered the SQL summary DAG.</label><label><input type="checkbox"> I created a GCS bucket and uploaded <code>input/sales.csv</code>.</label><label><input type="checkbox"> I created <code>google_cloud_default</code>.</label><label><input type="checkbox"> I triggered the GCS processing DAG.</label><label><input type="checkbox"> I verified the output CSV in GCS.</label></div><p class="small">Checklist state is saved in this browser.</p></section>
+
+<section id="sources"><h2>16. Official references</h2><ul><li>Apache Airflow — Managing Connections and Connections &amp; Hooks documentation.</li><li>Apache Airflow Microsoft MSSQL provider — <code>MsSqlHook</code> API.</li><li>Apache Airflow ODBC provider — ODBC Connection documentation.</li><li>Apache Airflow Google provider — <code>GCSHook</code> API.</li><li>Apache Airflow prerequisites — Windows users should use WSL2 or Linux containers.</li></ul><p class="small">Prepared against current Apache Airflow documentation available in August 2026. Provider UI labels can vary slightly by Airflow/provider version.</p></section>
+</main></div>
+<footer>Apache Airflow Connections &amp; Hooks — SQL Server and Google Cloud Storage practical tutorial</footer>
+<script>
+document.querySelectorAll('.copy').forEach(b=>b.onclick=()=>{navigator.clipboard.writeText(b.nextElementSibling.innerText);b.textContent='Copied';setTimeout(()=>b.textContent='Copy',1200)});
+function gradeQuiz(){let score=0,total=0;document.querySelectorAll('.quiz-q').forEach(q=>{total++;const picked=q.querySelector('input:checked');const a=q.querySelector('.answer');if(!picked){a.className='answer bad';a.textContent='Choose an option.';a.style.display='block'}else if(picked.value===q.dataset.answer){score++;a.className='answer good';a.textContent='Correct.';a.style.display='block'}else{a.className='answer bad';a.textContent='Incorrect. Review the section above.';a.style.display='block'}});document.getElementById('score').textContent=`Score: ${score}/${total}`}
+const checks=[...document.querySelectorAll('#checks input')];checks.forEach((c,i)=>{c.checked=localStorage.getItem('airflow-hook-check-'+i)==='1';c.onchange=()=>localStorage.setItem('airflow-hook-check-'+i,c.checked?'1':'0')});
+document.addEventListener('mousemove',e=>{if(Math.random()>.88){const s=document.createElement('span');s.className='spark';s.style.left=e.clientX+'px';s.style.top=e.clientY+'px';document.body.appendChild(s);setTimeout(()=>s.remove(),650)}});
+</script>
+</body></html>

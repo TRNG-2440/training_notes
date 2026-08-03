@@ -1,0 +1,558 @@
+<!DOCTYPE html><html lang='en' data-theme='light'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Airflow Parameterized DAG Tutorial</title><!-- Self-contained edition: SVG diagrams embedded as Base64 data URIs --><style>
+:root{--bg:#eef4fb;--panel:#fff;--panel2:#f7faff;--text:#172033;--muted:#5c6980;--brand:#0878d1;--brand2:#7c3aed;--border:#d3deec;--code:#081424;--codeText:#e7f1ff;--success:#17763a;--warn:#b55e05;--danger:#b91c1c;--shadow:0 12px 30px rgba(25,48,82,.11)}
+html[data-theme="dark"]{--bg:#07101e;--panel:#101d30;--panel2:#17263b;--text:#eef5ff;--muted:#b8c7db;--brand:#76baff;--brand2:#c1a6ff;--border:#30455f;--code:#040910;--codeText:#eaf3ff;--success:#78de99;--warn:#ffc370;--danger:#ff8b8b;--shadow:0 13px 30px rgba(0,0,0,.35)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--text);font-family:Segoe UI,Arial,sans-serif;line-height:1.63}
+header{background:linear-gradient(135deg,#031b36,#0878d1 56%,#5f28aa);color:#fff;padding:52px 24px}.hero{max-width:1280px;margin:auto}h1{font-size:clamp(2.3rem,5vw,4rem);line-height:1.08;margin:14px 0}.badge{display:inline-block;border:1px solid #ffffff55;background:#ffffff22;padding:7px 13px;border-radius:999px;font-weight:800}.subtitle{max-width:980px;color:#dceeff;font-size:1.12rem}.actions{display:flex;gap:10px;flex-wrap:wrap}.actions a{color:#fff;text-decoration:none;padding:10px 14px;border-radius:9px;background:#ffffff24;border:1px solid #ffffff40;font-weight:800}
+.layout{max-width:1550px;margin:auto;display:grid;grid-template-columns:292px minmax(0,1fr);gap:22px;padding:24px}aside{position:sticky;top:12px;height:max-content;max-height:96vh;overflow:auto;background:var(--panel);border:1px solid var(--border);border-radius:17px;padding:17px;box-shadow:var(--shadow)}aside a{display:block;text-decoration:none;color:var(--text);padding:7px 9px;border-radius:8px;font-size:.89rem}aside a:hover{background:var(--panel2);color:var(--brand)}main{min-width:0}section{background:var(--panel);border:1px solid var(--border);border-radius:18px;padding:27px;margin-bottom:21px;box-shadow:var(--shadow)}.section-head{display:flex;justify-content:space-between;align-items:center;gap:10px;border-bottom:1px solid var(--border);padding-bottom:10px;margin-bottom:15px}h2{color:var(--brand);margin:0;font-size:1.72rem}h3{margin-top:24px}.lead{font-size:1.08rem;color:var(--muted)}.grid-2,.grid-3{display:grid;gap:15px}.grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}.grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}.card{background:var(--panel2);border:1px solid var(--border);border-radius:14px;padding:17px}.card h3{margin-top:0}.callout{border-left:5px solid var(--brand);background:var(--panel2);border-radius:10px;padding:15px 17px;margin:15px 0}.warn{border-color:var(--warn)}.danger{border-color:var(--danger)}.success{border-color:var(--success)}table{width:100%;border-collapse:collapse;margin:15px 0;font-size:.93rem}th,td{border:1px solid var(--border);padding:10px;vertical-align:top;text-align:left}th{background:var(--panel2);color:var(--brand)}.code-wrap{position:relative;margin:14px 0}pre{background:var(--code);color:var(--codeText);padding:44px 17px 17px;border-radius:13px;overflow:auto;font:13px/1.55 Consolas,monospace;white-space:pre}.copy-btn{position:absolute;right:8px;top:8px;border:0;border-radius:8px;padding:7px 10px;background:#334155;color:#fff;cursor:pointer;font-weight:800}code{font-family:Consolas,monospace}.click-path{background:var(--code);color:var(--codeText);border-radius:10px;padding:12px 14px;overflow:auto;font-family:Consolas,monospace}.step{display:grid;grid-template-columns:44px minmax(0,1fr);gap:13px;margin:16px 0}.step-no{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;font-weight:900}.svg-img{width:100%;border-radius:15px;border:1px solid var(--border);background:#fff}details{border:1px solid var(--border);background:var(--panel2);border-radius:11px;margin:8px 0}summary{padding:12px 14px;cursor:pointer;font-weight:800}details .answer{padding:0 14px 14px;color:var(--muted)}.toolbar{position:fixed;right:13px;top:13px;z-index:100;display:flex;gap:6px}.toolbar button{border:1px solid var(--border);background:var(--panel);color:var(--text);padding:8px 10px;border-radius:8px}.progress-shell{height:13px;background:#d6e0ec;border-radius:999px;overflow:hidden}.progress-bar{height:100%;width:0;background:linear-gradient(90deg,var(--brand),var(--brand2))}.quiz-q{border:1px solid var(--border);border-radius:13px;padding:14px;margin:11px 0}.quiz-q label{display:block;padding:6px}.quiz-q.correct{border-color:#22c55e;background:#22c55e14}.quiz-q.wrong{border-color:#ef4444;background:#ef444414}.explanation{display:none;background:var(--panel);padding:9px;border-radius:8px;margin-top:8px}button.primary,button.secondary{padding:9px 13px;border-radius:8px;font-weight:800;cursor:pointer}button.primary{background:var(--brand);color:#fff;border:0}button.secondary{background:var(--panel2);color:var(--text);border:1px solid var(--border)}.note-mark{outline:3px solid #f59e0b}footer{text-align:center;color:var(--muted);padding:25px}@media(max-width:1050px){.layout{grid-template-columns:1fr}aside{position:relative;max-height:none}}@media(max-width:720px){.layout{padding:11px}section{padding:19px}.grid-2,.grid-3{grid-template-columns:1fr}.toolbar{position:static;margin:8px}}@media print{aside,.toolbar,.copy-btn,.complete-label{display:none}.layout{display:block;padding:0}section{box-shadow:none}}
+</style></head><body>
+<div class="toolbar"><button onclick="toggleTheme()">Theme</button><button onclick="fontChange(1)">A+</button><button onclick="fontChange(-1)">A−</button><button onclick="window.print()">Print</button></div>
+<header><div class="hero"><span class="badge">Apache Airflow 3.3 • Parameterized ETL</span><h1>Parameterized DAGs: Simple to Real World</h1><p class="subtitle">Build one reusable DAG and pass different table, period and environment values at runtime—without duplicating workflow code.</p><div class="actions"><a href="#concept">Concept</a><a href="#simple">Simple Demo</a><a href="#real">Real ETL</a><a href="#ui">Trigger UI</a></div></div></header>
+<div class="layout"><aside><h3>Course Menu</h3>
+<a href="#concept">1. Concept</a><a href="#why">2. Why use it?</a><a href="#comparison">3. Comparison</a><a href="#params">4. Params and Param</a><a href="#versions">5. Version imports</a><a href="#simple">6. Simple DAG</a><a href="#real">7. Real ETL</a><a href="#project">8. Setup</a><a href="#code">9. Complete code</a><a href="#ui">10. UI trigger</a><a href="#cli">11. CLI trigger</a><a href="#runtime">12. Runtime behavior</a><a href="#adf">13. ADF comparison</a><a href="#security">14. Security</a><a href="#errors">15. Errors</a><a href="#best">16. Best practices</a><a href="#interview">17. Interview Q&A</a><a href="#exercise">18. Exercises</a><a href="#quiz">19. Quiz</a><a href="#tracker">20. Tracker</a></aside><main>
+
+<section id="concept"><div class="section-head"><h2>1. What Is a Parameterized DAG?</h2><label class="complete-label"><input type="checkbox" class="complete"> Complete</label></div><p class="lead">A parameterized DAG is a reusable Airflow workflow whose runtime behavior changes according to values such as table name, file name, date, customer, region or environment.</p><div class="click-path">One DAG definition + different runtime values = reusable business runs</div><img class="svg-img" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNjAwIiBoZWlnaHQ9IjUyMCIgdmlld0JveD0iMCAwIDE2MDAgNTIwIj4KPGRlZnM+CjxsaW5lYXJHcmFkaWVudCBpZD0iYmciIHgxPSIwIiB5MT0iMCIgeDI9IjEiIHkyPSIxIj48c3RvcCBzdG9wLWNvbG9yPSIjZWRmNmZmIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjZjVlZmZmIi8+PC9saW5lYXJHcmFkaWVudD4KPGxpbmVhckdyYWRpZW50IGlkPSJub2RlIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agc3RvcC1jb2xvcj0iIzA4NzhkMSIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzdjM2FlZCIvPjwvbGluZWFyR3JhZGllbnQ+CjxtYXJrZXIgaWQ9ImFycm93IiBtYXJrZXJXaWR0aD0iMTIiIG1hcmtlckhlaWdodD0iMTIiIHJlZlg9IjEwIiByZWZZPSI1IiBvcmllbnQ9ImF1dG8iPjxwYXRoIGQ9Ik0wIDBMMTAgNUwwIDEweiIgZmlsbD0iIzEyNmZjMyIvPjwvbWFya2VyPgo8ZmlsdGVyIGlkPSJzaGFkb3ciPjxmZURyb3BTaGFkb3cgZHg9IjAiIGR5PSI3IiBzdGREZXZpYXRpb249IjciIGZsb29kLW9wYWNpdHk9Ii4yMiIvPjwvZmlsdGVyPgo8L2RlZnM+CjxyZWN0IHdpZHRoPSIxNjAwIiBoZWlnaHQ9IjUyMCIgcng9IjMwIiBmaWxsPSJ1cmwoI2JnKSIvPgo8dGV4dCB4PSI4MDAiIHk9IjYyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iU2Vnb2UgVUkiIGZvbnQtc2l6ZT0iMzYiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IiMxNTNiNjkiPlBhcmFtZXRlcml6ZWQgVGFibGUtUHJvY2Vzc2luZyBEQUc8L3RleHQ+Cjx0ZXh0IHg9IjgwMCIgeT0iMTAyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iU2Vnb2UgVUkiIGZvbnQtc2l6ZT0iMjAiIGZpbGw9IiM1MjZkOGQiPk9uZSBEQUcg4oCiIERpZmZlcmVudCB0YWJsZSwgcGVyaW9kIGFuZCBlbnZpcm9ubWVudCB2YWx1ZXM8L3RleHQ+CjxnIGZpbHRlcj0idXJsKCNzaGFkb3cpIiBmb250LWZhbWlseT0iU2Vnb2UgVUkiIHRleHQtYW5jaG9yPSJtaWRkbGUiPgo8cmVjdCB4PSI0NSIgeT0iMTkwIiB3aWR0aD0iMTc1IiBoZWlnaHQ9IjEyNSIgcng9IjIyIiBmaWxsPSJ1cmwoI25vZGUpIi8+PHRleHQgeD0iMTMyIiB5PSIyMzIiIGZpbGw9IiNmZmYiIGZvbnQtc2l6ZT0iMjAiIGZvbnQtd2VpZ2h0PSI3MDAiPlBhcmFtZXRlcnM8L3RleHQ+PHRleHQgeD0iMTMyIiB5PSIyNjMiIGZpbGw9IiNlYWYzZmYiIGZvbnQtc2l6ZT0iMTUiPnRhYmxlLCB5ZWFyLCBtb250aDwvdGV4dD48dGV4dCB4PSIxMzIiIHk9IjI4NyIgZmlsbD0iI2VhZjNmZiIgZm9udC1zaXplPSIxNSI+ZW52aXJvbm1lbnQ8L3RleHQ+CjxyZWN0IHg9IjI3MCIgeT0iMTkwIiB3aWR0aD0iMTg1IiBoZWlnaHQ9IjEyNSIgcng9IjIyIiBmaWxsPSJ1cmwoI25vZGUpIi8+PHRleHQgeD0iMzYyIiB5PSIyMzIiIGZpbGw9IiNmZmYiIGZvbnQtc2l6ZT0iMjAiIGZvbnQtd2VpZ2h0PSI3MDAiPlNob3cgJmFtcDsgVmFsaWRhdGU8L3RleHQ+PHRleHQgeD0iMzYyIiB5PSIyNzAiIGZpbGw9IiNlYWYzZmYiIGZvbnQtc2l6ZT0iMTUiPlNhZmV0eSBjaGVja3M8L3RleHQ+CjxyZWN0IHg9IjUwNSIgeT0iMTkwIiB3aWR0aD0iMTc1IiBoZWlnaHQ9IjEyNSIgcng9IjIyIiBmaWxsPSJ1cmwoI25vZGUpIi8+PHRleHQgeD0iNTkyIiB5PSIyMzIiIGZpbGw9IiNmZmYiIGZvbnQtc2l6ZT0iMjAiIGZvbnQtd2VpZ2h0PSI3MDAiPkV4dHJhY3Q8L3RleHQ+PHRleHQgeD0iNTkyIiB5PSIyNzAiIGZpbGw9IiNlYWYzZmYiIGZvbnQtc2l6ZT0iMTUiPlNlbGVjdCBzb3VyY2UgZmlsZTwvdGV4dD4KPHJlY3QgeD0iNzMwIiB5PSIxOTAiIHdpZHRoPSIxNzUiIGhlaWdodD0iMTI1IiByeD0iMjIiIGZpbGw9InVybCgjbm9kZSkiLz48dGV4dCB4PSI4MTciIHk9IjIzMiIgZmlsbD0iI2ZmZiIgZm9udC1zaXplPSIyMCIgZm9udC13ZWlnaHQ9IjcwMCI+VmFsaWRhdGU8L3RleHQ+PHRleHQgeD0iODE3IiB5PSIyNzAiIGZpbGw9IiNlYWYzZmYiIGZvbnQtc2l6ZT0iMTUiPkNsZWFuIGFuZCByZWplY3Q8L3RleHQ+CjxyZWN0IHg9Ijk1NSIgeT0iMTkwIiB3aWR0aD0iMTc1IiBoZWlnaHQ9IjEyNSIgcng9IjIyIiBmaWxsPSJ1cmwoI25vZGUpIi8+PHRleHQgeD0iMTA0MiIgeT0iMjMyIiBmaWxsPSIjZmZmIiBmb250LXNpemU9IjIwIiBmb250LXdlaWdodD0iNzAwIj5Mb2FkPC90ZXh0Pjx0ZXh0IHg9IjEwNDIiIHk9IjI3MCIgZmlsbD0iI2VhZjNmZiIgZm9udC1zaXplPSIxNSI+RW52aXJvbm1lbnQgdGFyZ2V0PC90ZXh0Pgo8cmVjdCB4PSIxMTgwIiB5PSIxOTAiIHdpZHRoPSIxNzUiIGhlaWdodD0iMTI1IiByeD0iMjIiIGZpbGw9InVybCgjbm9kZSkiLz48dGV4dCB4PSIxMjY3IiB5PSIyMzIiIGZpbGw9IiNmZmYiIGZvbnQtc2l6ZT0iMjAiIGZvbnQtd2VpZ2h0PSI3MDAiPkF1ZGl0PC90ZXh0Pjx0ZXh0IHg9IjEyNjciIHk9IjI3MCIgZmlsbD0iI2VhZjNmZiIgZm9udC1zaXplPSIxNSI+SlNPTiBydW4gc3VtbWFyeTwvdGV4dD4KPHJlY3QgeD0iMTQwNSIgeT0iMTkwIiB3aWR0aD0iMTQ1IiBoZWlnaHQ9IjEyNSIgcng9IjIyIiBmaWxsPSJ1cmwoI25vZGUpIi8+PHRleHQgeD0iMTQ3NyIgeT0iMjMyIiBmaWxsPSIjZmZmIiBmb250LXNpemU9IjIwIiBmb250LXdlaWdodD0iNzAwIj5GaW5pc2g8L3RleHQ+PHRleHQgeD0iMTQ3NyIgeT0iMjcwIiBmaWxsPSIjZWFmM2ZmIiBmb250LXNpemU9IjE1Ij5TdWNjZXNzPC90ZXh0Pgo8L2c+CjxnIHN0cm9rZT0iIzEyNmZjMyIgc3Ryb2tlLXdpZHRoPSI1IiBtYXJrZXItZW5kPSJ1cmwoI2Fycm93KSI+CjxsaW5lIHgxPSIyMjAiIHkxPSIyNTIiIHgyPSIyNzAiIHkyPSIyNTIiLz48bGluZSB4MT0iNDU1IiB5MT0iMjUyIiB4Mj0iNTA1IiB5Mj0iMjUyIi8+PGxpbmUgeDE9IjY4MCIgeTE9IjI1MiIgeDI9IjczMCIgeTI9IjI1MiIvPjxsaW5lIHgxPSI5MDUiIHkxPSIyNTIiIHgyPSI5NTUiIHkyPSIyNTIiLz48bGluZSB4MT0iMTEzMCIgeTE9IjI1MiIgeDI9IjExODAiIHkyPSIyNTIiLz48bGluZSB4MT0iMTM1NSIgeTE9IjI1MiIgeDI9IjE0MDUiIHkyPSIyNTIiLz4KPC9nPgo8dGV4dCB4PSI4MDAiIHk9IjQwNSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IlNlZ29lIFVJIiBmb250LXNpemU9IjI0IiBmb250LXdlaWdodD0iNzAwIiBmaWxsPSIjNGQyYTg2Ij5TYW1lIERBRyArIE5ldyBQYXJhbWV0ZXIgVmFsdWVzID0gTmV3IEJ1c2luZXNzIFJ1bjwvdGV4dD4KPC9zdmc+" alt="Parameterized flow"><div class="callout">Restaurant = DAG. Kitchen steps = Tasks. Food selection = Parameter.</div></section>
+
+<section id="why"><div class="section-head"><h2>2. Why Use It?</h2><label class="complete-label"><input type="checkbox" class="complete"> Complete</label></div><div class="grid-3"><div class="card"><h3>Less code</h3><p>Replace duplicate DAG files.</p></div><div class="card"><h3>Maintenance</h3><p>Fix workflow logic once.</p></div><div class="card"><h3>Reusable</h3><p>Process tables, dates and customers.</p></div><div class="card"><h3>Flexible</h3><p>Change values when triggering.</p></div><div class="card"><h3>Validated</h3><p>Use type, enum and range rules.</p></div><div class="card"><h3>Auditable</h3><p>Run configuration is recorded.</p></div></div></section>
+
+<section id="comparison"><div class="section-head"><h2>3. Without vs With Parameters</h2><label class="complete-label"><input type="checkbox" class="complete"> Complete</label></div><img class="svg-img" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNDAwIiBoZWlnaHQ9IjcwMCIgdmlld0JveD0iMCAwIDE0MDAgNzAwIj4KPHJlY3Qgd2lkdGg9IjE0MDAiIGhlaWdodD0iNzAwIiByeD0iMzAiIGZpbGw9IiNmNGY4ZmQiLz4KPHRleHQgeD0iNzAwIiB5PSI2MiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IlNlZ29lIFVJIiBmb250LXNpemU9IjM2IiBmb250LXdlaWdodD0iNzAwIiBmaWxsPSIjMTczZDZjIj5XaXRob3V0IFBhcmFtZXRlcnMgdnMgV2l0aCBQYXJhbWV0ZXJzPC90ZXh0Pgo8cmVjdCB4PSI3MCIgeT0iMTIwIiB3aWR0aD0iNTc1IiBoZWlnaHQ9IjUwMCIgcng9IjI0IiBmaWxsPSIjZmZmM2YzIiBzdHJva2U9IiNkNjQ1NDUiIHN0cm9rZS13aWR0aD0iMyIvPgo8cmVjdCB4PSI3NTUiIHk9IjEyMCIgd2lkdGg9IjU3NSIgaGVpZ2h0PSI1MDAiIHJ4PSIyNCIgZmlsbD0iI2VmZmZmNSIgc3Ryb2tlPSIjMjI5MjRkIiBzdHJva2Utd2lkdGg9IjMiLz4KPHRleHQgeD0iMzU3IiB5PSIxNzIiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJTZWdvZSBVSSIgZm9udC1zaXplPSIyOCIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iI2I3MjUyNSI+V2l0aG91dCBQYXJhbWV0ZXJzPC90ZXh0Pgo8dGV4dCB4PSIxMDQyIiB5PSIxNzIiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJTZWdvZSBVSSIgZm9udC1zaXplPSIyOCIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iIzE0NzEzYSI+V2l0aCBQYXJhbWV0ZXJzPC90ZXh0Pgo8ZyBmb250LWZhbWlseT0iU2Vnb2UgVUkiIGZvbnQtc2l6ZT0iMjIiIGZpbGw9IiM3MDMwMzAiPgo8dGV4dCB4PSIxMzUiIHk9IjI1MCI+RW1wbG95ZWVfREFHPC90ZXh0Pjx0ZXh0IHg9IjEzNSIgeT0iMzA1Ij5EZXBhcnRtZW50X0RBRzwvdGV4dD48dGV4dCB4PSIxMzUiIHk9IjM2MCI+Q3VzdG9tZXJfREFHPC90ZXh0Pjx0ZXh0IHg9IjEzNSIgeT0iNDE1Ij5Qcm9kdWN0X0RBRzwvdGV4dD48dGV4dCB4PSIxMzUiIHk9IjUwMCI+RHVwbGljYXRlIGNvZGU8L3RleHQ+PHRleHQgeD0iMTM1IiB5PSI1NTAiPkhhcmQgbWFpbnRlbmFuY2U8L3RleHQ+CjwvZz4KPGcgZm9udC1mYW1pbHk9IlNlZ29lIFVJIiBmb250LXNpemU9IjIyIiBmaWxsPSIjMjQ1YzNhIj4KPHRleHQgeD0iODIwIiB5PSIyNTAiPnBhcmFtZXRlcml6ZWRfdGFibGVfcHJvY2Vzc2luZzwvdGV4dD48dGV4dCB4PSI4MjAiIHk9IjMyMCI+dGFibGVfbmFtZSA9IEVtcGxveWVlPC90ZXh0Pjx0ZXh0IHg9IjgyMCIgeT0iMzcwIj50YWJsZV9uYW1lID0gQ3VzdG9tZXI8L3RleHQ+PHRleHQgeD0iODIwIiB5PSI0MjAiPnRhYmxlX25hbWUgPSBQcm9kdWN0PC90ZXh0Pjx0ZXh0IHg9IjgyMCIgeT0iNTAwIj5PbmUgd29ya2Zsb3c8L3RleHQ+PHRleHQgeD0iODIwIiB5PSI1NTAiPlZhbGlkYXRlZCBydW50aW1lIHZhbHVlczwvdGV4dD4KPC9nPgo8L3N2Zz4=" alt="Comparison"><table><tr><th>Without</th><th>With</th></tr><tr><td>Many duplicate DAGs</td><td>One reusable DAG</td></tr><tr><td>Code changes per input</td><td>Runtime values</td></tr><tr><td>Hard maintenance</td><td>Centralized maintenance</td></tr><tr><td>More deployment effort</td><td>Fewer DAG definitions</td></tr></table></section>
+
+<section id="params"><div class="section-head"><h2>4. <code>params</code> and <code>Param</code></h2><label class="complete-label"><input type="checkbox" class="complete"> Complete</label></div><h3>Simple defaults</h3><div class="code-wrap"><button class="copy-btn">Copy</button><pre>params={
+    "table_name": "Employee",
+    "year": 2026,
+    "month": "August"
+}</pre></div><h3>Validated field</h3><div class="code-wrap"><button class="copy-btn">Copy</button><pre>"table_name": Param(
+    default="Employee",
+    type="string",
+    enum=["Employee", "Department", "Customer", "Product"],
+    title="Source table",
+    description="Select the business table."
+)</pre></div><table><tr><th>Property</th><th>Purpose</th></tr><tr><td>default</td><td>Value used without override</td></tr><tr><td>type</td><td>Validation and field type</td></tr><tr><td>enum</td><td>Allowlist and dropdown</td></tr><tr><td>minimum / maximum</td><td>Numeric range</td></tr><tr><td>title / description</td><td>Form label and help</td></tr><tr><td>section</td><td>Groups form controls</td></tr></table></section>
+
+<section id="versions"><div class="section-head"><h2>5. Correct Imports</h2><label class="complete-label"><input type="checkbox" class="complete"> Complete</label></div><h3>Airflow 3</h3><div class="code-wrap"><button class="copy-btn">Copy</button><pre>from airflow.sdk import DAG, Param
+from airflow.providers.standard.operators.python import PythonOperator
+from airflow.providers.standard.operators.empty import EmptyOperator</pre></div><h3>Airflow 2 legacy</h3><div class="code-wrap"><button class="copy-btn">Copy</button><pre>from airflow import DAG
+from airflow.models.param import Param
+from airflow.operators.python import PythonOperator</pre></div><div class="callout danger"><strong>Do not mix versions.</strong> Downloadable DAGs use Airflow 3 imports.</div></section>
+
+<section id="simple"><div class="section-head"><h2>6. Simple Parameterized DAG</h2><label class="complete-label"><input type="checkbox" class="complete"> Complete</label></div><div class="code-wrap"><button class="copy-btn">Copy</button><pre>
+from __future__ import annotations
+
+import pendulum
+
+from airflow.sdk import DAG, Param
+from airflow.providers.standard.operators.python import PythonOperator
+
+
+def process_table(**context) -&gt; None:
+    params = context[&quot;params&quot;]
+    print(&quot;=&quot; * 55)
+    print(&quot;Simple Parameterized DAG&quot;)
+    print(&quot;=&quot; * 55)
+    print(f&quot;Processing table : {params[&#x27;table_name&#x27;]}&quot;)
+    print(f&quot;Processing year  : {params[&#x27;year&#x27;]}&quot;)
+    print(f&quot;Processing month : {params[&#x27;month&#x27;]}&quot;)
+    print(&quot;=&quot; * 55)
+
+
+with DAG(
+    dag_id=&quot;simple_parameterized_dag&quot;,
+    description=&quot;First demonstration of Airflow runtime parameters.&quot;,
+    schedule=None,
+    start_date=pendulum.datetime(2026, 1, 1, tz=&quot;Asia/Kolkata&quot;),
+    catchup=False,
+    params={
+        &quot;table_name&quot;: Param(
+            default=&quot;Employee&quot;,
+            type=&quot;string&quot;,
+            enum=[&quot;Employee&quot;, &quot;Department&quot;, &quot;Customer&quot;, &quot;Product&quot;],
+            title=&quot;Source table&quot;,
+            description=&quot;Select the table to process.&quot;,
+        ),
+        &quot;year&quot;: Param(
+            default=2026,
+            type=&quot;integer&quot;,
+            minimum=2020,
+            maximum=2030,
+            title=&quot;Processing year&quot;,
+        ),
+        &quot;month&quot;: Param(
+            default=&quot;August&quot;,
+            type=&quot;string&quot;,
+            enum=[
+                &quot;January&quot;, &quot;February&quot;, &quot;March&quot;, &quot;April&quot;,
+                &quot;May&quot;, &quot;June&quot;, &quot;July&quot;, &quot;August&quot;,
+                &quot;September&quot;, &quot;October&quot;, &quot;November&quot;, &quot;December&quot;,
+            ],
+            title=&quot;Processing month&quot;,
+        ),
+    },
+    tags=[&quot;parameter-demo&quot;, &quot;training&quot;],
+) as dag:
+    process_table_task = PythonOperator(
+        task_id=&quot;process_table&quot;,
+        python_callable=process_table,
+    )
+</pre></div><h3>Trigger values</h3><div class="code-wrap"><button class="copy-btn">Copy</button><pre>{"table_name":"Customer","year":2026,"month":"September"}</pre></div><pre>Processing table : Customer
+Processing year  : 2026
+Processing month : September</pre></section>
+
+<section id="real"><div class="section-head"><h2>7. Real-World ETL Scenario</h2><label class="complete-label"><input type="checkbox" class="complete"> Complete</label></div><p>One DAG processes Employee, Department, Customer or Product files using table, year, month and environment values.</p><img class="svg-img" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNjAwIiBoZWlnaHQ9IjUyMCIgdmlld0JveD0iMCAwIDE2MDAgNTIwIj4KPGRlZnM+CjxsaW5lYXJHcmFkaWVudCBpZD0iYmciIHgxPSIwIiB5MT0iMCIgeDI9IjEiIHkyPSIxIj48c3RvcCBzdG9wLWNvbG9yPSIjZWRmNmZmIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjZjVlZmZmIi8+PC9saW5lYXJHcmFkaWVudD4KPGxpbmVhckdyYWRpZW50IGlkPSJub2RlIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agc3RvcC1jb2xvcj0iIzA4NzhkMSIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzdjM2FlZCIvPjwvbGluZWFyR3JhZGllbnQ+CjxtYXJrZXIgaWQ9ImFycm93IiBtYXJrZXJXaWR0aD0iMTIiIG1hcmtlckhlaWdodD0iMTIiIHJlZlg9IjEwIiByZWZZPSI1IiBvcmllbnQ9ImF1dG8iPjxwYXRoIGQ9Ik0wIDBMMTAgNUwwIDEweiIgZmlsbD0iIzEyNmZjMyIvPjwvbWFya2VyPgo8ZmlsdGVyIGlkPSJzaGFkb3ciPjxmZURyb3BTaGFkb3cgZHg9IjAiIGR5PSI3IiBzdGREZXZpYXRpb249IjciIGZsb29kLW9wYWNpdHk9Ii4yMiIvPjwvZmlsdGVyPgo8L2RlZnM+CjxyZWN0IHdpZHRoPSIxNjAwIiBoZWlnaHQ9IjUyMCIgcng9IjMwIiBmaWxsPSJ1cmwoI2JnKSIvPgo8dGV4dCB4PSI4MDAiIHk9IjYyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iU2Vnb2UgVUkiIGZvbnQtc2l6ZT0iMzYiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IiMxNTNiNjkiPlBhcmFtZXRlcml6ZWQgVGFibGUtUHJvY2Vzc2luZyBEQUc8L3RleHQ+Cjx0ZXh0IHg9IjgwMCIgeT0iMTAyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iU2Vnb2UgVUkiIGZvbnQtc2l6ZT0iMjAiIGZpbGw9IiM1MjZkOGQiPk9uZSBEQUcg4oCiIERpZmZlcmVudCB0YWJsZSwgcGVyaW9kIGFuZCBlbnZpcm9ubWVudCB2YWx1ZXM8L3RleHQ+CjxnIGZpbHRlcj0idXJsKCNzaGFkb3cpIiBmb250LWZhbWlseT0iU2Vnb2UgVUkiIHRleHQtYW5jaG9yPSJtaWRkbGUiPgo8cmVjdCB4PSI0NSIgeT0iMTkwIiB3aWR0aD0iMTc1IiBoZWlnaHQ9IjEyNSIgcng9IjIyIiBmaWxsPSJ1cmwoI25vZGUpIi8+PHRleHQgeD0iMTMyIiB5PSIyMzIiIGZpbGw9IiNmZmYiIGZvbnQtc2l6ZT0iMjAiIGZvbnQtd2VpZ2h0PSI3MDAiPlBhcmFtZXRlcnM8L3RleHQ+PHRleHQgeD0iMTMyIiB5PSIyNjMiIGZpbGw9IiNlYWYzZmYiIGZvbnQtc2l6ZT0iMTUiPnRhYmxlLCB5ZWFyLCBtb250aDwvdGV4dD48dGV4dCB4PSIxMzIiIHk9IjI4NyIgZmlsbD0iI2VhZjNmZiIgZm9udC1zaXplPSIxNSI+ZW52aXJvbm1lbnQ8L3RleHQ+CjxyZWN0IHg9IjI3MCIgeT0iMTkwIiB3aWR0aD0iMTg1IiBoZWlnaHQ9IjEyNSIgcng9IjIyIiBmaWxsPSJ1cmwoI25vZGUpIi8+PHRleHQgeD0iMzYyIiB5PSIyMzIiIGZpbGw9IiNmZmYiIGZvbnQtc2l6ZT0iMjAiIGZvbnQtd2VpZ2h0PSI3MDAiPlNob3cgJmFtcDsgVmFsaWRhdGU8L3RleHQ+PHRleHQgeD0iMzYyIiB5PSIyNzAiIGZpbGw9IiNlYWYzZmYiIGZvbnQtc2l6ZT0iMTUiPlNhZmV0eSBjaGVja3M8L3RleHQ+CjxyZWN0IHg9IjUwNSIgeT0iMTkwIiB3aWR0aD0iMTc1IiBoZWlnaHQ9IjEyNSIgcng9IjIyIiBmaWxsPSJ1cmwoI25vZGUpIi8+PHRleHQgeD0iNTkyIiB5PSIyMzIiIGZpbGw9IiNmZmYiIGZvbnQtc2l6ZT0iMjAiIGZvbnQtd2VpZ2h0PSI3MDAiPkV4dHJhY3Q8L3RleHQ+PHRleHQgeD0iNTkyIiB5PSIyNzAiIGZpbGw9IiNlYWYzZmYiIGZvbnQtc2l6ZT0iMTUiPlNlbGVjdCBzb3VyY2UgZmlsZTwvdGV4dD4KPHJlY3QgeD0iNzMwIiB5PSIxOTAiIHdpZHRoPSIxNzUiIGhlaWdodD0iMTI1IiByeD0iMjIiIGZpbGw9InVybCgjbm9kZSkiLz48dGV4dCB4PSI4MTciIHk9IjIzMiIgZmlsbD0iI2ZmZiIgZm9udC1zaXplPSIyMCIgZm9udC13ZWlnaHQ9IjcwMCI+VmFsaWRhdGU8L3RleHQ+PHRleHQgeD0iODE3IiB5PSIyNzAiIGZpbGw9IiNlYWYzZmYiIGZvbnQtc2l6ZT0iMTUiPkNsZWFuIGFuZCByZWplY3Q8L3RleHQ+CjxyZWN0IHg9Ijk1NSIgeT0iMTkwIiB3aWR0aD0iMTc1IiBoZWlnaHQ9IjEyNSIgcng9IjIyIiBmaWxsPSJ1cmwoI25vZGUpIi8+PHRleHQgeD0iMTA0MiIgeT0iMjMyIiBmaWxsPSIjZmZmIiBmb250LXNpemU9IjIwIiBmb250LXdlaWdodD0iNzAwIj5Mb2FkPC90ZXh0Pjx0ZXh0IHg9IjEwNDIiIHk9IjI3MCIgZmlsbD0iI2VhZjNmZiIgZm9udC1zaXplPSIxNSI+RW52aXJvbm1lbnQgdGFyZ2V0PC90ZXh0Pgo8cmVjdCB4PSIxMTgwIiB5PSIxOTAiIHdpZHRoPSIxNzUiIGhlaWdodD0iMTI1IiByeD0iMjIiIGZpbGw9InVybCgjbm9kZSkiLz48dGV4dCB4PSIxMjY3IiB5PSIyMzIiIGZpbGw9IiNmZmYiIGZvbnQtc2l6ZT0iMjAiIGZvbnQtd2VpZ2h0PSI3MDAiPkF1ZGl0PC90ZXh0Pjx0ZXh0IHg9IjEyNjciIHk9IjI3MCIgZmlsbD0iI2VhZjNmZiIgZm9udC1zaXplPSIxNSI+SlNPTiBydW4gc3VtbWFyeTwvdGV4dD4KPHJlY3QgeD0iMTQwNSIgeT0iMTkwIiB3aWR0aD0iMTQ1IiBoZWlnaHQ9IjEyNSIgcng9IjIyIiBmaWxsPSJ1cmwoI25vZGUpIi8+PHRleHQgeD0iMTQ3NyIgeT0iMjMyIiBmaWxsPSIjZmZmIiBmb250LXNpemU9IjIwIiBmb250LXdlaWdodD0iNzAwIj5GaW5pc2g8L3RleHQ+PHRleHQgeD0iMTQ3NyIgeT0iMjcwIiBmaWxsPSIjZWFmM2ZmIiBmb250LXNpemU9IjE1Ij5TdWNjZXNzPC90ZXh0Pgo8L2c+CjxnIHN0cm9rZT0iIzEyNmZjMyIgc3Ryb2tlLXdpZHRoPSI1IiBtYXJrZXItZW5kPSJ1cmwoI2Fycm93KSI+CjxsaW5lIHgxPSIyMjAiIHkxPSIyNTIiIHgyPSIyNzAiIHkyPSIyNTIiLz48bGluZSB4MT0iNDU1IiB5MT0iMjUyIiB4Mj0iNTA1IiB5Mj0iMjUyIi8+PGxpbmUgeDE9IjY4MCIgeTE9IjI1MiIgeDI9IjczMCIgeTI9IjI1MiIvPjxsaW5lIHgxPSI5MDUiIHkxPSIyNTIiIHgyPSI5NTUiIHkyPSIyNTIiLz48bGluZSB4MT0iMTEzMCIgeTE9IjI1MiIgeDI9IjExODAiIHkyPSIyNTIiLz48bGluZSB4MT0iMTM1NSIgeTE9IjI1MiIgeDI9IjE0MDUiIHkyPSIyNTIiLz4KPC9nPgo8dGV4dCB4PSI4MDAiIHk9IjQwNSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IlNlZ29lIFVJIiBmb250LXNpemU9IjI0IiBmb250LXdlaWdodD0iNzAwIiBmaWxsPSIjNGQyYTg2Ij5TYW1lIERBRyArIE5ldyBQYXJhbWV0ZXIgVmFsdWVzID0gTmV3IEJ1c2luZXNzIFJ1bjwvdGV4dD4KPC9zdmc+" alt="ETL flow"><table><tr><th>Task</th><th>Purpose</th></tr><tr><td>show_parameters</td><td>Validate and display inputs</td></tr><tr><td>extract_table</td><td>Select source file</td></tr><tr><td>validate_table</td><td>Create valid/rejected outputs</td></tr><tr><td>load_table</td><td>Write environment target</td></tr><tr><td>create_audit_summary</td><td>Write JSON audit</td></tr></table><div class="callout warn">Production requires <code>confirm_production=true</code>.</div></section>
+
+<section id="project"><div class="section-head"><h2>8. Project Setup</h2><label class="complete-label"><input type="checkbox" class="complete"> Complete</label></div><pre>apache-airflow-parameterized-dag-trainer/
+├── dags/
+├── data/source/
+├── scripts/
+├── docs/
+├── diagrams/
+└── expected-output/</pre><div class="code-wrap"><button class="copy-btn">Copy</button><pre>cd ~/apache-airflow-parameterized-dag-trainer
+chmod +x scripts/*.sh
+./scripts/install_parameterized_lab.sh
+
+airflow dags list | grep parameterized
+airflow dags list-import-errors
+airflow tasks list parameterized_table_processing</pre></div><div class="callout">Airflow 3 file testing: <code>airflow dags test DAG_ID -f PATH_TO_DAG_FILE</code>.</div></section>
+
+<section id="code"><div class="section-head"><h2>9. Complete Real-World DAG</h2><label class="complete-label"><input type="checkbox" class="complete"> Complete</label></div><details><summary>Open complete executable code</summary><div class="answer"><div class="code-wrap"><button class="copy-btn">Copy</button><pre>
+from __future__ import annotations
+
+import csv
+import json
+import os
+import re
+import shutil
+from pathlib import Path
+from typing import Any
+
+import pendulum
+
+from airflow.sdk import DAG, Param
+from airflow.providers.standard.operators.empty import EmptyOperator
+from airflow.providers.standard.operators.python import PythonOperator
+
+
+LAB_HOME = Path(
+    os.environ.get(
+        &quot;AIRFLOW_PARAMETER_LAB_HOME&quot;,
+        str(Path.home() / &quot;airflow_parameterized_lab&quot;),
+    )
+)
+
+SOURCE_DIR = LAB_HOME / &quot;data&quot; / &quot;source&quot;
+STAGING_DIR = LAB_HOME / &quot;data&quot; / &quot;staging&quot;
+PROCESSED_DIR = LAB_HOME / &quot;data&quot; / &quot;processed&quot;
+REJECTED_DIR = LAB_HOME / &quot;data&quot; / &quot;rejected&quot;
+TARGET_DIR = LAB_HOME / &quot;data&quot; / &quot;targets&quot;
+AUDIT_DIR = LAB_HOME / &quot;data&quot; / &quot;audit&quot;
+
+ALLOWED_TABLES = {&quot;Employee&quot;, &quot;Department&quot;, &quot;Customer&quot;, &quot;Product&quot;}
+ALLOWED_ENVIRONMENTS = {&quot;Development&quot;, &quot;Testing&quot;, &quot;Production&quot;}
+ALLOWED_STATUSES = {&quot;ACTIVE&quot;, &quot;INACTIVE&quot;, &quot;PENDING&quot;}
+REQUIRED_COLUMNS = {&quot;record_id&quot;, &quot;name&quot;, &quot;created_date&quot;, &quot;status&quot;, &quot;amount&quot;}
+
+
+def _safe_run_id(run_id: str) -&gt; str:
+    return re.sub(r&quot;[^A-Za-z0-9_.-]+&quot;, &quot;_&quot;, run_id)
+
+
+def _runtime_values(context: dict[str, Any]) -&gt; dict[str, Any]:
+    params = context[&quot;params&quot;]
+
+    values = {
+        &quot;table_name&quot;: str(params[&quot;table_name&quot;]).strip(),
+        &quot;year&quot;: int(params[&quot;year&quot;]),
+        &quot;month&quot;: str(params[&quot;month&quot;]).strip(),
+        &quot;environment&quot;: str(params[&quot;environment&quot;]).strip(),
+        &quot;confirm_production&quot;: bool(params[&quot;confirm_production&quot;]),
+    }
+
+    if values[&quot;table_name&quot;] not in ALLOWED_TABLES:
+        raise ValueError(&quot;Unsupported table_name.&quot;)
+
+    if values[&quot;environment&quot;] not in ALLOWED_ENVIRONMENTS:
+        raise ValueError(&quot;Unsupported environment.&quot;)
+
+    if (
+        values[&quot;environment&quot;] == &quot;Production&quot;
+        and not values[&quot;confirm_production&quot;]
+    ):
+        raise ValueError(
+            &quot;Production was selected, but confirm_production is false.&quot;
+        )
+
+    return values
+
+
+def show_parameters(**context) -&gt; dict[str, Any]:
+    values = _runtime_values(context)
+
+    print(&quot;=&quot; * 62)
+    print(&quot;Received DAG Parameters&quot;)
+    print(&quot;=&quot; * 62)
+    print(f&quot;Table              : {values[&#x27;table_name&#x27;]}&quot;)
+    print(f&quot;Year               : {values[&#x27;year&#x27;]}&quot;)
+    print(f&quot;Month              : {values[&#x27;month&#x27;]}&quot;)
+    print(f&quot;Environment        : {values[&#x27;environment&#x27;]}&quot;)
+    print(f&quot;Confirm production : {values[&#x27;confirm_production&#x27;]}&quot;)
+    print(&quot;=&quot; * 62)
+
+    return values
+
+
+def extract_table(**context) -&gt; dict[str, Any]:
+    values = context[&quot;ti&quot;].xcom_pull(task_ids=&quot;show_parameters&quot;)
+    run_folder = _safe_run_id(str(context[&quot;run_id&quot;]))
+
+    source_file = SOURCE_DIR / (
+        f&quot;{values[&#x27;table_name&#x27;]}_{values[&#x27;year&#x27;]}_{values[&#x27;month&#x27;]}.csv&quot;
+    )
+    staging_folder = STAGING_DIR / run_folder
+    staging_folder.mkdir(parents=True, exist_ok=True)
+    staged_file = staging_folder / source_file.name
+
+    if not source_file.exists():
+        raise FileNotFoundError(
+            &quot;Source file not found. Expected: &quot;
+            f&quot;{source_file}&quot;
+        )
+
+    shutil.copy2(source_file, staged_file)
+
+    print(f&quot;Source file : {source_file}&quot;)
+    print(f&quot;Staged file : {staged_file}&quot;)
+
+    return {
+        **values,
+        &quot;run_folder&quot;: run_folder,
+        &quot;source_file&quot;: str(source_file),
+        &quot;staged_file&quot;: str(staged_file),
+    }
+
+
+def validate_table(**context) -&gt; dict[str, Any]:
+    metadata = context[&quot;ti&quot;].xcom_pull(task_ids=&quot;extract_table&quot;)
+    staged_file = Path(metadata[&quot;staged_file&quot;])
+    run_folder = metadata[&quot;run_folder&quot;]
+
+    processed_folder = PROCESSED_DIR / run_folder
+    rejected_folder = REJECTED_DIR / run_folder
+    processed_folder.mkdir(parents=True, exist_ok=True)
+    rejected_folder.mkdir(parents=True, exist_ok=True)
+
+    clean_file = processed_folder / &quot;valid_records.csv&quot;
+    rejected_file = rejected_folder / &quot;rejected_records.csv&quot;
+
+    valid_rows: list[dict[str, Any]] = []
+    rejected_rows: list[dict[str, Any]] = []
+
+    with staged_file.open(&quot;r&quot;, encoding=&quot;utf-8&quot;, newline=&quot;&quot;) as source:
+        reader = csv.DictReader(source)
+        columns = set(reader.fieldnames or [])
+
+        missing_columns = REQUIRED_COLUMNS - columns
+        if missing_columns:
+            raise ValueError(
+                &quot;Missing required columns: &quot;
+                + &quot;, &quot;.join(sorted(missing_columns))
+            )
+
+        for line_number, raw in enumerate(reader, start=2):
+            row = {key: (value or &quot;&quot;).strip() for key, value in raw.items()}
+            reasons: list[str] = []
+
+            if not row[&quot;record_id&quot;]:
+                reasons.append(&quot;MISSING_RECORD_ID&quot;)
+
+            if not row[&quot;name&quot;]:
+                reasons.append(&quot;MISSING_NAME&quot;)
+
+            try:
+                pendulum.parse(row[&quot;created_date&quot;], strict=True)
+            except Exception:
+                reasons.append(&quot;INVALID_CREATED_DATE&quot;)
+
+            status = row[&quot;status&quot;].upper()
+            if status not in ALLOWED_STATUSES:
+                reasons.append(&quot;INVALID_STATUS&quot;)
+
+            try:
+                amount = float(row[&quot;amount&quot;])
+                if amount &lt; 0:
+                    reasons.append(&quot;NEGATIVE_AMOUNT&quot;)
+            except ValueError:
+                amount = 0.0
+                reasons.append(&quot;INVALID_AMOUNT&quot;)
+
+            transformed = {
+                &quot;record_id&quot;: row[&quot;record_id&quot;].upper(),
+                &quot;name&quot;: row[&quot;name&quot;].title(),
+                &quot;created_date&quot;: row[&quot;created_date&quot;],
+                &quot;status&quot;: status,
+                &quot;amount&quot;: round(amount, 2),
+                &quot;source_table&quot;: metadata[&quot;table_name&quot;],
+                &quot;processing_year&quot;: metadata[&quot;year&quot;],
+                &quot;processing_month&quot;: metadata[&quot;month&quot;],
+                &quot;target_environment&quot;: metadata[&quot;environment&quot;],
+                &quot;source_line_number&quot;: line_number,
+            }
+
+            if reasons:
+                transformed[&quot;rejection_reason&quot;] = &quot;|&quot;.join(reasons)
+                rejected_rows.append(transformed)
+            else:
+                valid_rows.append(transformed)
+
+    clean_fields = [
+        &quot;record_id&quot;,
+        &quot;name&quot;,
+        &quot;created_date&quot;,
+        &quot;status&quot;,
+        &quot;amount&quot;,
+        &quot;source_table&quot;,
+        &quot;processing_year&quot;,
+        &quot;processing_month&quot;,
+        &quot;target_environment&quot;,
+        &quot;source_line_number&quot;,
+    ]
+
+    with clean_file.open(&quot;w&quot;, encoding=&quot;utf-8&quot;, newline=&quot;&quot;) as target:
+        writer = csv.DictWriter(target, fieldnames=clean_fields)
+        writer.writeheader()
+        writer.writerows(valid_rows)
+
+    with rejected_file.open(&quot;w&quot;, encoding=&quot;utf-8&quot;, newline=&quot;&quot;) as target:
+        writer = csv.DictWriter(
+            target,
+            fieldnames=clean_fields + [&quot;rejection_reason&quot;],
+        )
+        writer.writeheader()
+        writer.writerows(rejected_rows)
+
+    if not valid_rows:
+        raise ValueError(&quot;No valid records remained after validation.&quot;)
+
+    print(f&quot;Valid rows    : {len(valid_rows)}&quot;)
+    print(f&quot;Rejected rows : {len(rejected_rows)}&quot;)
+    print(f&quot;Clean file    : {clean_file}&quot;)
+    print(f&quot;Rejected file : {rejected_file}&quot;)
+
+    return {
+        **metadata,
+        &quot;clean_file&quot;: str(clean_file),
+        &quot;rejected_file&quot;: str(rejected_file),
+        &quot;valid_count&quot;: len(valid_rows),
+        &quot;rejected_count&quot;: len(rejected_rows),
+    }
+
+
+def load_table(**context) -&gt; dict[str, Any]:
+    metadata = context[&quot;ti&quot;].xcom_pull(task_ids=&quot;validate_table&quot;)
+    clean_file = Path(metadata[&quot;clean_file&quot;])
+
+    target_folder = (
+        TARGET_DIR
+        / metadata[&quot;environment&quot;]
+        / metadata[&quot;table_name&quot;]
+        / str(metadata[&quot;year&quot;])
+        / metadata[&quot;month&quot;]
+    )
+    target_folder.mkdir(parents=True, exist_ok=True)
+
+    target_file = target_folder / &quot;loaded_records.csv&quot;
+    shutil.copy2(clean_file, target_file)
+
+    print(
+        f&quot;Loaded {metadata[&#x27;valid_count&#x27;]} records from &quot;
+        f&quot;{metadata[&#x27;table_name&#x27;]} into {metadata[&#x27;environment&#x27;]}.&quot;
+    )
+    print(f&quot;Target file: {target_file}&quot;)
+
+    return {
+        **metadata,
+        &quot;target_file&quot;: str(target_file),
+    }
+
+
+def create_audit_summary(**context) -&gt; str:
+    metadata = context[&quot;ti&quot;].xcom_pull(task_ids=&quot;load_table&quot;)
+    run_folder = metadata[&quot;run_folder&quot;]
+
+    AUDIT_DIR.mkdir(parents=True, exist_ok=True)
+    audit_file = AUDIT_DIR / f&quot;audit_{run_folder}.json&quot;
+
+    audit = {
+        &quot;dag_id&quot;: context[&quot;dag&quot;].dag_id,
+        &quot;run_id&quot;: str(context[&quot;run_id&quot;]),
+        &quot;table_name&quot;: metadata[&quot;table_name&quot;],
+        &quot;year&quot;: metadata[&quot;year&quot;],
+        &quot;month&quot;: metadata[&quot;month&quot;],
+        &quot;environment&quot;: metadata[&quot;environment&quot;],
+        &quot;valid_count&quot;: metadata[&quot;valid_count&quot;],
+        &quot;rejected_count&quot;: metadata[&quot;rejected_count&quot;],
+        &quot;source_file&quot;: metadata[&quot;source_file&quot;],
+        &quot;target_file&quot;: metadata[&quot;target_file&quot;],
+        &quot;status&quot;: &quot;SUCCESS&quot;,
+    }
+
+    audit_file.write_text(
+        json.dumps(audit, indent=2),
+        encoding=&quot;utf-8&quot;,
+    )
+
+    print(json.dumps(audit, indent=2))
+    return str(audit_file)
+
+
+with DAG(
+    dag_id=&quot;parameterized_table_processing&quot;,
+    description=&quot;Reusable ETL workflow driven by validated runtime parameters.&quot;,
+    schedule=None,
+    start_date=pendulum.datetime(2026, 1, 1, tz=&quot;Asia/Kolkata&quot;),
+    catchup=False,
+    max_active_runs=2,
+    params={
+        &quot;table_name&quot;: Param(
+            default=&quot;Employee&quot;,
+            type=&quot;string&quot;,
+            enum=[&quot;Employee&quot;, &quot;Department&quot;, &quot;Customer&quot;, &quot;Product&quot;],
+            title=&quot;Source table&quot;,
+            description=&quot;Select the business table to process.&quot;,
+            section=&quot;Source&quot;,
+        ),
+        &quot;year&quot;: Param(
+            default=2026,
+            type=&quot;integer&quot;,
+            minimum=2020,
+            maximum=2030,
+            title=&quot;Processing year&quot;,
+            section=&quot;Processing period&quot;,
+        ),
+        &quot;month&quot;: Param(
+            default=&quot;August&quot;,
+            type=&quot;string&quot;,
+            enum=[
+                &quot;January&quot;, &quot;February&quot;, &quot;March&quot;, &quot;April&quot;,
+                &quot;May&quot;, &quot;June&quot;, &quot;July&quot;, &quot;August&quot;,
+                &quot;September&quot;, &quot;October&quot;, &quot;November&quot;, &quot;December&quot;,
+            ],
+            title=&quot;Processing month&quot;,
+            section=&quot;Processing period&quot;,
+        ),
+        &quot;environment&quot;: Param(
+            default=&quot;Development&quot;,
+            type=&quot;string&quot;,
+            enum=[&quot;Development&quot;, &quot;Testing&quot;, &quot;Production&quot;],
+            title=&quot;Target environment&quot;,
+            section=&quot;Target&quot;,
+        ),
+        &quot;confirm_production&quot;: Param(
+            default=False,
+            type=&quot;boolean&quot;,
+            title=&quot;Confirm Production load&quot;,
+            description=(
+                &quot;Select true only when Target environment is Production.&quot;
+            ),
+            section=&quot;Target&quot;,
+        ),
+    },
+    tags=[&quot;parameterized&quot;, &quot;etl&quot;, &quot;training&quot;],
+) as dag:
+    start = EmptyOperator(task_id=&quot;start&quot;)
+
+    show_parameters_task = PythonOperator(
+        task_id=&quot;show_parameters&quot;,
+        python_callable=show_parameters,
+    )
+
+    extract_task = PythonOperator(
+        task_id=&quot;extract_table&quot;,
+        python_callable=extract_table,
+    )
+
+    validate_task = PythonOperator(
+        task_id=&quot;validate_table&quot;,
+        python_callable=validate_table,
+    )
+
+    load_task = PythonOperator(
+        task_id=&quot;load_table&quot;,
+        python_callable=load_table,
+    )
+
+    audit_task = PythonOperator(
+        task_id=&quot;create_audit_summary&quot;,
+        python_callable=create_audit_summary,
+    )
+
+    finish = EmptyOperator(task_id=&quot;finish&quot;)
+
+    (
+        start
+        &gt;&gt; show_parameters_task
+        &gt;&gt; extract_task
+        &gt;&gt; validate_task
+        &gt;&gt; load_task
+        &gt;&gt; audit_task
+        &gt;&gt; finish
+    )
+</pre></div></div></details></section>
+
+<section id="ui"><div class="section-head"><h2>10. Trigger from Airflow 3 UI</h2><label class="complete-label"><input type="checkbox" class="complete"> Complete</label></div><div class="step"><div class="step-no">1</div><div>Open <code>http://localhost:8080</code>.</div></div><div class="step"><div class="step-no">2</div><div>Open <strong>Dags</strong> and select <code>parameterized_table_processing</code>.</div></div><div class="step"><div class="step-no">3</div><div>Unpause it and select <strong>Trigger</strong>.</div></div><div class="step"><div class="step-no">4</div><div>The Single Run window displays controls generated from Params.</div></div><div class="step"><div class="step-no">5</div><div>Select Customer, 2026, August, Development and Trigger.</div></div><div class="step"><div class="step-no">6</div><div>Open the run, Graph View and task Logs.</div></div></section>
+
+<section id="cli"><div class="section-head"><h2>11. Trigger from CLI</h2><label class="complete-label"><input type="checkbox" class="complete"> Complete</label></div><div class="code-wrap"><button class="copy-btn">Copy</button><pre>airflow dags trigger \
+  --conf '{"table_name":"Customer","year":2026,"month":"August","environment":"Development","confirm_production":false}' \
+  parameterized_table_processing</pre></div><h3>Verify</h3><div class="code-wrap"><button class="copy-btn">Copy</button><pre>python "$AIRFLOW_PARAMETER_LAB_HOME/scripts/verify_outputs.py"</pre></div></section>
+
+<section id="runtime"><div class="section-head"><h2>12. Runtime Behavior</h2><label class="complete-label"><input type="checkbox" class="complete"> Complete</label></div><table><tr><th>Run type</th><th>Behavior</th></tr><tr><td>Manual UI</td><td>User edits form values</td></tr><tr><td>CLI/API</td><td>JSON can override defaults</td></tr><tr><td>Scheduled</td><td>Uses DAG defaults</td></tr><tr><td>Overrides disabled</td><td>Defaults act like constants</td></tr></table><p>Override behavior depends on <code>core.dag_run_conf_overrides_params</code>.</p><div class="callout"><strong>Params</strong> are per-run inputs. <strong>Variables</strong> are persistent values. <strong>Connections</strong> store endpoints and credentials.</div></section>
+
+<section id="adf"><div class="section-head"><h2>13. Azure Data Factory Comparison</h2><label class="complete-label"><input type="checkbox" class="complete"> Complete</label></div><table><tr><th>ADF</th><th>Airflow</th></tr><tr><td>Pipeline parameter</td><td>DAG Param</td></tr><tr><td>Dataset parameter</td><td>Task argument/template</td></tr><tr><td>Copy Activity</td><td>Operator/task</td></tr><tr><td>Pipeline run</td><td>DAG run</td></tr><tr><td>Activity run</td><td>Task instance</td></tr></table></section>
+
+<section id="security"><div class="section-head"><h2>14. Validation and Security</h2><label class="complete-label"><input type="checkbox" class="complete"> Complete</label></div><ul><li>Use enum allowlists for identifiers.</li><li>Do not concatenate unrestricted table names into SQL.</li><li>Do not pass passwords or tokens as Params.</li><li>Use Connections or a secrets backend.</li><li>Require confirmation for Production.</li><li>Audit parameter values and outputs.</li><li>Keep loads idempotent.</li></ul></section>
+
+<section id="errors"><div class="section-head"><h2>15. Common Errors</h2><label class="complete-label"><input type="checkbox" class="complete"> Complete</label></div><table><tr><th>Error</th><th>Cause</th><th>Fix</th></tr><tr><td>KeyError: table_name</td><td>Defined <code>table</code> but read <code>table_name</code></td><td>Use one exact key</td></tr><tr><td>DAG import error</td><td>Airflow 2 imports on Airflow 3</td><td>Use SDK and Standard provider</td></tr><tr><td>Validation error</td><td>Value outside enum/range</td><td>Choose permitted value</td></tr><tr><td>File not found</td><td>No source combination</td><td>Use supplied table/month</td></tr><tr><td>Production error</td><td>Confirmation false</td><td>Confirm deliberately</td></tr><tr><td>CLI JSON error</td><td>Incorrect shell quoting</td><td>Use valid JSON</td></tr></table></section>
+
+<section id="best"><div class="section-head"><h2>16. Best Practices and Edge Cases</h2><label class="complete-label"><input type="checkbox" class="complete"> Complete</label></div><div class="grid-2"><div class="card"><h3>Best practices</h3><ul><li>Consistent names</li><li>Typed Params</li><li>Enums for identifiers</li><li>Meaningful defaults</li><li>Audit runs</li><li>Idempotent loads</li></ul></div><div class="card"><h3>Edge cases</h3><ul><li>Missing source combination</li><li>No valid rows</li><li>Overlapping writes</li><li>Wrong environment</li><li>Unexpected scheduled defaults</li><li>Changed parameter schema</li></ul></div></div></section>
+
+<section id="interview"><div class="section-head"><h2>17. Interview Q&A</h2><label class="complete-label"><input type="checkbox" class="complete"> Complete</label></div>
+<details><summary>Why use a parameterized DAG?</summary><div class="answer">Reuse one workflow with different values and reduce duplicate code.</div></details>
+<details><summary>params versus Param?</summary><div class="answer">params is the DAG mapping; Param defines validation and form metadata for a value.</div></details>
+<details><summary>How does PythonOperator access values?</summary><div class="answer"><code>context["params"]["table_name"]</code>.</div></details>
+<details><summary>Params versus tags?</summary><div class="answer">Params are runtime inputs; tags group DAGs in the UI.</div></details>
+<details><summary>Params versus Variables?</summary><div class="answer">Params are per-run; Variables persist across runs.</div></details>
+<details><summary>Why enum for table name?</summary><div class="answer">It provides an allowlist, prevents typing errors and reduces injection risk.</div></details>
+<details><summary>How do scheduled runs get Params?</summary><div class="answer">They use valid DAG defaults.</div></details>
+<details><summary>Why not pass secrets?</summary><div class="answer">Run config and logs can expose them; use Connections or a secrets backend.</div></details>
+<details><summary>What is idempotency?</summary><div class="answer">The same parameter combination can be rerun without corrupting the result.</div></details>
+<details><summary>Can one run process many tables?</summary><div class="answer">Yes, with a list Param and dynamic task mapping as an advanced design.</div></details>
+</section>
+
+<section id="exercise"><div class="section-head"><h2>18. Exercises</h2><label class="complete-label"><input type="checkbox" class="complete"> Complete</label></div><ol><li>Run Employee/August/Development.</li><li>Run Customer/August/Testing.</li><li>Run Product/September/Production with confirmation.</li><li>Add a Region Param.</li><li>Add minimum valid-row count.</li><li>Add CSV/JSON output format.</li><li>Convert to TaskFlow API.</li><li>Add a list Param and dynamic task mapping.</li></ol></section>
+
+<section id="quiz"><div class="section-head"><h2>19. Knowledge Check</h2><label class="complete-label"><input type="checkbox" class="complete"> Complete</label></div><form id="quizForm"></form><button class="primary" type="button" onclick="gradeQuiz()">Submit</button> <button class="secondary" type="button" onclick="resetQuiz()">Reset</button><p id="score"></p></section>
+<section id="tracker"><div class="section-head"><h2>20. Progress Tracker</h2></div><div class="progress-shell"><div class="progress-bar" id="progressBar"></div></div><p id="progressText"><strong>0%</strong> completed</p><div class="callout warn">Double-click a section to save a private browser note.</div></section>
+</main></div><footer>Apache Airflow 3.3 • Parameterized DAG • Trainer-ready tutorial</footer>
+<script>
+let fs=16;
+function toggleTheme(){document.documentElement.dataset.theme=document.documentElement.dataset.theme==="dark"?"light":"dark"}
+function fontChange(d){fs=Math.max(13,Math.min(21,fs+d));document.body.style.fontSize=fs+"px"}
+document.querySelectorAll(".copy-btn").forEach(b=>b.onclick=async()=>{await navigator.clipboard.writeText(b.nextElementSibling.innerText);const o=b.textContent;b.textContent="Copied";setTimeout(()=>b.textContent=o,900)});
+const qs=[
+{q:"Main purpose of a parameterized DAG?",o:["Duplicate workflows","Reuse one DAG with different values","Store secrets","Replace Scheduler"],a:1,e:"One workflow can serve many inputs."},
+{q:"Which class adds validation?",o:["Param","Tag","XCom","Connection"],a:0,e:"Param provides JSON Schema validation."},
+{q:"What do tags do?",o:["Pass runtime values","Group DAGs in UI","Store passwords","Validate years"],a:1,e:"Tags organize DAGs."},
+{q:"Where are Params read?",o:["context['params']","context['tags']","Only airflow.cfg","SQL only"],a:0,e:"They are in execution context."},
+{q:"Cause of KeyError table_name?",o:["Names do not match","No Scheduler","Too many tags","Dark mode"],a:0,e:"Keys must match exactly."},
+{q:"Airflow 3 import for DAG and Param?",o:["airflow.sdk","pandas","sqlite3","airflow.models only"],a:0,e:"Use airflow.sdk."},
+{q:"Why enum for table name?",o:["Allow any value","Restrict safe values","Disable UI","Increase duplicates"],a:1,e:"It is an allowlist and dropdown."},
+{q:"Scheduled runs use?",o:["UI prompt","DAG default Params","Tags","No values"],a:1,e:"Scheduled runs use defaults."},
+{q:"Where store credentials?",o:["Params","Connections/secrets backend","Tags","Task ID"],a:1,e:"Do not pass secrets as Params."},
+{q:"CLI option for JSON config?",o:["--conf","--tag","--xcom","--secret"],a:0,e:"Use --conf."}
+];
+function renderQuiz(){const f=document.getElementById("quizForm");qs.forEach((x,i)=>{const b=document.createElement("div");b.className="quiz-q";b.id="q"+i;let h="<strong>"+(i+1)+". "+x.q+"</strong>";x.o.forEach((o,j)=>h+=`<label><input type="radio" name="q${i}" value="${j}"> ${o}</label>`);h+=`<div class="explanation" id="e${i}"></div>`;b.innerHTML=h;f.appendChild(b)})}
+function gradeQuiz(){let s=0;qs.forEach((x,i)=>{const b=document.getElementById("q"+i),p=document.querySelector(`input[name="q${i}"]:checked`),e=document.getElementById("e"+i);b.classList.remove("correct","wrong");e.style.display="block";if(p&&Number(p.value)===x.a){s++;b.classList.add("correct");e.textContent="Correct. "+x.e}else{b.classList.add("wrong");e.textContent="Review: "+x.e}});document.getElementById("score").textContent=`Score: ${s}/${qs.length}`}
+function resetQuiz(){document.getElementById("quizForm").reset();document.querySelectorAll(".quiz-q").forEach(x=>x.classList.remove("correct","wrong"));document.querySelectorAll(".explanation").forEach(x=>x.style.display="none");document.getElementById("score").textContent=""}
+const key="airflow_parameter_progress";let saved={};try{saved=JSON.parse(localStorage.getItem(key)||"{}")}catch(e){}
+const checks=[...document.querySelectorAll(".complete")];checks.forEach((c,i)=>{c.checked=!!saved[i];c.onchange=()=>{saved[i]=c.checked;localStorage.setItem(key,JSON.stringify(saved));progress()}});
+function progress(){const d=checks.filter(c=>c.checked).length,p=Math.round(d/checks.length*100);document.getElementById("progressBar").style.width=p+"%";document.getElementById("progressText").innerHTML="<strong>"+p+"%</strong> completed"}
+document.querySelectorAll("main section").forEach(s=>{const k="airflow_parameter_note_"+s.id,n=localStorage.getItem(k);if(n){s.classList.add("note-mark");s.title=n}s.ondblclick=()=>{const t=prompt("Private note:",localStorage.getItem(k)||"");if(t===null)return;if(t.trim()){localStorage.setItem(k,t.trim());s.classList.add("note-mark");s.title=t.trim()}else{localStorage.removeItem(k);s.classList.remove("note-mark");s.removeAttribute("title")}}});
+renderQuiz();progress();
+</script></body></html>

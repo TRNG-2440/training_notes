@@ -1,0 +1,4 @@
+apache-airflow-providers-standard
+apache-airflow-providers-http
+requests
+apache-airflow-providers-google

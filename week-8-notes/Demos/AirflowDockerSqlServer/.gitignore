@@ -1,0 +1,11 @@
+# Airflow runtime files
+logs/
+__pycache__/
+*.pyc
+
+# Secrets
+gcp_credentials/
+*.json
+
+# Environment values
+.env

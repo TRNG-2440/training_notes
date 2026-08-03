@@ -1,0 +1,187 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: airflow-postgres
+
+    environment:
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+      POSTGRES_DB: airflow
+
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - pg_isready -U airflow
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+    volumes:
+      - postgres-db-volume:/var/lib/postgresql/data
+
+    restart: unless-stopped
+
+
+  airflow-init:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    container_name: airflow-init
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+    environment: &airflow-common-env
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: >-
+        postgresql+psycopg2://airflow:airflow@postgres/airflow
+
+      AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+      AIRFLOW__CORE__DAGS_FOLDER: /opt/airflow/dags
+
+      AIRFLOW__API_AUTH__JWT_SECRET: >-
+        change-this-local-development-secret
+
+      AIRFLOW__CORE__SIMPLE_AUTH_MANAGER_USERS: admin:admin
+      AIRFLOW__CORE__SIMPLE_AUTH_MANAGER_ALL_ADMINS: "false"
+
+      # Enable Test Connection
+      AIRFLOW__CORE__TEST_CONNECTION: Enabled
+
+      # SQL Server Windows Authentication bridge
+      SQL_BRIDGE_BASE_URL: http://host.docker.internal:5055
+
+      # Default Google service-account credential file
+      GOOGLE_APPLICATION_CREDENTIALS: >-
+        /opt/airflow/gcp_credentials/airflow-gcs-key.json
+
+      # Runtime Google Cloud connection
+      AIRFLOW_CONN_GOOGLE_CLOUD_DEFAULT: >-
+        {"conn_type":"google_cloud_platform","extra":{"project":"bigquery-optimization-lab","key_path":"/opt/airflow/gcp_credentials/airflow-gcs-key.json"}}
+
+    volumes: &airflow-common-volumes
+      - ./dags:/opt/airflow/dags
+      - ./logs:/opt/airflow/logs
+      - ./plugins:/opt/airflow/plugins
+      - ./config:/opt/airflow/config
+      - ./gcp_credentials:/opt/airflow/gcp_credentials:ro
+
+    command:
+      - bash
+      - -c
+      - |
+        airflow db migrate
+        airflow version
+
+
+  airflow-api-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    container_name: airflow-api-server
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+      airflow-init:
+        condition: service_completed_successfully
+
+    environment:
+      <<: *airflow-common-env
+
+    volumes: *airflow-common-volumes
+
+    ports:
+      - "8080:8080"
+
+    command: api-server
+
+    healthcheck:
+      test:
+        - CMD
+        - curl
+        - --fail
+        - http://localhost:8080/api/v2/version
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      start_period: 60s
+
+    restart: unless-stopped
+
+
+  airflow-scheduler:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    container_name: airflow-scheduler
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+      airflow-init:
+        condition: service_completed_successfully
+
+    environment:
+      <<: *airflow-common-env
+
+    volumes: *airflow-common-volumes
+
+    command: scheduler
+
+    restart: unless-stopped
+
+
+  airflow-dag-processor:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    container_name: airflow-dag-processor
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+      airflow-init:
+        condition: service_completed_successfully
+
+    environment:
+      <<: *airflow-common-env
+
+    volumes: *airflow-common-volumes
+
+    command: dag-processor
+
+    restart: unless-stopped
+
+
+  airflow-triggerer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    container_name: airflow-triggerer
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+      airflow-init:
+        condition: service_completed_successfully
+
+    environment:
+      <<: *airflow-common-env
+
+    volumes: *airflow-common-volumes
+
+    command: triggerer
+
+    restart: unless-stopped
+
+
+volumes:
+  postgres-db-volume:
