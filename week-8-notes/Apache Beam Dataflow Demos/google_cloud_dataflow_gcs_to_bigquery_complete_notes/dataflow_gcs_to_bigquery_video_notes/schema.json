@@ -1,0 +1,39 @@
+{
+  "BigQuery Schema": [
+    {
+      "name": "order_id",
+      "type": "INTEGER",
+      "mode": "NULLABLE"
+    },
+    {
+      "name": "customer_name",
+      "type": "STRING",
+      "mode": "NULLABLE"
+    },
+    {
+      "name": "city",
+      "type": "STRING",
+      "mode": "NULLABLE"
+    },
+    {
+      "name": "state",
+      "type": "STRING",
+      "mode": "NULLABLE"
+    },
+    {
+      "name": "category",
+      "type": "STRING",
+      "mode": "NULLABLE"
+    },
+    {
+      "name": "amount",
+      "type": "FLOAT",
+      "mode": "NULLABLE"
+    },
+    {
+      "name": "order_date",
+      "type": "DATE",
+      "mode": "NULLABLE"
+    }
+  ]
+}

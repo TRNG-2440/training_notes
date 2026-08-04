@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kafka vs Google Cloud Pub/Sub — Real-World Diagrammatic Tutorial</title>
+<style>
+:root{
+  --bg:#07111f;--panel:#0d1b2d;--panel2:#10243b;--text:#eef6ff;--muted:#adc3d8;
+  --blue:#5aa9ff;--cyan:#35d0ba;--orange:#ffb45b;--red:#ff6b78;--green:#61d98b;
+  --line:#29425d;--shadow:0 14px 36px rgba(0,0,0,.28)
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:linear-gradient(135deg,#07111f,#0a1830 45%,#07111f);color:var(--text);line-height:1.65}
+a{color:#8cc8ff}
+header{padding:64px 7vw 46px;background:
+radial-gradient(circle at 12% 15%,rgba(53,208,186,.18),transparent 28%),
+radial-gradient(circle at 88% 8%,rgba(90,169,255,.2),transparent 30%)}
+.badge{display:inline-block;padding:6px 12px;border:1px solid #376482;border-radius:999px;color:#bfe4ff;background:#0a2238;font-size:.85rem}
+h1{font-size:clamp(2.3rem,5vw,4.8rem);line-height:1.04;margin:.65rem 0 1rem;max-width:1050px}
+.lead{max-width:900px;font-size:1.16rem;color:var(--muted)}
+.layout{display:grid;grid-template-columns:260px minmax(0,1fr);gap:28px;padding:28px 5vw 70px}
+nav{position:sticky;top:18px;align-self:start;background:rgba(13,27,45,.92);border:1px solid var(--line);border-radius:18px;padding:16px;box-shadow:var(--shadow);max-height:92vh;overflow:auto}
+nav a{display:block;text-decoration:none;color:#cce4f7;padding:8px 10px;border-radius:9px;font-size:.93rem}
+nav a:hover{background:#17314e;color:white}
+main{min-width:0}
+section{background:rgba(13,27,45,.9);border:1px solid var(--line);border-radius:22px;padding:28px;margin-bottom:24px;box-shadow:var(--shadow)}
+h2{font-size:1.75rem;margin-top:0;border-bottom:1px solid var(--line);padding-bottom:10px}
+h3{color:#bfe4ff;margin-top:1.6rem}
+.callout{border-left:5px solid var(--cyan);background:#0b2633;padding:14px 16px;border-radius:10px;margin:16px 0}
+.warning{border-left-color:var(--orange);background:#302416}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px}
+.card{background:var(--panel2);border:1px solid #284663;border-radius:15px;padding:18px}
+.card strong{color:#fff}
+.kpi{font-size:1.8rem;font-weight:750;color:var(--cyan)}
+table{width:100%;border-collapse:collapse;margin:16px 0;overflow:hidden;border-radius:12px}
+th,td{border:1px solid #2b4761;padding:12px;text-align:left;vertical-align:top}
+th{background:#15314d;color:#fff}
+tr:nth-child(even) td{background:#0b1d31}
+code{font-family:Consolas,monospace;background:#06101c;color:#b9f6e8;padding:2px 5px;border-radius:5px}
+pre{background:#050d17;border:1px solid #243f58;border-radius:14px;padding:16px;overflow:auto;color:#c9f4ff}
+.diagram{background:#071522;border:1px solid #29445e;border-radius:18px;padding:18px;overflow:auto}
+.diagram svg{min-width:760px;width:100%;height:auto}
+.flow-note{text-align:center;color:var(--muted);font-size:.9rem;margin-top:8px}
+.step{display:grid;grid-template-columns:42px 1fr;gap:12px;margin:14px 0}
+.num{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:#175a75;color:white;font-weight:700}
+.tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.tab{border:1px solid #345570;background:#10233a;color:#d7eaff;padding:9px 12px;border-radius:10px;cursor:pointer}
+.tab.active{background:#1c6280}
+.tabpane{display:none}.tabpane.active{display:block}
+.quiz-q{background:#0a1c2e;border:1px solid #294861;border-radius:14px;padding:16px;margin:14px 0}
+.quiz-q label{display:block;padding:6px 8px;border-radius:7px;cursor:pointer}
+.quiz-q label:hover{background:#14304c}
+button{background:#197395;color:white;border:0;padding:10px 16px;border-radius:10px;cursor:pointer;font-weight:650}
+.answer{display:none;margin-top:10px;padding:10px;border-radius:9px}
+.correct{background:#123c28;border:1px solid #2b8c59;color:#c8ffe0}
+.incorrect{background:#431f27;border:1px solid #b85668;color:#ffd7de}
+.small{font-size:.9rem;color:var(--muted)}
+footer{text-align:center;padding:25px;color:#8ea8be}
+@media(max-width:900px){.layout{grid-template-columns:1fr}nav{position:relative;top:0;max-height:none}header{padding-top:40px}}
+@media print{body{background:white;color:black}nav{display:none}.layout{display:block;padding:0}section{box-shadow:none;break-inside:avoid;background:white;border-color:#bbb}.diagram{background:white}pre{white-space:pre-wrap;color:black;background:#f5f5f5}}
+</style>
+</head>
+<body>
+<header>
+  <span class="badge">Trainer-ready • Basic to Advanced • GCP Focus</span>
+  <h1>Kafka vs Google Cloud Pub/Sub</h1>
+  <p class="lead">A real-world, diagrammatic tutorial explaining architecture, message flow, delivery models, scaling, ordering, replay, operations, cost thinking, selection rules, and hands-on demonstrations.</p>
+</header>
+
+<div class="layout">
+<nav>
+  <strong>Contents</strong>
+  <a href="#outcomes">1. Learning outcomes</a>
+  <a href="#foundation">2. Messaging foundation</a>
+  <a href="#kafka">3. Kafka architecture</a>
+  <a href="#pubsub">4. GCP Pub/Sub architecture</a>
+  <a href="#difference">5. Core differences</a>
+  <a href="#scenario">6. Food-delivery case study</a>
+  <a href="#flows">7. Message-flow diagrams</a>
+  <a href="#delivery">8. Delivery and ordering</a>
+  <a href="#scaling">9. Scaling and operations</a>
+  <a href="#gcp-kafka">10. Kafka options on GCP</a>
+  <a href="#decision">11. Decision guide</a>
+  <a href="#demo">12. Pub/Sub hands-on demo</a>
+  <a href="#kafka-demo">13. Kafka demo</a>
+  <a href="#hybrid">14. Hybrid architecture</a>
+  <a href="#troubleshooting">15. Troubleshooting</a>
+  <a href="#interview">16. Interview Q&A</a>
+  <a href="#quiz">17. Quiz</a>
+  <a href="#sources">18. Official references</a>
+</nav>
+
+<main>
+<section id="outcomes">
+<h2>1. Learning outcomes</h2>
+<div class="grid">
+ <div class="card"><div class="kpi">Understand</div>Topics, partitions, brokers, subscriptions, acknowledgements, offsets and consumer groups.</div>
+ <div class="card"><div class="kpi">Compare</div>Kafka's distributed event-log model with Pub/Sub's fully managed messaging model.</div>
+ <div class="card"><div class="kpi">Design</div>A real-world event-driven system and choose the correct service for each requirement.</div>
+ <div class="card"><div class="kpi">Implement</div>A small producer/consumer demonstration using both platforms.</div>
+</div>
+</section>
+
+<section id="foundation">
+<h2>2. Messaging foundation</h2>
+<p>Both technologies decouple producers from consumers. A producer sends an event without directly calling every downstream system.</p>
+<div class="diagram">
+<svg viewBox="0 0 1000 310" role="img" aria-label="Basic event-driven architecture">
+<defs><marker id="a" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#5aa9ff"/></marker></defs>
+<rect x="40" y="105" width="190" height="90" rx="18" fill="#15314d" stroke="#5aa9ff" stroke-width="2"/>
+<text x="135" y="142" text-anchor="middle" fill="white" font-size="23">Producer</text><text x="135" y="173" text-anchor="middle" fill="#adc3d8" font-size="16">Order Service</text>
+<rect x="390" y="90" width="220" height="120" rx="22" fill="#103d45" stroke="#35d0ba" stroke-width="3"/>
+<text x="500" y="140" text-anchor="middle" fill="white" font-size="24">Messaging Layer</text><text x="500" y="174" text-anchor="middle" fill="#b8f5ec" font-size="16">Kafka or Pub/Sub</text>
+<rect x="770" y="25" width="190" height="70" rx="15" fill="#392919" stroke="#ffb45b"/><text x="865" y="67" text-anchor="middle" fill="white" font-size="18">Payment</text>
+<rect x="770" y="120" width="190" height="70" rx="15" fill="#392919" stroke="#ffb45b"/><text x="865" y="162" text-anchor="middle" fill="white" font-size="18">Notification</text>
+<rect x="770" y="215" width="190" height="70" rx="15" fill="#392919" stroke="#ffb45b"/><text x="865" y="257" text-anchor="middle" fill="white" font-size="18">Analytics</text>
+<line x1="230" y1="150" x2="390" y2="150" stroke="#5aa9ff" stroke-width="3" marker-end="url(#a)"/>
+<line x1="610" y1="125" x2="770" y2="60" stroke="#5aa9ff" stroke-width="3" marker-end="url(#a)"/>
+<line x1="610" y1="150" x2="770" y2="155" stroke="#5aa9ff" stroke-width="3" marker-end="url(#a)"/>
+<line x1="610" y1="175" x2="770" y2="250" stroke="#5aa9ff" stroke-width="3" marker-end="url(#a)"/>
+</svg>
+</div>
+<div class="callout"><strong>Event example:</strong> <code>OrderCreated</code> may contain order ID, customer ID, restaurant, total amount, timestamp and delivery location.</div>
+</section>
+
+<section id="kafka">
+<h2>3. Apache Kafka architecture</h2>
+<p>Kafka is a distributed event-streaming platform. Events are written to named topics, divided into partitions and stored by brokers. Consumers normally track their reading position through offsets.</p>
+<div class="diagram">
+<svg viewBox="0 0 1100 490">
+<defs><marker id="ak" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#35d0ba"/></marker></defs>
+<rect x="30" y="190" width="170" height="90" rx="16" fill="#15314d" stroke="#5aa9ff" stroke-width="2"/>
+<text x="115" y="225" text-anchor="middle" fill="white" font-size="22">Producers</text><text x="115" y="255" text-anchor="middle" fill="#adc3d8">Web / Mobile / IoT</text>
+<rect x="290" y="35" width="470" height="390" rx="22" fill="#0b2338" stroke="#35d0ba" stroke-width="3"/>
+<text x="525" y="72" text-anchor="middle" fill="white" font-size="25">Kafka Cluster</text>
+<g>
+<rect x="325" y="105" width="400" height="78" rx="12" fill="#15314d"/><text x="345" y="133" fill="#bfe4ff" font-size="18">Topic: orders</text>
+<rect x="345" y="145" width="105" height="25" rx="5" fill="#1f6b7f"/><text x="397" y="163" text-anchor="middle" fill="white">Partition 0</text>
+<rect x="475" y="145" width="105" height="25" rx="5" fill="#1f6b7f"/><text x="527" y="163" text-anchor="middle" fill="white">Partition 1</text>
+<rect x="605" y="145" width="105" height="25" rx="5" fill="#1f6b7f"/><text x="657" y="163" text-anchor="middle" fill="white">Partition 2</text>
+</g>
+<rect x="325" y="215" width="118" height="150" rx="13" fill="#312518" stroke="#ffb45b"/><text x="384" y="248" text-anchor="middle" fill="white">Broker 1</text><text x="384" y="285" text-anchor="middle" fill="#ffd9aa">P0 leader</text><text x="384" y="315" text-anchor="middle" fill="#ffd9aa">P2 replica</text>
+<rect x="466" y="215" width="118" height="150" rx="13" fill="#312518" stroke="#ffb45b"/><text x="525" y="248" text-anchor="middle" fill="white">Broker 2</text><text x="525" y="285" text-anchor="middle" fill="#ffd9aa">P1 leader</text><text x="525" y="315" text-anchor="middle" fill="#ffd9aa">P0 replica</text>
+<rect x="607" y="215" width="118" height="150" rx="13" fill="#312518" stroke="#ffb45b"/><text x="666" y="248" text-anchor="middle" fill="white">Broker 3</text><text x="666" y="285" text-anchor="middle" fill="#ffd9aa">P2 leader</text><text x="666" y="315" text-anchor="middle" fill="#ffd9aa">P1 replica</text>
+<rect x="850" y="70" width="210" height="100" rx="16" fill="#17314d" stroke="#5aa9ff"/><text x="955" y="105" text-anchor="middle" fill="white" font-size="19">Consumer Group A</text><text x="955" y="137" text-anchor="middle" fill="#adc3d8">Payment instances</text>
+<rect x="850" y="215" width="210" height="100" rx="16" fill="#17314d" stroke="#5aa9ff"/><text x="955" y="250" text-anchor="middle" fill="white" font-size="19">Consumer Group B</text><text x="955" y="282" text-anchor="middle" fill="#adc3d8">Analytics instances</text>
+<rect x="850" y="360" width="210" height="80" rx="16" fill="#17314d" stroke="#5aa9ff"/><text x="955" y="407" text-anchor="middle" fill="white" font-size="19">Replay / Reprocess</text>
+<line x1="200" y1="235" x2="290" y2="235" stroke="#35d0ba" stroke-width="3" marker-end="url(#ak)"/>
+<line x1="760" y1="145" x2="850" y2="120" stroke="#35d0ba" stroke-width="3" marker-end="url(#ak)"/>
+<line x1="760" y1="235" x2="850" y2="265" stroke="#35d0ba" stroke-width="3" marker-end="url(#ak)"/>
+<line x1="760" y1="350" x2="850" y2="400" stroke="#35d0ba" stroke-width="3" marker-end="url(#ak)"/>
+</svg>
+</div>
+<h3>Important Kafka terms</h3>
+<table>
+<tr><th>Term</th><th>Meaning</th><th>Real-world analogy</th></tr>
+<tr><td>Broker</td><td>A Kafka server that stores topic partitions and serves clients.</td><td>A warehouse building.</td></tr>
+<tr><td>Topic</td><td>A named stream/category of events.</td><td>A labelled warehouse aisle.</td></tr>
+<tr><td>Partition</td><td>An ordered append-only portion of a topic.</td><td>One conveyor belt.</td></tr>
+<tr><td>Offset</td><td>The position of an event inside a partition.</td><td>A serial number on the belt.</td></tr>
+<tr><td>Consumer group</td><td>Consumers cooperating to divide partitions.</td><td>Workers sharing conveyor belts.</td></tr>
+<tr><td>Replication</td><td>Copies of partitions maintained on multiple brokers.</td><td>Backup warehouse copies.</td></tr>
+</table>
+</section>
+
+<section id="pubsub">
+<h2>4. Google Cloud Pub/Sub architecture</h2>
+<p>Pub/Sub is a fully managed asynchronous messaging service. Publishers send messages to a topic. Each subscription represents an independent delivery path from that topic to a subscriber.</p>
+<div class="diagram">
+<svg viewBox="0 0 1100 430">
+<defs><marker id="ap" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#5aa9ff"/></marker></defs>
+<rect x="30" y="165" width="180" height="90" rx="16" fill="#15314d" stroke="#5aa9ff" stroke-width="2"/>
+<text x="120" y="202" text-anchor="middle" fill="white" font-size="22">Publishers</text><text x="120" y="232" text-anchor="middle" fill="#adc3d8">Apps / Services</text>
+<rect x="320" y="145" width="220" height="130" rx="22" fill="#103d45" stroke="#35d0ba" stroke-width="3"/>
+<text x="430" y="195" text-anchor="middle" fill="white" font-size="25">Topic</text><text x="430" y="232" text-anchor="middle" fill="#b8f5ec">order-events</text>
+<rect x="660" y="40" width="205" height="80" rx="14" fill="#312518" stroke="#ffb45b"/><text x="762" y="75" text-anchor="middle" fill="white">Subscription A</text><text x="762" y="100" text-anchor="middle" fill="#ffd9aa">payment-sub</text>
+<rect x="660" y="175" width="205" height="80" rx="14" fill="#312518" stroke="#ffb45b"/><text x="762" y="210" text-anchor="middle" fill="white">Subscription B</text><text x="762" y="235" text-anchor="middle" fill="#ffd9aa">notification-sub</text>
+<rect x="660" y="310" width="205" height="80" rx="14" fill="#312518" stroke="#ffb45b"/><text x="762" y="345" text-anchor="middle" fill="white">Subscription C</text><text x="762" y="370" text-anchor="middle" fill="#ffd9aa">analytics-sub</text>
+<rect x="930" y="40" width="145" height="80" rx="14" fill="#17314d"/><text x="1002" y="87" text-anchor="middle" fill="white">Payment</text>
+<rect x="930" y="175" width="145" height="80" rx="14" fill="#17314d"/><text x="1002" y="222" text-anchor="middle" fill="white">Notification</text>
+<rect x="930" y="310" width="145" height="80" rx="14" fill="#17314d"/><text x="1002" y="357" text-anchor="middle" fill="white">Dataflow</text>
+<line x1="210" y1="210" x2="320" y2="210" stroke="#5aa9ff" stroke-width="3" marker-end="url(#ap)"/>
+<line x1="540" y1="185" x2="660" y2="80" stroke="#5aa9ff" stroke-width="3" marker-end="url(#ap)"/>
+<line x1="540" y1="210" x2="660" y2="215" stroke="#5aa9ff" stroke-width="3" marker-end="url(#ap)"/>
+<line x1="540" y1="235" x2="660" y2="350" stroke="#5aa9ff" stroke-width="3" marker-end="url(#ap)"/>
+<line x1="865" y1="80" x2="930" y2="80" stroke="#5aa9ff" stroke-width="3" marker-end="url(#ap)"/>
+<line x1="865" y1="215" x2="930" y2="215" stroke="#5aa9ff" stroke-width="3" marker-end="url(#ap)"/>
+<line x1="865" y1="350" x2="930" y2="350" stroke="#5aa9ff" stroke-width="3" marker-end="url(#ap)"/>
+</svg>
+</div>
+<div class="callout"><strong>Critical idea:</strong> A Pub/Sub topic does not deliver directly to a subscriber application. Delivery happens through a subscription. One topic can feed multiple subscriptions.</div>
+<table>
+<tr><th>Term</th><th>Meaning</th></tr>
+<tr><td>Topic</td><td>The named resource to which publishers send messages.</td></tr>
+<tr><td>Subscription</td><td>An independent stream of messages from one topic to subscriber clients.</td></tr>
+<tr><td>Acknowledgement</td><td>The subscriber confirms successful processing.</td></tr>
+<tr><td>Pull delivery</td><td>The subscriber requests or streams messages from Pub/Sub.</td></tr>
+<tr><td>Push delivery</td><td>Pub/Sub sends an HTTPS request to the subscriber endpoint.</td></tr>
+<tr><td>Dead-letter topic</td><td>A destination for messages that cannot be processed after configured attempts.</td></tr>
+</table>
+</section>
+
+<section id="difference">
+<h2>5. Kafka vs Pub/Sub: core differences</h2>
+<table>
+<tr><th>Dimension</th><th>Apache Kafka</th><th>Google Cloud Pub/Sub</th></tr>
+<tr><td>Primary model</td><td>Distributed, durable event log.</td><td>Fully managed publish/subscribe messaging.</td></tr>
+<tr><td>Infrastructure</td><td>You operate brokers, or use a managed Kafka provider.</td><td>Google manages the messaging infrastructure.</td></tr>
+<tr><td>Scaling unit</td><td>Partitions, brokers, storage and consumer-group members.</td><td>Service scales without exposing brokers or partition administration.</td></tr>
+<tr><td>Consumer position</td><td>Consumers use partition offsets.</td><td>Subscriber delivery state is managed through subscriptions and acknowledgements.</td></tr>
+<tr><td>Ordering</td><td>Ordering is naturally maintained within a partition.</td><td>Ordering can be enabled with ordering keys; it is not a single global order.</td></tr>
+<tr><td>Replay</td><td>Consumers can seek to earlier offsets while retained data remains.</td><td>Replay uses retained messages, seek/snapshots or re-delivery mechanisms.</td></tr>
+<tr><td>Portability</td><td>Strong portability across on-premises and clouds through the Kafka ecosystem.</td><td>Native Google Cloud API and operational model.</td></tr>
+<tr><td>Processing ecosystem</td><td>Kafka Streams, Kafka Connect, ksqlDB ecosystem and many connectors.</td><td>Strong integrations with Dataflow, Cloud Run, Functions, BigQuery and other GCP services.</td></tr>
+<tr><td>Best fit</td><td>Event streaming platform, long-lived logs, Kafka compatibility and fine-grained control.</td><td>Rapid cloud-native event delivery with minimal operational burden.</td></tr>
+</table>
+<div class="callout warning"><strong>Do not compare only by throughput.</strong> The most important distinction is the operating and programming model: Kafka exposes a distributed log; Pub/Sub exposes a managed topic-and-subscription service.</div>
+</section>
+
+<section id="scenario">
+<h2>6. Real-world case study: food-delivery platform</h2>
+<p>A food-delivery company receives thousands of order events. Payment, restaurant assignment, delivery tracking, customer notification, fraud detection and analytics all need the same order information.</p>
+<h3>Business event</h3>
+<pre>{
+  "eventType": "OrderCreated",
+  "orderId": "ORD-90031",
+  "customerId": "CUS-1044",
+  "restaurantId": "RES-210",
+  "city": "Chennai",
+  "amount": 785.50,
+  "eventTime": "2026-08-04T12:30:00+05:30"
+}</pre>
+<div class="grid">
+<div class="card"><strong>Payment</strong><br>Authorize the amount and publish payment status.</div>
+<div class="card"><strong>Notification</strong><br>Send confirmation through email, SMS or mobile push.</div>
+<div class="card"><strong>Analytics</strong><br>Calculate orders per city, revenue and restaurant performance.</div>
+<div class="card"><strong>Fraud</strong><br>Detect unusual order values or rapid repeated purchases.</div>
+</div>
+<h3>Why asynchronous messaging?</h3>
+<p>The order API can respond quickly after storing the order and publishing an event. Slow analytics or notification services do not have to block the customer transaction.</p>
+</section>
+
+<section id="flows">
+<h2>7. Side-by-side message flow</h2>
+<div class="tabs">
+<button class="tab active" onclick="showTab('kf',this)">Kafka flow</button>
+<button class="tab" onclick="showTab('ps',this)">Pub/Sub flow</button>
+</div>
+<div id="kf" class="tabpane active">
+<div class="step"><div class="num">1</div><div>The order service publishes <code>OrderCreated</code> to the <code>orders</code> topic.</div></div>
+<div class="step"><div class="num">2</div><div>A key such as <code>customerId</code> is hashed to select a partition.</div></div>
+<div class="step"><div class="num">3</div><div>The partition leader appends the record and replicas copy it.</div></div>
+<div class="step"><div class="num">4</div><div>Payment and analytics consumer groups independently read the event.</div></div>
+<div class="step"><div class="num">5</div><div>Each group records its own offset, allowing independent progress and replay.</div></div>
+</div>
+<div id="ps" class="tabpane">
+<div class="step"><div class="num">1</div><div>The order service publishes <code>OrderCreated</code> to <code>order-events</code>.</div></div>
+<div class="step"><div class="num">2</div><div>Pub/Sub makes the message available to every attached subscription.</div></div>
+<div class="step"><div class="num">3</div><div>Payment workers consume from <code>payment-sub</code>.</div></div>
+<div class="step"><div class="num">4</div><div>Notification workers consume independently from <code>notification-sub</code>.</div></div>
+<div class="step"><div class="num">5</div><div>Each subscriber acknowledges after successful processing; failed processing can cause redelivery.</div></div>
+</div>
+</section>
+
+<section id="delivery">
+<h2>8. Delivery, duplicates, ordering and replay</h2>
+<h3>At-least-once thinking</h3>
+<p>Applications should normally be designed to tolerate duplicate delivery. A safe consumer is <em>idempotent</em>: processing the same event twice does not produce two payments or two inventory deductions.</p>
+<pre># Simplified idempotency logic
+if event_id already exists in processed_events:
+    return "already processed"
+
+begin transaction
+perform_business_operation()
+insert event_id into processed_events
+commit transaction</pre>
+<h3>Ordering</h3>
+<table>
+<tr><th>Requirement</th><th>Kafka approach</th><th>Pub/Sub approach</th></tr>
+<tr><td>Orders for one customer must remain ordered</td><td>Use customer ID as the record key so related events enter the same partition.</td><td>Use customer ID as an ordering key and enable ordered delivery on the subscription.</td></tr>
+<tr><td>All global events must have one strict order</td><td>One partition can provide it, but limits parallelism.</td><td>Global total ordering is generally not the normal scalable design.</td></tr>
+</table>
+<h3>Replay</h3>
+<p>Kafka replay commonly means resetting or seeking consumer offsets. Pub/Sub replay depends on message retention and subscription features such as seek and snapshots. In either system, replaying into a non-idempotent consumer can repeat side effects.</p>
+</section>
+
+<section id="scaling">
+<h2>9. Scaling and operational responsibility</h2>
+<div class="grid">
+<div class="card"><strong>Kafka scaling questions</strong><br>How many partitions? Which replication factor? Are brokers balanced? Is consumer lag increasing? Is storage sufficient? Are rebalances healthy?</div>
+<div class="card"><strong>Pub/Sub scaling questions</strong><br>Are publisher and subscriber clients configured well? Are acknowledgement deadlines suitable? Is backlog growing? Are quotas, flow control and downstream capacity sufficient?</div>
+</div>
+<table>
+<tr><th>Responsibility</th><th>Self-managed Kafka</th><th>Managed Kafka</th><th>Cloud Pub/Sub</th></tr>
+<tr><td>Broker provisioning</td><td>Your team</td><td>Provider automates much of it</td><td>Not exposed</td></tr>
+<tr><td>Partition planning</td><td>Your team</td><td>Your team</td><td>Not a normal user-facing task</td></tr>
+<tr><td>Patching/upgrades</td><td>Your team</td><td>Mostly provider</td><td>Google</td></tr>
+<tr><td>Consumer application scaling</td><td>Your team</td><td>Your team</td><td>Your team</td></tr>
+<tr><td>Schema and event governance</td><td>Your team</td><td>Your team</td><td>Your team</td></tr>
+</table>
+</section>
+
+<section id="gcp-kafka">
+<h2>10. Kafka choices on Google Cloud</h2>
+<p>On GCP, “Kafka” can mean several different deployments:</p>
+<div class="grid">
+<div class="card"><strong>Self-managed Kafka on Compute Engine or GKE</strong><br>Maximum control, maximum operations.</div>
+<div class="card"><strong>Google Cloud Managed Service for Apache Kafka</strong><br>Native managed Kafka clusters with Kafka compatibility while Google automates major cluster tasks.</div>
+<div class="card"><strong>Third-party managed Kafka</strong><br>A Kafka provider operates clusters, often with rich connector and governance tooling.</div>
+<div class="card"><strong>Cloud Pub/Sub</strong><br>Use the GCP-native messaging API instead of the Kafka protocol.</div>
+</div>
+<div class="callout"><strong>Migration question:</strong> If an existing application depends on Kafka clients, offsets, Kafka Connect or Kafka Streams, managed Kafka may reduce migration changes. For a new GCP-native serverless application, Pub/Sub may be simpler.</div>
+</section>
+
+<section id="decision">
+<h2>11. Decision guide</h2>
+<table>
+<tr><th>Requirement</th><th>Recommended starting point</th><th>Reason</th></tr>
+<tr><td>Existing Kafka applications and connectors</td><td>Managed Kafka</td><td>Preserves Kafka protocol and ecosystem compatibility.</td></tr>
+<tr><td>New Cloud Run microservices with minimal operations</td><td>Pub/Sub</td><td>Native managed delivery and straightforward GCP integration.</td></tr>
+<tr><td>Hybrid/on-premises and multi-cloud portability</td><td>Kafka</td><td>Kafka is widely deployable across environments.</td></tr>
+<tr><td>Fine control over partitions, offsets and log retention</td><td>Kafka</td><td>These are first-class Kafka concepts.</td></tr>
+<tr><td>Webhook-style event delivery</td><td>Pub/Sub push subscription</td><td>Pub/Sub can initiate HTTPS delivery.</td></tr>
+<tr><td>Stream processing tightly coupled to Kafka topics</td><td>Kafka plus Kafka Streams</td><td>Native Kafka processing model.</td></tr>
+<tr><td>GCP data pipeline to Dataflow/BigQuery</td><td>Pub/Sub</td><td>Strong native integrations and low operations.</td></tr>
+</table>
+<h3>Five-question checklist</h3>
+<ol>
+<li>Must the application remain Kafka-protocol compatible?</li>
+<li>Does the team want control over partitions and offsets?</li>
+<li>Is multi-cloud or on-premises portability essential?</li>
+<li>How much operational work can the team accept?</li>
+<li>Which downstream services and processing frameworks are required?</li>
+</ol>
+</section>
+
+<section id="demo">
+<h2>12. Hands-on: Google Cloud Pub/Sub demo</h2>
+<p><strong>Scenario:</strong> Publish food-order events and consume them using a pull subscription.</p>
+<h3>Prerequisites</h3>
+<ul>
+<li>A Google Cloud project with billing as required.</li>
+<li>Cloud Shell or a local machine with Google Cloud CLI.</li>
+<li>Pub/Sub API enabled and suitable IAM permissions.</li>
+</ul>
+<h3>Step 1 — Configure the project</h3>
+<pre>gcloud auth login
+gcloud config set project YOUR_PROJECT_ID
+gcloud services enable pubsub.googleapis.com</pre>
+<h3>Step 2 — Create a topic and subscription</h3>
+<pre>gcloud pubsub topics create order-events
+
+gcloud pubsub subscriptions create order-processing-sub \
+  --topic=order-events</pre>
+<h3>Step 3 — Publish messages</h3>
+<pre>gcloud pubsub topics publish order-events \
+  --message='{"orderId":"ORD-1001","city":"Chennai","amount":550}'
+
+gcloud pubsub topics publish order-events \
+  --message='{"orderId":"ORD-1002","city":"Bengaluru","amount":820}'</pre>
+<h3>Step 4 — Pull messages</h3>
+<pre>gcloud pubsub subscriptions pull order-processing-sub \
+  --auto-ack \
+  --limit=10</pre>
+<h3>Python publisher</h3>
+<pre>from google.cloud import pubsub_v1
+import json
+
+project_id = "YOUR_PROJECT_ID"
+topic_id = "order-events"
+
+publisher = pubsub_v1.PublisherClient()
+topic_path = publisher.topic_path(project_id, topic_id)
+
+order = {
+    "orderId": "ORD-2001",
+    "city": "Chennai",
+    "amount": 799.50
+}
+
+future = publisher.publish(
+    topic_path,
+    json.dumps(order).encode("utf-8"),
+    eventType="OrderCreated"
+)
+
+print("Published message ID:", future.result())</pre>
+<h3>Python subscriber</h3>
+<pre>from google.cloud import pubsub_v1
+
+project_id = "YOUR_PROJECT_ID"
+subscription_id = "order-processing-sub"
+
+subscriber = pubsub_v1.SubscriberClient()
+subscription_path = subscriber.subscription_path(
+    project_id, subscription_id
+)
+
+def callback(message):
+    try:
+        print("Order received:", message.data.decode("utf-8"))
+        print("Attributes:", dict(message.attributes))
+        message.ack()
+    except Exception:
+        message.nack()
+
+streaming_pull_future = subscriber.subscribe(
+    subscription_path,
+    callback=callback
+)
+
+print("Listening...")
+try:
+    streaming_pull_future.result()
+except KeyboardInterrupt:
+    streaming_pull_future.cancel()</pre>
+<h3>Install and authenticate locally</h3>
+<pre>pip install google-cloud-pubsub
+gcloud auth application-default login</pre>
+</section>
+
+<section id="kafka-demo">
+<h2>13. Small Kafka demo for comparison</h2>
+<p>This example assumes a reachable Kafka broker at <code>localhost:9092</code> and an <code>order-events</code> topic.</p>
+<h3>Install Python client</h3>
+<pre>pip install confluent-kafka</pre>
+<h3>Producer</h3>
+<pre>from confluent_kafka import Producer
+import json
+
+producer = Producer({"bootstrap.servers": "localhost:9092"})
+
+order = {
+    "orderId": "ORD-3001",
+    "customerId": "CUS-101",
+    "city": "Chennai",
+    "amount": 925
+}
+
+producer.produce(
+    "order-events",
+    key=order["customerId"],
+    value=json.dumps(order)
+)
+producer.flush()
+print("Order published")</pre>
+<h3>Consumer</h3>
+<pre>from confluent_kafka import Consumer
+
+consumer = Consumer({
+    "bootstrap.servers": "localhost:9092",
+    "group.id": "payment-service",
+    "auto.offset.reset": "earliest"
+})
+
+consumer.subscribe(["order-events"])
+
+try:
+    while True:
+        message = consumer.poll(1.0)
+        if message is None:
+            continue
+        if message.error():
+            print(message.error())
+            continue
+        print("Order:", message.value().decode("utf-8"))
+finally:
+    consumer.close()</pre>
+<div class="callout"><strong>Observe the conceptual difference:</strong> Kafka configures a broker address and consumer group. Pub/Sub configures a Google Cloud project, topic and subscription.</div>
+</section>
+
+<section id="hybrid">
+<h2>14. Hybrid architecture: Kafka and Pub/Sub together</h2>
+<p>Large organisations sometimes use both. Kafka may remain the enterprise event backbone while Pub/Sub distributes selected events to GCP-native workloads.</p>
+<div class="diagram">
+<svg viewBox="0 0 1080 330">
+<defs><marker id="ah" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#35d0ba"/></marker></defs>
+<rect x="30" y="115" width="180" height="90" rx="15" fill="#15314d" stroke="#5aa9ff"/><text x="120" y="152" text-anchor="middle" fill="white">On-prem Apps</text><text x="120" y="181" text-anchor="middle" fill="#adc3d8">ERP / CDC / Logs</text>
+<rect x="280" y="95" width="200" height="130" rx="20" fill="#312518" stroke="#ffb45b" stroke-width="2"/><text x="380" y="145" text-anchor="middle" fill="white" font-size="23">Kafka</text><text x="380" y="180" text-anchor="middle" fill="#ffd9aa">Enterprise Backbone</text>
+<rect x="550" y="115" width="180" height="90" rx="15" fill="#103d45" stroke="#35d0ba"/><text x="640" y="150" text-anchor="middle" fill="white">Connector /</text><text x="640" y="180" text-anchor="middle" fill="white">Dataflow bridge</text>
+<rect x="800" y="95" width="220" height="130" rx="20" fill="#15314d" stroke="#5aa9ff" stroke-width="2"/><text x="910" y="145" text-anchor="middle" fill="white" font-size="23">Cloud Pub/Sub</text><text x="910" y="180" text-anchor="middle" fill="#adc3d8">GCP-native consumers</text>
+<line x1="210" y1="160" x2="280" y2="160" stroke="#35d0ba" stroke-width="3" marker-end="url(#ah)"/>
+<line x1="480" y1="160" x2="550" y2="160" stroke="#35d0ba" stroke-width="3" marker-end="url(#ah)"/>
+<line x1="730" y1="160" x2="800" y2="160" stroke="#35d0ba" stroke-width="3" marker-end="url(#ah)"/>
+</svg>
+</div>
+<p>Use a bridge only when there is a real integration need. Every bridge introduces schema mapping, monitoring, security, duplicate-handling and failure-recovery responsibilities.</p>
+</section>
+
+<section id="troubleshooting">
+<h2>15. Common problems and troubleshooting</h2>
+<table>
+<tr><th>Symptom</th><th>Likely cause</th><th>Action</th></tr>
+<tr><td>Kafka consumer receives nothing</td><td>Wrong topic, broker, group position or network connectivity.</td><td>Verify topic, bootstrap servers, offsets, ACLs and consumer logs.</td></tr>
+<tr><td>Kafka lag continuously grows</td><td>Consumer processing is slower than production.</td><td>Add suitable partitions/consumers, batch work, optimise processing or reduce downstream latency.</td></tr>
+<tr><td>Pub/Sub permission denied</td><td>Missing IAM role for publisher or subscriber identity.</td><td>Verify service account and topic/subscription-level permissions.</td></tr>
+<tr><td>Pub/Sub messages are redelivered</td><td>No acknowledgement, deadline exceeded or consumer failure.</td><td>Acknowledge only after success, tune flow control and make processing idempotent.</td></tr>
+<tr><td>Ordering appears inconsistent</td><td>Different Kafka partitions or different/missing Pub/Sub ordering keys.</td><td>Use a stable business key and understand ordering scope.</td></tr>
+<tr><td>Duplicate payment</td><td>Consumer repeated a non-idempotent side effect.</td><td>Use event IDs, uniqueness constraints and transactional idempotency.</td></tr>
+</table>
+</section>
+
+<section id="interview">
+<h2>16. Interview questions and answers</h2>
+<div class="grid">
+<div class="card"><strong>1. Topic vs broker?</strong><br>A topic is a logical event stream; a broker is a Kafka server that stores topic partitions.</div>
+<div class="card"><strong>2. Topic vs subscription in Pub/Sub?</strong><br>Publishers write to a topic. Subscribers consume through subscriptions, each with independent delivery state.</div>
+<div class="card"><strong>3. Why use partitions in Kafka?</strong><br>Partitions provide scalable parallelism, distribution and ordering within each partition.</div>
+<div class="card"><strong>4. Why can duplicates occur?</strong><br>A message may be delivered again when acknowledgement or commit status is uncertain.</div>
+<div class="card"><strong>5. What is consumer lag?</strong><br>The difference between the latest available Kafka offset and a consumer group's processed position.</div>
+<div class="card"><strong>6. What is a dead-letter topic?</strong><br>A destination for messages that repeatedly fail processing.</div>
+<div class="card"><strong>7. When is Kafka preferred?</strong><br>When Kafka compatibility, event-log control, connectors, offsets or portability are important.</div>
+<div class="card"><strong>8. When is Pub/Sub preferred?</strong><br>For GCP-native asynchronous messaging with low infrastructure management.</div>
+<div class="card"><strong>9. Does one topic equal one consumer?</strong><br>No. Kafka supports multiple consumer groups; Pub/Sub supports multiple subscriptions.</div>
+<div class="card"><strong>10. What is idempotency?</strong><br>The ability to process the same event more than once without repeating the business effect.</div>
+<div class="card"><strong>11. Push vs pull?</strong><br>Push sends HTTPS requests to a consumer endpoint; pull lets consumers request or stream messages.</div>
+<div class="card"><strong>12. Can both coexist?</strong><br>Yes. A bridge can connect Kafka ecosystems to GCP-native Pub/Sub consumers.</div>
+<div class="card"><strong>13. What controls Kafka ordering?</strong><br>Partition assignment; records in a partition have an ordered sequence.</div>
+<div class="card"><strong>14. What controls Pub/Sub ordering?</strong><br>Ordering keys and ordered-delivery configuration.</div>
+<div class="card"><strong>15. Main operational difference?</strong><br>Kafka exposes cluster resources and partitions; Pub/Sub hides most infrastructure management.</div>
+</div>
+</section>
+
+<section id="quiz">
+<h2>17. Interactive knowledge check</h2>
+<div class="quiz-q" data-answer="b">
+<strong>1. Which Pub/Sub resource gives a consumer an independent delivery path?</strong>
+<label><input type="radio" name="q1" value="a"> Broker</label>
+<label><input type="radio" name="q1" value="b"> Subscription</label>
+<label><input type="radio" name="q1" value="c"> Partition leader</label>
+<div class="answer"></div>
+</div>
+<div class="quiz-q" data-answer="c">
+<strong>2. Kafka ordering is primarily guaranteed within a:</strong>
+<label><input type="radio" name="q2" value="a"> Cloud project</label>
+<label><input type="radio" name="q2" value="b"> Consumer group</label>
+<label><input type="radio" name="q2" value="c"> Partition</label>
+<div class="answer"></div>
+</div>
+<div class="quiz-q" data-answer="a">
+<strong>3. Which choice usually minimises messaging-infrastructure operations on GCP?</strong>
+<label><input type="radio" name="q3" value="a"> Cloud Pub/Sub</label>
+<label><input type="radio" name="q3" value="b"> Self-managed Kafka on VMs</label>
+<label><input type="radio" name="q3" value="c"> A single custom TCP server</label>
+<div class="answer"></div>
+</div>
+<div class="quiz-q" data-answer="b">
+<strong>4. Which design protects against duplicate business effects?</strong>
+<label><input type="radio" name="q4" value="a"> Larger message size</label>
+<label><input type="radio" name="q4" value="b"> Idempotent consumer</label>
+<label><input type="radio" name="q4" value="c"> More topic names</label>
+<div class="answer"></div>
+</div>
+<div class="quiz-q" data-answer="c">
+<strong>5. An existing Kafka Streams application most naturally points toward:</strong>
+<label><input type="radio" name="q5" value="a"> Removing all messaging</label>
+<label><input type="radio" name="q5" value="b"> Only HTTP polling</label>
+<label><input type="radio" name="q5" value="c"> Kafka-compatible deployment</label>
+<div class="answer"></div>
+</div>
+<button onclick="gradeQuiz()">Check answers</button>
+<p id="score"></p>
+</section>
+
+<section id="sources">
+<h2>18. Official references</h2>
+<ul>
+<li><a href="https://docs.cloud.google.com/pubsub/docs/overview" target="_blank">Google Cloud: What is Pub/Sub?</a></li>
+<li><a href="https://docs.cloud.google.com/pubsub/docs/pubsub-basics" target="_blank">Google Cloud: Pub/Sub basics</a></li>
+<li><a href="https://docs.cloud.google.com/pubsub/docs/subscription-overview" target="_blank">Google Cloud: Subscription overview</a></li>
+<li><a href="https://docs.cloud.google.com/pubsub/docs/publish-receive-messages-client-library" target="_blank">Google Cloud: Publish and receive with client libraries</a></li>
+<li><a href="https://docs.cloud.google.com/managed-service-for-apache-kafka/docs/overview" target="_blank">Google Cloud: Managed Service for Apache Kafka overview</a></li>
+<li><a href="https://kafka.apache.org/documentation/" target="_blank">Apache Kafka documentation</a></li>
+</ul>
+<p class="small">Product behaviour, quotas, pricing and feature availability can change. Verify deployment-specific details in current official documentation.</p>
+</section>
+</main>
+</div>
+
+<footer>Kafka vs Google Cloud Pub/Sub • Diagrammatic Trainer Tutorial</footer>
+<script>
+function showTab(id,btn){
+  document.querySelectorAll('.tabpane').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+  document.getElementById(id).classList.add('active'); btn.classList.add('active');
+}
+function gradeQuiz(){
+  let score=0,total=0;
+  document.querySelectorAll('.quiz-q').forEach((q,i)=>{
+    total++;
+    const selected=q.querySelector('input:checked');
+    const ans=q.dataset.answer;
+    const out=q.querySelector('.answer');
+    out.style.display='block';
+    if(selected && selected.value===ans){
+      score++; out.className='answer correct'; out.textContent='Correct';
+    } else {
+      out.className='answer incorrect';
+      const correct=q.querySelector('input[value="'+ans+'"]').parentElement.textContent.trim();
+      out.textContent='Incorrect. Correct answer: '+correct;
+    }
+  });
+  document.getElementById('score').innerHTML='<strong>Score: '+score+' / '+total+'</strong>';
+}
+</script>
+</body>
+</html>

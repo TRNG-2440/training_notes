@@ -1,0 +1,11 @@
+order_id,customer_name,city,state,category,amount,order_date
+1001,Aarav,Chennai,Tamil Nadu,Electronics,12500.5,2026-07-01
+1002,Diya,Bengaluru,Karnataka,Grocery,2350.0,2026-07-01
+1003,Vivaan,Hyderabad,Telangana,Furniture,18999.99,2026-07-02
+1004,Ananya,Pune,Maharashtra,Electronics,7999.0,2026-07-02
+1005,Arjun,Mumbai,Maharashtra,Fashion,4200.75,2026-07-03
+1006,Meera,Coimbatore,Tamil Nadu,Grocery,1560.25,2026-07-03
+1007,Kabir,Delhi,Delhi,Furniture,25500.0,2026-07-04
+1008,Ishita,Kochi,Kerala,Electronics,10990.0,2026-07-04
+1009,Aditya,Jaipur,Rajasthan,Fashion,2899.5,2026-07-05
+1010,Saanvi,Chennai,Tamil Nadu,Furniture,16500.0,2026-07-05
