@@ -432,21 +432,7 @@ gcloud pubsub topics create my-demo-topic-from-gcloud
 
 Then pressed `Ctrl+C`, and Cloud Shell displayed:
 
-```text
-Command killed by keyboard interrupt
-```
 
-### What happened?
-
-`Ctrl+C` interrupted the local waiting command. However, the server-side create request had apparently already reached Google Cloud and completed.
-
-When you ran the same command again:
-
-```bash
-gcloud pubsub topics create my-demo-topic-from-gcloud
-```
-
-you received:
 
 ```text
 Resource already exists in the project
