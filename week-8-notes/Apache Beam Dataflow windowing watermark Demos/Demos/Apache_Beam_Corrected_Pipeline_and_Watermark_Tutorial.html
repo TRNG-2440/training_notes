@@ -1,0 +1,1979 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Apache Beam Corrected Pipeline and Watermark Tutorial</title>
+<style>
+:root{--bg:#eef4fb;--panel:#fff;--text:#172033;--muted:#5c6980;--brand:#0878d1;--brand2:#7c3aed;--border:#d3deec;--code:#081424;--codeText:#e7f1ff;--shadow:0 12px 30px rgba(25,48,82,.11)}
+html[data-theme=dark]{--bg:#07101e;--panel:#101d30;--text:#eef5ff;--muted:#b8c7db;--brand:#76baff;--brand2:#c1a6ff;--border:#30455f;--code:#040910;--codeText:#eaf3ff;--shadow:0 13px 30px rgba(0,0,0,.35)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--text);font-family:Segoe UI,Arial,sans-serif;line-height:1.65}
+header{background:linear-gradient(135deg,#031b36,#0878d1 56%,#5f28aa);color:white;padding:54px 24px}.hero{max-width:1280px;margin:auto}h1{font-size:clamp(2.4rem,5vw,4rem);line-height:1.08;margin:12px 0}.badge{display:inline-block;background:#ffffff22;border:1px solid #ffffff44;padding:7px 13px;border-radius:999px;font-weight:800}.subtitle{max-width:1000px;color:#dceeff;font-size:1.13rem}main{max-width:1320px;margin:24px auto;background:var(--panel);border:1px solid var(--border);border-radius:18px;padding:32px;box-shadow:var(--shadow)}h1,h2,h3{scroll-margin-top:20px}h2{color:var(--brand);border-bottom:1px solid var(--border);padding-bottom:8px}h3{color:var(--brand2)}pre{background:var(--code);color:var(--codeText);padding:18px;border-radius:12px;overflow:auto;line-height:1.52}code{font-family:Consolas,monospace}table{width:100%;border-collapse:collapse;margin:16px 0}th,td{border:1px solid var(--border);padding:10px;text-align:left;vertical-align:top}th{background:color-mix(in srgb,var(--brand) 10%,var(--panel));color:var(--brand)}.diagram svg{width:100%;height:auto;border-radius:15px;border:1px solid var(--border);background:white}.toolbar{position:fixed;right:14px;top:14px;z-index:20;display:flex;gap:7px}.toolbar button{background:var(--panel);color:var(--text);border:1px solid var(--border);padding:9px 11px;border-radius:8px;cursor:pointer}.quiz{background:color-mix(in srgb,var(--brand) 6%,var(--panel));border:1px solid var(--border);border-radius:14px;padding:20px;margin-top:30px}.q{border:1px solid var(--border);border-radius:11px;padding:13px;margin:10px 0}.q label{display:block;padding:5px}.good{border-color:#22c55e;background:#22c55e12}.bad{border-color:#ef4444;background:#ef444412}button.primary{background:var(--brand);color:white;border:0;padding:10px 14px;border-radius:8px;font-weight:800;cursor:pointer}footer{text-align:center;color:var(--muted);padding:25px}@media(max-width:700px){main{margin:10px;padding:18px}.toolbar{position:static;margin:8px}}@media print{.toolbar,.quiz{display:none}main{box-shadow:none;border:0;margin:0}}
+</style>
+</head>
+<body>
+<div class="toolbar">
+<button onclick="toggleTheme()">Theme</button>
+<button onclick="window.print()">Print</button>
+</div>
+<header>
+<div class="hero">
+<span class="badge">Attached Code Only • Function Pipeline • Watermark Demo</span>
+<h1>Apache Beam Corrected Tutorial</h1>
+<p class="subtitle">A complete tutorial rebuilt only from the newly attached batch pipeline, watermark demonstration, and toll dataset.</p>
+</div>
+</header>
+<main>
+<div class="diagram">
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="540" viewBox="0 0 1500 540">
+<defs>
+<linearGradient id="bg" x1="0" x2="1"><stop stop-color="#edf6ff"/><stop offset="1" stop-color="#f6efff"/></linearGradient>
+<linearGradient id="node" x1="0" x2="1"><stop stop-color="#0878d1"/><stop offset="1" stop-color="#7c3aed"/></linearGradient>
+<marker id="a" markerWidth="12" markerHeight="12" refX="10" refY="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#0878d1"/></marker>
+</defs>
+<rect width="1500" height="540" rx="30" fill="url(#bg)"/>
+<text x="750" y="56" text-anchor="middle" font-family="Segoe UI" font-size="34" font-weight="700" fill="#173d6c">Batch Windowing to Watermark Demonstration</text>
+<g font-family="Segoe UI" text-anchor="middle">
+<rect x="70" y="145" width="250" height="115" rx="20" fill="url(#node)"/>
+<text x="195" y="190" fill="#fff" font-size="23" font-weight="700">CSV Batch Pipeline</text>
+<text x="195" y="225" fill="#eaf3ff" font-size="17">ReadFromText</text>
+<rect x="405" y="145" width="250" height="115" rx="20" fill="url(#node)"/>
+<text x="530" y="190" fill="#fff" font-size="23" font-weight="700">Event Time</text>
+<text x="530" y="225" fill="#eaf3ff" font-size="17">TimestampedValue</text>
+<rect x="740" y="145" width="250" height="115" rx="20" fill="url(#node)"/>
+<text x="865" y="190" fill="#fff" font-size="23" font-weight="700">Fixed Window</text>
+<text x="865" y="225" fill="#eaf3ff" font-size="17">[12:00, 12:05)</text>
+<rect x="1075" y="145" width="300" height="115" rx="20" fill="url(#node)"/>
+<text x="1225" y="190" fill="#fff" font-size="23" font-weight="700">Window Total</text>
+<text x="1225" y="225" fill="#eaf3ff" font-size="17">CombinePerKey</text>
+
+<rect x="260" y="360" width="250" height="110" rx="20" fill="#0b456d"/>
+<text x="385" y="402" fill="#fff" font-size="23" font-weight="700">TestStream</text>
+<text x="385" y="438" fill="#dff6ff" font-size="17">Unbounded simulation</text>
+<rect x="625" y="360" width="250" height="110" rx="20" fill="#0b456d"/>
+<text x="750" y="402" fill="#fff" font-size="23" font-weight="700">Watermark 12:05</text>
+<text x="750" y="438" fill="#dff6ff" font-size="17">ON_TIME pane</text>
+<rect x="990" y="360" width="250" height="110" rx="20" fill="#0b456d"/>
+<text x="1115" y="402" fill="#fff" font-size="23" font-weight="700">Late Event 12:03</text>
+<text x="1115" y="438" fill="#dff6ff" font-size="17">LATE pane</text>
+</g>
+<g stroke="#0878d1" stroke-width="5" marker-end="url(#a)">
+<line x1="320" y1="202" x2="405" y2="202"/>
+<line x1="655" y1="202" x2="740" y2="202"/>
+<line x1="990" y1="202" x2="1075" y2="202"/>
+<line x1="1225" y1="260" x2="470" y2="360"/>
+<line x1="510" y1="415" x2="625" y2="415"/>
+<line x1="875" y1="415" x2="990" y2="415"/>
+</g>
+</svg>
+</div>
+<pre># Apache Beam Function Pipeline and Watermark Tutorial
+
+## Source of this tutorial
+
+This tutorial is based only on the attached files:
+
+- `pipeline_function.py`
+- `watermark_demo.py`
+- `tolls.csv`
+
+The earlier example code is not used here.
+
+## Project objective
+
+The project contains two separate Apache Beam demonstrations:
+
+```text
+pipeline_function.py
+    Reads a bounded CSV file
+    Parses toll transactions
+    Assigns event timestamps
+    Applies fixed five-minute windows
+    Calculates toll revenue for each window
+    Writes the result to a local text file
+
+watermark_demo.py
+    Creates a simulated unbounded stream
+    Adds on-time events
+    Advances the watermark
+    Emits an on-time pane
+    Adds a late event
+    Emits a late pane
+    Demonstrates allowed lateness and accumulation
+```
+
+The two programs should be taught together:
+
+```text
+Batch-style event-time windowing
+            ↓
+Streaming watermark demonstration
+```
+
+---
+
+# Part 1 — Required project structure
+
+The attached `pipeline_function.py` expects this structure:
+
+```text
+beam-demo/
+├── .venv/
+├── data/
+│   └── tolls.csv
+├── pipeline_function.py
+└── watermark_demo.py
+```
+
+The batch program constructs the input path using:
+
+```python
+project_directory = Path(__file__).resolve().parent
+
+input_file = (
+    project_directory
+    / &quot;data&quot;
+    / &quot;tolls.csv&quot;
+)
+```
+
+Therefore, `tolls.csv` must be inside the `data` folder.
+
+---
+
+# Part 2 — Dataset
+
+The attached CSV has these columns:
+
+| Column | Python value after parsing | Meaning |
+|---|---|---|
+| `car_id` | `str` | Vehicle identifier |
+| `toll_amount` | converted to `float` | Toll amount |
+| `event_timestamp` | converted to event-time timestamp | Time when the toll event happened |
+
+Attached CSV content:
+
+```csv
+car_id,toll_amount,event_timestamp
+CAR-001,5.50,2026-08-05T12:01:00Z
+CAR-002,7.25,2026-08-05T12:02:00Z
+CAR-003,4.75,2026-08-05T12:04:00Z
+CAR-004,6.50,2026-08-05T12:06:00Z
+CAR-005,8.25,2026-08-05T12:08:00Z
+CAR-006,3.50,2026-08-05T12:09:00Z
+CAR-007,9.00,2026-08-05T12:11:00Z
+CAR-008,5.25,2026-08-05T12:13:00Z
+CAR-009,6.75,2026-08-05T12:16:00Z
+CAR-010,4.25,2026-08-05T12:18:00Z
+```
+
+## Python terminology
+
+Each line read by Beam is initially a Python string:
+
+```python
+&quot;CAR-001,5.50,2026-08-05T12:01:00Z&quot;
+```
+
+After:
+
+```python
+parts = element.split(&quot;,&quot;)
+```
+
+the result is a Python list:
+
+```python
+[
+    &quot;CAR-001&quot;,
+    &quot;5.50&quot;,
+    &quot;2026-08-05T12:01:00Z&quot;
+]
+```
+
+After parsing, the program creates a Python dictionary:
+
+```python
+{
+    &quot;car_id&quot;: &quot;CAR-001&quot;,
+    &quot;toll&quot;: 5.50
+}
+```
+
+After key mapping, the program creates a Python tuple:
+
+```python
+(&quot;toll_revenue&quot;, 5.50)
+```
+
+---
+
+# Part 3 — Batch pipeline architecture
+
+```text
+ReadFromText
+    ↓
+PCollection[str]
+    ↓
+FlatMap(parse_and_add_timestamp)
+    ↓
+PCollection[dict] with event-time metadata
+    ↓
+WindowInto(FixedWindows(300 seconds))
+    ↓
+Map(map_to_key_value)
+    ↓
+PCollection[(key, value)]
+    ↓
+CombinePerKey(sum)
+    ↓
+PCollection[(key, total)]
+    ↓
+Map(format_output)
+    ↓
+PCollection[str]
+    ↓
+WriteToText
+```
+
+## Apache Beam terminology
+
+| Beam term | Meaning in this project |
+|---|---|
+| `Pipeline` | Complete processing graph |
+| `DirectRunner` | Local runner used to execute the pipeline |
+| `PCollection` | Beam distributed collection abstraction |
+| `PTransform` | Operation applied to a pipeline or PCollection |
+| `ReadFromText` | Source transform |
+| `FlatMap` | Produces zero, one or many outputs per input |
+| `Map` | Produces exactly one output per input |
+| `TimestampedValue` | Attaches event-time metadata |
+| `WindowInto` | Assigns elements to windows |
+| `FixedWindows` | Non-overlapping fixed-size windows |
+| `CombinePerKey` | Aggregates values for each key in each window |
+| `WriteToText` | Sink transform |
+| Transform label | Human-readable name such as `ReadCSV` |
+
+---
+
+# Part 4 — Exact attached batch code
+
+```python
+import apache_beam as beam
+
+from apache_beam.options.pipeline_options import PipelineOptions
+from datetime import datetime
+from pathlib import Path
+
+
+# ---------------------------------------------------------
+# 1. Parse one CSV line
+# ---------------------------------------------------------
+def parse_and_add_timestamp(element):
+    &quot;&quot;&quot;
+    Parse one CSV row and assign its event timestamp.
+
+    FlatMap is used because:
+    - Header produces zero output records.
+    - Valid data row produces one output record.
+    &quot;&quot;&quot;
+
+    # Skip header
+    if element.startswith(&quot;car_id&quot;):
+        return []
+
+    parts = element.split(&quot;,&quot;)
+
+    # Skip malformed rows
+    if len(parts) != 3:
+        print(f&quot;Skipping malformed row: {element}&quot;)
+        return []
+
+    try:
+        car_id = parts[0].strip()
+        toll_amount = float(parts[1].strip())
+
+        # Convert UTC Z notation into Python-compatible timezone notation
+        timestamp_text = (
+            parts[2]
+            .strip()
+            .replace(&quot;Z&quot;, &quot;+00:00&quot;)
+        )
+
+        event_timestamp = datetime.fromisoformat(
+            timestamp_text
+        ).timestamp()
+
+        record = {
+            &quot;car_id&quot;: car_id,
+            &quot;toll&quot;: toll_amount,
+        }
+
+        return [
+            beam.window.TimestampedValue(
+                record,
+                event_timestamp,
+            )
+        ]
+
+    except (ValueError, IndexError) as error:
+        print(
+            f&quot;Skipping invalid row: {element}. &quot;
+            f&quot;Reason: {error}&quot;
+        )
+        return []
+
+
+# ---------------------------------------------------------
+# 2. Convert record into key-value format
+# ---------------------------------------------------------
+def map_to_key_value(element):
+    &quot;&quot;&quot;
+    One input produces exactly one output.
+
+    Input:
+        {&quot;car_id&quot;: &quot;CAR-001&quot;, &quot;toll&quot;: 5.50}
+
+    Output:
+        (&quot;toll_revenue&quot;, 5.50)
+    &quot;&quot;&quot;
+
+    return (
+        &quot;toll_revenue&quot;,
+        element[&quot;toll&quot;],
+    )
+
+
+# ---------------------------------------------------------
+# 3. Format final window result
+# ---------------------------------------------------------
+def format_output(
+    element,
+    window=beam.DoFn.WindowParam,
+):
+    &quot;&quot;&quot;
+    Format the aggregated result and include window boundaries.
+    &quot;&quot;&quot;
+
+    key, total_revenue = element
+
+    start_time = (
+        window.start
+        .to_utc_datetime()
+        .strftime(&quot;%H:%M:%S&quot;)
+    )
+
+    end_time = (
+        window.end
+        .to_utc_datetime()
+        .strftime(&quot;%H:%M:%S&quot;)
+    )
+
+    return (
+        f&quot;Window [{start_time} to {end_time}] &quot;
+        f&quot;-&gt; Total Revenue: ${total_revenue:.2f}&quot;
+    )
+
+
+# ---------------------------------------------------------
+# 4. Create and run pipeline
+# ---------------------------------------------------------
+def run():
+
+    project_directory = Path(__file__).resolve().parent
+
+    input_file = (
+        project_directory
+        / &quot;data&quot;
+        / &quot;tolls.csv&quot;
+    )
+
+    output_prefix = (
+        project_directory
+        / &quot;output_results&quot;
+    )
+
+    print(&quot;=&quot; * 70)
+    print(&quot;Apache Beam Toll Revenue Pipeline&quot;)
+    print(&quot;=&quot; * 70)
+    print(f&quot;Input file    : {input_file}&quot;)
+    print(f&quot;Output prefix : {output_prefix}&quot;)
+    print(&quot;=&quot; * 70)
+
+    if not input_file.exists():
+        raise FileNotFoundError(
+            &quot;\nInput CSV file was not found.\n&quot;
+            f&quot;Expected location:\n{input_file}\n&quot;
+        )
+
+    options = PipelineOptions()
+
+    with beam.Pipeline(
+        runner=&quot;DirectRunner&quot;,
+        options=options,
+    ) as pipeline:
+
+        (
+            pipeline
+
+            # PCollection[str]
+            | &quot;ReadCSV&quot;
+            &gt;&gt; beam.io.ReadFromText(
+                str(input_file)
+            )
+
+            # PCollection[TimestampedValue]
+            | &quot;ParseAndTimestamp&quot;
+            &gt;&gt; beam.FlatMap(
+                parse_and_add_timestamp
+            )
+
+            # Place records into five-minute event-time windows
+            | &quot;ApplyFiveMinuteWindows&quot;
+            &gt;&gt; beam.WindowInto(
+                beam.window.FixedWindows(
+                    5 * 60
+                )
+            )
+
+            # PCollection[tuple[str, float]]
+            | &quot;MapToKeyValue&quot;
+            &gt;&gt; beam.Map(
+                map_to_key_value
+            )
+
+            # Sum toll values separately inside each window
+            | &quot;SumRevenuePerWindow&quot;
+            &gt;&gt; beam.CombinePerKey(sum)
+
+            # PCollection[str]
+            | &quot;FormatResult&quot;
+            &gt;&gt; beam.Map(
+                format_output
+            )
+
+            # Local text output
+            | &quot;WriteOutput&quot;
+            &gt;&gt; beam.io.WriteToText(
+                str(output_prefix)
+            )
+        )
+
+
+if __name__ == &quot;__main__&quot;:
+    run()
+
+    print()
+    print(&quot;Pipeline execution completed successfully.&quot;)
+    print(
+        &quot;Check the project folder for &quot;
+        &quot;&#x27;output_results-00000-of-00001&#x27;.&quot;
+    )
+```
+
+---
+
+# Part 5 — Batch code explanation
+
+## Imports
+
+```python
+import apache_beam as beam
+```
+
+- `apache_beam` is the installed Python package.
+- `beam` is a Python alias.
+- Beam classes and transforms are accessed through this alias.
+
+```python
+from apache_beam.options.pipeline_options import PipelineOptions
+```
+
+- `PipelineOptions` is a class.
+- `options = PipelineOptions()` creates an object.
+- The object stores execution and runner configuration.
+
+```python
+from datetime import datetime
+```
+
+- `datetime` is a Python class.
+- It converts ISO timestamp text into a datetime object.
+
+```python
+from pathlib import Path
+```
+
+- `Path` is used for reliable file paths.
+- It avoids depending on the terminal&#x27;s current directory.
+
+## Function: `parse_and_add_timestamp`
+
+```python
+def parse_and_add_timestamp(element):
+```
+
+- Python terminology: function definition.
+- `element` is a function parameter.
+- Beam passes one CSV line at a time.
+- The function is used by `beam.FlatMap`.
+
+### Header handling
+
+```python
+if element.startswith(&quot;car_id&quot;):
+    return []
+```
+
+- `element` is a Python string.
+- `startswith()` is a string method.
+- It returns a Boolean.
+- `[]` is an empty Python list.
+- For `FlatMap`, an empty list means zero output elements.
+
+### Split the row
+
+```python
+parts = element.split(&quot;,&quot;)
+```
+
+- `split()` returns a Python list of strings.
+- The attached dataset has three fields per line.
+
+### Validate field count
+
+```python
+if len(parts) != 3:
+```
+
+- `len(parts)` returns an integer.
+- Malformed rows are skipped.
+
+### Parse the fields
+
+```python
+car_id = parts[0].strip()
+```
+
+- `car_id` is a Python string.
+- `strip()` removes surrounding spaces.
+
+```python
+toll_amount = float(parts[1].strip())
+```
+
+- The CSV field starts as a string.
+- `float()` converts it into a Python floating-point number.
+
+### Convert UTC text
+
+```python
+timestamp_text = (
+    parts[2]
+    .strip()
+    .replace(&quot;Z&quot;, &quot;+00:00&quot;)
+)
+```
+
+- `Z` means UTC.
+- `+00:00` gives Python an explicit UTC offset.
+
+### Convert to Unix timestamp
+
+```python
+event_timestamp = datetime.fromisoformat(
+    timestamp_text
+).timestamp()
+```
+
+- `datetime.fromisoformat()` creates a timezone-aware datetime object.
+- `.timestamp()` returns Unix epoch seconds as a float.
+
+### Create the record
+
+```python
+record = {
+    &quot;car_id&quot;: car_id,
+    &quot;toll&quot;: toll_amount,
+}
+```
+
+- Python type: dictionary.
+- It contains named fields.
+
+### Attach event time
+
+```python
+beam.window.TimestampedValue(
+    record,
+    event_timestamp,
+)
+```
+
+- Beam type: `TimestampedValue`.
+- It carries the dictionary and its event-time metadata.
+- The timestamp is Beam metadata; it is not automatically added as a dictionary field.
+
+### Why return a list?
+
+```python
+return [
+    beam.window.TimestampedValue(...)
+]
+```
+
+- Python type: list containing one object.
+- `FlatMap` requires an iterable.
+- Valid row: one output.
+- Header or invalid row: zero outputs.
+
+## Function: `map_to_key_value`
+
+```python
+return (
+    &quot;toll_revenue&quot;,
+    element[&quot;toll&quot;],
+)
+```
+
+- Python type: tuple.
+- Beam terminology: keyed element or key-value pair.
+- Key: `&quot;toll_revenue&quot;`.
+- Value: toll amount.
+
+Every record uses the same key, so Beam calculates total toll revenue for each window.
+
+## Function: `format_output`
+
+```python
+def format_output(
+    element,
+    window=beam.DoFn.WindowParam,
+):
+```
+
+- `element` contains the aggregated tuple.
+- `WindowParam` is a Beam-injected special parameter.
+- Beam supplies the current window automatically.
+
+```python
+key, total_revenue = element
+```
+
+- Python terminology: tuple unpacking.
+
+```python
+window.start.to_utc_datetime()
+```
+
+- Converts the Beam window start to a Python UTC datetime.
+
+```python
+window.end.to_utc_datetime()
+```
+
+- Converts the Beam window end to a Python UTC datetime.
+
+Output example:
+
+```text
+Window [12:00:00 to 12:05:00] -&gt; Total Revenue: $17.50
+```
+
+## Function: `run`
+
+```python
+project_directory = Path(__file__).resolve().parent
+```
+
+- `__file__` refers to the current Python file.
+- `Path(...)` creates a path object.
+- `resolve()` creates an absolute path.
+- `parent` returns the containing folder.
+
+```python
+input_file = project_directory / &quot;data&quot; / &quot;tolls.csv&quot;
+```
+
+- `/` joins Path components.
+- This is not numeric division.
+
+```python
+output_prefix = project_directory / &quot;output_results&quot;
+```
+
+- This is a file prefix.
+- Beam usually adds shard information.
+
+### File validation
+
+```python
+if not input_file.exists():
+    raise FileNotFoundError(...)
+```
+
+- `exists()` returns a Boolean.
+- `raise` stops execution with an explicit exception.
+
+### Pipeline options
+
+```python
+options = PipelineOptions()
+```
+
+- Creates a Beam configuration object.
+
+### Pipeline object and runner
+
+```python
+with beam.Pipeline(
+    runner=&quot;DirectRunner&quot;,
+    options=options,
+) as pipeline:
+```
+
+- `beam.Pipeline(...)` creates a Beam Pipeline object.
+- `DirectRunner` executes locally.
+- `with` is a Python context manager.
+- Beam executes and waits for completion when the block exits successfully.
+
+## Transform 1: Read CSV
+
+```python
+| &quot;ReadCSV&quot;
+&gt;&gt; beam.io.ReadFromText(
+    str(input_file)
+)
+```
+
+Input:
+
+```text
+Pipeline
+```
+
+Output:
+
+```text
+PCollection[str]
+```
+
+Each element is one line from the file.
+
+## Transform 2: Parse and timestamp
+
+```python
+| &quot;ParseAndTimestamp&quot;
+&gt;&gt; beam.FlatMap(
+    parse_and_add_timestamp
+)
+```
+
+Input:
+
+```text
+PCollection[str]
+```
+
+Output:
+
+```text
+PCollection[dict]
+```
+
+Each output element carries event-time metadata.
+
+Why `FlatMap`?
+
+```text
+Header row     → zero outputs
+Invalid row    → zero outputs
+Valid row      → one output
+```
+
+## Transform 3: Apply fixed windows
+
+```python
+beam.window.FixedWindows(
+    5 * 60
+)
+```
+
+Python calculation:
+
+```text
+5 × 60 = 300 seconds
+```
+
+Beam creates windows such as:
+
+```text
+[12:00, 12:05)
+[12:05, 12:10)
+[12:10, 12:15)
+```
+
+The start is inclusive and the end is exclusive.
+
+## Transform 4: Map to key-value
+
+```python
+beam.Map(
+    map_to_key_value
+)
+```
+
+Input element:
+
+```python
+{
+    &quot;car_id&quot;: &quot;CAR-001&quot;,
+    &quot;toll&quot;: 5.50
+}
+```
+
+Output element:
+
+```python
+(&quot;toll_revenue&quot;, 5.50)
+```
+
+`Map` is suitable because one input produces exactly one output.
+
+## Transform 5: Sum per key and window
+
+```python
+beam.CombinePerKey(sum)
+```
+
+Example input in one window:
+
+```python
+(&quot;toll_revenue&quot;, 5.50)
+(&quot;toll_revenue&quot;, 7.25)
+(&quot;toll_revenue&quot;, 4.75)
+```
+
+Output:
+
+```python
+(&quot;toll_revenue&quot;, 17.50)
+```
+
+The combination is scoped by:
+
+```text
+Key + window
+```
+
+## Transform 6: Format result
+
+```python
+beam.Map(
+    format_output
+)
+```
+
+Input:
+
+```python
+(&quot;toll_revenue&quot;, 17.50)
+```
+
+Output:
+
+```text
+Window [12:00:00 to 12:05:00] -&gt; Total Revenue: $17.50
+```
+
+## Sink: Write output
+
+```python
+beam.io.WriteToText(
+    str(output_prefix)
+)
+```
+
+Possible output:
+
+```text
+output_results-00000-of-00001
+```
+
+---
+
+# Part 6 — Run the batch pipeline
+
+From the project folder:
+
+```powershell
+.\.venv\Scriptsctivate
+python pipeline_function.py
+```
+
+Read the output:
+
+```powershell
+Get-Content .\output_results-00000-of-00001
+```
+
+Before rerunning, remove older output files when necessary:
+
+```powershell
+Remove-Item .\output_results* -Force
+```
+
+---
+
+# Part 7 — Why a second watermark program is required
+
+The batch program uses:
+
+- Event timestamps
+- Fixed event-time windows
+- Window-scoped aggregation
+
+However, its input is bounded.
+
+A visible watermark demonstration needs a source where event arrival and watermark movement can be controlled. The attached `watermark_demo.py` uses `TestStream` for this purpose.
+
+---
+
+# Part 8 — Watermark definition
+
+A watermark is Beam&#x27;s estimate of how far event time has progressed.
+
+Example:
+
+```text
+Watermark = 12:05
+```
+
+Approximate interpretation:
+
+```text
+Most events with event times earlier than 12:05
+should already have arrived.
+```
+
+A watermark is:
+
+- Not a toll transaction
+- Not a Python variable in the record
+- Not a window
+- Not a trigger
+
+It is event-time progress information used by Beam and the runner.
+
+---
+
+# Part 9 — Event time, processing time and watermark
+
+| Concept | Meaning |
+|---|---|
+| Event time | Time when the toll event happened |
+| Processing time | Time when Beam processed the event |
+| Watermark | Estimate of event-time progress |
+| Window | Event-time grouping interval |
+| Trigger | Rule deciding when to emit |
+| Allowed lateness | Duration for accepting late updates |
+| Pane | One emitted result for a window |
+
+Example:
+
+```text
+Event happened:       12:03
+Processed by Beam:    12:07
+Current watermark:    12:05
+```
+
+The event is late because its event time is behind the watermark and it belongs to a window whose end the watermark has reached.
+
+---
+
+# Part 10 — Exact attached watermark code
+
+```python
+import apache_beam as beam
+
+from apache_beam.options.pipeline_options import (
+    PipelineOptions,
+    StandardOptions,
+)
+from apache_beam.testing.test_stream import TestStream
+from apache_beam.transforms.trigger import (
+    AccumulationMode,
+    AfterCount,
+    AfterWatermark,
+)
+from apache_beam.utils.timestamp import Timestamp
+
+
+# ---------------------------------------------------------
+# Convert a toll dictionary into a Beam key-value tuple
+# ---------------------------------------------------------
+def map_to_key_value(element):
+    &quot;&quot;&quot;
+    Input:
+        {
+            &quot;car_id&quot;: &quot;CAR-001&quot;,
+            &quot;toll&quot;: 5.50
+        }
+
+    Output:
+        (&quot;toll_revenue&quot;, 5.50)
+    &quot;&quot;&quot;
+
+    return (
+        &quot;toll_revenue&quot;,
+        element[&quot;toll&quot;],
+    )
+
+
+# ---------------------------------------------------------
+# Format every pane emitted by the trigger
+# ---------------------------------------------------------
+def format_result(
+    element,
+    window=beam.DoFn.WindowParam,
+    pane_info=beam.DoFn.PaneInfoParam,
+):
+    &quot;&quot;&quot;
+    element:
+        (&quot;toll_revenue&quot;, total)
+
+    window:
+        Beam IntervalWindow
+
+    pane_info:
+        Information about the pane that Beam emitted.
+    &quot;&quot;&quot;
+
+    key, total_revenue = element
+
+    window_start = (
+        window.start
+        .to_utc_datetime()
+        .strftime(&quot;%H:%M:%S&quot;)
+    )
+
+    window_end = (
+        window.end
+        .to_utc_datetime()
+        .strftime(&quot;%H:%M:%S&quot;)
+    )
+
+    return (
+        f&quot;Window [{window_start} to {window_end}] | &quot;
+        f&quot;Pane timing: {pane_info.timing} | &quot;
+        f&quot;Pane index: {pane_info.index} | &quot;
+        f&quot;Revenue: ${total_revenue:.2f}&quot;
+    )
+
+
+# ---------------------------------------------------------
+# Print output produced by each pane
+# ---------------------------------------------------------
+def print_result(element):
+    print(element)
+    return element
+
+
+# ---------------------------------------------------------
+# Create the watermark demonstration pipeline
+# ---------------------------------------------------------
+def run():
+    options = PipelineOptions()
+
+    # TestStream represents an unbounded stream.
+    options.view_as(StandardOptions).streaming = True
+
+    # -----------------------------------------------------
+    # Window:
+    # [12:00, 12:05)
+    #
+    # CAR-001 and CAR-002 arrive before the watermark
+    # reaches 12:05.
+    #
+    # The watermark then reaches the end of the window,
+    # causing the on-time pane.
+    #
+    # CAR-003 arrives afterward, but its event timestamp
+    # is 12:03. It therefore belongs to the old window
+    # and is treated as late data.
+    # -----------------------------------------------------
+
+    test_stream = (
+        TestStream()
+
+        # Begin the simulated event-time clock.
+        .advance_watermark_to(
+            Timestamp.from_rfc3339(
+                &quot;2026-08-05T12:00:00Z&quot;
+            )
+        )
+
+        # Event 1 belongs to [12:00, 12:05).
+        .add_elements(
+            [
+                beam.window.TimestampedValue(
+                    {
+                        &quot;car_id&quot;: &quot;CAR-001&quot;,
+                        &quot;toll&quot;: 5.50,
+                    },
+                    Timestamp.from_rfc3339(
+                        &quot;2026-08-05T12:01:00Z&quot;
+                    ),
+                )
+            ]
+        )
+
+        # Event 2 also belongs to [12:00, 12:05).
+        .add_elements(
+            [
+                beam.window.TimestampedValue(
+                    {
+                        &quot;car_id&quot;: &quot;CAR-002&quot;,
+                        &quot;toll&quot;: 7.25,
+                    },
+                    Timestamp.from_rfc3339(
+                        &quot;2026-08-05T12:02:00Z&quot;
+                    ),
+                )
+            ]
+        )
+
+        # Move the watermark to the end of the window.
+        # Beam can now emit the on-time pane.
+        .advance_watermark_to(
+            Timestamp.from_rfc3339(
+                &quot;2026-08-05T12:05:00Z&quot;
+            )
+        )
+
+        # This record arrives after the watermark has
+        # reached 12:05.
+        #
+        # Its event timestamp is 12:03, so it belongs to
+        # the earlier [12:00, 12:05) window.
+        .add_elements(
+            [
+                beam.window.TimestampedValue(
+                    {
+                        &quot;car_id&quot;: &quot;CAR-003&quot;,
+                        &quot;toll&quot;: 4.75,
+                    },
+                    Timestamp.from_rfc3339(
+                        &quot;2026-08-05T12:03:00Z&quot;
+                    ),
+                )
+            ]
+        )
+
+        # Complete the simulated stream.
+        .advance_watermark_to_infinity()
+    )
+
+    with beam.Pipeline(
+        runner=&quot;DirectRunner&quot;,
+        options=options,
+    ) as pipeline:
+
+        (
+            pipeline
+
+            # Source: simulated unbounded stream
+            | &quot;CreateTestStream&quot;
+            &gt;&gt; test_stream
+
+            # Group events into five-minute event-time windows
+            | &quot;ApplyFiveMinuteWindows&quot;
+            &gt;&gt; beam.WindowInto(
+                beam.window.FixedWindows(
+                    5 * 60
+                ),
+
+                # Emit the normal result when the watermark
+                # reaches the end of the window.
+                #
+                # Emit another pane whenever one late record
+                # arrives.
+                trigger=AfterWatermark(
+                    late=AfterCount(1)
+                ),
+
+                # Retain the window for two additional minutes
+                # of event-time watermark progression.
+                allowed_lateness=2 * 60,
+
+                # Each later pane contains the previous values
+                # plus newly arrived values.
+                accumulation_mode=(
+                    AccumulationMode.ACCUMULATING
+                ),
+            )
+
+            # Convert each record into:
+            # (&quot;toll_revenue&quot;, toll_amount)
+            | &quot;MapToKeyValue&quot;
+            &gt;&gt; beam.Map(
+                map_to_key_value
+            )
+
+            # Calculate the total for each window
+            | &quot;SumRevenuePerWindow&quot;
+            &gt;&gt; beam.CombinePerKey(sum)
+
+            # Include window and pane information
+            | &quot;FormatResults&quot;
+            &gt;&gt; beam.Map(
+                format_result
+            )
+
+            # Print each pane
+            | &quot;PrintResults&quot;
+            &gt;&gt; beam.Map(
+                print_result
+            )
+        )
+
+
+if __name__ == &quot;__main__&quot;:
+    run()
+```
+
+---
+
+# Part 11 — Watermark architecture
+
+```text
+TestStream
+    ↓
+Watermark starts at 12:00
+    ↓
+CAR-001 event time 12:01
+    ↓
+CAR-002 event time 12:02
+    ↓
+Watermark advances to 12:05
+    ↓
+ON_TIME pane
+    ↓
+CAR-003 arrives later with event time 12:03
+    ↓
+LATE pane
+    ↓
+Watermark advances to infinity
+```
+
+The window is:
+
+```text
+[12:00, 12:05)
+```
+
+On-time amount:
+
+```text
+5.50 + 7.25 = 12.75
+```
+
+Accumulating late result:
+
+```text
+5.50 + 7.25 + 4.75 = 17.50
+```
+
+---
+
+# Part 12 — Watermark code explanation
+
+## Imports
+
+```python
+from apache_beam.options.pipeline_options import (
+    PipelineOptions,
+    StandardOptions,
+)
+```
+
+- `PipelineOptions`: general configuration.
+- `StandardOptions`: standard options including streaming mode.
+
+```python
+from apache_beam.testing.test_stream import TestStream
+```
+
+- `TestStream` is a Beam testing source.
+- It simulates an unbounded stream.
+- It allows explicit watermark movement.
+
+```python
+from apache_beam.transforms.trigger import (
+    AccumulationMode,
+    AfterCount,
+    AfterWatermark,
+)
+```
+
+- `AfterWatermark`: event-time trigger.
+- `AfterCount`: count-based trigger.
+- `AccumulationMode`: controls pane content.
+
+```python
+from apache_beam.utils.timestamp import Timestamp
+```
+
+- `Timestamp` represents Beam timestamps.
+- The attached code uses `Timestamp.from_rfc3339(...)`.
+
+## Streaming mode
+
+```python
+options.view_as(StandardOptions).streaming = True
+```
+
+- `view_as()` accesses StandardOptions.
+- `streaming = True` declares streaming behavior.
+
+## Create the TestStream
+
+```python
+test_stream = (
+    TestStream()
+```
+
+Python terminology:
+
+```text
+TestStream object
+```
+
+Beam terminology:
+
+```text
+Simulated unbounded source
+```
+
+## Initial watermark
+
+```python
+.advance_watermark_to(
+    Timestamp.from_rfc3339(
+        &quot;2026-08-05T12:00:00Z&quot;
+    )
+)
+```
+
+Meaning:
+
+```text
+The simulated source reports event-time progress at 12:00.
+```
+
+This does not create a toll record.
+
+## Add on-time events
+
+The attached code adds:
+
+```text
+CAR-001 at event time 12:01, toll 5.50
+CAR-002 at event time 12:02, toll 7.25
+```
+
+Both belong to:
+
+```text
+[12:00, 12:05)
+```
+
+## Advance watermark to the window end
+
+```python
+.advance_watermark_to(
+    Timestamp.from_rfc3339(
+        &quot;2026-08-05T12:05:00Z&quot;
+    )
+)
+```
+
+The window ends at 12:05.
+
+When the watermark reaches the end, `AfterWatermark` can emit the normal on-time pane.
+
+## Add the late event
+
+The attached code next adds:
+
+```text
+CAR-003
+Toll: 4.75
+Event time: 12:03
+Arrival: after watermark reached 12:05
+```
+
+The event time places it in the old window:
+
+```text
+[12:00, 12:05)
+```
+
+It arrives after the watermark has reached the end of the window, so it is late.
+
+## Finish the stream
+
+```python
+.advance_watermark_to_infinity()
+```
+
+This indicates that no earlier event-time data is expected from the simulated source.
+
+---
+
+# Part 13 — Window configuration
+
+```python
+beam.WindowInto(
+    beam.window.FixedWindows(
+        5 * 60
+    ),
+```
+
+The records are assigned to five-minute windows.
+
+## Trigger
+
+```python
+trigger=AfterWatermark(
+    late=AfterCount(1)
+)
+```
+
+Meaning:
+
+```text
+Emit the normal result when the watermark reaches the window end.
+
+Afterward, emit another pane whenever one late record arrives.
+```
+
+## Allowed lateness
+
+```python
+allowed_lateness=2 * 60
+```
+
+Python value:
+
+```text
+120 seconds
+```
+
+Conceptual meaning:
+
+```text
+Retain the window for two additional minutes of
+event-time watermark progression so late records
+may still update the result.
+```
+
+## Accumulating mode
+
+```python
+AccumulationMode.ACCUMULATING
+```
+
+The late pane includes earlier values.
+
+On-time pane:
+
+```text
+12.75
+```
+
+Late accumulating pane:
+
+```text
+17.50
+```
+
+With discarding mode, the late pane would logically contain only the newly arrived amount:
+
+```text
+4.75
+```
+
+---
+
+# Part 14 — Pane information
+
+The formatter declares:
+
+```python
+pane_info=beam.DoFn.PaneInfoParam
+```
+
+Beam injects pane metadata.
+
+Useful fields include:
+
+```python
+pane_info.timing
+pane_info.index
+pane_info.is_first
+pane_info.is_last
+```
+
+Possible timing categories include:
+
+```text
+EARLY
+ON_TIME
+LATE
+UNKNOWN
+```
+
+The output includes:
+
+```text
+Pane timing
+Pane index
+Window start
+Window end
+Revenue
+```
+
+---
+
+# Part 15 — Expected logical output
+
+The on-time pane should logically show:
+
+```text
+Window [12:00:00 to 12:05:00]
+Revenue: $12.75
+```
+
+The late accumulating pane should logically show:
+
+```text
+Window [12:00:00 to 12:05:00]
+Revenue: $17.50
+```
+
+The exact textual representation of `pane_info.timing` may vary by Beam version and runner output.
+
+---
+
+# Part 16 — Run the watermark demo
+
+```powershell
+.\.venv\Scriptsctivate
+python watermark_demo.py
+```
+
+No CSV input is required by this program because the source is `TestStream`.
+
+---
+
+# Part 17 — Watermark versus trigger
+
+## Watermark
+
+Answers:
+
+```text
+How far has event time probably progressed?
+```
+
+## Trigger
+
+Answers:
+
+```text
+When should the current result be emitted?
+```
+
+In the attached code:
+
+```python
+AfterWatermark(
+    late=AfterCount(1)
+)
+```
+
+- Watermark controls the normal on-time firing.
+- `AfterCount(1)` controls late firings.
+
+---
+
+# Part 18 — Why watermarks are useful
+
+## 1. Streaming sources may never finish
+
+A Kafka, Pub/Sub or similar stream can continue indefinitely.
+
+Beam needs a way to decide that an event-time window is reasonably complete.
+
+## 2. Events may arrive out of order
+
+Arrival order may be:
+
+```text
+12:04 event
+12:01 event
+12:03 event
+```
+
+Event timestamps still place them in the correct windows.
+
+## 3. Watermarks balance speed and completeness
+
+```text
+ON_TIME result
+    Normal result when event-time progress reaches the window end
+
+LATE result
+    Correction after delayed data arrives
+```
+
+## 4. They support cleanup
+
+Watermarks and allowed lateness help Beam determine when window state can eventually be removed.
+
+---
+
+# Part 19 — Healthy watermark
+
+A healthy watermark normally:
+
+- Moves forward continuously
+- Does not stay stuck for a long time
+- Remains reasonably close to expected event time
+- Allows on-time panes to fire without excessive delay
+- Does not create an excessive percentage of late events
+
+Healthy example:
+
+```text
+Current real time: 12:10
+Watermark:         12:09
+Lag:               1 minute
+```
+
+Possible unhealthy example:
+
+```text
+Current real time: 12:30
+Watermark:         12:05
+Lag:               25 minutes
+```
+
+Possible reasons:
+
+- Stuck input partition
+- Idle partition holding back progress
+- Worker backlog
+- Incorrectly old timestamps
+- Timestamp parsing problem
+- Source connectivity problem
+- Source not reporting progress
+
+A stalled watermark can delay:
+
+- On-time panes
+- Window completion
+- Event-time timers
+- State cleanup
+
+The precise watermark calculation depends on the source and runner.
+
+---
+
+# Part 20 — What happens after allowed lateness?
+
+Window end:
+
+```text
+12:05
+```
+
+Allowed lateness:
+
+```text
+2 minutes
+```
+
+Conceptual cleanup boundary:
+
+```text
+12:07
+```
+
+While the window state is retained, late events may update the result.
+
+After cleanup, extremely late events may be dropped or may no longer update the old result.
+
+Allowed lateness affects:
+
+- Result completeness
+- State retention
+- Memory usage
+- Storage usage
+- Duration for accepting corrections
+
+---
+
+# Part 21 — Batch pipeline versus watermark demo
+
+| `pipeline_function.py` | `watermark_demo.py` |
+|---|---|
+| Uses `ReadFromText` | Uses `TestStream` |
+| Bounded source | Simulated unbounded source |
+| Reads CSV rows | Creates events in code |
+| Assigns event timestamps | Assigns event timestamps |
+| Uses fixed windows | Uses fixed windows |
+| Produces final window totals | Produces on-time and late panes |
+| Writes to text file | Prints pane results |
+| Good for basic event-time windowing | Good for watermark and lateness teaching |
+
+---
+
+# Part 22 — PCollection types through both programs
+
+## Batch pipeline
+
+| Stage | Logical PCollection element |
+|---|---|
+| `ReadCSV` | Python string |
+| `ParseAndTimestamp` | Python dictionary with Beam timestamp metadata |
+| `ApplyFiveMinuteWindows` | Same dictionary assigned to a window |
+| `MapToKeyValue` | Python tuple `(str, float)` |
+| `SumRevenuePerWindow` | Python tuple `(str, float)` |
+| `FormatResult` | Python string |
+| `WriteOutput` | Written text |
+
+## Watermark demo
+
+| Stage | Logical PCollection element |
+|---|---|
+| `CreateTestStream` | Python dictionary with timestamp metadata |
+| `ApplyFiveMinuteWindows` | Dictionary assigned to a window and trigger policy |
+| `MapToKeyValue` | Tuple `(str, float)` |
+| `SumRevenuePerWindow` | Tuple `(str, total)` emitted as panes |
+| `FormatResults` | String with window and pane metadata |
+| `PrintResults` | String printed to worker logs/terminal |
+
+---
+
+# Part 23 — Function, Map, FlatMap and ParDo
+
+## `FlatMap`
+
+Used in the attached batch code:
+
+```python
+beam.FlatMap(
+    parse_and_add_timestamp
+)
+```
+
+Use it when one input may produce:
+
+```text
+Zero outputs
+One output
+Multiple outputs
+```
+
+## `Map`
+
+Used in both attached programs:
+
+```python
+beam.Map(
+    map_to_key_value
+)
+```
+
+Use it when one input produces exactly one output.
+
+## `ParDo`
+
+The attached programs do not define a custom `DoFn` class.
+
+However, Beam still uses special injected parameters such as:
+
+```python
+beam.DoFn.WindowParam
+beam.DoFn.PaneInfoParam
+```
+
+A class-based `ParDo` is normally used for advanced requirements such as:
+
+- `setup()` and `teardown()`
+- Multiple tagged outputs
+- Stateful processing
+- Timers
+- External clients
+- Bundle lifecycle control
+
+For these attached teaching examples, function-based `Map` and `FlatMap` keep the code simpler.
+
+---
+
+# Part 24 — Trainer explanation
+
+Use this classroom sequence:
+
+```text
+1. Read a bounded CSV file.
+
+2. Convert every row into a Python dictionary.
+
+3. Attach the actual toll event timestamp.
+
+4. Place events into five-minute windows.
+
+5. Convert events into keyed tuples.
+
+6. Sum toll values per key and window.
+
+7. Explain that a bounded file eventually finishes.
+
+8. Introduce TestStream to simulate an unbounded stream.
+
+9. Add two on-time events.
+
+10. Move the watermark to the window end.
+
+11. Observe the on-time pane.
+
+12. Add an event whose timestamp belongs to the old window.
+
+13. Explain why it is late.
+
+14. Use allowed lateness to retain the window.
+
+15. Use the late trigger to emit an updated pane.
+
+16. Explain accumulating mode.
+```
+
+Central rule:
+
+```text
+An event is late when its event timestamp belongs
+to a window whose end has already been reached
+by the watermark.
+```
+
+---
+
+# Part 25 — Final terminology map
+
+```text
+Pipeline
+    Complete Beam processing graph
+
+DirectRunner
+    Local execution runner
+
+PCollection
+    Beam distributed collection abstraction
+
+PTransform
+    Operation applied to a Pipeline or PCollection
+
+ReadFromText
+    Bounded file source transform
+
+TestStream
+    Simulated unbounded source
+
+FlatMap
+    Zero, one or multiple outputs per input
+
+Map
+    Exactly one output per input
+
+TimestampedValue
+    Value with explicit event-time metadata
+
+Event time
+    Time when the toll event occurred
+
+Processing time
+    Time when the runner processed the event
+
+FixedWindows
+    Non-overlapping fixed-size windows
+
+Watermark
+    Estimate of event-time progress
+
+AfterWatermark
+    Event-time trigger
+
+AfterCount(1)
+    Late trigger after one late element
+
+Allowed lateness
+    Duration for accepting updates to an old window
+
+Pane
+    One emitted result for a window
+
+PaneInfoParam
+    Beam-injected pane metadata
+
+Accumulating mode
+    Later pane contains previous and new values
+
+CombinePerKey
+    Per-key and per-window aggregation
+
+WriteToText
+    File sink
+```
+
+---
+
+# Part 26 — Verification
+
+Attached source syntax check:
+
+| File | Result |
+|---|---|
+| `pipeline_function.py` | `PASS` |
+| `watermark_demo.py` | `PASS` |
+
+A live result still depends on the installed Apache Beam version and the local DirectRunner environment.
+</pre>
+<section class="quiz">
+<h2>Knowledge Check</h2>
+<form id="quiz"></form>
+<button class="primary" type="button" onclick="grade()">Submit Quiz</button>
+<p id="score"></p>
+</section>
+</main>
+<footer>Self-contained tutorial. All diagrams and scripts are embedded.</footer>
+<script>
+function toggleTheme(){document.documentElement.dataset.theme=document.documentElement.dataset.theme==='dark'?'light':'dark'}
+const questions=[
+{q:'Why does parse_and_add_timestamp use FlatMap?',o:['It always creates two outputs','It may produce zero or one output','It writes the file','It creates the runner'],a:1},
+{q:'What Python type is ("toll_revenue", 5.50)?',o:['List','Dictionary','Tuple','Set'],a:2},
+{q:'What does TimestampedValue attach?',o:['A file path','Event-time metadata','A SQL schema','A worker count'],a:1},
+{q:'What does a watermark estimate?',o:['File size','Event-time progress','Number of records','CPU usage only'],a:1},
+{q:'When does the attached trigger emit a late pane?',o:['After one late record','After every CSV header','Before any event','Only after file deletion'],a:0},
+{q:'What does accumulating mode do?',o:['Includes previous and new values','Keeps only the newest value','Disables windows','Removes timestamps'],a:0},
+{q:'Which program uses TestStream?',o:['pipeline_function.py','watermark_demo.py','tolls.csv','Neither'],a:1},
+{q:'Where must tolls.csv be stored for the batch code?',o:['Project root only','data folder under the script folder','Inside .venv','Any unrelated directory'],a:1}
+];
+const form=document.getElementById('quiz');
+questions.forEach((x,i)=>{const d=document.createElement('div');d.className='q';d.id='q'+i;let s='<strong>'+(i+1)+'. '+x.q+'</strong>';x.o.forEach((v,j)=>s+=`<label><input type="radio" name="q${i}" value="${j}"> ${v}</label>`);d.innerHTML=s;form.appendChild(d)});
+function grade(){let n=0;questions.forEach((x,i)=>{const d=document.getElementById('q'+i),p=document.querySelector(`input[name="q${i}"]:checked`);d.classList.remove('good','bad');if(p&&Number(p.value)===x.a){n++;d.classList.add('good')}else{d.classList.add('bad')}});document.getElementById('score').textContent=`Score: ${n}/${questions.length}`}
+</script>
+</body>
+</html>

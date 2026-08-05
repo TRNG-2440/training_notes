@@ -1,0 +1,2091 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cloud Composer Tutorial</title>
+<style>
+:root {
+  --bg:#f5f7fb; --panel:#ffffff; --ink:#172033; --muted:#667085;
+  --brand:#1a73e8; --brand2:#0b57d0; --line:#dbe3ef; --code:#0f172a;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.65}
+header{position:sticky;top:0;z-index:20;background:linear-gradient(135deg,var(--brand2),var(--brand));color:white;padding:18px 26px;box-shadow:0 4px 14px rgba(0,0,0,.16)}
+header h1{margin:0;font-size:24px} header p{margin:4px 0 0;opacity:.9}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.toolbar input{min-width:260px;flex:1;padding:10px 12px;border:0;border-radius:8px}
+.toolbar button{padding:10px 14px;border:0;border-radius:8px;cursor:pointer;background:#fff;color:var(--brand2);font-weight:700}
+.layout{display:grid;grid-template-columns:300px minmax(0,1fr);min-height:100vh}
+aside{position:sticky;top:112px;height:calc(100vh - 112px);overflow:auto;background:#fff;border-right:1px solid var(--line);padding:16px}
+.nav-item{display:block;text-decoration:none;color:#344054;padding:7px 9px;border-radius:7px;font-size:13px}
+.nav-item:hover,.nav-item.active{background:#e8f0fe;color:var(--brand2)} .level-2{padding-left:20px;font-size:12px}
+main{max-width:1100px;padding:30px 38px 80px}
+article{background:var(--panel);padding:34px;border-radius:14px;box-shadow:0 5px 20px rgba(31,41,55,.07)}
+h1,h2,h3{line-height:1.25;scroll-margin-top:130px} h1{color:#0b57d0} h2{margin-top:34px;color:#174ea6} h3{margin-top:26px}
+blockquote{margin:20px 0;padding:14px 18px;border-left:5px solid var(--brand);background:#eef4ff;border-radius:0 8px 8px 0}
+pre{position:relative;background:var(--code);color:#e5e7eb;padding:18px;border-radius:10px;overflow:auto}
+code{font-family:Consolas,Monaco,monospace} :not(pre)>code{background:#eef2f7;padding:2px 5px;border-radius:4px;color:#9d174d}
+.copy-btn{position:absolute;top:8px;right:8px;border:0;border-radius:6px;padding:6px 9px;cursor:pointer}
+table{width:100%;border-collapse:collapse;margin:18px 0;display:block;overflow:auto}
+th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;white-space:nowrap} th{background:#eef4ff}
+hr{border:0;border-top:1px solid var(--line);margin:34px 0}
+.progress{position:fixed;left:0;top:0;height:4px;background:#fbbc04;z-index:99;width:0}
+mark{background:#fff3a3}
+footer{margin-top:26px;color:var(--muted);text-align:center}
+@media(max-width:900px){.layout{grid-template-columns:1fr}aside{display:none}main{padding:18px}article{padding:22px}header{position:relative}}
+@media print{header,aside,.copy-btn,.progress{display:none}.layout{display:block}main{padding:0;max-width:none}article{box-shadow:none}}
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<header>
+  <h1>Cloud Composer: Environment Setup, Logging & GCP-Native Operators</h1>
+  <p>Step-by-step GCP Console tutorial with code, diagrams, monitoring and troubleshooting.</p>
+  <div class="toolbar">
+    <input id="searchBox" type="search" placeholder="Search this tutorial...">
+    <button onclick="window.print()">Print / Save PDF</button>
+    <button id="themeBtn">Dark Mode</button>
+  </div>
+</header>
+<div class="layout">
+<aside>
+  <strong>Topic Menu</strong>
+  <nav id="toc"><a class="nav-item level-1" href="#cloud-composer-tutorial-environment-setup-cloud-logging-monitoring-and-gcp-native-operators">Cloud Composer Tutorial: Environment Setup, Cloud Logging Monitoring, and GCP-Native Operators</a>
+<a class="nav-item level-1" href="#1-what-you-will-build">1. What You Will Build</a>
+<a class="nav-item level-1" href="#2-cloud-composer-architecture">2. Cloud Composer Architecture</a>
+<a class="nav-item level-1" href="#part-1-cloud-composer-environment-setup">Part 1: Cloud Composer Environment Setup</a>
+<a class="nav-item level-1" href="#3-prerequisites">3. Prerequisites</a>
+<a class="nav-item level-1" href="#4-create-or-select-a-google-cloud-project">4. Create or Select a Google Cloud Project</a>
+<a class="nav-item level-2" href="#step-1-open-google-cloud-console">Step 1: Open Google Cloud Console</a>
+<a class="nav-item level-2" href="#step-2-select-a-project">Step 2: Select a project</a>
+<a class="nav-item level-1" href="#5-enable-billing">5. Enable Billing</a>
+<a class="nav-item level-1" href="#6-enable-the-required-apis">6. Enable the Required APIs</a>
+<a class="nav-item level-1" href="#7-create-the-composer-service-account">7. Create the Composer Service Account</a>
+<a class="nav-item level-1" href="#8-assign-permissions-to-the-composer-service-account">8. Assign Permissions to the Composer Service Account</a>
+<a class="nav-item level-2" href="#console-procedure">Console procedure</a>
+<a class="nav-item level-1" href="#9-ensure-your-user-can-use-the-service-account">9. Ensure Your User Can Use the Service Account</a>
+<a class="nav-item level-1" href="#10-create-the-cloud-composer-environment">10. Create the Cloud Composer Environment</a>
+<a class="nav-item level-1" href="#11-basic-environment-configuration">11. Basic Environment Configuration</a>
+<a class="nav-item level-2" href="#environment-name-rules">Environment name rules</a>
+<a class="nav-item level-1" href="#12-select-the-region-carefully">12. Select the Region Carefully</a>
+<a class="nav-item level-1" href="#13-environment-sizing">13. Environment Sizing</a>
+<a class="nav-item level-1" href="#14-examine-the-environment-details">14. Examine the Environment Details</a>
+<a class="nav-item level-1" href="#15-composer-environment-bucket">15. Composer Environment Bucket</a>
+<a class="nav-item level-2" href="#folder-purposes">Folder purposes</a>
+<a class="nav-item level-1" href="#16-upload-a-basic-dag">16. Upload a Basic DAG</a>
+<a class="nav-item level-1" href="#17-upload-the-dag-through-the-console">17. Upload the DAG Through the Console</a>
+<a class="nav-item level-1" href="#18-run-the-dag">18. Run the DAG</a>
+<a class="nav-item level-1" href="#part-2-monitoring-composer-through-cloud-logging">Part 2: Monitoring Composer Through Cloud Logging</a>
+<a class="nav-item level-1" href="#19-what-is-cloud-logging">19. What Is Cloud Logging?</a>
+<a class="nav-item level-1" href="#20-three-places-to-view-composer-logs">20. Three Places to View Composer Logs</a>
+<a class="nav-item level-2" href="#method-1-dag-task-log">Method 1: DAG task log</a>
+<a class="nav-item level-2" href="#method-2-environment-logs-tab">Method 2: Environment Logs tab</a>
+<a class="nav-item level-2" href="#method-3-logs-explorer">Method 3: Logs Explorer</a>
+<a class="nav-item level-1" href="#21-search-for-errors-in-logs-explorer">21. Search for Errors in Logs Explorer</a>
+<a class="nav-item level-1" href="#22-find-a-particular-dag-run">22. Find a Particular DAG Run</a>
+<a class="nav-item level-1" href="#23-generate-a-controlled-failure">23. Generate a Controlled Failure</a>
+<a class="nav-item level-1" href="#24-useful-logging-statements-in-python-tasks">24. Useful Logging Statements in Python Tasks</a>
+<a class="nav-item level-1" href="#25-composer-monitoring-dashboard">25. Composer Monitoring Dashboard</a>
+<a class="nav-item level-1" href="#26-create-a-log-based-alert">26. Create a Log-Based Alert</a>
+<a class="nav-item level-2" href="#step-1-create-a-logs-explorer-query">Step 1: Create a Logs Explorer query</a>
+<a class="nav-item level-2" href="#step-2-create-an-alert">Step 2: Create an alert</a>
+<a class="nav-item level-2" href="#step-3-configure-the-condition">Step 3: Configure the condition</a>
+<a class="nav-item level-2" href="#step-4-add-notification-channel">Step 4: Add notification channel</a>
+<a class="nav-item level-2" href="#step-5-test">Step 5: Test</a>
+<a class="nav-item level-1" href="#part-3-gcp-native-airflow-operators">Part 3: GCP-Native Airflow Operators</a>
+<a class="nav-item level-1" href="#27-what-is-a-gcp-native-operator">27. What Is a GCP-Native Operator?</a>
+<a class="nav-item level-1" href="#28-operator-vs-hook-vs-sensor">28. Operator vs Hook vs Sensor</a>
+<a class="nav-item level-2" href="#example-comparison">Example comparison</a>
+<a class="nav-item level-1" href="#29-authentication-in-cloud-composer">29. Authentication in Cloud Composer</a>
+<a class="nav-item level-1" href="#part-4-practical-gcp-native-operator-example">Part 4: Practical GCP-Native Operator Example</a>
+<a class="nav-item level-1" href="#30-example-requirement">30. Example Requirement</a>
+<a class="nav-item level-1" href="#31-create-a-cloud-storage-bucket">31. Create a Cloud Storage Bucket</a>
+<a class="nav-item level-1" href="#32-create-the-input-csv-file">32. Create the Input CSV File</a>
+<a class="nav-item level-1" href="#33-upload-the-csv-to-cloud-storage">33. Upload the CSV to Cloud Storage</a>
+<a class="nav-item level-1" href="#34-gcp-native-operator-dag">34. GCP-Native Operator DAG</a>
+<a class="nav-item level-1" href="#35-workflow-diagram">35. Workflow Diagram</a>
+<a class="nav-item level-1" href="#36-explanation-of-the-operators">36. Explanation of the Operators</a>
+<a class="nav-item level-2" href="#gcsobjectexistencesensor">GCSObjectExistenceSensor</a>
+<a class="nav-item level-2" href="#bigquerycreateemptydatasetoperator">BigQueryCreateEmptyDatasetOperator</a>
+<a class="nav-item level-2" href="#bigqueryinsertjoboperator">BigQueryInsertJobOperator</a>
+<a class="nav-item level-1" href="#37-upload-and-execute-the-dag">37. Upload and Execute the DAG</a>
+<a class="nav-item level-1" href="#38-verify-the-bigquery-output">38. Verify the BigQuery Output</a>
+<a class="nav-item level-1" href="#39-monitor-the-gcp-native-dag-in-cloud-logging">39. Monitor the GCP-Native DAG in Cloud Logging</a>
+<a class="nav-item level-1" href="#part-5-other-useful-gcp-native-operators">Part 5: Other Useful GCP-Native Operators</a>
+<a class="nav-item level-1" href="#40-cloud-storage-operators">40. Cloud Storage Operators</a>
+<a class="nav-item level-1" href="#41-pub-sub-operator">41. Pub/Sub Operator</a>
+<a class="nav-item level-1" href="#42-dataproc-operator">42. Dataproc Operator</a>
+<a class="nav-item level-1" href="#43-dataflow-operator">43. Dataflow Operator</a>
+<a class="nav-item level-1" href="#44-cloud-run-job-operator">44. Cloud Run Job Operator</a>
+<a class="nav-item level-1" href="#part-6-pypi-packages-and-environment-variables">Part 6: PyPI Packages and Environment Variables</a>
+<a class="nav-item level-1" href="#45-install-an-additional-python-package">45. Install an Additional Python Package</a>
+<a class="nav-item level-1" href="#46-add-environment-variables">46. Add Environment Variables</a>
+<a class="nav-item level-1" href="#part-7-troubleshooting">Part 7: Troubleshooting</a>
+<a class="nav-item level-1" href="#47-dag-does-not-appear">47. DAG Does Not Appear</a>
+<a class="nav-item level-1" href="#48-broken-dag-or-import-error">48. Broken DAG or Import Error</a>
+<a class="nav-item level-1" href="#49-permission-denied">49. Permission Denied</a>
+<a class="nav-item level-1" href="#50-bigquery-location-error">50. BigQuery Location Error</a>
+<a class="nav-item level-1" href="#51-gcs-sensor-keeps-waiting">51. GCS Sensor Keeps Waiting</a>
+<a class="nav-item level-1" href="#52-task-remains-queued">52. Task Remains Queued</a>
+<a class="nav-item level-1" href="#53-environment-creation-fails">53. Environment Creation Fails</a>
+<a class="nav-item level-1" href="#part-8-best-practices">Part 8: Best Practices</a>
+<a class="nav-item level-2" href="#security">Security</a>
+<a class="nav-item level-2" href="#dag-development">DAG development</a>
+<a class="nav-item level-2" href="#reliability">Reliability</a>
+<a class="nav-item level-2" href="#cost-control">Cost control</a>
+<a class="nav-item level-1" href="#54-complete-real-world-scenario">54. Complete Real-World Scenario</a>
+<a class="nav-item level-2" href="#requirement">Requirement</a>
+<a class="nav-item level-2" href="#suitable-airflow-components">Suitable Airflow components</a>
+<a class="nav-item level-1" href="#55-final-checklist">55. Final Checklist</a>
+<a class="nav-item level-2" href="#environment-setup">Environment setup</a>
+<a class="nav-item level-2" href="#dag-deployment">DAG deployment</a>
+<a class="nav-item level-2" href="#monitoring">Monitoring</a>
+<a class="nav-item level-1" href="#summary">Summary</a></nav>
+</aside>
+<main>
+<article id="content"><h1 id="cloud-composer-tutorial-environment-setup-cloud-logging-monitoring-and-gcp-native-operators">Cloud Composer Tutorial: Environment Setup, Cloud Logging Monitoring, and GCP-Native Operators</h1>
+<blockquote>
+<p><strong>Current product name:</strong> Google now presents Cloud Composer as <strong>Managed Service for Apache Airflow</strong> in parts of the Google Cloud Console and documentation. It is still commonly called Cloud Composer. It is a managed Apache Airflow service used to create, schedule, execute, and monitor workflows without manually maintaining Airflow infrastructure. (<a href="https://docs.cloud.google.com/composer/docs">Google Cloud Composer documentation</a>)</p>
+</blockquote>
+<hr />
+<h1 id="1-what-you-will-build">1. What You Will Build</h1>
+<p>In this tutorial, you will:</p>
+<ol>
+<li>Create a Google Cloud project.</li>
+<li>Enable the required APIs.</li>
+<li>Create a service account for Composer.</li>
+<li>Assign permissions.</li>
+<li>Create a Cloud Composer environment.</li>
+<li>Upload an Airflow DAG.</li>
+<li>Execute the DAG from the Google Cloud Console.</li>
+<li>Inspect DAG and task logs using Cloud Logging.</li>
+<li>Use GCP-native Airflow operators.</li>
+<li>Run a practical workflow using Cloud Storage and BigQuery.</li>
+</ol>
+<p>The example workflow will perform this process:</p>
+<pre><code class="language-text">Start
+  |
+  v
+Check whether a file exists in Cloud Storage
+  |
+  v
+Create a BigQuery dataset
+  |
+  v
+Create a BigQuery table using SQL
+  |
+  v
+Run an aggregation query
+  |
+  v
+Display the result
+</code></pre>
+<hr />
+<h1 id="2-cloud-composer-architecture">2. Cloud Composer Architecture</h1>
+<pre><code class="language-text">                       Google Cloud Project
+                                |
+              +-----------------+-----------------+
+              |                                   |
+              v                                   v
+      Cloud Composer Environment           Google Cloud Services
+              |                                   |
+    +---------+----------+              +---------+----------+
+    |                    |              |                    |
+    v                    v              v                    v
+Airflow Scheduler   Airflow Workers   Cloud Storage       BigQuery
+    |                    |
+    |                    |
+    +---------+----------+
+              |
+              v
+        Airflow DAG Tasks
+              |
+              v
+        Cloud Logging
+              |
+              v
+      Logs Explorer / Alerts
+</code></pre>
+<p>When you upload a Python DAG file to the environment's <code>dags</code> folder, Composer synchronizes it with the Airflow components. Composer environments contain managed Airflow schedulers, workers, triggerers, monitoring components, networking, and storage integration. (<a href="https://docs.cloud.google.com/composer/docs/composer-3/environment-architecture">Environment architecture</a>)</p>
+<hr />
+<h1 id="part-1-cloud-composer-environment-setup">Part 1: Cloud Composer Environment Setup</h1>
+<h1 id="3-prerequisites">3. Prerequisites</h1>
+<p>You need:</p>
+<ul>
+<li>A Google Cloud account</li>
+<li>An active Google Cloud project</li>
+<li>Billing enabled</li>
+<li>Permission to enable APIs</li>
+<li>Permission to create service accounts</li>
+<li>Permission to create Composer environments</li>
+<li>Permission to assign IAM roles</li>
+</ul>
+<p>Cloud Composer creates billable resources. Delete the environment after completing the lab when it is no longer required.</p>
+<hr />
+<h1 id="4-create-or-select-a-google-cloud-project">4. Create or Select a Google Cloud Project</h1>
+<h2 id="step-1-open-google-cloud-console">Step 1: Open Google Cloud Console</h2>
+<p>Open the Google Cloud Console and sign in.</p>
+<h2 id="step-2-select-a-project">Step 2: Select a project</h2>
+<p>At the top of the console:</p>
+<pre><code class="language-text">Project selector
+→ Select an existing project
+</code></pre>
+<p>Or create one:</p>
+<pre><code class="language-text">Project selector
+→ New Project
+</code></pre>
+<p>Example values:</p>
+<table>
+<thead>
+<tr>
+  <th>Property</th>
+  <th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Project name</td>
+  <td><code>composer-training-project</code></td>
+</tr>
+<tr>
+  <td>Project ID</td>
+  <td><code>composer-training-12345</code></td>
+</tr>
+<tr>
+  <td>Organization</td>
+  <td>Select the appropriate organization</td>
+</tr>
+<tr>
+  <td>Location</td>
+  <td>Select the appropriate folder or organization</td>
+</tr>
+</tbody>
+</table>
+<p>Record your actual project ID. You will use it inside the DAG.</p>
+<p>Example:</p>
+<pre><code class="language-python">PROJECT_ID = &quot;composer-training-12345&quot;
+</code></pre>
+<hr />
+<h1 id="5-enable-billing">5. Enable Billing</h1>
+<p>Open:</p>
+<pre><code class="language-text">Navigation menu
+→ Billing
+</code></pre>
+<p>Associate the project with an active billing account.</p>
+<p>Composer environment creation will fail when billing is not enabled.</p>
+<hr />
+<h1 id="6-enable-the-required-apis">6. Enable the Required APIs</h1>
+<p>Open:</p>
+<pre><code class="language-text">Navigation menu
+→ APIs &amp; Services
+→ Library
+</code></pre>
+<p>Search for and enable the following APIs:</p>
+<table>
+<thead>
+<tr>
+  <th>API</th>
+  <th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Cloud Composer API</td>
+  <td>Creates and manages Composer environments</td>
+</tr>
+<tr>
+  <td>Compute Engine API</td>
+  <td>Supports environment compute resources</td>
+</tr>
+<tr>
+  <td>Kubernetes Engine API</td>
+  <td>Supports the managed environment infrastructure</td>
+</tr>
+<tr>
+  <td>Cloud Storage API</td>
+  <td>Stores DAGs, data and environment files</td>
+</tr>
+<tr>
+  <td>Cloud Logging API</td>
+  <td>Collects environment and task logs</td>
+</tr>
+<tr>
+  <td>Cloud Monitoring API</td>
+  <td>Collects metrics and health information</td>
+</tr>
+<tr>
+  <td>BigQuery API</td>
+  <td>Required for the BigQuery operator example</td>
+</tr>
+<tr>
+  <td>IAM API</td>
+  <td>Supports permissions and service accounts</td>
+</tr>
+</tbody>
+</table>
+<p>For the practical example, enable at least:</p>
+<pre><code class="language-text">Cloud Composer API
+Cloud Storage API
+BigQuery API
+Cloud Logging API
+Cloud Monitoring API
+</code></pre>
+<hr />
+<h1 id="7-create-the-composer-service-account">7. Create the Composer Service Account</h1>
+<p>Cloud Composer runs DAG tasks using an environment service account. This account needs the Composer Worker role plus permissions for the Google Cloud services used by the DAG. Google recommends granting extra resource permissions to this service account rather than embedding a JSON key in the DAG. (<a href="https://docs.cloud.google.com/composer/docs/composer-3/create-environments">Create environments</a>)</p>
+<p>Open:</p>
+<pre><code class="language-text">Navigation menu
+→ IAM &amp; Admin
+→ Service Accounts
+</code></pre>
+<p>Click:</p>
+<pre><code class="language-text">Create service account
+</code></pre>
+<p>Enter:</p>
+<table>
+<thead>
+<tr>
+  <th>Property</th>
+  <th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Service account name</td>
+  <td><code>composer-training-sa</code></td>
+</tr>
+<tr>
+  <td>Service account ID</td>
+  <td><code>composer-training-sa</code></td>
+</tr>
+<tr>
+  <td>Description</td>
+  <td><code>Service account used by Cloud Composer training environment</code></td>
+</tr>
+</tbody>
+</table>
+<p>Click <strong>Create and continue</strong>.</p>
+<p>The generated email resembles:</p>
+<pre><code class="language-text">composer-training-sa@PROJECT_ID.iam.gserviceaccount.com
+</code></pre>
+<hr />
+<h1 id="8-assign-permissions-to-the-composer-service-account">8. Assign Permissions to the Composer Service Account</h1>
+<p>Assign these roles for the lab:</p>
+<table>
+<thead>
+<tr>
+  <th>Role</th>
+  <th>Why it is needed</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Composer Worker</td>
+  <td>Required for the environment service account</td>
+</tr>
+<tr>
+  <td>Storage Object Admin</td>
+  <td>Allows the DAG to inspect and manage lab objects</td>
+</tr>
+<tr>
+  <td>BigQuery Job User</td>
+  <td>Allows execution of BigQuery jobs</td>
+</tr>
+<tr>
+  <td>BigQuery Data Editor</td>
+  <td>Allows creation and modification of datasets and tables</td>
+</tr>
+<tr>
+  <td>Logs Writer</td>
+  <td>Allows supported workloads to write logs</td>
+</tr>
+</tbody>
+</table>
+<p>The required base role for the environment service account is <strong>Composer Worker</strong>. Additional roles are required when DAGs access resources such as BigQuery, Cloud Storage or services in another project. (<a href="https://docs.cloud.google.com/composer/docs/how-to/managing/creating">Creating environments</a>)</p>
+<p>For a training project, project-level roles are simpler. In production, use narrower permissions on specific buckets and datasets.</p>
+<h2 id="console-procedure">Console procedure</h2>
+<p>Open:</p>
+<pre><code class="language-text">IAM &amp; Admin
+→ IAM
+→ Grant access
+</code></pre>
+<p>In <strong>New principals</strong>, enter:</p>
+<pre><code class="language-text">composer-training-sa@PROJECT_ID.iam.gserviceaccount.com
+</code></pre>
+<p>Add the required roles one at a time, and then click <strong>Save</strong>.</p>
+<hr />
+<h1 id="9-ensure-your-user-can-use-the-service-account">9. Ensure Your User Can Use the Service Account</h1>
+<p>The user creating the environment generally needs:</p>
+<ul>
+<li>Permission to create Composer environments</li>
+<li><code>iam.serviceAccounts.actAs</code> on the selected service account</li>
+</ul>
+<p>A commonly used role for the second requirement is:</p>
+<pre><code class="language-text">Service Account User
+</code></pre>
+<p>The Composer environment creation permission includes <code>composer.environments.create</code>, while using the environment service account requires permission to act as that account. (<a href="https://docs.cloud.google.com/composer/docs/composer-3/access-control">Access control</a>)</p>
+<p>Open:</p>
+<pre><code class="language-text">IAM &amp; Admin
+→ IAM
+→ Grant access
+</code></pre>
+<p>Select your own Google account and add the appropriate Composer and service-account permissions according to your organization's security policy.</p>
+<hr />
+<h1 id="10-create-the-cloud-composer-environment">10. Create the Cloud Composer Environment</h1>
+<p>Google's current documentation describes Managed Airflow Gen 3 as the current managed environment option. The exact labels shown in the console can vary as Google updates the interface. (<a href="https://docs.cloud.google.com/composer/docs/composer-3/create-environments">Create environments</a>)</p>
+<p>Open:</p>
+<pre><code class="language-text">Navigation menu
+→ Composer
+</code></pre>
+<p>The page may appear as:</p>
+<pre><code class="language-text">Managed Service for Apache Airflow
+</code></pre>
+<p>Click:</p>
+<pre><code class="language-text">Create environment
+</code></pre>
+<p>Select the currently available managed environment generation, preferably <strong>Gen 3</strong> when available for your project and region.</p>
+<hr />
+<h1 id="11-basic-environment-configuration">11. Basic Environment Configuration</h1>
+<p>Use values similar to these:</p>
+<table>
+<thead>
+<tr>
+  <th>Property</th>
+  <th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Environment name</td>
+  <td><code>composer-training-env</code></td>
+</tr>
+<tr>
+  <td>Region</td>
+  <td><code>asia-south1</code></td>
+</tr>
+<tr>
+  <td>Service account</td>
+  <td><code>composer-training-sa@PROJECT_ID.iam.gserviceaccount.com</code></td>
+</tr>
+<tr>
+  <td>Environment size</td>
+  <td>Smallest suitable training option</td>
+</tr>
+<tr>
+  <td>Network</td>
+  <td>Default</td>
+</tr>
+<tr>
+  <td>Subnetwork</td>
+  <td>Default</td>
+</tr>
+<tr>
+  <td>Web server access</td>
+  <td>Allow access according to your lab policy</td>
+</tr>
+</tbody>
+</table>
+<h2 id="environment-name-rules">Environment name rules</h2>
+<p>Use:</p>
+<ul>
+<li>lowercase letters</li>
+<li>numbers</li>
+<li>hyphens</li>
+</ul>
+<p>Example:</p>
+<pre><code class="language-text">composer-training-env
+</code></pre>
+<p>Avoid spaces and underscores.</p>
+<hr />
+<h1 id="12-select-the-region-carefully">12. Select the Region Carefully</h1>
+<p>Create related resources in the same or a compatible location.</p>
+<p>Example training setup:</p>
+<pre><code class="language-text">Composer region: asia-south1
+Cloud Storage bucket region: asia-south1
+BigQuery dataset location: asia-south1
+</code></pre>
+<p>A BigQuery dataset location is significant. Jobs can fail when the source, destination or job location is inconsistent.</p>
+<p>For simplicity, this tutorial uses:</p>
+<pre><code class="language-python">REGION = &quot;asia-south1&quot;
+BQ_LOCATION = &quot;asia-south1&quot;
+</code></pre>
+<p>Replace these values when the selected region differs.</p>
+<hr />
+<h1 id="13-environment-sizing">13. Environment Sizing</h1>
+<p>For a basic training environment:</p>
+<ul>
+<li>Use the smallest available environment preset.</li>
+<li>Keep worker minimums low.</li>
+<li>Avoid unnecessarily large schedulers and workers.</li>
+<li>Do not enable extra features unless needed.</li>
+</ul>
+<p>A Composer environment may continue generating charges while it exists, even when DAGs are not running.</p>
+<p>Click:</p>
+<pre><code class="language-text">Create
+</code></pre>
+<p>Environment provisioning can take several minutes.</p>
+<p>Wait until the status becomes:</p>
+<pre><code class="language-text">Running
+</code></pre>
+<hr />
+<h1 id="14-examine-the-environment-details">14. Examine the Environment Details</h1>
+<p>Open:</p>
+<pre><code class="language-text">Composer
+→ Environments
+→ composer-training-env
+</code></pre>
+<p>You should see options such as:</p>
+<ul>
+<li>DAGs</li>
+<li>DAG UI</li>
+<li>Airflow UI</li>
+<li>Logs</li>
+<li>Monitoring</li>
+<li>Environment configuration</li>
+<li>PyPI packages</li>
+<li>Environment variables</li>
+<li>DAGs folder or bucket</li>
+</ul>
+<p>The environment page provides access to Airflow information, logs, monitoring and the environment's Cloud Storage location. (<a href="https://docs.cloud.google.com/composer/docs/composer-3/environment-architecture">Environment architecture</a>)</p>
+<hr />
+<h1 id="15-composer-environment-bucket">15. Composer Environment Bucket</h1>
+<p>Composer uses a Cloud Storage bucket containing folders similar to:</p>
+<pre><code class="language-text">dags/
+data/
+logs/
+plugins/
+</code></pre>
+<h2 id="folder-purposes">Folder purposes</h2>
+<table>
+<thead>
+<tr>
+  <th>Folder</th>
+  <th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>dags/</code></td>
+  <td>Stores Airflow Python DAG files</td>
+</tr>
+<tr>
+  <td><code>data/</code></td>
+  <td>Stores data or supporting files</td>
+</tr>
+<tr>
+  <td><code>plugins/</code></td>
+  <td>Stores custom Airflow plugins</td>
+</tr>
+<tr>
+  <td><code>logs/</code></td>
+  <td>May contain Airflow task log copies depending on configuration</td>
+</tr>
+</tbody>
+</table>
+<p>Composer schedules DAGs found in the environment's <code>/dags</code> folder. Uploaded files are synchronized and parsed with a small delay, commonly around one or two minutes. (<a href="https://docs.cloud.google.com/composer/docs/composer-3/manage-dags">Manage DAGs</a>)</p>
+<hr />
+<h1 id="16-upload-a-basic-dag">16. Upload a Basic DAG</h1>
+<p>Create a file named:</p>
+<pre><code class="language-text">composer_basic_dag.py
+</code></pre>
+<p>Use this code:</p>
+<pre><code class="language-python">import datetime
+
+from airflow import DAG
+from airflow.operators.bash import BashOperator
+from airflow.operators.python import PythonOperator
+
+
+def print_composer_message():
+    print(&quot;Cloud Composer DAG is running successfully&quot;)
+
+
+default_args = {
+    &quot;owner&quot;: &quot;training&quot;,
+    &quot;start_date&quot;: datetime.datetime(2026, 1, 1),
+    &quot;retries&quot;: 1,
+    &quot;retry_delay&quot;: datetime.timedelta(minutes=2),
+}
+
+
+with DAG(
+    dag_id=&quot;composer_basic_dag&quot;,
+    default_args=default_args,
+    description=&quot;Basic Cloud Composer training DAG&quot;,
+    schedule=None,
+    catchup=False,
+    tags=[&quot;composer&quot;, &quot;training&quot;],
+) as dag:
+
+    start_task = BashOperator(
+        task_id=&quot;start_task&quot;,
+        bash_command='echo &quot;Starting Cloud Composer workflow&quot;',
+    )
+
+    python_task = PythonOperator(
+        task_id=&quot;python_task&quot;,
+        python_callable=print_composer_message,
+    )
+
+    end_task = BashOperator(
+        task_id=&quot;end_task&quot;,
+        bash_command='echo &quot;Cloud Composer workflow completed&quot;',
+    )
+
+    start_task &gt;&gt; python_task &gt;&gt; end_task
+</code></pre>
+<hr />
+<h1 id="17-upload-the-dag-through-the-console">17. Upload the DAG Through the Console</h1>
+<p>Open:</p>
+<pre><code class="language-text">Composer
+→ Environments
+</code></pre>
+<p>Locate your environment.</p>
+<p>In the <strong>DAGs folder</strong> column, click the folder link.</p>
+<p>You will be taken to:</p>
+<pre><code class="language-text">Cloud Storage
+→ Environment bucket
+→ dags
+</code></pre>
+<p>Click:</p>
+<pre><code class="language-text">Upload files
+</code></pre>
+<p>Select:</p>
+<pre><code class="language-text">composer_basic_dag.py
+</code></pre>
+<p>Composer automatically synchronizes the file and reparses the DAG. Allow approximately one or two minutes for it to appear. (<a href="https://docs.cloud.google.com/composer/docs/composer-3/manage-dags">Manage DAGs</a>)</p>
+<hr />
+<h1 id="18-run-the-dag">18. Run the DAG</h1>
+<p>Return to:</p>
+<pre><code class="language-text">Composer
+→ Environments
+→ composer-training-env
+→ DAGs
+</code></pre>
+<p>Find:</p>
+<pre><code class="language-text">composer_basic_dag
+</code></pre>
+<p>Unpause or enable the DAG when required.</p>
+<p>Click:</p>
+<pre><code class="language-text">Trigger DAG
+</code></pre>
+<p>Open the DAG and select:</p>
+<pre><code class="language-text">Grid
+</code></pre>
+<p>or:</p>
+<pre><code class="language-text">Graph
+</code></pre>
+<p>Expected dependency:</p>
+<pre><code class="language-text">start_task
+    |
+    v
+python_task
+    |
+    v
+end_task
+</code></pre>
+<p>Successful tasks normally appear green.</p>
+<hr />
+<h1 id="part-2-monitoring-composer-through-cloud-logging">Part 2: Monitoring Composer Through Cloud Logging</h1>
+<h1 id="19-what-is-cloud-logging">19. What Is Cloud Logging?</h1>
+<p>Cloud Logging collects log entries generated by:</p>
+<ul>
+<li>Airflow tasks</li>
+<li>Airflow scheduler</li>
+<li>Airflow workers</li>
+<li>Airflow triggerers</li>
+<li>DAG processors</li>
+<li>Web server components</li>
+<li>Environment infrastructure</li>
+<li>Composer agents</li>
+<li>Audit activities</li>
+</ul>
+<p>Cloud Composer provides streaming Airflow task and component logs, while Cloud Monitoring collects health and performance metrics for the environment. (<a href="https://docs.cloud.google.com/composer/docs/composer-3/view-logs">View logs</a>)</p>
+<hr />
+<h1 id="20-three-places-to-view-composer-logs">20. Three Places to View Composer Logs</h1>
+<h2 id="method-1-dag-task-log">Method 1: DAG task log</h2>
+<p>Open:</p>
+<pre><code class="language-text">Composer
+→ Environments
+→ DAGs
+→ composer_basic_dag
+→ Grid
+</code></pre>
+<p>Select a task, for example:</p>
+<pre><code class="language-text">python_task
+</code></pre>
+<p>Then click:</p>
+<pre><code class="language-text">Logs
+</code></pre>
+<p>You should find:</p>
+<pre><code class="language-text">Cloud Composer DAG is running successfully
+</code></pre>
+<p>This is the easiest method for checking one task execution.</p>
+<h2 id="method-2-environment-logs-tab">Method 2: Environment Logs tab</h2>
+<p>Open:</p>
+<pre><code class="language-text">Composer
+→ Environments
+→ composer-training-env
+→ Logs
+</code></pre>
+<p>This shows logs associated with the selected environment.</p>
+<p>You can filter by:</p>
+<ul>
+<li>severity</li>
+<li>DAG ID</li>
+<li>task ID</li>
+<li>scheduler</li>
+<li>worker</li>
+<li>time range</li>
+<li>log message</li>
+</ul>
+<h2 id="method-3-logs-explorer">Method 3: Logs Explorer</h2>
+<p>Open:</p>
+<pre><code class="language-text">Navigation menu
+→ Logging
+→ Logs Explorer
+</code></pre>
+<p>Logs Explorer is best for:</p>
+<ul>
+<li>searching across many DAG runs</li>
+<li>searching errors</li>
+<li>filtering by environment</li>
+<li>creating log-based metrics</li>
+<li>creating alerts</li>
+<li>sharing saved queries</li>
+</ul>
+<hr />
+<h1 id="21-search-for-errors-in-logs-explorer">21. Search for Errors in Logs Explorer</h1>
+<p>In the query editor, start with:</p>
+<pre><code class="language-text">severity&gt;=ERROR
+</code></pre>
+<p>Click:</p>
+<pre><code class="language-text">Run query
+</code></pre>
+<p>This displays errors across the selected project.</p>
+<p>To narrow the results:</p>
+<ol>
+<li>Select the Composer or managed Airflow resource from the resource selector.</li>
+<li>Select the environment.</li>
+<li>Choose the appropriate time range.</li>
+<li>Add the DAG or task name.</li>
+</ol>
+<p>A practical message filter is:</p>
+<pre><code class="language-text">severity&gt;=ERROR
+&quot;composer_basic_dag&quot;
+</code></pre>
+<p>Another example:</p>
+<pre><code class="language-text">&quot;python_task&quot;
+</code></pre>
+<p>Because log field names can differ between environment versions and resource types, use the query builder to select an actual log entry and then choose <strong>Show matching entries</strong> or <strong>Add field to query</strong>.</p>
+<hr />
+<h1 id="22-find-a-particular-dag-run">22. Find a Particular DAG Run</h1>
+<p>Run the DAG manually.</p>
+<p>Then open:</p>
+<pre><code class="language-text">Logging
+→ Logs Explorer
+</code></pre>
+<p>Search:</p>
+<pre><code class="language-text">&quot;composer_basic_dag&quot;
+</code></pre>
+<p>Set the time range to:</p>
+<pre><code class="language-text">Last 1 hour
+</code></pre>
+<p>Expand a matching entry and inspect:</p>
+<ul>
+<li>timestamp</li>
+<li>severity</li>
+<li>DAG ID</li>
+<li>task ID</li>
+<li>try number</li>
+<li>execution date</li>
+<li>log message</li>
+<li>worker or scheduler component</li>
+</ul>
+<hr />
+<h1 id="23-generate-a-controlled-failure">23. Generate a Controlled Failure</h1>
+<p>Create a file named:</p>
+<pre><code class="language-text">composer_failure_demo.py
+</code></pre>
+<pre><code class="language-python">import datetime
+
+from airflow import DAG
+from airflow.operators.python import PythonOperator
+
+
+def generate_error():
+    raise ValueError(&quot;Training failure: customer input file was not found&quot;)
+
+
+with DAG(
+    dag_id=&quot;composer_failure_demo&quot;,
+    start_date=datetime.datetime(2026, 1, 1),
+    schedule=None,
+    catchup=False,
+    tags=[&quot;composer&quot;, &quot;logging&quot;, &quot;failure-demo&quot;],
+) as dag:
+
+    fail_task = PythonOperator(
+        task_id=&quot;generate_failure&quot;,
+        python_callable=generate_error,
+    )
+</code></pre>
+<p>Upload it to the Composer <code>dags</code> folder and trigger it.</p>
+<p>Expected result:</p>
+<pre><code class="language-text">composer_failure_demo
+└── generate_failure: FAILED
+</code></pre>
+<p>In Logs Explorer, search:</p>
+<pre><code class="language-text">&quot;Training failure: customer input file was not found&quot;
+</code></pre>
+<p>This demonstrates how application-specific messages make troubleshooting easier.</p>
+<hr />
+<h1 id="24-useful-logging-statements-in-python-tasks">24. Useful Logging Statements in Python Tasks</h1>
+<p>Use Python's logging module rather than relying only on <code>print()</code>:</p>
+<pre><code class="language-python">import logging
+
+
+def process_orders():
+    logging.info(&quot;Order processing started&quot;)
+
+    total_orders = 100
+    successful_orders = 96
+    failed_orders = 4
+
+    logging.info(&quot;Total orders: %s&quot;, total_orders)
+    logging.info(&quot;Successful orders: %s&quot;, successful_orders)
+
+    if failed_orders &gt; 0:
+        logging.warning(&quot;Failed orders found: %s&quot;, failed_orders)
+
+    logging.info(&quot;Order processing completed&quot;)
+</code></pre>
+<p>Levels:</p>
+<table>
+<thead>
+<tr>
+  <th>Level</th>
+  <th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>DEBUG</code></td>
+  <td>Detailed development information</td>
+</tr>
+<tr>
+  <td><code>INFO</code></td>
+  <td>Normal process progress</td>
+</tr>
+<tr>
+  <td><code>WARNING</code></td>
+  <td>Unexpected condition but task may continue</td>
+</tr>
+<tr>
+  <td><code>ERROR</code></td>
+  <td>Operation failed</td>
+</tr>
+<tr>
+  <td><code>CRITICAL</code></td>
+  <td>Severe system-level failure</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1 id="25-composer-monitoring-dashboard">25. Composer Monitoring Dashboard</h1>
+<p>Open:</p>
+<pre><code class="language-text">Composer
+→ Environments
+→ composer-training-env
+→ Monitoring
+</code></pre>
+<p>The dashboard can show metrics and trends for:</p>
+<ul>
+<li>successful and failed DAG runs</li>
+<li>task execution</li>
+<li>queued tasks</li>
+<li>scheduler health</li>
+<li>worker performance</li>
+<li>database health</li>
+<li>resource utilization</li>
+<li>Airflow components</li>
+</ul>
+<p>The managed monitoring dashboard is designed to identify DAG-run trends and problems with Airflow components and environment resources. (<a href="https://docs.cloud.google.com/composer/docs/composer-3/use-monitoring-dashboard">Monitoring dashboard</a>)</p>
+<hr />
+<h1 id="26-create-a-log-based-alert">26. Create a Log-Based Alert</h1>
+<p>A useful production alert is:</p>
+<pre><code class="language-text">Notify the support team when Composer task failures are logged.
+</code></pre>
+<h2 id="step-1-create-a-logs-explorer-query">Step 1: Create a Logs Explorer query</h2>
+<p>Open:</p>
+<pre><code class="language-text">Logging
+→ Logs Explorer
+</code></pre>
+<p>Use a query that finds your failure:</p>
+<pre><code class="language-text">severity&gt;=ERROR
+&quot;composer_failure_demo&quot;
+</code></pre>
+<p>Confirm that matching entries appear.</p>
+<h2 id="step-2-create-an-alert">Step 2: Create an alert</h2>
+<p>Click:</p>
+<pre><code class="language-text">Create alert
+</code></pre>
+<p>Depending on the console version, it may appear as:</p>
+<pre><code class="language-text">Actions
+→ Create log alert
+</code></pre>
+<h2 id="step-3-configure-the-condition">Step 3: Configure the condition</h2>
+<p>Example:</p>
+<table>
+<thead>
+<tr>
+  <th>Property</th>
+  <th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Alert name</td>
+  <td><code>Composer DAG Failure Alert</code></td>
+</tr>
+<tr>
+  <td>Condition</td>
+  <td>At least one matching log entry</td>
+</tr>
+<tr>
+  <td>Evaluation window</td>
+  <td>5 minutes</td>
+</tr>
+<tr>
+  <td>Auto-close</td>
+  <td>According to operational policy</td>
+</tr>
+</tbody>
+</table>
+<h2 id="step-4-add-notification-channel">Step 4: Add notification channel</h2>
+<p>Possible channels include:</p>
+<ul>
+<li>email</li>
+<li>SMS where supported</li>
+<li>Slack through an integration</li>
+<li>webhook</li>
+<li>Pub/Sub</li>
+<li>incident-management integration</li>
+</ul>
+<h2 id="step-5-test">Step 5: Test</h2>
+<p>Trigger <code>composer_failure_demo</code>.</p>
+<p>Confirm that:</p>
+<ol>
+<li>the task fails;</li>
+<li>the log appears;</li>
+<li>the alert condition opens;</li>
+<li>the notification is delivered.</li>
+</ol>
+<hr />
+<h1 id="part-3-gcp-native-airflow-operators">Part 3: GCP-Native Airflow Operators</h1>
+<h1 id="27-what-is-a-gcp-native-operator">27. What Is a GCP-Native Operator?</h1>
+<p>An Airflow operator defines the work performed by one task.</p>
+<p>GCP-native operators are operators from the Google Airflow provider that communicate directly with Google Cloud services.</p>
+<p>Examples include:</p>
+<table>
+<thead>
+<tr>
+  <th>Google Cloud service</th>
+  <th>Example operator</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>BigQuery</td>
+  <td><code>BigQueryInsertJobOperator</code></td>
+</tr>
+<tr>
+  <td>Cloud Storage</td>
+  <td><code>GCSObjectExistenceSensor</code></td>
+</tr>
+<tr>
+  <td>Pub/Sub</td>
+  <td><code>PubSubPublishMessageOperator</code></td>
+</tr>
+<tr>
+  <td>Dataproc</td>
+  <td><code>DataprocSubmitJobOperator</code></td>
+</tr>
+<tr>
+  <td>Dataflow</td>
+  <td>Dataflow operators</td>
+</tr>
+<tr>
+  <td>Cloud Run</td>
+  <td>Cloud Run job operators</td>
+</tr>
+<tr>
+  <td>Vertex AI</td>
+  <td>Vertex AI operators</td>
+</tr>
+<tr>
+  <td>GKE</td>
+  <td><code>GKEStartPodOperator</code></td>
+</tr>
+<tr>
+  <td>Dataform</td>
+  <td>Dataform operators</td>
+</tr>
+</tbody>
+</table>
+<p>Google recommends using Google Cloud Airflow operators when a DAG needs to operate on Google Cloud products. For example, BigQuery operators execute queries and process BigQuery data. (<a href="https://docs.cloud.google.com/composer/docs/composer-3/write-dags">Write DAGs</a>)</p>
+<hr />
+<h1 id="28-operator-vs-hook-vs-sensor">28. Operator vs Hook vs Sensor</h1>
+<table>
+<thead>
+<tr>
+  <th>Component</th>
+  <th>Purpose</th>
+  <th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Operator</td>
+  <td>Performs an action</td>
+  <td>Run a BigQuery query</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Waits for a condition</td>
+  <td>Wait until a GCS object exists</td>
+</tr>
+<tr>
+  <td>Hook</td>
+  <td>Provides a lower-level API connection</td>
+  <td>Connect to BigQuery from Python</td>
+</tr>
+<tr>
+  <td>Transfer operator</td>
+  <td>Moves data between systems</td>
+  <td>GCS to BigQuery</td>
+</tr>
+<tr>
+  <td>Deferrable operator</td>
+  <td>Waits without occupying a worker continuously</td>
+  <td>Long-running cloud job sensor</td>
+</tr>
+</tbody>
+</table>
+<h2 id="example-comparison">Example comparison</h2>
+<pre><code class="language-text">Operator:
+Create a BigQuery table
+
+Sensor:
+Wait until orders.csv arrives
+
+Hook:
+Run custom BigQuery logic inside Python
+
+Transfer:
+Load orders.csv from GCS into BigQuery
+</code></pre>
+<p>Deferrable operators can reduce worker-slot usage while waiting for long-running external operations, provided support is enabled in the environment and operator. (<a href="https://docs.cloud.google.com/composer/docs/composer-3/use-deferrable-operators">Deferrable operators</a>)</p>
+<hr />
+<h1 id="29-authentication-in-cloud-composer">29. Authentication in Cloud Composer</h1>
+<p>Inside Composer, you normally do not upload or reference a service-account JSON key.</p>
+<p>The operator uses:</p>
+<pre><code class="language-text">google_cloud_default
+</code></pre>
+<p>and the Composer environment service account.</p>
+<p>Conceptually:</p>
+<pre><code class="language-text">Airflow task
+   |
+   v
+Google Cloud connection
+   |
+   v
+Composer environment service account
+   |
+   v
+IAM roles
+   |
+   v
+GCS / BigQuery / Pub/Sub / Dataproc
+</code></pre>
+<p>This is why the Composer service account must have permission to use each target service.</p>
+<hr />
+<h1 id="part-4-practical-gcp-native-operator-example">Part 4: Practical GCP-Native Operator Example</h1>
+<h1 id="30-example-requirement">30. Example Requirement</h1>
+<p>Create an Airflow pipeline that:</p>
+<ol>
+<li>waits for <code>input/employees.csv</code> in Cloud Storage;</li>
+<li>creates a BigQuery dataset;</li>
+<li>creates an employee table;</li>
+<li>inserts sample records;</li>
+<li>creates a department summary table;</li>
+<li>verifies the output.</li>
+</ol>
+<hr />
+<h1 id="31-create-a-cloud-storage-bucket">31. Create a Cloud Storage Bucket</h1>
+<p>Open:</p>
+<pre><code class="language-text">Navigation menu
+→ Cloud Storage
+→ Buckets
+→ Create
+</code></pre>
+<p>Use:</p>
+<table>
+<thead>
+<tr>
+  <th>Property</th>
+  <th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Bucket name</td>
+  <td><code>PROJECT_ID-composer-training-data</code></td>
+</tr>
+<tr>
+  <td>Location type</td>
+  <td>Region</td>
+</tr>
+<tr>
+  <td>Region</td>
+  <td>Same or compatible region as Composer</td>
+</tr>
+<tr>
+  <td>Storage class</td>
+  <td>Standard</td>
+</tr>
+<tr>
+  <td>Public access prevention</td>
+  <td>Enabled</td>
+</tr>
+<tr>
+  <td>Access control</td>
+  <td>Uniform</td>
+</tr>
+</tbody>
+</table>
+<p>Example bucket:</p>
+<pre><code class="language-text">composer-training-12345-composer-training-data
+</code></pre>
+<p>Bucket names are globally unique.</p>
+<hr />
+<h1 id="32-create-the-input-csv-file">32. Create the Input CSV File</h1>
+<p>Create a local file named:</p>
+<pre><code class="language-text">employees.csv
+</code></pre>
+<pre><code class="language-csv">employee_id,employee_name,department,salary
+101,Anitha,Engineering,75000
+102,Rajesh,Sales,62000
+103,Meena,Engineering,81000
+104,David,Finance,70000
+105,Priya,Sales,66000
+106,Arun,Finance,72000
+</code></pre>
+<hr />
+<h1 id="33-upload-the-csv-to-cloud-storage">33. Upload the CSV to Cloud Storage</h1>
+<p>Open:</p>
+<pre><code class="language-text">Cloud Storage
+→ Buckets
+→ YOUR_DATA_BUCKET
+</code></pre>
+<p>Create a folder:</p>
+<pre><code class="language-text">input
+</code></pre>
+<p>Open the folder and click:</p>
+<pre><code class="language-text">Upload files
+</code></pre>
+<p>Upload:</p>
+<pre><code class="language-text">employees.csv
+</code></pre>
+<p>Final object path:</p>
+<pre><code class="language-text">gs://YOUR_DATA_BUCKET/input/employees.csv
+</code></pre>
+<hr />
+<h1 id="34-gcp-native-operator-dag">34. GCP-Native Operator DAG</h1>
+<p>Create:</p>
+<pre><code class="language-text">gcp_native_operator_demo.py
+</code></pre>
+<p>Replace these three values:</p>
+<pre><code class="language-python">PROJECT_ID = &quot;YOUR_PROJECT_ID&quot;
+DATA_BUCKET = &quot;YOUR_BUCKET_NAME&quot;
+BQ_LOCATION = &quot;YOUR_BIGQUERY_LOCATION&quot;
+</code></pre>
+<p>Use this code:</p>
+<pre><code class="language-python">import datetime
+
+from airflow import DAG
+from airflow.operators.empty import EmptyOperator
+from airflow.providers.google.cloud.sensors.gcs import GCSObjectExistenceSensor
+from airflow.providers.google.cloud.operators.bigquery import (
+    BigQueryCreateEmptyDatasetOperator,
+    BigQueryInsertJobOperator,
+)
+
+
+PROJECT_ID = &quot;YOUR_PROJECT_ID&quot;
+DATA_BUCKET = &quot;YOUR_BUCKET_NAME&quot;
+BQ_DATASET = &quot;composer_training&quot;
+BQ_LOCATION = &quot;asia-south1&quot;
+
+
+default_args = {
+    &quot;owner&quot;: &quot;training&quot;,
+    &quot;start_date&quot;: datetime.datetime(2026, 1, 1),
+    &quot;retries&quot;: 1,
+    &quot;retry_delay&quot;: datetime.timedelta(minutes=2),
+}
+
+
+with DAG(
+    dag_id=&quot;gcp_native_operator_demo&quot;,
+    default_args=default_args,
+    description=&quot;Demonstrates GCS sensor and BigQuery operators&quot;,
+    schedule=None,
+    catchup=False,
+    tags=[&quot;composer&quot;, &quot;gcp&quot;, &quot;gcs&quot;, &quot;bigquery&quot;],
+) as dag:
+
+    start = EmptyOperator(
+        task_id=&quot;start&quot;,
+    )
+
+    wait_for_employee_file = GCSObjectExistenceSensor(
+        task_id=&quot;wait_for_employee_file&quot;,
+        bucket=DATA_BUCKET,
+        object=&quot;input/employees.csv&quot;,
+        google_cloud_conn_id=&quot;google_cloud_default&quot;,
+        poke_interval=30,
+        timeout=600,
+        mode=&quot;reschedule&quot;,
+    )
+
+    create_dataset = BigQueryCreateEmptyDatasetOperator(
+        task_id=&quot;create_dataset&quot;,
+        project_id=PROJECT_ID,
+        dataset_id=BQ_DATASET,
+        location=BQ_LOCATION,
+        exists_ok=True,
+        gcp_conn_id=&quot;google_cloud_default&quot;,
+    )
+
+    create_external_table = BigQueryInsertJobOperator(
+        task_id=&quot;create_external_table&quot;,
+        location=BQ_LOCATION,
+        gcp_conn_id=&quot;google_cloud_default&quot;,
+        configuration={
+            &quot;query&quot;: {
+                &quot;query&quot;: f&quot;&quot;&quot;
+                    CREATE OR REPLACE EXTERNAL TABLE
+                    `{PROJECT_ID}.{BQ_DATASET}.employees_external`
+                    (
+                        employee_id INT64,
+                        employee_name STRING,
+                        department STRING,
+                        salary NUMERIC
+                    )
+                    OPTIONS (
+                        format = 'CSV',
+                        uris = ['gs://{DATA_BUCKET}/input/employees.csv'],
+                        skip_leading_rows = 1
+                    )
+                &quot;&quot;&quot;,
+                &quot;useLegacySql&quot;: False,
+            }
+        },
+    )
+
+    create_department_summary = BigQueryInsertJobOperator(
+        task_id=&quot;create_department_summary&quot;,
+        location=BQ_LOCATION,
+        gcp_conn_id=&quot;google_cloud_default&quot;,
+        configuration={
+            &quot;query&quot;: {
+                &quot;query&quot;: f&quot;&quot;&quot;
+                    CREATE OR REPLACE TABLE
+                    `{PROJECT_ID}.{BQ_DATASET}.department_salary_summary`
+                    AS
+                    SELECT
+                        department,
+                        COUNT(*) AS employee_count,
+                        SUM(salary) AS total_salary,
+                        ROUND(AVG(salary), 2) AS average_salary,
+                        MAX(salary) AS maximum_salary,
+                        MIN(salary) AS minimum_salary
+                    FROM
+                        `{PROJECT_ID}.{BQ_DATASET}.employees_external`
+                    GROUP BY
+                        department
+                &quot;&quot;&quot;,
+                &quot;useLegacySql&quot;: False,
+            }
+        },
+    )
+
+    validate_summary = BigQueryInsertJobOperator(
+        task_id=&quot;validate_summary&quot;,
+        location=BQ_LOCATION,
+        gcp_conn_id=&quot;google_cloud_default&quot;,
+        configuration={
+            &quot;query&quot;: {
+                &quot;query&quot;: f&quot;&quot;&quot;
+                    SELECT
+                        department,
+                        employee_count,
+                        total_salary,
+                        average_salary
+                    FROM
+                        `{PROJECT_ID}.{BQ_DATASET}.department_salary_summary`
+                    ORDER BY
+                        department
+                &quot;&quot;&quot;,
+                &quot;useLegacySql&quot;: False,
+            }
+        },
+    )
+
+    end = EmptyOperator(
+        task_id=&quot;end&quot;,
+    )
+
+    (
+        start
+        &gt;&gt; wait_for_employee_file
+        &gt;&gt; create_dataset
+        &gt;&gt; create_external_table
+        &gt;&gt; create_department_summary
+        &gt;&gt; validate_summary
+        &gt;&gt; end
+    )
+</code></pre>
+<hr />
+<h1 id="35-workflow-diagram">35. Workflow Diagram</h1>
+<pre><code class="language-text">start
+  |
+  v
+wait_for_employee_file
+GCSObjectExistenceSensor
+  |
+  v
+create_dataset
+BigQueryCreateEmptyDatasetOperator
+  |
+  v
+create_external_table
+BigQueryInsertJobOperator
+  |
+  v
+create_department_summary
+BigQueryInsertJobOperator
+  |
+  v
+validate_summary
+BigQueryInsertJobOperator
+  |
+  v
+end
+</code></pre>
+<hr />
+<h1 id="36-explanation-of-the-operators">36. Explanation of the Operators</h1>
+<h2 id="gcsobjectexistencesensor"><code>GCSObjectExistenceSensor</code></h2>
+<pre><code class="language-python">wait_for_employee_file = GCSObjectExistenceSensor(
+    task_id=&quot;wait_for_employee_file&quot;,
+    bucket=DATA_BUCKET,
+    object=&quot;input/employees.csv&quot;,
+)
+</code></pre>
+<p>Purpose:</p>
+<pre><code class="language-text">Wait until employees.csv exists in the bucket.
+</code></pre>
+<p>Without this sensor, the query might run before the input file arrives.</p>
+<h3 id="important-options">Important options</h3>
+<table>
+<thead>
+<tr>
+  <th>Option</th>
+  <th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>bucket</code></td>
+  <td>Bucket name without <code>gs://</code></td>
+</tr>
+<tr>
+  <td><code>object</code></td>
+  <td>Path inside the bucket</td>
+</tr>
+<tr>
+  <td><code>poke_interval</code></td>
+  <td>Seconds between checks</td>
+</tr>
+<tr>
+  <td><code>timeout</code></td>
+  <td>Maximum waiting time</td>
+</tr>
+<tr>
+  <td><code>mode=&quot;reschedule&quot;</code></td>
+  <td>Releases the worker between checks</td>
+</tr>
+</tbody>
+</table>
+<h2 id="bigquerycreateemptydatasetoperator"><code>BigQueryCreateEmptyDatasetOperator</code></h2>
+<pre><code class="language-python">create_dataset = BigQueryCreateEmptyDatasetOperator(
+    project_id=PROJECT_ID,
+    dataset_id=BQ_DATASET,
+    location=BQ_LOCATION,
+    exists_ok=True,
+)
+</code></pre>
+<p>Purpose:</p>
+<pre><code class="language-text">Create the BigQuery dataset when it does not already exist.
+</code></pre>
+<p><code>exists_ok=True</code> prevents failure when the dataset already exists.</p>
+<h2 id="bigqueryinsertjoboperator"><code>BigQueryInsertJobOperator</code></h2>
+<pre><code class="language-python">BigQueryInsertJobOperator(
+    configuration={
+        &quot;query&quot;: {
+            &quot;query&quot;: &quot;SELECT ...&quot;,
+            &quot;useLegacySql&quot;: False,
+        }
+    }
+)
+</code></pre>
+<p>Purpose:</p>
+<pre><code class="language-text">Submit a BigQuery job.
+</code></pre>
+<p>It can execute:</p>
+<ul>
+<li><code>SELECT</code></li>
+<li><code>CREATE TABLE</code></li>
+<li><code>CREATE OR REPLACE TABLE</code></li>
+<li><code>INSERT</code></li>
+<li><code>UPDATE</code></li>
+<li><code>DELETE</code></li>
+<li><code>MERGE</code></li>
+<li>stored procedures</li>
+</ul>
+<hr />
+<h1 id="37-upload-and-execute-the-dag">37. Upload and Execute the DAG</h1>
+<p>Upload:</p>
+<pre><code class="language-text">gcp_native_operator_demo.py
+</code></pre>
+<p>to:</p>
+<pre><code class="language-text">Composer
+→ Environments
+→ DAGs folder
+→ Upload files
+</code></pre>
+<p>Wait for synchronization.</p>
+<p>Then open:</p>
+<pre><code class="language-text">Composer
+→ Environments
+→ DAGs
+→ gcp_native_operator_demo
+</code></pre>
+<p>Click:</p>
+<pre><code class="language-text">Trigger DAG
+</code></pre>
+<p>Follow task execution using:</p>
+<pre><code class="language-text">Grid
+</code></pre>
+<p>or:</p>
+<pre><code class="language-text">Graph
+</code></pre>
+<hr />
+<h1 id="38-verify-the-bigquery-output">38. Verify the BigQuery Output</h1>
+<p>Open:</p>
+<pre><code class="language-text">Navigation menu
+→ BigQuery
+</code></pre>
+<p>In Explorer, expand:</p>
+<pre><code class="language-text">YOUR_PROJECT_ID
+└── composer_training
+    ├── employees_external
+    └── department_salary_summary
+</code></pre>
+<p>Open:</p>
+<pre><code class="language-text">department_salary_summary
+→ Preview
+</code></pre>
+<p>Expected output:</p>
+<table>
+<thead>
+<tr>
+  <th>department</th>
+  <th style="text-align:right">employee_count</th>
+  <th style="text-align:right">total_salary</th>
+  <th style="text-align:right">average_salary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Engineering</td>
+  <td style="text-align:right">2</td>
+  <td style="text-align:right">156000</td>
+  <td style="text-align:right">78000</td>
+</tr>
+<tr>
+  <td>Finance</td>
+  <td style="text-align:right">2</td>
+  <td style="text-align:right">142000</td>
+  <td style="text-align:right">71000</td>
+</tr>
+<tr>
+  <td>Sales</td>
+  <td style="text-align:right">2</td>
+  <td style="text-align:right">128000</td>
+  <td style="text-align:right">64000</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1 id="39-monitor-the-gcp-native-dag-in-cloud-logging">39. Monitor the GCP-Native DAG in Cloud Logging</h1>
+<p>Open:</p>
+<pre><code class="language-text">Logging
+→ Logs Explorer
+</code></pre>
+<p>Search:</p>
+<pre><code class="language-text">&quot;gcp_native_operator_demo&quot;
+</code></pre>
+<p>To focus on errors:</p>
+<pre><code class="language-text">severity&gt;=ERROR
+&quot;gcp_native_operator_demo&quot;
+</code></pre>
+<p>To inspect one task:</p>
+<pre><code class="language-text">&quot;create_department_summary&quot;
+</code></pre>
+<p>Check for messages such as:</p>
+<ul>
+<li>BigQuery job submitted</li>
+<li>BigQuery job ID</li>
+<li>query completed</li>
+<li>permission denied</li>
+<li>dataset not found</li>
+<li>bucket object not found</li>
+<li>location mismatch</li>
+<li>task retry</li>
+</ul>
+<hr />
+<h1 id="part-5-other-useful-gcp-native-operators">Part 5: Other Useful GCP-Native Operators</h1>
+<h1 id="40-cloud-storage-operators">40. Cloud Storage Operators</h1>
+<p>Common examples:</p>
+<pre><code class="language-python">from airflow.providers.google.cloud.operators.gcs import (
+    GCSCreateBucketOperator,
+    GCSDeleteObjectsOperator,
+    GCSListObjectsOperator,
+)
+</code></pre>
+<p>Typical uses:</p>
+<pre><code class="language-text">Create a bucket
+List objects
+Delete processed files
+Copy or move objects
+Check file arrival
+</code></pre>
+<p>The Google provider includes dedicated Cloud Storage operators and transfer operators for GCS-related workflows. (<a href="https://airflow.apache.org/docs/apache-airflow-providers-google/stable/operators/cloud/gcs.html">Cloud Storage operators</a>)</p>
+<hr />
+<h1 id="41-pub-sub-operator">41. Pub/Sub Operator</h1>
+<p>A Pub/Sub operator can publish a pipeline-completion event.</p>
+<p>Example:</p>
+<pre><code class="language-python">from airflow.providers.google.cloud.operators.pubsub import (
+    PubSubPublishMessageOperator,
+)
+
+
+publish_message = PubSubPublishMessageOperator(
+    task_id=&quot;publish_message&quot;,
+    project_id=PROJECT_ID,
+    topic=&quot;pipeline-events&quot;,
+    messages=[
+        {
+            &quot;data&quot;: b&quot;Employee pipeline completed successfully&quot;,
+            &quot;attributes&quot;: {
+                &quot;pipeline&quot;: &quot;employee-processing&quot;,
+                &quot;status&quot;: &quot;success&quot;,
+            },
+        }
+    ],
+)
+</code></pre>
+<p>Possible use:</p>
+<pre><code class="language-text">BigQuery processing completes
+        |
+        v
+Publish completion event to Pub/Sub
+        |
+        v
+Subscriber receives event
+        |
+        v
+Send notification or start another system
+</code></pre>
+<p>The Composer service account needs permission to publish messages to the topic.</p>
+<hr />
+<h1 id="42-dataproc-operator">42. Dataproc Operator</h1>
+<p>A Dataproc operator can create a cluster or submit a Spark job.</p>
+<p>Example import:</p>
+<pre><code class="language-python">from airflow.providers.google.cloud.operators.dataproc import (
+    DataprocSubmitJobOperator,
+)
+</code></pre>
+<p>Typical flow:</p>
+<pre><code class="language-text">Input data in GCS
+   |
+   v
+Composer starts Dataproc Spark job
+   |
+   v
+Spark transforms data
+   |
+   v
+Output saved to GCS or BigQuery
+</code></pre>
+<p>Dataproc operators can create managed clusters and submit jobs while waiting for the Google Cloud operation to complete. (<a href="https://airflow.apache.org/docs/apache-airflow-providers-google/stable/_api/airflow/providers/google/cloud/operators/dataproc/index.html">Dataproc operators</a>)</p>
+<hr />
+<h1 id="43-dataflow-operator">43. Dataflow Operator</h1>
+<p>A Dataflow operator can launch Apache Beam pipelines.</p>
+<p>Typical workflow:</p>
+<pre><code class="language-text">File arrives in Cloud Storage
+   |
+   v
+Composer starts Dataflow pipeline
+   |
+   v
+Dataflow transforms data
+   |
+   v
+Output written to BigQuery
+</code></pre>
+<p>Google provides Composer guidance for launching Dataflow pipelines using managed Airflow DAGs. (<a href="https://docs.cloud.google.com/composer/docs/composer-3/launch-dataflow-pipelines">Launch Dataflow pipelines</a>)</p>
+<hr />
+<h1 id="44-cloud-run-job-operator">44. Cloud Run Job Operator</h1>
+<p>Cloud Run operators can manage and execute Cloud Run jobs.</p>
+<p>Typical use:</p>
+<pre><code class="language-text">Composer DAG
+   |
+   v
+Execute containerized Cloud Run Job
+   |
+   v
+Job performs Python or Java processing
+   |
+   v
+Return execution status to Airflow
+</code></pre>
+<p>Cloud Run operator parameters commonly include:</p>
+<ul>
+<li>project ID</li>
+<li>region</li>
+<li>job name</li>
+<li>overrides</li>
+<li>timeout</li>
+<li>connection ID</li>
+</ul>
+<p>The current Google provider includes operators for creating and managing Cloud Run jobs. (<a href="https://airflow.apache.org/docs/apache-airflow-providers-google/stable/_api/airflow/providers/google/cloud/operators/cloud_run/index.html">Cloud Run operators</a>)</p>
+<hr />
+<h1 id="part-6-pypi-packages-and-environment-variables">Part 6: PyPI Packages and Environment Variables</h1>
+<h1 id="45-install-an-additional-python-package">45. Install an Additional Python Package</h1>
+<p>Some packages are already installed with Composer. Do not install another version of the Google Airflow provider without checking compatibility.</p>
+<p>Open:</p>
+<pre><code class="language-text">Composer
+→ Environments
+→ composer-training-env
+→ PyPI packages
+</code></pre>
+<p>Click:</p>
+<pre><code class="language-text">Edit
+</code></pre>
+<p>Add:</p>
+<table>
+<thead>
+<tr>
+  <th>Package</th>
+  <th>Version</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>pandas</code></td>
+  <td>A version compatible with the environment</td>
+</tr>
+</tbody>
+</table>
+<p>Save the environment update.</p>
+<p>Package installation updates the environment and may take several minutes. Only users with the relevant environment-update permission can change PyPI packages, and package conflicts can cause update failures. (<a href="https://docs.cloud.google.com/composer/docs/composer-3/install-python-dependencies">Install Python dependencies</a>)</p>
+<hr />
+<h1 id="46-add-environment-variables">46. Add Environment Variables</h1>
+<p>Open:</p>
+<pre><code class="language-text">Composer
+→ Environments
+→ composer-training-env
+→ Environment variables
+→ Edit
+</code></pre>
+<p>Example:</p>
+<table>
+<thead>
+<tr>
+  <th>Name</th>
+  <th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>TRAINING_BUCKET</code></td>
+  <td><code>your-bucket-name</code></td>
+</tr>
+<tr>
+  <td><code>BQ_DATASET</code></td>
+  <td><code>composer_training</code></td>
+</tr>
+</tbody>
+</table>
+<p>Read them in a DAG:</p>
+<pre><code class="language-python">import os
+
+TRAINING_BUCKET = os.environ.get(&quot;TRAINING_BUCKET&quot;)
+BQ_DATASET = os.environ.get(&quot;BQ_DATASET&quot;, &quot;composer_training&quot;)
+</code></pre>
+<p>Do not store passwords or private keys in plain environment variables. Use Secret Manager for secrets.</p>
+<hr />
+<h1 id="part-7-troubleshooting">Part 7: Troubleshooting</h1>
+<h1 id="47-dag-does-not-appear">47. DAG Does Not Appear</h1>
+<p>Check:</p>
+<ol>
+<li>The file has a <code>.py</code> extension.</li>
+<li>It is uploaded directly under the environment's <code>dags/</code> folder.</li>
+<li>The Python file contains a valid DAG object.</li>
+<li>The DAG ID is unique.</li>
+<li>Imports are compatible with the installed Airflow/provider version.</li>
+<li>Wait at least one or two minutes.</li>
+<li>Check environment logs for import errors.</li>
+</ol>
+<p>Recommended imports:</p>
+<pre><code class="language-python">from airflow.operators.bash import BashOperator
+from airflow.operators.python import PythonOperator
+</code></pre>
+<p>Avoid older imports such as:</p>
+<pre><code class="language-python">from airflow import BashOperator
+from airflow.operators import PythonOperator
+</code></pre>
+<hr />
+<h1 id="48-broken-dag-or-import-error">48. Broken DAG or Import Error</h1>
+<p>Open:</p>
+<pre><code class="language-text">Composer
+→ Environments
+→ DAGs
+</code></pre>
+<p>Look for:</p>
+<pre><code class="language-text">Import errors
+</code></pre>
+<p>Or use Logs Explorer:</p>
+<pre><code class="language-text">severity&gt;=ERROR
+&quot;Broken DAG&quot;
+</code></pre>
+<p>Common causes:</p>
+<ul>
+<li>missing Python package</li>
+<li>wrong import path</li>
+<li>syntax error</li>
+<li>undefined variable</li>
+<li>unsupported provider class</li>
+<li>indentation error</li>
+<li>duplicate task ID</li>
+<li>invalid dependency syntax</li>
+</ul>
+<hr />
+<h1 id="49-permission-denied">49. Permission Denied</h1>
+<p>Example error:</p>
+<pre><code class="language-text">403 Permission denied
+</code></pre>
+<p>Check:</p>
+<pre><code class="language-text">IAM &amp; Admin
+→ IAM
+</code></pre>
+<p>Confirm the Composer environment service account has the required role.</p>
+<p>Examples:</p>
+<table>
+<thead>
+<tr>
+  <th>Operation</th>
+  <th>Required permission category</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Run BigQuery query</td>
+  <td>BigQuery Job User</td>
+</tr>
+<tr>
+  <td>Create or update tables</td>
+  <td>BigQuery Data Editor</td>
+</tr>
+<tr>
+  <td>Read a GCS file</td>
+  <td>Storage Object Viewer</td>
+</tr>
+<tr>
+  <td>Write a GCS file</td>
+  <td>Storage Object Creator or Admin</td>
+</tr>
+<tr>
+  <td>Publish Pub/Sub message</td>
+  <td>Pub/Sub Publisher</td>
+</tr>
+<tr>
+  <td>Run Dataproc job</td>
+  <td>Dataproc permissions</td>
+</tr>
+<tr>
+  <td>Execute Cloud Run job</td>
+  <td>Cloud Run permissions</td>
+</tr>
+</tbody>
+</table>
+<p>Do not grant <code>Owner</code> only to solve a permission error. Identify the missing permission and apply the narrowest suitable role.</p>
+<hr />
+<h1 id="50-bigquery-location-error">50. BigQuery Location Error</h1>
+<p>Example:</p>
+<pre><code class="language-text">Not found: Dataset was not found in location
+</code></pre>
+<p>Check:</p>
+<pre><code class="language-python">BQ_LOCATION = &quot;asia-south1&quot;
+</code></pre>
+<p>The operator location and dataset location must match.</p>
+<p>Open:</p>
+<pre><code class="language-text">BigQuery
+→ Dataset
+→ Details
+→ Data location
+</code></pre>
+<p>Use that exact value in the DAG.</p>
+<hr />
+<h1 id="51-gcs-sensor-keeps-waiting">51. GCS Sensor Keeps Waiting</h1>
+<p>Check:</p>
+<pre><code class="language-python">bucket=DATA_BUCKET
+object=&quot;input/employees.csv&quot;
+</code></pre>
+<p>The bucket must not include:</p>
+<pre><code class="language-text">gs://
+</code></pre>
+<p>Correct:</p>
+<pre><code class="language-python">bucket=&quot;my-training-bucket&quot;
+</code></pre>
+<p>Incorrect:</p>
+<pre><code class="language-python">bucket=&quot;gs://my-training-bucket&quot;
+</code></pre>
+<p>Also confirm capitalization and folder names. Cloud Storage object paths are case-sensitive.</p>
+<hr />
+<h1 id="52-task-remains-queued">52. Task Remains Queued</h1>
+<p>Possible causes:</p>
+<ul>
+<li>no worker capacity</li>
+<li>environment resources are too small</li>
+<li>many parallel tasks</li>
+<li>pool limits</li>
+<li>concurrency settings</li>
+<li>worker startup delay</li>
+<li>scheduler issue</li>
+</ul>
+<p>Check:</p>
+<pre><code class="language-text">Composer
+→ Environment
+→ Monitoring
+</code></pre>
+<p>Review:</p>
+<ul>
+<li>queued tasks</li>
+<li>running tasks</li>
+<li>worker utilization</li>
+<li>scheduler health</li>
+<li>task duration</li>
+</ul>
+<hr />
+<h1 id="53-environment-creation-fails">53. Environment Creation Fails</h1>
+<p>Check:</p>
+<ul>
+<li>Composer API is enabled.</li>
+<li>Billing is enabled.</li>
+<li>The selected region supports the environment.</li>
+<li>Your account can create environments.</li>
+<li>Your account can act as the environment service account.</li>
+<li>The service account has Composer Worker.</li>
+<li>Organization policies permit the required network and service resources.</li>
+</ul>
+<p>Google's troubleshooting guidance highlights missing user and service-account permissions as a frequent environment-creation problem. (<a href="https://docs.cloud.google.com/composer/docs/composer-3/troubleshooting-environment-creation">Troubleshooting environment creation</a>)</p>
+<hr />
+<h1 id="part-8-best-practices">Part 8: Best Practices</h1>
+<h2 id="security">Security</h2>
+<ul>
+<li>Use a dedicated Composer service account.</li>
+<li>Avoid service-account key files.</li>
+<li>Use least-privilege IAM roles.</li>
+<li>Use Secret Manager for passwords and tokens.</li>
+<li>Restrict Airflow web-server access.</li>
+<li>Separate development and production environments.</li>
+</ul>
+<h2 id="dag-development">DAG development</h2>
+<ul>
+<li>Keep DAG files lightweight.</li>
+<li>Do not perform API calls while the DAG file is being imported.</li>
+<li>Use operators for cloud operations.</li>
+<li>Make task IDs meaningful.</li>
+<li>Add retries only for recoverable failures.</li>
+<li>Avoid hard-coding project IDs where configuration is preferable.</li>
+<li>Log important business checkpoints.</li>
+</ul>
+<h2 id="reliability">Reliability</h2>
+<ul>
+<li>Use sensors for external dependencies.</li>
+<li>Use <code>mode=&quot;reschedule&quot;</code> or deferrable sensors when appropriate.</li>
+<li>Set execution timeouts.</li>
+<li>Configure retry delays.</li>
+<li>Design tasks to be idempotent.</li>
+<li>Validate data before publishing downstream output.</li>
+</ul>
+<h2 id="cost-control">Cost control</h2>
+<ul>
+<li>Use the smallest appropriate environment.</li>
+<li>Delete training environments after use.</li>
+<li>Avoid unnecessary polling.</li>
+<li>Avoid keeping temporary Dataproc clusters running.</li>
+<li>Use BigQuery partitioning for large datasets.</li>
+<li>Review Cloud Billing reports and budgets.</li>
+</ul>
+<hr />
+<h1 id="54-complete-real-world-scenario">54. Complete Real-World Scenario</h1>
+<h2 id="requirement">Requirement</h2>
+<p>A retail organization receives a daily sales file.</p>
+<pre><code class="language-text">sales_2026_08_05.csv
+</code></pre>
+<p>The required pipeline is:</p>
+<pre><code class="language-text">1. Wait for the sales file in GCS
+2. Validate that the file exists
+3. Load data into BigQuery
+4. Transform and aggregate city-wise sales
+5. Run a data-quality query
+6. Publish a Pub/Sub completion event
+7. Monitor failures through Cloud Logging
+8. Notify support through an alert
+</code></pre>
+<h2 id="suitable-airflow-components">Suitable Airflow components</h2>
+<table>
+<thead>
+<tr>
+  <th>Requirement</th>
+  <th>Component</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Wait for file</td>
+  <td><code>GCSObjectExistenceSensor</code></td>
+</tr>
+<tr>
+  <td>Load to BigQuery</td>
+  <td>GCS-to-BigQuery transfer operator</td>
+</tr>
+<tr>
+  <td>Transform</td>
+  <td><code>BigQueryInsertJobOperator</code></td>
+</tr>
+<tr>
+  <td>Data quality</td>
+  <td>BigQuery check operator</td>
+</tr>
+<tr>
+  <td>Publish event</td>
+  <td><code>PubSubPublishMessageOperator</code></td>
+</tr>
+<tr>
+  <td>Error inspection</td>
+  <td>Cloud Logging</td>
+</tr>
+<tr>
+  <td>Health monitoring</td>
+  <td>Cloud Monitoring</td>
+</tr>
+<tr>
+  <td>Notification</td>
+  <td>Log-based alert</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1 id="55-final-checklist">55. Final Checklist</h1>
+<h2 id="environment-setup">Environment setup</h2>
+<pre><code class="language-text">[ ] Google Cloud project selected
+[ ] Billing enabled
+[ ] Composer API enabled
+[ ] BigQuery API enabled
+[ ] Cloud Storage API enabled
+[ ] Service account created
+[ ] Composer Worker assigned
+[ ] BigQuery permissions assigned
+[ ] Storage permissions assigned
+[ ] Composer environment running
+</code></pre>
+<h2 id="dag-deployment">DAG deployment</h2>
+<pre><code class="language-text">[ ] Python DAG file created
+[ ] Modern Airflow imports used
+[ ] Project ID replaced
+[ ] Bucket name replaced
+[ ] BigQuery location checked
+[ ] DAG uploaded to /dags
+[ ] DAG visible in the console
+[ ] DAG triggered
+[ ] Tasks completed successfully
+</code></pre>
+<h2 id="monitoring">Monitoring</h2>
+<pre><code class="language-text">[ ] Task logs inspected
+[ ] Environment logs inspected
+[ ] Logs Explorer query tested
+[ ] Failure demo executed
+[ ] Monitoring dashboard reviewed
+[ ] Log-based alert created
+</code></pre>
+<h1 id="summary">Summary</h1>
+<p><strong>Cloud Composer environment setup</strong> creates a managed Apache Airflow platform, including schedulers, workers, a DAG bucket, logging and monitoring integrations.</p>
+<p><strong>Cloud Logging</strong> helps diagnose task failures, scheduler issues, permission problems, import errors and environment problems.</p>
+<p><strong>GCP-native operators</strong> allow Airflow tasks to interact directly with BigQuery, Cloud Storage, Pub/Sub, Dataproc, Dataflow, Cloud Run, GKE and other Google Cloud services using the Composer environment service account.</p>
+</article>
+<footer>Cloud Composer tutorial • Single-file interactive TUT format</footer>
+</main>
+</div>
+<script>
+document.querySelectorAll('pre').forEach(pre=>{
+ const b=document.createElement('button'); b.className='copy-btn'; b.textContent='Copy';
+ b.onclick=()=>navigator.clipboard.writeText(pre.innerText.replace(/^Copy\n/,'')).then(()=>{b.textContent='Copied';setTimeout(()=>b.textContent='Copy',1200)});
+ pre.appendChild(b);
+});
+const progress=document.getElementById('progress');
+addEventListener('scroll',()=>{const d=document.documentElement;progress.style.width=((d.scrollTop/(d.scrollHeight-d.clientHeight))*100)+'%'});
+const links=[...document.querySelectorAll('.nav-item')];
+const headings=[...document.querySelectorAll('h1[id],h2[id]')];
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){links.forEach(a=>a.classList.remove('active'));const a=links.find(x=>x.getAttribute('href')==='#'+e.target.id);if(a)a.classList.add('active')}}),{rootMargin:'-20% 0px -70% 0px'});
+headings.forEach(h=>io.observe(h));
+document.getElementById('searchBox').addEventListener('input',e=>{
+ const q=e.target.value.trim().toLowerCase();
+ document.querySelectorAll('mark').forEach(m=>m.replaceWith(document.createTextNode(m.textContent)));
+ if(!q)return;
+ const walker=document.createTreeWalker(document.getElementById('content'),NodeFilter.SHOW_TEXT);
+ const nodes=[]; while(walker.nextNode())nodes.push(walker.currentNode);
+ nodes.forEach(n=>{if(['SCRIPT','STYLE','CODE','PRE'].includes(n.parentElement.tagName))return;const i=n.data.toLowerCase().indexOf(q);if(i>=0){const r=document.createRange();r.setStart(n,i);r.setEnd(n,i+q.length);const m=document.createElement('mark');r.surroundContents(m)}});
+});
+document.getElementById('themeBtn').onclick=()=>{
+ const dark=document.body.classList.toggle('dark');
+ document.documentElement.style.setProperty('--bg',dark?'#0b1220':'#f5f7fb');
+ document.documentElement.style.setProperty('--panel',dark?'#111827':'#ffffff');
+ document.documentElement.style.setProperty('--ink',dark?'#e5e7eb':'#172033');
+ document.documentElement.style.setProperty('--muted',dark?'#9ca3af':'#667085');
+ document.documentElement.style.setProperty('--line',dark?'#334155':'#dbe3ef');
+ document.querySelector('aside').style.background=dark?'#111827':'#fff';
+ document.getElementById('themeBtn').textContent=dark?'Light Mode':'Dark Mode';
+ localStorage.setItem('composerTutDark',dark?'1':'0');
+};
+if(localStorage.getItem('composerTutDark')==='1')document.getElementById('themeBtn').click();
+</script>
+</body>
+</html>

@@ -1,0 +1,121 @@
+customer_id,customer_name,city,state,region,segment,signup_date,customer_status
+C0001,Aarav Singh,Bengaluru,Karnataka,South,Consumer,16-08-2024,Active
+C0002,Lakshmi Iyer,Bengaluru,Karnataka,South,Small Business,08-03-2025,Active
+C0003,Arjun Patel,Chennai,Tamil Nadu,South,Consumer,01-06-2025,Active
+C0004,Karthik Gupta,Bhubaneswar,Odisha,East,Corporate,13-08-2024,Inactive
+C0005,Vikram Sharma,Ahmedabad,Gujarat,West,Consumer,08-03-2025,Active
+C0006,Rohan Patel,Pune,Maharashtra,West,Corporate,14-04-2024,Active
+C0007,Isha Kumar,Noida,Uttar Pradesh,North,Corporate,10-09-2025,Active
+C0008,Aditya Gupta,Chennai,Tamil Nadu,South,Consumer,22-01-2025,Active
+C0009,Nisha Rao,Bhubaneswar,Odisha,East,Corporate,14-08-2025,Active
+C0010,Diya Patel,Bengaluru,Karnataka,South,Corporate,22-03-2024,Active
+C0011,Sanjay Singh,Bengaluru,Karnataka,South,Corporate,12-10-2025,Active
+C0012,Priya Kumar,Hyderabad,Telangana,South,Consumer,17-11-2025,Active
+C0013,Divya Reddy,Bengaluru,Karnataka,South,Small Business,07-09-2024,Active
+C0014,Sanjay Singh,Kolkata,West Bengal,East,Small Business,24-07-2025,Active
+C0015,Diya Patel,Delhi,Delhi,North,Consumer,19-11-2024,Inactive
+C0016,Arjun Patel,Pune,Maharashtra,West,Small Business,18-11-2024,Active
+C0017,Sanjay Das,Kolkata,West Bengal,East,Consumer,28-09-2024,Active
+C0018,Lakshmi Gupta,Mumbai,Maharashtra,West,Corporate,21-08-2025,Inactive
+C0019,Sanjay Kumar,Ahmedabad,Gujarat,West,Consumer,21-05-2024,Inactive
+C0020,Diya Iyer,Bengaluru,Karnataka,South,Consumer,04-10-2025,Active
+C0021,Divya Iyer,Noida,Uttar Pradesh,North,Corporate,25-01-2025,Inactive
+C0022,Vikram Gupta,Bhubaneswar,Odisha,East,Consumer,27-11-2025,Active
+C0023,Vikram Kumar,Bhubaneswar,Odisha,East,Consumer,27-10-2024,Inactive
+C0024,Aditya Sharma,Hyderabad,Telangana,South,Small Business,26-09-2024,Active
+C0025,Isha Singh,Bhubaneswar,Odisha,East,Small Business,03-06-2025,Active
+C0026,Priya Reddy,Hyderabad,Telangana,South,Small Business,27-06-2025,Active
+C0027,Rahul Das,Ahmedabad,Gujarat,West,Consumer,24-04-2024,Active
+C0028,Ananya Sharma,Pune,Maharashtra,West,Consumer,03-08-2025,Active
+C0029,Sneha Iyer,Bengaluru,Karnataka,South,Small Business,08-05-2024,Active
+C0030,Lakshmi Reddy,Kolkata,West Bengal,East,Corporate,24-06-2025,Inactive
+C0031,Lakshmi Patel,Mumbai,Maharashtra,West,Small Business,15-11-2024,Inactive
+C0032,Aditya Gupta,Delhi,Delhi,North,Corporate,03-05-2024,Active
+C0033,Arjun Kumar,Mumbai,Maharashtra,West,Consumer,25-08-2025,Active
+C0034,Ananya Sharma,Ahmedabad,Gujarat,West,Consumer,08-10-2025,Active
+C0035,Arjun Sharma,Mumbai,Maharashtra,West,Corporate,13-03-2024,Active
+C0036,Sneha Patel,Pune,Maharashtra,West,Small Business,15-05-2024,Inactive
+C0037,Sneha Nair,Mumbai,Maharashtra,West,Consumer,06-04-2024,Active
+C0038,Priya Nair,Noida,Uttar Pradesh,North,Corporate,23-04-2025,Active
+C0039,Diya Nair,Bengaluru,Karnataka,South,Small Business,13-12-2024,Active
+C0040,Karthik Patel,Mumbai,Maharashtra,West,Small Business,04-04-2025,Active
+C0041,Meera Singh,Noida,Uttar Pradesh,North,Corporate,12-09-2024,Active
+C0042,Lakshmi Iyer,Kolkata,West Bengal,East,Consumer,29-10-2025,Active
+C0043,Ananya Reddy,Bengaluru,Karnataka,South,Corporate,12-05-2025,Inactive
+C0044,Sanjay Sharma,Mumbai,Maharashtra,West,Consumer,23-01-2025,Active
+C0045,Vikram Das,Noida,Uttar Pradesh,North,Corporate,09-03-2025,Inactive
+C0046,Karthik Singh,Hyderabad,Telangana,South,Consumer,29-02-2024,Active
+C0047,Diya Sharma,Delhi,Delhi,North,Small Business,03-05-2025,Active
+C0048,Gopi Iyer,Chennai,Tamil Nadu,South,Consumer,11-03-2024,Active
+C0049,Sanjay Iyer,Mumbai,Maharashtra,West,Small Business,09-09-2024,Active
+C0050,Arjun Nair,Ahmedabad,Gujarat,West,Small Business,20-08-2025,Active
+C0051,Karthik Kumar,Pune,Maharashtra,West,Consumer,28-09-2024,Inactive
+C0052,Nisha Das,Hyderabad,Telangana,South,Corporate,15-03-2024,Active
+C0053,Divya Rao,Kolkata,West Bengal,East,Consumer,16-03-2024,Active
+C0054,Vikram Reddy,Bhubaneswar,Odisha,East,Corporate,11-03-2024,Active
+C0055,Nisha Reddy,Delhi,Delhi,North,Corporate,10-07-2025,Active
+C0056,Gopi Sharma,Ahmedabad,Gujarat,West,Small Business,21-07-2025,Active
+C0057,Rohan Singh,Bengaluru,Karnataka,South,Consumer,19-04-2024,Active
+C0058,Nisha Rao,Pune,Maharashtra,West,Consumer,17-12-2024,Active
+C0059,Gopi Das,Pune,Maharashtra,West,Corporate,22-02-2024,Active
+C0060,Vikram Sharma,Noida,Uttar Pradesh,North,Consumer,07-12-2024,Active
+C0061,Meera Das,Pune,Maharashtra,West,Small Business,13-03-2025,Active
+C0062,Arjun Reddy,Bengaluru,Karnataka,South,Small Business,06-02-2024,Active
+C0063,Lakshmi Reddy,Ahmedabad,Gujarat,West,Corporate,10-05-2024,Active
+C0064,Priya Sharma,Pune,Maharashtra,West,Corporate,03-08-2024,Active
+C0065,Priya Gupta,Bengaluru,Karnataka,South,Corporate,27-09-2025,Active
+C0066,Meera Reddy,Mumbai,Maharashtra,West,Corporate,26-01-2024,Active
+C0067,Kavya Patel,Delhi,Delhi,North,Corporate,12-06-2024,Active
+C0068,Diya Das,Noida,Uttar Pradesh,North,Consumer,23-07-2024,Inactive
+C0069,Nisha Patel,Delhi,Delhi,North,Consumer,25-01-2024,Active
+C0070,Rahul Singh,Noida,Uttar Pradesh,North,Consumer,12-10-2024,Active
+C0071,Sanjay Gupta,Bhubaneswar,Odisha,East,Corporate,29-01-2024,Active
+C0072,Meera Rao,Pune,Maharashtra,West,Corporate,09-02-2024,Active
+C0073,Kavya Kumar,Ahmedabad,Gujarat,West,Small Business,17-11-2024,Inactive
+C0074,Gopi Iyer,Ahmedabad,Gujarat,West,Corporate,13-08-2025,Active
+C0075,Diya Nair,Pune,Maharashtra,West,Consumer,16-06-2025,Active
+C0076,Kavya Iyer,Delhi,Delhi,North,Small Business,04-12-2024,Active
+C0077,Nisha Gupta,Bengaluru,Karnataka,South,Corporate,13-11-2025,Inactive
+C0078,Sanjay Singh,Delhi,Delhi,North,Small Business,10-05-2024,Active
+C0079,Sanjay Reddy,Noida,Uttar Pradesh,North,Small Business,05-08-2025,Active
+C0080,Lakshmi Sharma,Noida,Uttar Pradesh,North,Corporate,20-10-2024,Active
+C0081,Manoj Rao,Noida,Uttar Pradesh,North,Small Business,25-11-2024,Inactive
+C0082,Aditya Patel,Kolkata,West Bengal,East,Small Business,29-04-2025,Active
+C0083,Nisha Gupta,Bengaluru,Karnataka,South,Small Business,10-10-2025,Active
+C0084,Ananya Singh,Bengaluru,Karnataka,South,Consumer,22-07-2024,Active
+C0085,Diya Patel,Chennai,Tamil Nadu,South,Corporate,17-09-2025,Active
+C0086,Kavya Rao,Kolkata,West Bengal,East,Consumer,28-01-2025,Inactive
+C0087,Ananya Reddy,Noida,Uttar Pradesh,North,Small Business,06-01-2024,Active
+C0088,Ananya Reddy,Noida,Uttar Pradesh,North,Small Business,14-06-2025,Inactive
+C0089,Lakshmi Patel,Chennai,Tamil Nadu,South,Consumer,12-04-2025,Active
+C0090,Gopi Gupta,Kolkata,West Bengal,East,Small Business,20-11-2024,Inactive
+C0091,Gopi Nair,Ahmedabad,Gujarat,West,Small Business,01-04-2025,Active
+C0092,Aditya Singh,Kolkata,West Bengal,East,Consumer,14-10-2025,Active
+C0093,Sneha Patel,Bhubaneswar,Odisha,East,Corporate,26-03-2025,Active
+C0094,Ananya Singh,Pune,Maharashtra,West,Corporate,23-11-2024,Active
+C0095,Rohan Patel,Hyderabad,Telangana,South,Corporate,05-06-2024,Active
+C0096,Kavya Nair,Bengaluru,Karnataka,South,Corporate,09-07-2025,Inactive
+C0097,Diya Patel,Noida,Uttar Pradesh,North,Corporate,02-02-2025,Active
+C0098,Sanjay Das,Ahmedabad,Gujarat,West,Consumer,26-12-2024,Active
+C0099,Kavya Gupta,Noida,Uttar Pradesh,North,Small Business,13-07-2025,Active
+C0100,Ananya Singh,Kolkata,West Bengal,East,Corporate,12-05-2025,Active
+C0101,Rahul Nair,Noida,Uttar Pradesh,North,Small Business,18-06-2024,Inactive
+C0102,Divya Gupta,Hyderabad,Telangana,South,Consumer,07-02-2025,Active
+C0103,Kavya Reddy,Bengaluru,Karnataka,South,Corporate,05-07-2024,Active
+C0104,Sanjay Kumar,Pune,Maharashtra,West,Consumer,10-04-2025,Active
+C0105,Sanjay Singh,Delhi,Delhi,North,Corporate,15-09-2024,Active
+C0106,Aarav Gupta,Kolkata,West Bengal,East,Consumer,24-12-2024,Active
+C0107,Diya Sharma,Bengaluru,Karnataka,South,Consumer,23-07-2024,Active
+C0108,Rohan Patel,Ahmedabad,Gujarat,West,Consumer,29-04-2025,Active
+C0109,Karthik Das,Ahmedabad,Gujarat,West,Small Business,19-09-2024,Active
+C0110,Divya Rao,Hyderabad,Telangana,South,Small Business,27-04-2024,Active
+C0111,Isha Rao,Pune,Maharashtra,West,Consumer,15-11-2024,Inactive
+C0112,Karthik Iyer,Noida,Uttar Pradesh,North,Small Business,04-10-2025,Active
+C0113,Nisha Rao,Bengaluru,Karnataka,South,Consumer,02-08-2025,Active
+C0114,Lakshmi Nair,Delhi,Delhi,North,Small Business,14-01-2025,Active
+C0115,Rahul Sharma,Bhubaneswar,Odisha,East,Corporate,16-05-2025,Active
+C0116,Priya Das,Noida,Uttar Pradesh,North,Small Business,05-06-2024,Inactive
+C0117,Gopi Singh,Hyderabad,Telangana,South,Small Business,05-07-2025,Inactive
+C0118,Kavya Rao,Kolkata,West Bengal,East,Corporate,26-11-2024,Active
+C0119,Vikram Das,Bengaluru,Karnataka,South,Consumer,20-04-2025,Inactive
+C0120,Aarav Das,Delhi,Delhi,North,Corporate,05-07-2024,Inactive

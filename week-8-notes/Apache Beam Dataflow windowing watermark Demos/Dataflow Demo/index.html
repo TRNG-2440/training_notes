@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Google Cloud Dataflow: GCS to BigQuery — Complete Video-Based Notes</title>
+<style>
+:root{--bg:#071323;--panel:#0d2035;--panel2:#112a43;--line:#2e506d;--txt:#edf7ff;--muted:#b5cadb;--blue:#69b5ff;--green:#4bd29d;--yellow:#ffc661;--red:#ff7785}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:linear-gradient(130deg,#06111e,#0a1b30 48%,#06111e);color:var(--txt);font:16px/1.65 Segoe UI,Arial,sans-serif}
+header{padding:55px 6vw;background:radial-gradient(circle at 15% 20%,rgba(75,210,157,.18),transparent 30%),radial-gradient(circle at 85% 15%,rgba(105,181,255,.2),transparent 32%)}
+h1{font-size:clamp(2.2rem,5vw,4.2rem);line-height:1.08;margin:.4rem 0}.lead{max-width:1000px;color:var(--muted);font-size:1.12rem}.badge{display:inline-block;padding:5px 11px;border:1px solid #407195;border-radius:99px;background:#0c2942}
+.layout{display:grid;grid-template-columns:270px minmax(0,1fr);gap:25px;padding:28px 4vw 70px}nav{position:sticky;top:15px;align-self:start;max-height:94vh;overflow:auto;background:#0b1d31;border:1px solid var(--line);border-radius:17px;padding:15px}
+nav a{display:block;color:#cee7fa;text-decoration:none;padding:7px 9px;border-radius:8px;font-size:.92rem}nav a:hover{background:#173651}
+section{background:rgba(13,32,53,.94);border:1px solid var(--line);border-radius:20px;padding:27px;margin-bottom:22px;box-shadow:0 12px 32px rgba(0,0,0,.22)}
+h2{margin-top:0;border-bottom:1px solid var(--line);padding-bottom:9px}h3{color:#bfe3ff;margin-top:1.6rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}.card{background:var(--panel2);border:1px solid #315472;border-radius:14px;padding:16px}
+.note{border-left:5px solid var(--green);padding:13px 16px;background:#0b302b;border-radius:9px;margin:15px 0}.warn{border-left-color:var(--yellow);background:#372b18}.danger{border-left-color:var(--red);background:#3a2028}
+table{border-collapse:collapse;width:100%;margin:15px 0}th,td{border:1px solid #31506b;padding:11px;text-align:left;vertical-align:top}th{background:#173a5a}tr:nth-child(even) td{background:#0a1c2f}
+pre{background:#050e18;color:#c9f7ee;border:1px solid #29465e;border-radius:12px;padding:15px;overflow:auto}code{font-family:Consolas,monospace}
+.diagram{background:#061625;border:1px solid #2e4d68;border-radius:17px;padding:15px;overflow:auto}.diagram svg{min-width:760px;width:100%;height:auto}
+.screen{background:#f5f7fa;color:#17202a;border-radius:14px;padding:0;overflow:hidden;border:1px solid #9faebc;margin:15px 0}.screenbar{background:#e6eaf0;padding:8px 13px;font-weight:700}.screenbody{padding:17px}.field{border:1px solid #aab7c4;border-radius:5px;padding:8px;margin:5px 0 12px;background:white}.btn{display:inline-block;background:#1769d1;color:white;padding:8px 15px;border-radius:5px;font-weight:700}
+.step{display:grid;grid-template-columns:42px 1fr;gap:11px;margin:14px 0}.n{height:35px;width:35px;border-radius:50%;display:grid;place-items:center;background:#1b6f93;font-weight:800}
+img.hero{width:100%;max-width:900px;border-radius:15px;border:1px solid #35536d}
+.small{font-size:.9rem;color:var(--muted)}footer{text-align:center;padding:25px;color:#91aabd}
+@media(max-width:900px){.layout{grid-template-columns:1fr}nav{position:relative;max-height:none}}@media print{nav{display:none}.layout{display:block;padding:0}body{background:white;color:black}section{background:white;box-shadow:none;break-inside:avoid}pre{white-space:pre-wrap;color:black;background:#f4f4f4}}
+</style>
+</head>
+<body>
+<header>
+<span class="badge">Video reference: TechTrapture • GCS → Dataflow → BigQuery</span>
+<h1>Google Cloud Dataflow Explained</h1>
+<p class="lead">Complete trainer notes for creating a first batch data pipeline from Google Cloud Storage to BigQuery, including prerequisites, APIs, IAM, locations, sample files, JavaScript UDF, schema, template fields, execution monitoring, validation, troubleshooting and cleanup.</p>
+</header>
+<div class="layout">
+<nav><strong>Contents</strong>
+<a href="#scope">1. Video scope</a><a href="#concept">2. Dataflow concept</a><a href="#architecture">3. Architecture</a>
+<a href="#prereq">4. Prerequisites</a><a href="#files">5. Input files</a><a href="#project">6. Project setup</a>
+<a href="#apis">7. Enable APIs</a><a href="#iam">8. IAM roles</a><a href="#gcs">9. Create GCS bucket</a>
+<a href="#bq">10. Create BigQuery dataset</a><a href="#upload">11. Upload files</a><a href="#job">12. Create Dataflow job</a>
+<a href="#config">13. Exact configuration</a><a href="#monitor">14. Monitor job</a><a href="#validate">15. Validate result</a>
+<a href="#cli">16. CLI equivalent</a><a href="#errors">17. Troubleshooting</a><a href="#cost">18. Cost and cleanup</a>
+<a href="#interview">19. Interview Q&A</a><a href="#references">20. References</a>
+</nav>
+<main>
+<section id="scope"><h2>1. What the referenced video demonstrates</h2>
+<p>The referenced video is titled <strong>“Google Cloud Dataflow Explained | Create Your First Data Pipeline (GCS to BigQuery)”</strong>. Its practical goal is a batch ETL pipeline in which a text/CSV file is stored in Cloud Storage, transformed by Dataflow and inserted into a BigQuery table.</p>
+<div class="note warn"><strong>Portal-version note:</strong> Google Cloud Console labels and template screens can change. These notes preserve the same workflow while also documenting the currently required configuration and common permission fixes.</div>
+</section>
+
+<section id="concept"><h2>2. What is Google Cloud Dataflow?</h2>
+<p>Dataflow is Google Cloud’s managed execution service for Apache Beam pipelines. A pipeline normally reads from a source, applies one or more transforms and writes to a destination. The same service supports batch and streaming workloads.</p>
+<div class="grid"><div class="card"><strong>Source</strong><br>Cloud Storage CSV/text file</div><div class="card"><strong>Transform</strong><br>Parse each line and convert it to JSON</div><div class="card"><strong>Sink</strong><br>BigQuery table</div><div class="card"><strong>Runner</strong><br>Google Cloud Dataflow</div></div>
+</section>
+
+<section id="architecture"><h2>3. End-to-end architecture</h2>
+<div class="diagram"><svg viewBox="0 0 1100 390">
+<defs><marker id="ar" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#69b5ff"/></marker></defs>
+<rect x="30" y="130" width="210" height="120" rx="18" fill="#173a5a" stroke="#69b5ff" stroke-width="3"/>
+<text x="135" y="172" text-anchor="middle" fill="white" font-size="23">Cloud Storage</text><text x="135" y="207" text-anchor="middle" fill="#c9e8ff">customer_orders.csv</text>
+<rect x="330" y="55" width="420" height="280" rx="22" fill="#103c48" stroke="#4bd29d" stroke-width="3"/>
+<text x="540" y="95" text-anchor="middle" fill="white" font-size="27">Google Cloud Dataflow</text>
+<rect x="365" y="125" width="350" height="50" rx="10" fill="#16475a"/><text x="540" y="157" text-anchor="middle" fill="white">1. Read text lines from GCS</text>
+<rect x="365" y="195" width="350" height="50" rx="10" fill="#16475a"/><text x="540" y="227" text-anchor="middle" fill="white">2. JavaScript UDF: CSV → JSON</text>
+<rect x="365" y="265" width="350" height="50" rx="10" fill="#16475a"/><text x="540" y="297" text-anchor="middle" fill="white">3. Write rows to BigQuery</text>
+<rect x="845" y="130" width="220" height="120" rx="18" fill="#352a18" stroke="#ffc661" stroke-width="3"/>
+<text x="955" y="172" text-anchor="middle" fill="white" font-size="23">BigQuery</text><text x="955" y="207" text-anchor="middle" fill="#ffe3aa">sales.customer_orders</text>
+<line x1="240" y1="190" x2="330" y2="190" stroke="#69b5ff" stroke-width="4" marker-end="url(#ar)"/>
+<line x1="750" y1="190" x2="845" y2="190" stroke="#69b5ff" stroke-width="4" marker-end="url(#ar)"/>
+<text x="540" y="370" text-anchor="middle" fill="#b5cadb" font-size="17">Temporary and staging objects are also written to Cloud Storage during execution</text>
+</svg></div>
+</section>
+
+<section id="prereq"><h2>4. Prerequisites and naming plan</h2>
+<table><tr><th>Item</th><th>Example used in these notes</th></tr>
+<tr><td>Project ID</td><td><code>YOUR_PROJECT_ID</code></td></tr>
+<tr><td>Region/location</td><td><code>us-central1</code> for Dataflow; <code>US</code> multi-region for GCS and BigQuery</td></tr>
+<tr><td>Bucket</td><td><code>YOUR_PROJECT_ID-dataflow-lab</code></td></tr>
+<tr><td>BigQuery dataset</td><td><code>sales</code></td></tr>
+<tr><td>BigQuery table</td><td><code>customer_orders</code></td></tr>
+<tr><td>Job name</td><td><code>gcs-to-bigquery-orders</code></td></tr></table>
+<div class="note danger"><strong>Location rule:</strong> Keep the Cloud Storage bucket and BigQuery dataset compatible. A location mismatch is one of the most common reasons for failure.</div>
+</section>
+
+<section id="files"><h2>5. Files supplied with this tutorial</h2>
+<table><tr><th>File</th><th>Purpose</th></tr>
+<tr><td><code>customer_orders.csv</code></td><td>Source data placed in the GCS input folder.</td></tr>
+<tr><td><code>schema.json</code></td><td>BigQuery schema required by the Dataflow template.</td></tr>
+<tr><td><code>transform.js</code></td><td>JavaScript UDF that converts each CSV line into a JSON object.</td></tr></table>
+<h3>CSV preview</h3><pre>order_id,customer_name,city,state,category,amount,order_date
+1001,Aarav,Chennai,Tamil Nadu,Electronics,12500.50,2026-07-01
+1002,Diya,Bengaluru,Karnataka,Grocery,2350.00,2026-07-01</pre>
+<h3>Important schema wrapper</h3><pre>{
+  "BigQuery Schema": [
+    {"name":"order_id","type":"INTEGER","mode":"NULLABLE"},
+    {"name":"customer_name","type":"STRING","mode":"NULLABLE"}
+  ]
+}</pre>
+<p>The classic template expects the schema file in its documented wrapper format. Supplying only a plain field array can produce schema-reading errors.</p>
+</section>
+
+<section id="project"><h2>6. Select or create the Google Cloud project</h2>
+<div class="step"><div class="n">1</div><div>Open Google Cloud Console and use the project selector at the top.</div></div>
+<div class="step"><div class="n">2</div><div>Select an existing billing-enabled project or choose <strong>New Project</strong>.</div></div>
+<div class="step"><div class="n">3</div><div>Record the <strong>Project ID</strong>. Do not confuse the project name with the project ID.</div></div>
+<pre>gcloud auth login
+gcloud config set project YOUR_PROJECT_ID
+gcloud config get-value project</pre>
+</section>
+
+<section id="apis"><h2>7. Enable required APIs</h2>
+<p>Console route: <strong>Navigation menu → APIs &amp; Services → Library</strong>.</p>
+<ul><li>Dataflow API</li><li>Compute Engine API</li><li>Cloud Storage API</li><li>BigQuery API</li><li>Cloud Resource Manager API</li></ul>
+<pre>gcloud services enable \
+  dataflow.googleapis.com \
+  compute.googleapis.com \
+  storage.googleapis.com \
+  bigquery.googleapis.com \
+  cloudresourcemanager.googleapis.com</pre>
+<div class="note">Dataflow workers run on Google-managed Compute Engine resources; therefore, the Compute Engine API may also be required even though you do not manually create VMs.</div>
+</section>
+
+<section id="iam"><h2>8. IAM and service-account configuration</h2>
+<p>For a simple lab, the default Compute Engine service account may be used as the Dataflow worker service account:</p>
+<pre>PROJECT_NUMBER-compute@developer.gserviceaccount.com</pre>
+<h3>Recommended worker roles for the lab</h3>
+<table><tr><th>Scope</th><th>Role</th><th>Reason</th></tr>
+<tr><td>Project</td><td>Dataflow Worker</td><td>Allows worker instances to perform Dataflow work.</td></tr>
+<tr><td>Input/staging bucket</td><td>Storage Object Admin</td><td>Read source files and create staging/temp objects.</td></tr>
+<tr><td>BigQuery dataset</td><td>BigQuery Data Editor</td><td>Create/write destination table data.</td></tr>
+<tr><td>Project</td><td>BigQuery Job User</td><td>Run BigQuery jobs.</td></tr></table>
+<pre>PROJECT_NUMBER=$(gcloud projects describe YOUR_PROJECT_ID \
+  --format="value(projectNumber)")
+
+WORKER_SA="${PROJECT_NUMBER}-compute@developer.gserviceaccount.com"
+
+gcloud projects add-iam-policy-binding YOUR_PROJECT_ID \
+  --member="serviceAccount:${WORKER_SA}" \
+  --role="roles/dataflow.worker"
+
+gcloud projects add-iam-policy-binding YOUR_PROJECT_ID \
+  --member="serviceAccount:${WORKER_SA}" \
+  --role="roles/bigquery.jobUser"</pre>
+<div class="note warn">In production, use a dedicated least-privilege service account instead of broadly granting roles to the default Compute Engine service account.</div>
+</section>
+
+<section id="gcs"><h2>9. Create the Cloud Storage bucket and folders</h2>
+<p>Console route: <strong>Navigation menu → Cloud Storage → Buckets → Create</strong>.</p>
+<div class="screen"><div class="screenbar">Create a bucket</div><div class="screenbody">
+<strong>Name</strong><div class="field">YOUR_PROJECT_ID-dataflow-lab</div>
+<strong>Location type</strong><div class="field">Multi-region</div>
+<strong>Location</strong><div class="field">US</div>
+<strong>Default storage class</strong><div class="field">Standard</div>
+<strong>Public access prevention</strong><div class="field">Enforced</div>
+<span class="btn">Create</span></div></div>
+<pre>gcloud storage buckets create \
+  gs://YOUR_PROJECT_ID-dataflow-lab \
+  --location=US \
+  --uniform-bucket-level-access</pre>
+<p>Logical object paths used:</p>
+<pre>gs://YOUR_PROJECT_ID-dataflow-lab/input/
+gs://YOUR_PROJECT_ID-dataflow-lab/config/
+gs://YOUR_PROJECT_ID-dataflow-lab/temp/
+gs://YOUR_PROJECT_ID-dataflow-lab/staging/</pre>
+</section>
+
+<section id="bq"><h2>10. Create the BigQuery dataset</h2>
+<p>Console route: <strong>Navigation menu → BigQuery → Explorer → project menu → Create dataset</strong>.</p>
+<div class="screen"><div class="screenbar">Create dataset</div><div class="screenbody">
+<strong>Dataset ID</strong><div class="field">sales</div>
+<strong>Location type</strong><div class="field">Multi-region</div>
+<strong>Multi-region</strong><div class="field">US</div>
+<span class="btn">Create dataset</span></div></div>
+<pre>bq --location=US mk --dataset YOUR_PROJECT_ID:sales</pre>
+<p>You may allow the template to create the destination table, provided the worker has suitable BigQuery permissions and the schema file is valid.</p>
+</section>
+
+<section id="upload"><h2>11. Upload the source and configuration files</h2>
+<p>In the bucket, use <strong>Upload files</strong>, or use Cloud Shell:</p>
+<pre>gcloud storage cp customer_orders.csv \
+  gs://YOUR_PROJECT_ID-dataflow-lab/input/customer_orders.csv
+
+gcloud storage cp schema.json \
+  gs://YOUR_PROJECT_ID-dataflow-lab/config/schema.json
+
+gcloud storage cp transform.js \
+  gs://YOUR_PROJECT_ID-dataflow-lab/config/transform.js</pre>
+<h3>Verify</h3><pre>gcloud storage ls --recursive gs://YOUR_PROJECT_ID-dataflow-lab/</pre>
+</section>
+
+<section id="job"><h2>12. Create the Dataflow job from a template</h2>
+<div class="step"><div class="n">1</div><div>Open <strong>Navigation menu → Dataflow</strong>.</div></div>
+<div class="step"><div class="n">2</div><div>Choose <strong>Create job from template</strong>.</div></div>
+<div class="step"><div class="n">3</div><div>Enter the job name and select the region.</div></div>
+<div class="step"><div class="n">4</div><div>Select the batch template named similar to <strong>Text Files on Cloud Storage to BigQuery</strong>.</div></div>
+<div class="step"><div class="n">5</div><div>Enter every required path and destination exactly as shown in the next section.</div></div>
+<div class="step"><div class="n">6</div><div>Review optional worker and service-account settings, then click <strong>Run job</strong>.</div></div>
+</section>
+
+<section id="config"><h2>13. Complete template configuration</h2>
+<table><tr><th>Console field</th><th>Value</th><th>Explanation</th></tr>
+<tr><td>Job name</td><td><code>gcs-to-bigquery-orders</code></td><td>Lowercase letters, numbers and hyphens are safest.</td></tr>
+<tr><td>Regional endpoint</td><td><code>us-central1</code></td><td>Dataflow control/worker region.</td></tr>
+<tr><td>Template</td><td>Text Files on Cloud Storage to BigQuery</td><td>Classic batch template.</td></tr>
+<tr><td>Cloud Storage input file(s)</td><td><code>gs://YOUR_PROJECT_ID-dataflow-lab/input/customer_orders.csv</code></td><td>Wildcards can be used for multiple files.</td></tr>
+<tr><td>BigQuery schema path</td><td><code>gs://YOUR_PROJECT_ID-dataflow-lab/config/schema.json</code></td><td>Schema file for output rows.</td></tr>
+<tr><td>BigQuery output table</td><td><code>YOUR_PROJECT_ID:sales.customer_orders</code></td><td>Template commonly expects project:dataset.table syntax.</td></tr>
+<tr><td>JavaScript UDF path</td><td><code>gs://YOUR_PROJECT_ID-dataflow-lab/config/transform.js</code></td><td>GCS path to the JavaScript file.</td></tr>
+<tr><td>JavaScript UDF name</td><td><code>transform</code></td><td>Must exactly match the function name in the JS file.</td></tr>
+<tr><td>Temporary location</td><td><code>gs://YOUR_PROJECT_ID-dataflow-lab/temp</code></td><td>Temporary pipeline data.</td></tr>
+<tr><td>Staging location</td><td><code>gs://YOUR_PROJECT_ID-dataflow-lab/staging</code></td><td>Staged artifacts; may appear in advanced settings.</td></tr>
+<tr><td>Service account</td><td>Selected worker service account</td><td>Identity used by Dataflow workers.</td></tr>
+<tr><td>Machine type</td><td>Default for first lab</td><td>Avoid unnecessary cost for a tiny sample.</td></tr>
+<tr><td>Maximum workers</td><td><code>1</code> or a small lab value</td><td>Limits autoscaling cost for the sample.</td></tr></table>
+<div class="note danger"><strong>Do not type a local Windows path</strong> such as <code>C:\data\schema.json</code> into the template. Dataflow workers require accessible <code>gs://</code> paths.</div>
+</section>
+
+<section id="monitor"><h2>14. Monitor the Dataflow job</h2>
+<p>After submission, Dataflow opens the job-details screen.</p>
+<div class="screen"><div class="screenbar">Dataflow job graph — gcs-to-bigquery-orders</div><div class="screenbody">
+<div class="field">✓ Read from Cloud Storage</div><div style="text-align:center">↓</div>
+<div class="field">✓ Apply JavaScript UDF</div><div style="text-align:center">↓</div>
+<div class="field">✓ Convert / validate records</div><div style="text-align:center">↓</div>
+<div class="field">✓ Write to BigQuery</div>
+</div></div>
+<p>Review these areas:</p>
+<ul><li><strong>Job graph:</strong> each pipeline transform and its status.</li><li><strong>Execution details:</strong> worker progress and stage information.</li><li><strong>Job metrics:</strong> elements processed, throughput and resource usage.</li><li><strong>Logs:</strong> JavaScript errors, schema mismatch, IAM and file-access errors.</li></ul>
+<p>The final state should be <strong>Succeeded</strong>. A batch job stops automatically after processing all input.</p>
+</section>
+
+<section id="validate"><h2>15. Validate data in BigQuery</h2>
+<p>Open <strong>BigQuery → sales → customer_orders → Preview</strong>, then run:</p>
+<pre>SELECT *
+FROM `YOUR_PROJECT_ID.sales.customer_orders`
+ORDER BY order_id;</pre>
+<h3>Validation queries</h3>
+<pre>-- Number of loaded records
+SELECT COUNT(*) AS row_count
+FROM `YOUR_PROJECT_ID.sales.customer_orders`;
+
+-- Revenue by state
+SELECT state, ROUND(SUM(amount), 2) AS total_revenue
+FROM `YOUR_PROJECT_ID.sales.customer_orders`
+GROUP BY state
+ORDER BY total_revenue DESC;
+
+-- Category summary
+SELECT category,
+       COUNT(*) AS order_count,
+       ROUND(AVG(amount), 2) AS average_amount
+FROM `YOUR_PROJECT_ID.sales.customer_orders`
+GROUP BY category
+ORDER BY order_count DESC;</pre>
+<p>Expected sample row count: <strong>10</strong>.</p>
+</section>
+
+<section id="cli"><h2>16. Command-line equivalent of the template job</h2>
+<pre>gcloud dataflow jobs run gcs-to-bigquery-orders \
+  --gcs-location="gs://dataflow-templates-us-central1/latest/GCS_Text_to_BigQuery" \
+  --region="us-central1" \
+  --staging-location="gs://YOUR_PROJECT_ID-dataflow-lab/staging" \
+  --service-account-email="WORKER_SERVICE_ACCOUNT_EMAIL" \
+  --parameters="\
+javascriptTextTransformFunctionName=transform,\
+JSONPath=gs://YOUR_PROJECT_ID-dataflow-lab/config/schema.json,\
+javascriptTextTransformGcsPath=gs://YOUR_PROJECT_ID-dataflow-lab/config/transform.js,\
+inputFilePattern=gs://YOUR_PROJECT_ID-dataflow-lab/input/customer_orders.csv,\
+outputTable=YOUR_PROJECT_ID:sales.customer_orders,\
+bigQueryLoadingTemporaryDirectory=gs://YOUR_PROJECT_ID-dataflow-lab/temp"</pre>
+<div class="note warn">Template parameter names and regional template paths can evolve. Confirm the parameter list displayed by the current template in your project before automating a production deployment.</div>
+</section>
+
+<section id="errors"><h2>17. Troubleshooting guide</h2>
+<table><tr><th>Error/symptom</th><th>Cause</th><th>Correction</th></tr>
+<tr><td>Permission denied on GCS</td><td>Worker service account cannot read input or write temp/staging objects.</td><td>Grant bucket-level object permissions to the actual worker identity.</td></tr>
+<tr><td>Permission denied on BigQuery</td><td>Missing dataset write role or project job role.</td><td>Grant BigQuery Data Editor on the dataset and BigQuery Job User on the project.</td></tr>
+<tr><td>UDF function not found</td><td>Function field does not match JS function name.</td><td>Use exactly <code>transform</code>.</td></tr>
+<tr><td>Expected 7 columns</td><td>Malformed CSV row or embedded comma.</td><td>Clean the file or use a proper CSV parser in a custom Apache Beam pipeline.</td></tr>
+<tr><td>Invalid date</td><td>Date does not match BigQuery DATE format.</td><td>Use <code>YYYY-MM-DD</code>.</td></tr>
+<tr><td>Location mismatch</td><td>GCS, BigQuery and processing locations are incompatible.</td><td>Create all lab resources with a compatible regional strategy.</td></tr>
+<tr><td>Table already exists / write error</td><td>Template write disposition conflicts with existing table.</td><td>Delete the test table, use a new name or configure append/truncate when supported.</td></tr>
+<tr><td>Header inserted as a row</td><td>UDF did not filter the header.</td><td>Return <code>null</code> when the first column equals <code>order_id</code>.</td></tr>
+<tr><td>Job stays queued</td><td>API, quota, worker provisioning or organisation policy issue.</td><td>Review job messages, quotas, VPC rules and Compute Engine API status.</td></tr></table>
+</section>
+
+<section id="cost"><h2>18. Cost control and cleanup</h2>
+<p>Dataflow can create worker resources and incur charges. The sample is intentionally small, but cleanup is still necessary.</p>
+<pre># Delete the destination table
+bq rm -f -t YOUR_PROJECT_ID:sales.customer_orders
+
+# Delete the dataset and any remaining tables
+bq rm -r -f -d YOUR_PROJECT_ID:sales
+
+# Delete the bucket and all objects
+gcloud storage rm --recursive gs://YOUR_PROJECT_ID-dataflow-lab</pre>
+<div class="note danger">Never delete a shared production bucket or dataset. Confirm the project ID and resource names before running cleanup commands.</div>
+</section>
+
+<section id="interview"><h2>19. Interview questions and answers</h2>
+<div class="grid">
+<div class="card"><strong>1. What is Dataflow?</strong><br>A managed Google Cloud service for executing Apache Beam batch and streaming pipelines.</div>
+<div class="card"><strong>2. Why is a temp bucket required?</strong><br>Workers use it for temporary data and intermediate pipeline artifacts.</div>
+<div class="card"><strong>3. Why use a UDF?</strong><br>The template receives text lines; the UDF converts each line into JSON matching the BigQuery schema.</div>
+<div class="card"><strong>4. What is a batch job?</strong><br>A finite pipeline that processes bounded input and stops after completion.</div>
+<div class="card"><strong>5. What is a PTransform?</strong><br>An Apache Beam operation that transforms one or more PCollections.</div>
+<div class="card"><strong>6. Why must locations match?</strong><br>Cloud services impose data-location compatibility rules and cross-region limitations.</div>
+<div class="card"><strong>7. Who accesses the input file?</strong><br>The Dataflow worker service account, not merely the interactive console user.</div>
+<div class="card"><strong>8. How are failures investigated?</strong><br>Use the Dataflow job graph, execution details, job messages and Cloud Logging.</div>
+<div class="card"><strong>9. Template vs custom Beam?</strong><br>A template is prebuilt and parameterised; custom Beam gives complete transform control.</div>
+<div class="card"><strong>10. Why make consumers/transforms idempotent?</strong><br>Retries can repeat work, so duplicate side effects must be prevented.</div>
+</div>
+</section>
+
+<section id="references"><h2>20. Reference basis</h2>
+<p>This tutorial follows the workflow of the supplied TechTrapture video and supplements it with current Google Cloud operational requirements. The main official references are:</p>
+<ul>
+<li>Google Cloud Dataflow overview</li><li>Google-provided Dataflow templates</li><li>BigQuery loading and IAM documentation</li><li>Cloud Storage bucket and IAM documentation</li></ul>
+<p class="small">The YouTube page could be identified through public search, but its complete frame-by-frame transcript was not exposed by the retrieval interface. Therefore, the notes reproduce the full demonstrated GCS-to-BigQuery workflow and add current configuration safeguards rather than claiming verbatim transcription.</p>
+</section>
+</main></div><footer>Google Cloud Dataflow • GCS to BigQuery • Complete trainer notes</footer>
+</body></html>
