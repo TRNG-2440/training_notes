@@ -432,21 +432,7 @@ gcloud pubsub topics create my-demo-topic-from-gcloud
 
 Then pressed `Ctrl+C`, and Cloud Shell displayed:
 
-```text
-Command killed by keyboard interrupt
-```
 
-### What happened?
-
-`Ctrl+C` interrupted the local waiting command. However, the server-side create request had apparently already reached Google Cloud and completed.
-
-When you ran the same command again:
-
-```bash
-gcloud pubsub topics create my-demo-topic-from-gcloud
-```
-
-you received:
 
 ```text
 Resource already exists in the project
@@ -550,27 +536,7 @@ my-demo-topic
 
 ---
 
-## <span style="color:#188038;">11.6 First Pull Attempt – Invalid Resource Name</span>
 
-You entered:
-
-```bash
-gcloud pubsub subscriptions pull my=demo-subscription
-```
-
-The command failed because the subscription name contained `=` instead of `-`.
-
-Pub/Sub interpreted the resource as:
-
-```text
-projects/bigquery-optimization-lab/subscriptions/my=demo-subscription
-```
-
-The correct command was:
-
-```bash
-gcloud pubsub subscriptions pull my-demo-subscription
-```
 
 > <span style="color:#D93025;"><b>Common mistake:</b></span>  
 > Resource names must match exactly. `my=demo-subscription` and `my-demo-subscription` are completely different strings.
@@ -599,28 +565,7 @@ This is not an error. It simply means the pull request found no currently availa
 
 ---
 
-## <span style="color:#188038;">11.8 Typing `gclous` Instead of `gcloud`</span>
 
-You entered:
-
-```bash
-gclous pubsub topics publish my-demo-topic \
-  --message="My First Message from Gcloud"
-```
-
-Bash returned:
-
-```text
--bash: gclous: command not found
-```
-
-The correct executable is:
-
-```text
-gcloud
-```
-
-Correct command:
 
 ```bash
 gcloud pubsub topics publish my-demo-topic \
