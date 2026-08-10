@@ -1,0 +1,11 @@
+CUSTOMER_ID,CUSTOMER_NAME,CITY,COUNTRY,AGE,SEGMENT,TOTAL_SPEND
+111,Karthik,Coimbatore,India,30,Standard,19500
+112,Mia,Manchester,UK,27,Premium,31000
+113,Lucas,Melbourne,Australia,36,Standard,23500
+114,Priya,Pune,India,29,Premium,40500
+115,James,Boston,USA,40,Standard,22000
+116,Charlotte,Vancouver,Canada,33,Premium,34500
+117,Vikram,Delhi,India,42,Premium,49000
+118,Amelia,Bristol,UK,25,Standard,16500
+119,Benjamin,Seattle,USA,37,Premium,45500
+120,Divya,Kochi,India,31,Standard,20500
