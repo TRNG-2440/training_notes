@@ -1,0 +1,51 @@
+version: 2
+
+models:
+
+  - name: stg_products
+    description: "Clean and standardized product master"
+
+    columns:
+
+      - name: product_id
+        description: "Unique product identifier"
+        data_tests:
+          - unique
+          - not_null
+
+      - name: section
+        description: "Product section"
+        data_tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - 'ELECTRONICS'
+                  - 'FASHION'
+                  - 'HOME'
+
+
+  - name: stg_events
+    description: "Cleaned and standardized customer product interaction events"
+
+    columns:
+
+      - name: event_id
+        description: "Unique event identifier"
+        data_tests:
+          - unique
+          - not_null
+
+      - name: user_id
+        description: "Unique user identifier"
+        data_tests:
+          - not_null
+
+      - name: action
+        description: "The action taken by the user"
+        data_tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - 'VIEW'
+                  - 'ADD_TO_CART'
+                  - 'PURCHASE'

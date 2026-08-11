@@ -1,0 +1,9 @@
+snapshots:
+  - name: products_snapshot
+    relation: source('ecommerce_raw', 'products')
+
+    config: 
+      schema: SNAPSHOTS
+      unique_key: product_id
+      strategy: timestamp
+      updated_at: updated_at

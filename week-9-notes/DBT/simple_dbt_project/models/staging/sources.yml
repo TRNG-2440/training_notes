@@ -1,0 +1,18 @@
+version: 2
+sources:
+  - name: ecommerce_raw
+
+    database: DBT_TRAINING_DB
+    schema: RAW
+
+    description: "Raw e-commerce application data"
+
+    tables:
+      - name: products
+        identifier: PRODUCTS
+        description: "Current product master data"
+
+      - name: events
+        identifier: EVENTS
+        description: "Customer product interaction events"
+      

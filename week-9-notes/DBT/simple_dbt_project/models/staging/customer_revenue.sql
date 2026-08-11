@@ -1,0 +1,14 @@
+SELECT
+    C.CUSTOMER_ID,
+    C.CUSTOMER_NAME,
+
+    COUNT(O.ORDER_ID) AS TOTAL_ORDERS,
+    SUM(O.AMOUNT) AS TOTAL_REVENUE
+FROM {{ ref('stg_customers') }} AS C
+
+JOIN {{ ref('stg_orders') }} AS O
+    ON C.CUSTOMER_ID = O.CUSTOMER_ID
+
+GROUP BY
+    C.CUSTOMER_ID,
+    C.CUSTOMER_NAME

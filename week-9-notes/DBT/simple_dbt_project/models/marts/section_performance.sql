@@ -1,0 +1,14 @@
+SELECT
+    SECTION,
+    COUNT(DISTINCT PRODUCT_ID) AS PRODUCT_COUNT,
+    COUNT(DISTINCT USER_ID) AS UNIQUE_USERS,
+    COUNT(*) AS TOTAL_EVENTS,
+    SUM(
+        CASE    
+            WHEN ACTION = 'PURCHASE' THEN 1
+            ELSE 0
+        END
+    ) AS PURCHASE_COUNT
+
+FROM    {{ ref('int_product_events') }}
+GROUP BY   SECTION 
