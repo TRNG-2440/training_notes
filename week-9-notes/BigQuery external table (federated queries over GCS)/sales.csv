@@ -1,0 +1,126 @@
+order_id,customer_name,product,category,quantity,price,region
+1001,Asha,Laptop,Electronics,1,65000,South
+1002,Ravi,Phone,Electronics,2,30000,North
+1003,Meena,Chair,Furniture,4,5000,South
+1004,John,Monitor,Electronics,2,18000,West
+1005,Priya,Table,Furniture,1,12000,South
+1006,Arun,Keyboard,Electronics,3,2500,East
+1007,Sneha,Phone,Electronics,1,32000,West
+1008,David,Chair,Furniture,2,5500,North
+1009,Kavya,Laptop,Electronics,1,62000,South
+1010,Vijay,Phone,Electronics,2,28500,North
+1011,Anita,Monitor,Electronics,3,18500,East
+1012,Karthik,Keyboard,Electronics,4,3700,West
+1013,Divya,Mouse,Electronics,5,1200,South
+1014,Rahul,Headphones,Electronics,1,4000,North
+1015,Pooja,Chair,Furniture,2,6200,East
+1016,Suresh,Table,Furniture,3,13000,West
+1017,Neha,Bookshelf,Furniture,4,8500,South
+1018,Manoj,Sofa,Furniture,5,28500,North
+1019,Lakshmi,Printer,Electronics,1,15500,East
+1020,Ajay,Desk Lamp,Furniture,2,3300,West
+1021,Nisha,Laptop,Electronics,3,62000,South
+1022,Vikram,Phone,Electronics,4,28500,North
+1023,Deepa,Monitor,Electronics,5,18500,East
+1024,Sanjay,Keyboard,Electronics,1,3700,West
+1025,Harini,Mouse,Electronics,2,1200,South
+1026,Prakash,Headphones,Electronics,3,4000,North
+1027,Keerthi,Chair,Furniture,4,6200,East
+1028,Naveen,Table,Furniture,5,13000,West
+1029,Swetha,Bookshelf,Furniture,1,8500,South
+1030,Gopal,Sofa,Furniture,2,28500,North
+1031,Ritika,Printer,Electronics,3,15500,East
+1032,Mahesh,Desk Lamp,Furniture,4,3300,West
+1033,Kavya,Laptop,Electronics,5,62000,South
+1034,Vijay,Phone,Electronics,1,28500,North
+1035,Anita,Monitor,Electronics,2,18500,East
+1036,Karthik,Keyboard,Electronics,3,3700,West
+1037,Divya,Mouse,Electronics,4,1200,South
+1038,Rahul,Headphones,Electronics,5,4000,North
+1039,Pooja,Chair,Furniture,1,6200,East
+1040,Suresh,Table,Furniture,2,13000,West
+1041,Neha,Bookshelf,Furniture,3,8500,South
+1042,Manoj,Sofa,Furniture,4,28500,North
+1043,Lakshmi,Printer,Electronics,5,15500,East
+1044,Ajay,Desk Lamp,Furniture,1,3300,West
+1045,Nisha,Laptop,Electronics,2,62000,South
+1046,Vikram,Phone,Electronics,3,28500,North
+1047,Deepa,Monitor,Electronics,4,18500,East
+1048,Sanjay,Keyboard,Electronics,5,3700,West
+1049,Harini,Mouse,Electronics,1,1200,South
+1050,Prakash,Headphones,Electronics,2,4000,North
+1051,Keerthi,Chair,Furniture,3,6200,East
+1052,Naveen,Table,Furniture,4,13000,West
+1053,Swetha,Bookshelf,Furniture,5,8500,South
+1054,Gopal,Sofa,Furniture,1,28500,North
+1055,Ritika,Printer,Electronics,2,15500,East
+1056,Mahesh,Desk Lamp,Furniture,3,3300,West
+1057,Kavya,Laptop,Electronics,4,62000,South
+1058,Vijay,Phone,Electronics,5,28500,North
+1059,Anita,Monitor,Electronics,1,18500,East
+1060,Karthik,Keyboard,Electronics,2,3700,West
+1061,Divya,Mouse,Electronics,3,1200,South
+1062,Rahul,Headphones,Electronics,4,4000,North
+1063,Pooja,Chair,Furniture,5,6200,East
+1064,Suresh,Table,Furniture,1,13000,West
+1065,Neha,Bookshelf,Furniture,2,8500,South
+1066,Manoj,Sofa,Furniture,3,28500,North
+1067,Lakshmi,Printer,Electronics,4,15500,East
+1068,Ajay,Desk Lamp,Furniture,5,3300,West
+1069,Nisha,Laptop,Electronics,1,62000,South
+1070,Vikram,Phone,Electronics,2,28500,North
+1071,Deepa,Monitor,Electronics,3,18500,East
+1072,Sanjay,Keyboard,Electronics,4,3700,West
+1073,Harini,Mouse,Electronics,5,1200,South
+1074,Prakash,Headphones,Electronics,1,4000,North
+1075,Keerthi,Chair,Furniture,2,6200,East
+1076,Naveen,Table,Furniture,3,13000,West
+1077,Swetha,Bookshelf,Furniture,4,8500,South
+1078,Gopal,Sofa,Furniture,5,28500,North
+1079,Ritika,Printer,Electronics,1,15500,East
+1080,Mahesh,Desk Lamp,Furniture,2,3300,West
+1081,Kavya,Laptop,Electronics,3,62000,South
+1082,Vijay,Phone,Electronics,4,28500,North
+1083,Anita,Monitor,Electronics,5,18500,East
+1084,Karthik,Keyboard,Electronics,1,3700,West
+1085,Divya,Mouse,Electronics,2,1200,South
+1086,Rahul,Headphones,Electronics,3,4000,North
+1087,Pooja,Chair,Furniture,4,6200,East
+1088,Suresh,Table,Furniture,5,13000,West
+1089,Neha,Bookshelf,Furniture,1,8500,South
+1090,Manoj,Sofa,Furniture,2,28500,North
+1091,Lakshmi,Printer,Electronics,3,15500,East
+1092,Ajay,Desk Lamp,Furniture,4,3300,West
+1093,Nisha,Laptop,Electronics,5,62000,South
+1094,Vikram,Phone,Electronics,1,28500,North
+1095,Deepa,Monitor,Electronics,2,18500,East
+1096,Sanjay,Keyboard,Electronics,3,3700,West
+1097,Harini,Mouse,Electronics,4,1200,South
+1098,Prakash,Headphones,Electronics,5,4000,North
+1099,Keerthi,Chair,Furniture,1,6200,East
+1100,Naveen,Table,Furniture,2,13000,West
+1101,Swetha,Bookshelf,Furniture,3,8500,South
+1102,Gopal,Sofa,Furniture,4,28500,North
+1103,Ritika,Printer,Electronics,5,15500,East
+1104,Mahesh,Desk Lamp,Furniture,1,3300,West
+1105,Kavya,Laptop,Electronics,2,62000,South
+1106,Vijay,Phone,Electronics,3,28500,North
+1107,Anita,Monitor,Electronics,4,18500,East
+1108,Karthik,Keyboard,Electronics,5,3700,West
+1109,Divya,Mouse,Electronics,1,1200,South
+1110,Rahul,Headphones,Electronics,2,4000,North
+1111,Pooja,Chair,Furniture,3,6200,East
+1112,Suresh,Table,Furniture,4,13000,West
+1113,Neha,Bookshelf,Furniture,5,8500,South
+1114,Manoj,Sofa,Furniture,1,28500,North
+1115,Lakshmi,Printer,Electronics,2,15500,East
+1116,Ajay,Desk Lamp,Furniture,3,3300,West
+1117,Nisha,Laptop,Electronics,4,62000,South
+1118,Vikram,Phone,Electronics,5,28500,North
+1119,Deepa,Monitor,Electronics,1,18500,East
+1120,Sanjay,Keyboard,Electronics,2,3700,West
+1121,Geetha,Magic Pen,Electronics,12,9000,South
+1122,Muthu,Washine machine,Home,10,2400,North
+1123,Anita,Monitor,Electronics,5,18500,East
+1124,Karthik,Keyboard,Electronics,1,3700,West
+1125,Divya,Mouse,Electronics,2,1200,South
