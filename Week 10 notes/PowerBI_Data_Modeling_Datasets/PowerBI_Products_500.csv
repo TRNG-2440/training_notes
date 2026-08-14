@@ -1,0 +1,501 @@
+﻿ProductID,ProductName,Category,SubCategory,Brand,UnitPrice,UnitCost,ProductClass,Supplier,StockQty,ReorderLevel,OnlineOnly,PackageSize,WarrantyMonths,ProductStatus
+P0001,Vertex Pen 1,Office Supplies,Pen,Zenith,9078.55,5791.85,Standard,Supplier A,240,2,No,Large,3,Active
+P0002,Prime Iron 2,Appliances,Iron,Pulse,21706.3,15547.03,Standard,Supplier C,106,7,Yes,Small,36,Discontinued
+P0003,Zenith Vacuum 3,Appliances,Vacuum,Pulse,1179.98,891.46,Standard,Supplier D,85,22,Yes,Small,16,Discontinued
+P0004,Prime Shoes 4,Sports,Shoes,Zenith,11927.64,8189.87,Economy,Supplier C,65,8,No,Large,24,Active
+P0005,Vertex Sofa 5,Furniture,Sofa,Vertex,14471.91,10644.66,Premium,Supplier C,120,5,Yes,Large,17,Active
+P0006,Orbit Pen 6,Office Supplies,Pen,Zenith,21966.44,13919.07,Economy,Supplier B,126,25,Yes,Small,29,Discontinued
+P0007,Pulse Cabinet 7,Furniture,Cabinet,Prime,17508.17,13386.85,Premium,Supplier A,106,3,Yes,Small,16,Active
+P0008,Vertex Mixer 8,Appliances,Mixer,Vertex,14873.14,11290.38,Economy,Supplier C,93,0,No,Small,25,Active
+P0009,Prime Bottle 9,Sports,Bottle,Vertex,23097.29,16274.65,Premium,Supplier D,203,23,No,Small,27,Active
+P0010,Vertex Fan 10,Appliances,Fan,Nimbus,31930.27,21716.98,Economy,Supplier D,222,29,Yes,Small,13,Active
+P0011,Prime Bookshelf 11,Furniture,Bookshelf,Nimbus,10335.12,7976.61,Premium,Supplier D,204,27,No,Large,36,Discontinued
+P0012,Orbit Fan 12,Appliances,Fan,Prime,5415.66,4662.44,Economy,Supplier A,58,5,No,Small,9,Active
+P0013,Apex Vacuum 13,Appliances,Vacuum,Apex,2182.41,1421.33,Premium,Supplier B,26,20,No,Medium,17,Active
+P0014,Zenith Stapler 14,Office Supplies,Stapler,Nova,19075.68,15691.9,Standard,Supplier C,225,29,No,Medium,32,Active
+P0015,Zenith Racket 15,Sports,Racket,Pulse,5598.86,3447.06,Economy,Supplier D,139,20,No,Medium,33,Active
+P0016,Zenith Monitor 16,Electronics,Monitor,Prime,10512.61,7752.08,Standard,Supplier A,138,26,Yes,Medium,21,Discontinued
+P0017,Pulse Shoes 17,Sports,Shoes,Prime,24037.46,17219.23,Standard,Supplier D,209,9,Yes,Small,26,Active
+P0018,Nimbus Vacuum 18,Appliances,Vacuum,Nimbus,13989.61,10972.69,Standard,Supplier C,25,13,Yes,Large,20,Active
+P0019,Zenith Dumbbell 19,Sports,Dumbbell,Zenith,16350.11,10369.56,Premium,Supplier A,168,14,No,Medium,34,Active
+P0020,Nova Notebook 20,Office Supplies,Notebook,Zenith,6329.45,3871.56,Standard,Supplier C,73,4,No,Large,3,Active
+P0021,Nimbus Mobile 21,Electronics,Mobile,Prime,562.52,446.94,Premium,Supplier C,123,22,Yes,Medium,8,Active
+P0022,Pulse Headphones 22,Electronics,Headphones,Zenith,23013.42,19409.27,Standard,Supplier C,214,12,Yes,Small,18,Discontinued
+P0023,Pulse Fan 23,Appliances,Fan,Apex,21540.02,18461.47,Economy,Supplier B,126,12,No,Medium,13,Active
+P0024,Prime Bottle 24,Sports,Bottle,Orbit,4343.96,3123.77,Premium,Supplier A,226,21,Yes,Small,18,Discontinued
+P0025,Apex Notebook 25,Office Supplies,Notebook,Nimbus,5475.01,4250.62,Standard,Supplier A,15,18,No,Large,12,Active
+P0026,Vertex Mobile 26,Electronics,Mobile,Nova,4794.58,4009.85,Standard,Supplier C,170,4,Yes,Small,34,Active
+P0027,Pulse Folder 27,Office Supplies,Folder,Orbit,30155.79,19730.96,Standard,Supplier D,96,23,Yes,Medium,5,Discontinued
+P0028,Orbit Vacuum 28,Appliances,Vacuum,Zenith,11125.44,7424.29,Economy,Supplier C,87,23,No,Medium,13,Active
+P0029,Vertex Yoga Mat 29,Sports,Yoga Mat,Pulse,17591.42,11278.65,Standard,Supplier D,192,5,Yes,Large,26,Active
+P0030,Nimbus Notebook 30,Office Supplies,Notebook,Orbit,23399.49,16484.57,Economy,Supplier D,201,17,Yes,Large,21,Active
+P0031,Apex Iron 31,Appliances,Iron,Nova,3998.74,2832.77,Standard,Supplier B,228,1,Yes,Small,34,Active
+P0032,Pulse Laptop 32,Electronics,Laptop,Prime,22439.63,14309.62,Standard,Supplier C,61,19,Yes,Small,16,Discontinued
+P0033,Nimbus Monitor 33,Electronics,Monitor,Vertex,23655.89,20041.42,Economy,Supplier A,215,19,No,Large,5,Active
+P0034,Apex Notebook 34,Office Supplies,Notebook,Apex,38506.75,23619.52,Economy,Supplier B,141,12,Yes,Small,36,Active
+P0035,Apex Yoga Mat 35,Sports,Yoga Mat,Vertex,20001.15,13995.91,Economy,Supplier D,184,21,No,Small,13,Active
+P0036,Pulse Racket 36,Sports,Racket,Vertex,18716.65,12656.94,Premium,Supplier C,221,11,No,Large,30,Active
+P0037,Prime Yoga Mat 37,Sports,Yoga Mat,Vertex,17740.25,14113.57,Premium,Supplier D,250,12,Yes,Large,5,Active
+P0038,Prime Shoes 38,Sports,Shoes,Nova,21372.32,12978.83,Premium,Supplier B,59,27,No,Small,20,Active
+P0039,Prime Laptop 39,Electronics,Laptop,Vertex,14186.99,11552.42,Economy,Supplier B,64,8,No,Small,28,Active
+P0040,Apex Headphones 40,Electronics,Headphones,Prime,24530.17,19839.17,Standard,Supplier D,25,24,Yes,Medium,25,Discontinued
+P0041,Nova Mixer 41,Appliances,Mixer,Nimbus,27484.47,21755.08,Standard,Supplier C,139,1,No,Large,12,Active
+P0042,Nimbus Yoga Mat 42,Sports,Yoga Mat,Pulse,5795.14,3897.68,Economy,Supplier A,61,13,No,Medium,12,Active
+P0043,Nimbus Notebook 43,Office Supplies,Notebook,Prime,18177.94,11938.3,Standard,Supplier D,133,13,Yes,Small,33,Active
+P0044,Orbit Kettle 44,Appliances,Kettle,Orbit,20385.68,16334.03,Standard,Supplier C,203,13,No,Large,8,Active
+P0045,Vertex Kettle 45,Appliances,Kettle,Nova,11434.42,9182.47,Premium,Supplier B,94,19,No,Large,12,Discontinued
+P0046,Apex Mobile 46,Electronics,Mobile,Apex,6759.63,5056.16,Economy,Supplier A,67,30,Yes,Medium,3,Active
+P0047,Orbit Headphones 47,Electronics,Headphones,Orbit,13118.34,11295.53,Standard,Supplier C,145,15,Yes,Large,4,Discontinued
+P0048,Prime Bottle 48,Sports,Bottle,Orbit,1437.19,1163.57,Economy,Supplier C,18,14,Yes,Small,27,Active
+P0049,Nimbus Notebook 49,Office Supplies,Notebook,Orbit,879.64,555.43,Premium,Supplier A,236,10,No,Large,8,Active
+P0050,Nova Cabinet 50,Furniture,Cabinet,Nova,34574.9,24172.44,Standard,Supplier C,90,15,No,Large,13,Active
+P0051,Prime Paper 51,Office Supplies,Paper,Nova,11627.22,8936.02,Economy,Supplier C,229,12,Yes,Large,20,Active
+P0052,Apex Bookshelf 52,Furniture,Bookshelf,Nimbus,33173.24,22437.61,Economy,Supplier B,111,7,Yes,Medium,22,Active
+P0053,Orbit Vacuum 53,Appliances,Vacuum,Zenith,4965.7,3363.76,Premium,Supplier B,115,29,Yes,Large,13,Active
+P0054,Zenith Keyboard 54,Electronics,Keyboard,Vertex,20171.98,13361.4,Standard,Supplier A,200,10,No,Medium,22,Discontinued
+P0055,Zenith Pen 55,Office Supplies,Pen,Nova,23460.45,19495.37,Economy,Supplier C,160,18,Yes,Large,17,Active
+P0056,Zenith Headphones 56,Electronics,Headphones,Pulse,3173.04,2060.53,Economy,Supplier C,52,27,No,Medium,33,Active
+P0057,Nova Desk 57,Furniture,Desk,Prime,7744.83,5718.72,Premium,Supplier B,195,21,Yes,Small,7,Active
+P0058,Pulse Vacuum 58,Appliances,Vacuum,Orbit,16129.17,12289.38,Premium,Supplier D,203,1,No,Large,23,Discontinued
+P0059,Nova Bottle 59,Sports,Bottle,Apex,21016.38,14877.64,Premium,Supplier D,216,28,Yes,Small,36,Discontinued
+P0060,Nova Keyboard 60,Electronics,Keyboard,Orbit,14918.06,9733.95,Premium,Supplier D,106,28,No,Medium,32,Active
+P0061,Zenith Iron 61,Appliances,Iron,Pulse,18082.11,15359.31,Economy,Supplier D,28,23,Yes,Small,11,Discontinued
+P0062,Orbit Iron 62,Appliances,Iron,Pulse,14025.59,11316.08,Standard,Supplier C,87,22,Yes,Large,10,Active
+P0063,Nimbus Monitor 63,Electronics,Monitor,Zenith,18940.62,15881.08,Premium,Supplier D,16,24,Yes,Medium,12,Active
+P0064,Prime Desk 64,Furniture,Desk,Prime,22628.3,19247.39,Economy,Supplier D,78,20,Yes,Small,11,Active
+P0065,Pulse Keyboard 65,Electronics,Keyboard,Pulse,22143.62,19153.66,Economy,Supplier A,160,28,No,Small,16,Discontinued
+P0066,Nova Kettle 66,Appliances,Kettle,Orbit,16089.47,11091.53,Economy,Supplier C,163,20,Yes,Small,14,Active
+P0067,Prime Headphones 67,Electronics,Headphones,Vertex,1569.17,995.09,Standard,Supplier A,32,13,Yes,Small,21,Active
+P0068,Prime Vacuum 68,Appliances,Vacuum,Vertex,10576.57,9055.9,Premium,Supplier D,214,2,No,Large,7,Active
+P0069,Vertex Fan 69,Appliances,Fan,Nimbus,4929.97,3120.82,Economy,Supplier B,183,6,Yes,Small,36,Active
+P0070,Prime Vacuum 70,Appliances,Vacuum,Nimbus,38371.54,23352.58,Economy,Supplier C,71,16,No,Small,34,Discontinued
+P0071,Prime Fan 71,Appliances,Fan,Orbit,27987.71,22100.9,Standard,Supplier A,11,14,Yes,Large,16,Discontinued
+P0072,Orbit Mixer 72,Appliances,Mixer,Nova,12011.03,8398.1,Economy,Supplier B,181,9,No,Small,22,Active
+P0073,Vertex Bottle 73,Sports,Bottle,Vertex,9400.0,8152.18,Premium,Supplier A,218,5,Yes,Medium,24,Discontinued
+P0074,Pulse Mixer 74,Appliances,Mixer,Vertex,22487.9,16169.65,Premium,Supplier D,242,23,Yes,Large,22,Active
+P0075,Vertex Bottle 75,Sports,Bottle,Vertex,786.19,546.46,Standard,Supplier B,76,26,Yes,Medium,27,Active
+P0076,Prime Bottle 76,Sports,Bottle,Vertex,14169.05,9787.99,Economy,Supplier A,74,13,Yes,Medium,18,Active
+P0077,Apex Iron 77,Appliances,Iron,Vertex,7112.41,5466.21,Standard,Supplier B,238,2,No,Large,4,Discontinued
+P0078,Prime Yoga Mat 78,Sports,Yoga Mat,Vertex,7769.09,4820.08,Standard,Supplier A,215,30,Yes,Small,5,Discontinued
+P0079,Nova Vacuum 79,Appliances,Vacuum,Apex,3872.91,2966.63,Premium,Supplier D,232,1,Yes,Large,22,Active
+P0080,Orbit Dumbbell 80,Sports,Dumbbell,Orbit,20078.97,16000.16,Premium,Supplier C,141,10,No,Large,10,Active
+P0081,Apex Desk 81,Furniture,Desk,Orbit,7986.51,6899.03,Economy,Supplier C,145,10,No,Small,21,Active
+P0082,Pulse Chair 82,Furniture,Chair,Nova,12512.84,7839.53,Standard,Supplier A,125,28,Yes,Small,27,Active
+P0083,Pulse Monitor 83,Electronics,Monitor,Vertex,14792.88,9846.57,Premium,Supplier C,214,6,Yes,Medium,11,Active
+P0084,Pulse Mixer 84,Appliances,Mixer,Pulse,17061.01,11433.16,Standard,Supplier B,41,27,No,Medium,28,Active
+P0085,Pulse Paper 85,Office Supplies,Paper,Apex,13254.32,11375.81,Premium,Supplier D,123,27,Yes,Medium,25,Active
+P0086,Apex Shoes 86,Sports,Shoes,Vertex,15357.25,10189.69,Economy,Supplier A,207,9,No,Medium,29,Active
+P0087,Nimbus Yoga Mat 87,Sports,Yoga Mat,Apex,22483.27,13734.89,Premium,Supplier B,213,22,No,Medium,24,Active
+P0088,Pulse Chair 88,Furniture,Chair,Apex,27867.73,18505.03,Economy,Supplier D,88,17,Yes,Medium,14,Active
+P0089,Nimbus Mixer 89,Appliances,Mixer,Vertex,22374.33,14988.62,Premium,Supplier A,28,6,Yes,Large,3,Active
+P0090,Pulse Sofa 90,Furniture,Sofa,Orbit,17913.81,13318.9,Standard,Supplier C,81,18,No,Medium,25,Active
+P0091,Zenith Shoes 91,Sports,Shoes,Prime,21525.53,15318.35,Standard,Supplier C,235,17,Yes,Small,25,Active
+P0092,Nimbus Notebook 92,Office Supplies,Notebook,Vertex,8919.92,5942.21,Economy,Supplier D,108,12,No,Large,16,Active
+P0093,Vertex Fan 93,Appliances,Fan,Nimbus,6403.58,4770.61,Standard,Supplier C,228,21,Yes,Small,3,Active
+P0094,Nimbus Mobile 94,Electronics,Mobile,Zenith,25158.02,18055.77,Standard,Supplier B,169,25,No,Medium,30,Active
+P0095,Nimbus Vacuum 95,Appliances,Vacuum,Vertex,16613.12,10649.19,Standard,Supplier B,113,19,Yes,Large,34,Active
+P0096,Vertex Dumbbell 96,Sports,Dumbbell,Nova,14683.49,10318.08,Standard,Supplier D,185,11,Yes,Large,33,Active
+P0097,Prime Cabinet 97,Furniture,Cabinet,Pulse,40374.0,24590.79,Economy,Supplier A,138,28,Yes,Small,33,Active
+P0098,Vertex Bottle 98,Sports,Bottle,Nova,9255.21,7867.49,Premium,Supplier D,136,28,No,Large,24,Discontinued
+P0099,Prime Paper 99,Office Supplies,Paper,Prime,8508.84,7287.07,Standard,Supplier D,153,5,Yes,Large,21,Active
+P0100,Prime Stapler 100,Office Supplies,Stapler,Prime,2996.59,2136.15,Standard,Supplier C,75,27,No,Small,10,Active
+P0101,Zenith Yoga Mat 101,Sports,Yoga Mat,Prime,22033.8,16506.16,Economy,Supplier B,129,5,Yes,Medium,8,Active
+P0102,Nimbus Yoga Mat 102,Sports,Yoga Mat,Nimbus,31982.79,20953.35,Standard,Supplier D,190,20,Yes,Small,25,Active
+P0103,Pulse Notebook 103,Office Supplies,Notebook,Prime,1919.44,1388.88,Premium,Supplier B,102,21,No,Medium,19,Active
+P0104,Pulse Racket 104,Sports,Racket,Nimbus,606.12,375.63,Economy,Supplier C,140,21,Yes,Small,25,Discontinued
+P0105,Apex Dumbbell 105,Sports,Dumbbell,Prime,10816.93,8427.39,Economy,Supplier D,123,24,Yes,Large,15,Active
+P0106,Apex Bookshelf 106,Furniture,Bookshelf,Nova,20403.08,13726.5,Premium,Supplier A,139,3,No,Medium,17,Active
+P0107,Nova Pen 107,Office Supplies,Pen,Orbit,1355.07,928.32,Economy,Supplier A,186,30,Yes,Small,11,Discontinued
+P0108,Prime Yoga Mat 108,Sports,Yoga Mat,Prime,33563.84,22408.36,Premium,Supplier A,168,14,No,Medium,23,Active
+P0109,Nimbus Chair 109,Furniture,Chair,Vertex,8256.54,6990.0,Standard,Supplier C,249,26,No,Small,31,Active
+P0110,Pulse Fan 110,Appliances,Fan,Apex,18946.1,15288.72,Standard,Supplier D,60,19,Yes,Medium,19,Active
+P0111,Pulse Laptop 111,Electronics,Laptop,Nova,2777.29,1834.68,Premium,Supplier B,172,20,Yes,Small,27,Active
+P0112,Pulse Bookshelf 112,Furniture,Bookshelf,Pulse,32516.59,22623.07,Premium,Supplier D,221,23,Yes,Large,17,Active
+P0113,Vertex Kettle 113,Appliances,Kettle,Vertex,4395.27,3100.39,Economy,Supplier C,107,1,Yes,Medium,24,Active
+P0114,Nova Iron 114,Appliances,Iron,Nimbus,20089.08,16222.99,Economy,Supplier B,81,22,No,Small,25,Discontinued
+P0115,Orbit Monitor 115,Electronics,Monitor,Nova,22452.7,18404.28,Economy,Supplier B,130,12,Yes,Large,22,Discontinued
+P0116,Vertex Racket 116,Sports,Racket,Nova,27990.48,24167.03,Premium,Supplier A,108,3,Yes,Large,36,Discontinued
+P0117,Apex Yoga Mat 117,Sports,Yoga Mat,Nova,23489.64,18547.0,Economy,Supplier B,130,20,Yes,Medium,5,Active
+P0118,Prime Chair 118,Furniture,Chair,Apex,5137.54,4372.45,Premium,Supplier B,218,18,Yes,Small,10,Discontinued
+P0119,Nimbus Bottle 119,Sports,Bottle,Vertex,8656.26,5576.67,Economy,Supplier D,88,3,Yes,Medium,16,Active
+P0120,Zenith Yoga Mat 120,Sports,Yoga Mat,Nimbus,10216.45,8440.75,Standard,Supplier C,146,5,No,Small,5,Active
+P0121,Pulse Keyboard 121,Electronics,Keyboard,Apex,11616.81,9453.19,Standard,Supplier A,50,29,Yes,Large,21,Discontinued
+P0122,Pulse Fan 122,Appliances,Fan,Nimbus,7669.29,5217.51,Standard,Supplier B,161,22,Yes,Large,14,Discontinued
+P0123,Vertex Shoes 123,Sports,Shoes,Nimbus,24213.1,15709.62,Standard,Supplier B,54,3,Yes,Large,26,Active
+P0124,Zenith Fan 124,Appliances,Fan,Pulse,8688.8,6968.55,Premium,Supplier B,45,21,Yes,Small,26,Active
+P0125,Pulse Sofa 125,Furniture,Sofa,Nova,9252.78,6344.43,Standard,Supplier A,241,17,Yes,Small,4,Discontinued
+P0126,Pulse Shoes 126,Sports,Shoes,Vertex,2339.85,1845.82,Premium,Supplier B,196,21,No,Small,10,Active
+P0127,Orbit Chair 127,Furniture,Chair,Nimbus,8122.85,5988.99,Standard,Supplier A,125,18,No,Small,30,Active
+P0128,Zenith Cabinet 128,Furniture,Cabinet,Pulse,15342.47,11418.37,Economy,Supplier B,166,11,No,Small,24,Active
+P0129,Pulse Keyboard 129,Electronics,Keyboard,Pulse,1908.41,1566.52,Premium,Supplier B,199,10,Yes,Medium,13,Active
+P0130,Pulse Bottle 130,Sports,Bottle,Orbit,25519.41,21386.7,Economy,Supplier D,219,14,No,Small,30,Active
+P0131,Zenith Bookshelf 131,Furniture,Bookshelf,Nova,13748.98,10901.48,Premium,Supplier A,15,15,Yes,Medium,36,Discontinued
+P0132,Nova Mixer 132,Appliances,Mixer,Nimbus,14423.55,11354.84,Standard,Supplier B,96,9,Yes,Large,8,Active
+P0133,Nova Iron 133,Appliances,Iron,Pulse,5673.26,4112.13,Premium,Supplier B,228,22,No,Small,26,Discontinued
+P0134,Nova Laptop 134,Electronics,Laptop,Prime,14462.06,9671.19,Premium,Supplier C,183,30,Yes,Large,8,Active
+P0135,Nova Keyboard 135,Electronics,Keyboard,Apex,35156.58,23637.43,Premium,Supplier C,124,19,Yes,Medium,26,Active
+P0136,Zenith Shoes 136,Sports,Shoes,Vertex,21598.15,14054.09,Standard,Supplier A,171,15,Yes,Large,17,Active
+P0137,Nova Paper 137,Office Supplies,Paper,Apex,17193.75,12628.86,Premium,Supplier C,120,15,Yes,Medium,21,Discontinued
+P0138,Apex Dumbbell 138,Sports,Dumbbell,Orbit,32475.72,20013.6,Premium,Supplier A,25,12,Yes,Medium,7,Active
+P0139,Zenith Bookshelf 139,Furniture,Bookshelf,Orbit,3514.83,2871.65,Economy,Supplier A,80,13,Yes,Medium,25,Discontinued
+P0140,Orbit Mixer 140,Appliances,Mixer,Vertex,8677.46,7344.6,Premium,Supplier C,172,20,No,Medium,36,Discontinued
+P0141,Prime Iron 141,Appliances,Iron,Zenith,22733.24,14215.91,Premium,Supplier B,128,11,No,Small,12,Active
+P0142,Zenith Stapler 142,Office Supplies,Stapler,Prime,34890.55,23908.85,Standard,Supplier B,219,22,Yes,Small,18,Active
+P0143,Vertex Headphones 143,Electronics,Headphones,Zenith,19730.52,14397.17,Standard,Supplier A,175,10,No,Small,26,Discontinued
+P0144,Nova Yoga Mat 144,Sports,Yoga Mat,Nimbus,16197.81,13378.38,Premium,Supplier B,247,14,No,Small,3,Active
+P0145,Zenith Stapler 145,Office Supplies,Stapler,Pulse,36632.27,22407.76,Premium,Supplier A,192,15,Yes,Small,10,Active
+P0146,Vertex Monitor 146,Electronics,Monitor,Apex,19493.32,15468.65,Premium,Supplier A,160,20,Yes,Large,36,Active
+P0147,Pulse Pen 147,Office Supplies,Pen,Apex,911.0,641.91,Economy,Supplier D,54,15,No,Large,35,Active
+P0148,Vertex Stapler 148,Office Supplies,Stapler,Nimbus,5939.89,3766.81,Premium,Supplier A,77,11,No,Medium,31,Active
+P0149,Pulse Sofa 149,Furniture,Sofa,Prime,25199.32,18558.87,Standard,Supplier D,191,28,No,Small,8,Active
+P0150,Vertex Bookshelf 150,Furniture,Bookshelf,Apex,18858.44,11907.36,Economy,Supplier D,27,0,No,Large,20,Discontinued
+P0151,Zenith Cabinet 151,Furniture,Cabinet,Orbit,16628.22,11596.03,Standard,Supplier D,79,17,No,Small,22,Active
+P0152,Nova Vacuum 152,Appliances,Vacuum,Zenith,23373.54,18517.21,Premium,Supplier C,249,20,No,Small,21,Discontinued
+P0153,Nova Sofa 153,Furniture,Sofa,Apex,33389.88,22677.29,Premium,Supplier D,22,19,No,Large,33,Discontinued
+P0154,Vertex Stapler 154,Office Supplies,Stapler,Nova,37978.37,24358.53,Premium,Supplier B,153,1,Yes,Medium,32,Active
+P0155,Vertex Pen 155,Office Supplies,Pen,Nova,1860.13,1397.98,Premium,Supplier C,140,20,Yes,Large,15,Active
+P0156,Vertex Keyboard 156,Electronics,Keyboard,Prime,26781.37,18835.5,Premium,Supplier C,29,17,No,Small,3,Active
+P0157,Vertex Dumbbell 157,Sports,Dumbbell,Zenith,13054.92,9375.51,Standard,Supplier B,44,16,Yes,Small,36,Active
+P0158,Zenith Kettle 158,Appliances,Kettle,Nova,27678.74,22907.5,Premium,Supplier C,84,22,No,Small,31,Active
+P0159,Orbit Bookshelf 159,Furniture,Bookshelf,Zenith,1240.68,796.69,Economy,Supplier B,181,7,No,Small,16,Active
+P0160,Apex Monitor 160,Electronics,Monitor,Nova,26669.44,17295.19,Premium,Supplier D,15,6,Yes,Small,35,Active
+P0161,Prime Mixer 161,Appliances,Mixer,Nova,26620.32,22720.55,Standard,Supplier A,240,19,Yes,Large,15,Active
+P0162,Prime Notebook 162,Office Supplies,Notebook,Vertex,3684.15,2342.22,Premium,Supplier B,223,16,Yes,Large,7,Active
+P0163,Prime Shoes 163,Sports,Shoes,Zenith,19992.81,13258.66,Economy,Supplier A,190,3,Yes,Large,33,Active
+P0164,Zenith Yoga Mat 164,Sports,Yoga Mat,Vertex,17977.02,11036.47,Premium,Supplier D,59,16,Yes,Medium,10,Active
+P0165,Vertex Monitor 165,Electronics,Monitor,Prime,3445.7,2829.08,Economy,Supplier A,26,10,No,Small,27,Active
+P0166,Pulse Vacuum 166,Appliances,Vacuum,Orbit,27518.87,18425.47,Economy,Supplier D,79,27,No,Small,7,Discontinued
+P0167,Apex Pen 167,Office Supplies,Pen,Nimbus,592.78,398.62,Premium,Supplier A,35,4,No,Medium,9,Active
+P0168,Nimbus Headphones 168,Electronics,Headphones,Apex,32167.78,24382.17,Standard,Supplier D,190,15,No,Large,20,Discontinued
+P0169,Pulse Stapler 169,Office Supplies,Stapler,Prime,27128.24,16693.59,Standard,Supplier D,32,3,No,Medium,34,Active
+P0170,Apex Chair 170,Furniture,Chair,Pulse,3014.15,2562.12,Economy,Supplier A,50,12,No,Small,22,Active
+P0171,Orbit Keyboard 171,Electronics,Keyboard,Prime,29702.44,19207.9,Economy,Supplier D,130,16,No,Large,24,Active
+P0172,Pulse Monitor 172,Electronics,Monitor,Vertex,26625.87,22012.73,Premium,Supplier D,122,1,Yes,Small,22,Active
+P0173,Pulse Kettle 173,Appliances,Kettle,Apex,5174.15,3431.45,Economy,Supplier D,173,17,No,Medium,13,Active
+P0174,Vertex Iron 174,Appliances,Iron,Prime,20291.99,12407.7,Premium,Supplier A,12,18,Yes,Small,26,Active
+P0175,Nimbus Shoes 175,Sports,Shoes,Apex,28006.34,19148.63,Premium,Supplier C,96,13,No,Small,18,Active
+P0176,Apex Bookshelf 176,Furniture,Bookshelf,Prime,23830.54,14845.89,Standard,Supplier C,48,0,No,Small,32,Discontinued
+P0177,Pulse Bottle 177,Sports,Bottle,Nova,28929.81,22543.13,Premium,Supplier D,151,12,No,Large,9,Discontinued
+P0178,Vertex Mobile 178,Electronics,Mobile,Zenith,11844.93,8452.31,Economy,Supplier C,98,13,Yes,Medium,7,Active
+P0179,Nimbus Paper 179,Office Supplies,Paper,Orbit,2084.01,1264.48,Economy,Supplier A,188,27,Yes,Large,24,Active
+P0180,Orbit Keyboard 180,Electronics,Keyboard,Vertex,27815.89,20045.55,Standard,Supplier C,134,25,No,Medium,23,Active
+P0181,Zenith Kettle 181,Appliances,Kettle,Nova,8926.86,6341.52,Economy,Supplier B,152,15,Yes,Large,32,Active
+P0182,Nova Bottle 182,Sports,Bottle,Orbit,34202.73,21331.14,Premium,Supplier D,42,7,Yes,Large,22,Discontinued
+P0183,Orbit Iron 183,Appliances,Iron,Nimbus,34545.15,21515.83,Premium,Supplier C,170,5,No,Large,18,Discontinued
+P0184,Prime Chair 184,Furniture,Chair,Pulse,4442.49,3817.06,Premium,Supplier D,113,20,Yes,Small,13,Active
+P0185,Zenith Chair 185,Furniture,Chair,Nova,10116.37,6519.25,Economy,Supplier D,205,0,Yes,Small,23,Active
+P0186,Apex Monitor 186,Electronics,Monitor,Nimbus,33323.72,22427.59,Economy,Supplier B,65,3,Yes,Large,36,Active
+P0187,Vertex Mixer 187,Appliances,Mixer,Vertex,7282.43,6012.88,Economy,Supplier D,211,23,Yes,Medium,16,Active
+P0188,Nimbus Mobile 188,Electronics,Mobile,Prime,6971.35,5415.59,Economy,Supplier A,130,17,No,Large,10,Active
+P0189,Prime Racket 189,Sports,Racket,Zenith,15167.77,11913.36,Premium,Supplier D,188,11,No,Small,5,Active
+P0190,Vertex Bookshelf 190,Furniture,Bookshelf,Apex,18074.38,13853.98,Economy,Supplier B,224,14,No,Small,28,Active
+P0191,Prime Notebook 191,Office Supplies,Notebook,Orbit,35783.11,23413.15,Standard,Supplier D,166,10,No,Small,20,Active
+P0192,Vertex Kettle 192,Appliances,Kettle,Nimbus,29755.71,18444.59,Standard,Supplier B,183,8,Yes,Medium,29,Active
+P0193,Zenith Mixer 193,Appliances,Mixer,Pulse,28043.68,19068.43,Economy,Supplier B,5,12,Yes,Large,22,Active
+P0194,Zenith Shoes 194,Sports,Shoes,Nimbus,3622.78,2841.84,Premium,Supplier D,127,27,Yes,Medium,14,Active
+P0195,Nimbus Pen 195,Office Supplies,Pen,Nimbus,2911.98,2183.22,Economy,Supplier B,10,30,Yes,Large,17,Active
+P0196,Nova Fan 196,Appliances,Fan,Nimbus,10406.78,6603.64,Economy,Supplier D,158,8,Yes,Small,26,Active
+P0197,Pulse Shoes 197,Sports,Shoes,Pulse,610.01,431.74,Standard,Supplier B,187,6,Yes,Medium,21,Discontinued
+P0198,Orbit Fan 198,Appliances,Fan,Prime,13571.03,10828.21,Economy,Supplier B,112,5,No,Small,4,Active
+P0199,Vertex Pen 199,Office Supplies,Pen,Pulse,24812.84,15472.59,Standard,Supplier A,125,4,No,Large,28,Active
+P0200,Apex Kettle 200,Appliances,Kettle,Nova,23547.58,18423.71,Standard,Supplier C,243,7,No,Medium,5,Active
+P0201,Nimbus Folder 201,Office Supplies,Folder,Vertex,20197.89,15521.87,Standard,Supplier A,153,5,No,Small,35,Discontinued
+P0202,Nimbus Stapler 202,Office Supplies,Stapler,Zenith,4406.82,3367.43,Premium,Supplier A,85,1,Yes,Medium,20,Active
+P0203,Prime Iron 203,Appliances,Iron,Vertex,28935.62,22577.59,Premium,Supplier B,85,23,No,Small,31,Active
+P0204,Pulse Desk 204,Furniture,Desk,Prime,1787.63,1439.81,Standard,Supplier D,116,3,No,Small,31,Active
+P0205,Zenith Racket 205,Sports,Racket,Apex,13856.59,11487.37,Premium,Supplier A,57,27,No,Small,13,Active
+P0206,Nova Bottle 206,Sports,Bottle,Zenith,8859.94,5372.91,Premium,Supplier A,68,24,No,Large,9,Active
+P0207,Nimbus Headphones 207,Electronics,Headphones,Vertex,25422.32,17058.3,Economy,Supplier A,219,10,Yes,Small,8,Discontinued
+P0208,Nova Kettle 208,Appliances,Kettle,Vertex,20218.8,15738.65,Standard,Supplier D,88,30,Yes,Small,6,Active
+P0209,Nimbus Notebook 209,Office Supplies,Notebook,Apex,26500.62,18615.5,Premium,Supplier C,50,7,No,Small,4,Active
+P0210,Zenith Sofa 210,Furniture,Sofa,Apex,25209.52,19504.95,Premium,Supplier D,210,13,No,Large,11,Active
+P0211,Nimbus Headphones 211,Electronics,Headphones,Pulse,17930.75,12855.32,Premium,Supplier D,28,24,No,Medium,14,Discontinued
+P0212,Pulse Mixer 212,Appliances,Mixer,Orbit,1436.74,1087.72,Economy,Supplier B,243,15,Yes,Medium,32,Discontinued
+P0213,Prime Monitor 213,Electronics,Monitor,Orbit,12423.75,7565.8,Economy,Supplier D,80,18,Yes,Large,7,Active
+P0214,Pulse Shoes 214,Sports,Shoes,Prime,17370.7,12805.44,Premium,Supplier C,154,2,Yes,Small,32,Active
+P0215,Prime Sofa 215,Furniture,Sofa,Vertex,1640.41,1207.85,Economy,Supplier D,198,21,No,Large,19,Active
+P0216,Prime Desk 216,Furniture,Desk,Apex,7148.91,4692.38,Premium,Supplier A,6,12,Yes,Small,13,Discontinued
+P0217,Pulse Kettle 217,Appliances,Kettle,Prime,35482.97,21730.01,Economy,Supplier C,181,21,No,Medium,8,Active
+P0218,Orbit Chair 218,Furniture,Chair,Nova,7532.53,4834.79,Standard,Supplier D,171,4,Yes,Medium,15,Active
+P0219,Apex Stapler 219,Office Supplies,Stapler,Zenith,5133.86,3772.29,Standard,Supplier D,129,15,Yes,Medium,18,Active
+P0220,Vertex Folder 220,Office Supplies,Folder,Nova,27926.61,20749.91,Standard,Supplier D,111,27,No,Large,21,Active
+P0221,Pulse Kettle 221,Appliances,Kettle,Orbit,17626.15,12193.64,Economy,Supplier A,140,0,No,Large,23,Active
+P0222,Vertex Stapler 222,Office Supplies,Stapler,Pulse,26873.21,22237.38,Economy,Supplier D,10,5,No,Large,15,Discontinued
+P0223,Vertex Stapler 223,Office Supplies,Stapler,Pulse,7387.78,5864.01,Standard,Supplier C,190,22,No,Medium,26,Discontinued
+P0224,Apex Cabinet 224,Furniture,Cabinet,Pulse,7841.07,5243.64,Standard,Supplier B,56,5,No,Small,29,Discontinued
+P0225,Nova Pen 225,Office Supplies,Pen,Vertex,6218.59,5299.07,Premium,Supplier C,178,5,Yes,Large,5,Active
+P0226,Orbit Stapler 226,Office Supplies,Stapler,Pulse,3689.11,2920.11,Premium,Supplier C,205,11,Yes,Large,20,Active
+P0227,Pulse Bottle 227,Sports,Bottle,Pulse,25199.07,16763.59,Standard,Supplier A,205,19,Yes,Large,5,Active
+P0228,Zenith Chair 228,Furniture,Chair,Prime,34970.96,21782.07,Economy,Supplier D,200,16,No,Large,9,Active
+P0229,Orbit Paper 229,Office Supplies,Paper,Pulse,24827.69,20493.49,Premium,Supplier A,67,26,No,Medium,21,Active
+P0230,Vertex Headphones 230,Electronics,Headphones,Orbit,14298.37,9361.11,Standard,Supplier D,206,7,Yes,Medium,29,Discontinued
+P0231,Nova Vacuum 231,Appliances,Vacuum,Pulse,26460.19,19881.62,Standard,Supplier A,188,25,Yes,Small,24,Active
+P0232,Nova Fan 232,Appliances,Fan,Zenith,14674.37,10897.08,Economy,Supplier A,166,22,No,Medium,28,Active
+P0233,Zenith Paper 233,Office Supplies,Paper,Nimbus,357.2,276.92,Premium,Supplier B,232,17,No,Large,25,Discontinued
+P0234,Nimbus Bookshelf 234,Furniture,Bookshelf,Zenith,3093.2,2180.28,Economy,Supplier C,59,2,No,Large,24,Active
+P0235,Prime Laptop 235,Electronics,Laptop,Orbit,31618.05,22266.76,Premium,Supplier D,134,3,Yes,Medium,19,Active
+P0236,Pulse Laptop 236,Electronics,Laptop,Prime,30684.94,18933.47,Economy,Supplier A,121,10,Yes,Large,17,Active
+P0237,Zenith Paper 237,Office Supplies,Paper,Nimbus,26010.46,16699.71,Economy,Supplier B,31,10,Yes,Medium,32,Active
+P0238,Nova Sofa 238,Furniture,Sofa,Nimbus,24682.53,20724.67,Standard,Supplier D,59,14,Yes,Medium,36,Discontinued
+P0239,Prime Bottle 239,Sports,Bottle,Pulse,17532.4,13012.11,Economy,Supplier D,117,22,No,Large,29,Active
+P0240,Zenith Cabinet 240,Furniture,Cabinet,Apex,4890.0,3247.93,Economy,Supplier B,121,15,Yes,Large,13,Active
+P0241,Vertex Keyboard 241,Electronics,Keyboard,Prime,25693.89,21319.76,Standard,Supplier B,35,11,No,Medium,22,Active
+P0242,Nimbus Mixer 242,Appliances,Mixer,Nova,24173.28,19796.8,Premium,Supplier C,60,5,No,Small,10,Active
+P0243,Pulse Laptop 243,Electronics,Laptop,Vertex,15063.41,10485.97,Premium,Supplier D,218,23,Yes,Small,35,Discontinued
+P0244,Apex Kettle 244,Appliances,Kettle,Nimbus,5741.81,3792.65,Premium,Supplier B,235,12,No,Large,5,Discontinued
+P0245,Prime Notebook 245,Office Supplies,Notebook,Apex,32567.41,21659.56,Economy,Supplier A,54,30,Yes,Large,36,Active
+P0246,Zenith Vacuum 246,Appliances,Vacuum,Nova,27143.31,22429.86,Premium,Supplier B,67,26,No,Small,23,Discontinued
+P0247,Vertex Shoes 247,Sports,Shoes,Nimbus,19932.65,12327.51,Standard,Supplier D,11,27,No,Medium,19,Active
+P0248,Zenith Laptop 248,Electronics,Laptop,Prime,17556.01,13581.14,Standard,Supplier B,83,30,No,Large,13,Active
+P0249,Prime Dumbbell 249,Sports,Dumbbell,Nimbus,6933.5,4601.93,Standard,Supplier C,41,13,No,Medium,27,Active
+P0250,Orbit Mobile 250,Electronics,Mobile,Pulse,8765.47,6051.4,Economy,Supplier D,248,3,No,Small,23,Discontinued
+P0251,Orbit Racket 251,Sports,Racket,Nova,1992.64,1711.22,Premium,Supplier A,68,24,Yes,Medium,29,Discontinued
+P0252,Vertex Keyboard 252,Electronics,Keyboard,Zenith,8415.12,5150.15,Standard,Supplier D,238,17,No,Small,3,Discontinued
+P0253,Nova Dumbbell 253,Sports,Dumbbell,Pulse,20176.06,16354.23,Premium,Supplier C,219,21,No,Medium,16,Active
+P0254,Prime Mobile 254,Electronics,Mobile,Apex,26484.13,18500.44,Premium,Supplier A,217,4,No,Medium,16,Active
+P0255,Prime Paper 255,Office Supplies,Paper,Orbit,36833.92,24492.64,Economy,Supplier C,92,6,No,Large,24,Active
+P0256,Nova Chair 256,Furniture,Chair,Zenith,17571.25,15250.97,Premium,Supplier D,200,12,Yes,Large,7,Active
+P0257,Vertex Mixer 257,Appliances,Mixer,Nimbus,13815.5,8876.63,Standard,Supplier A,36,14,No,Small,31,Active
+P0258,Vertex Chair 258,Furniture,Chair,Orbit,28285.24,18979.85,Standard,Supplier C,211,22,Yes,Small,34,Active
+P0259,Orbit Headphones 259,Electronics,Headphones,Nova,18567.3,12361.52,Standard,Supplier D,33,27,No,Large,35,Discontinued
+P0260,Zenith Cabinet 260,Furniture,Cabinet,Apex,7458.39,4908.75,Economy,Supplier B,195,2,Yes,Medium,17,Active
+P0261,Prime Chair 261,Furniture,Chair,Pulse,37112.17,24799.43,Standard,Supplier D,169,21,Yes,Medium,30,Discontinued
+P0262,Vertex Notebook 262,Office Supplies,Notebook,Nova,23557.38,17029.92,Economy,Supplier B,17,8,No,Large,31,Active
+P0263,Nova Monitor 263,Electronics,Monitor,Orbit,5870.72,4929.63,Economy,Supplier D,250,2,Yes,Small,13,Active
+P0264,Pulse Notebook 264,Office Supplies,Notebook,Nimbus,18790.08,15679.79,Standard,Supplier C,220,8,Yes,Small,33,Active
+P0265,Orbit Notebook 265,Office Supplies,Notebook,Apex,28979.37,20555.11,Economy,Supplier D,200,3,No,Large,10,Active
+P0266,Apex Laptop 266,Electronics,Laptop,Zenith,15128.48,9484.69,Standard,Supplier D,19,9,No,Small,9,Active
+P0267,Apex Shoes 267,Sports,Shoes,Nimbus,9960.71,7429.33,Standard,Supplier A,121,12,No,Medium,9,Active
+P0268,Apex Monitor 268,Electronics,Monitor,Apex,18725.95,12968.95,Standard,Supplier A,156,25,Yes,Large,11,Active
+P0269,Zenith Stapler 269,Office Supplies,Stapler,Orbit,17636.78,12076.47,Standard,Supplier A,20,4,No,Large,30,Active
+P0270,Zenith Folder 270,Office Supplies,Folder,Pulse,34045.32,22139.73,Premium,Supplier C,79,11,Yes,Large,12,Active
+P0271,Nova Cabinet 271,Furniture,Cabinet,Nimbus,29300.87,20494.06,Premium,Supplier B,56,20,Yes,Small,24,Active
+P0272,Vertex Kettle 272,Appliances,Kettle,Prime,19767.9,15026.08,Premium,Supplier C,46,3,No,Small,34,Active
+P0273,Orbit Mobile 273,Electronics,Mobile,Orbit,24006.71,17355.06,Premium,Supplier C,211,23,No,Small,28,Active
+P0274,Apex Headphones 274,Electronics,Headphones,Zenith,433.91,326.51,Premium,Supplier D,54,20,No,Small,4,Active
+P0275,Zenith Bookshelf 275,Furniture,Bookshelf,Vertex,7039.26,4419.73,Economy,Supplier B,50,6,Yes,Small,19,Active
+P0276,Apex Mobile 276,Electronics,Mobile,Vertex,14700.35,9522.76,Standard,Supplier C,121,7,No,Medium,13,Discontinued
+P0277,Orbit Laptop 277,Electronics,Laptop,Orbit,5931.24,3679.25,Economy,Supplier D,182,11,No,Large,30,Active
+P0278,Prime Keyboard 278,Electronics,Keyboard,Zenith,23210.59,14716.16,Premium,Supplier B,18,20,No,Small,35,Discontinued
+P0279,Apex Chair 279,Furniture,Chair,Zenith,30344.1,19633.86,Economy,Supplier D,197,28,No,Medium,36,Discontinued
+P0280,Pulse Bookshelf 280,Furniture,Bookshelf,Pulse,25196.42,17835.17,Premium,Supplier C,153,12,Yes,Small,17,Active
+P0281,Nimbus Fan 281,Appliances,Fan,Zenith,12959.41,9945.83,Premium,Supplier C,145,2,Yes,Small,21,Discontinued
+P0282,Vertex Dumbbell 282,Sports,Dumbbell,Nimbus,6808.08,5816.03,Premium,Supplier D,115,13,No,Medium,23,Active
+P0283,Apex Mixer 283,Appliances,Mixer,Vertex,5770.43,4554.78,Standard,Supplier C,220,16,Yes,Medium,17,Active
+P0284,Vertex Laptop 284,Electronics,Laptop,Orbit,12888.37,9057.1,Economy,Supplier C,69,9,No,Small,11,Active
+P0285,Nimbus Headphones 285,Electronics,Headphones,Nimbus,9400.28,7103.58,Economy,Supplier A,125,20,Yes,Medium,17,Active
+P0286,Pulse Sofa 286,Furniture,Sofa,Pulse,8522.98,5904.38,Premium,Supplier A,85,27,Yes,Medium,29,Active
+P0287,Zenith Kettle 287,Appliances,Kettle,Zenith,24856.82,21335.37,Premium,Supplier A,132,25,No,Medium,17,Discontinued
+P0288,Prime Kettle 288,Appliances,Kettle,Vertex,28544.52,19090.01,Economy,Supplier A,150,25,Yes,Small,12,Active
+P0289,Nimbus Bottle 289,Sports,Bottle,Nimbus,32835.07,22850.7,Standard,Supplier D,21,17,No,Small,33,Active
+P0290,Prime Folder 290,Office Supplies,Folder,Apex,35343.72,24051.5,Standard,Supplier A,177,17,Yes,Small,34,Active
+P0291,Prime Desk 291,Furniture,Desk,Orbit,2955.82,1811.72,Standard,Supplier C,173,16,Yes,Medium,6,Active
+P0292,Nimbus Shoes 292,Sports,Shoes,Nimbus,6891.16,4361.9,Standard,Supplier A,38,17,No,Medium,7,Discontinued
+P0293,Pulse Desk 293,Furniture,Desk,Zenith,28409.28,21771.59,Economy,Supplier C,155,6,No,Medium,15,Active
+P0294,Orbit Sofa 294,Furniture,Sofa,Vertex,2259.44,1674.13,Economy,Supplier D,122,14,Yes,Large,8,Active
+P0295,Prime Iron 295,Appliances,Iron,Nimbus,26399.94,17531.89,Economy,Supplier B,111,7,Yes,Large,30,Discontinued
+P0296,Nova Fan 296,Appliances,Fan,Orbit,20945.56,17487.17,Standard,Supplier C,230,20,No,Large,7,Active
+P0297,Vertex Kettle 297,Appliances,Kettle,Apex,35389.78,24810.35,Standard,Supplier C,109,14,Yes,Medium,16,Active
+P0298,Pulse Mixer 298,Appliances,Mixer,Nimbus,2850.8,1904.03,Premium,Supplier D,224,6,No,Small,3,Active
+P0299,Pulse Mobile 299,Electronics,Mobile,Pulse,12547.73,8231.59,Standard,Supplier A,145,21,Yes,Large,31,Active
+P0300,Nova Iron 300,Appliances,Iron,Apex,26005.1,21051.74,Standard,Supplier C,36,17,No,Small,7,Active
+P0301,Nova Pen 301,Office Supplies,Pen,Orbit,13704.5,11061.2,Premium,Supplier A,219,20,Yes,Medium,22,Discontinued
+P0302,Orbit Keyboard 302,Electronics,Keyboard,Orbit,301.51,196.27,Premium,Supplier B,56,2,Yes,Medium,4,Active
+P0303,Apex Pen 303,Office Supplies,Pen,Zenith,20116.01,17024.59,Economy,Supplier B,16,13,Yes,Medium,23,Active
+P0304,Nimbus Yoga Mat 304,Sports,Yoga Mat,Apex,31482.98,23363.44,Standard,Supplier B,32,11,No,Small,3,Discontinued
+P0305,Apex Notebook 305,Office Supplies,Notebook,Prime,13488.39,9778.53,Economy,Supplier C,16,2,Yes,Medium,22,Discontinued
+P0306,Zenith Keyboard 306,Electronics,Keyboard,Prime,31897.1,19798.19,Standard,Supplier C,166,22,No,Large,11,Active
+P0307,Apex Bookshelf 307,Furniture,Bookshelf,Vertex,36267.29,24452.3,Standard,Supplier D,102,16,Yes,Large,3,Active
+P0308,Orbit Keyboard 308,Electronics,Keyboard,Nimbus,23019.82,18992.81,Standard,Supplier A,20,4,No,Medium,21,Active
+P0309,Pulse Sofa 309,Furniture,Sofa,Vertex,6047.32,5173.28,Standard,Supplier C,86,20,Yes,Large,29,Active
+P0310,Orbit Mobile 310,Electronics,Mobile,Orbit,27872.55,21185.62,Economy,Supplier A,237,29,Yes,Large,17,Discontinued
+P0311,Apex Dumbbell 311,Sports,Dumbbell,Pulse,6817.53,4653.95,Standard,Supplier B,18,20,Yes,Small,11,Active
+P0312,Orbit Cabinet 312,Furniture,Cabinet,Orbit,21290.98,13757.27,Economy,Supplier A,114,23,No,Medium,13,Active
+P0313,Prime Sofa 313,Furniture,Sofa,Pulse,5705.57,4476.77,Economy,Supplier B,74,27,No,Small,26,Discontinued
+P0314,Nimbus Fan 314,Appliances,Fan,Zenith,16077.77,11810.18,Premium,Supplier A,200,12,No,Small,22,Active
+P0315,Pulse Yoga Mat 315,Sports,Yoga Mat,Prime,8970.41,6491.71,Premium,Supplier D,23,10,Yes,Large,33,Active
+P0316,Vertex Desk 316,Furniture,Desk,Pulse,291.16,184.18,Premium,Supplier D,245,12,No,Medium,34,Active
+P0317,Apex Shoes 317,Sports,Shoes,Nimbus,12006.36,10266.99,Economy,Supplier B,54,24,No,Medium,25,Discontinued
+P0318,Orbit Notebook 318,Office Supplies,Notebook,Orbit,26297.08,16300.59,Premium,Supplier A,240,26,No,Large,4,Active
+P0319,Prime Folder 319,Office Supplies,Folder,Orbit,17037.29,11430.33,Economy,Supplier B,8,3,Yes,Large,27,Discontinued
+P0320,Nimbus Shoes 320,Sports,Shoes,Zenith,16179.77,13001.94,Premium,Supplier C,182,9,No,Large,22,Discontinued
+P0321,Vertex Laptop 321,Electronics,Laptop,Zenith,24511.4,15933.61,Premium,Supplier B,243,23,No,Large,22,Active
+P0322,Nimbus Sofa 322,Furniture,Sofa,Nimbus,141.41,119.34,Economy,Supplier C,192,13,Yes,Small,26,Active
+P0323,Apex Desk 323,Furniture,Desk,Pulse,17099.95,12202.86,Economy,Supplier B,52,6,Yes,Large,14,Active
+P0324,Apex Stapler 324,Office Supplies,Stapler,Zenith,17772.55,11063.0,Standard,Supplier C,26,12,Yes,Medium,7,Active
+P0325,Apex Keyboard 325,Electronics,Keyboard,Nova,8259.1,5930.72,Standard,Supplier C,197,30,Yes,Large,5,Active
+P0326,Prime Cabinet 326,Furniture,Cabinet,Pulse,26504.24,19811.32,Premium,Supplier C,159,13,No,Medium,24,Active
+P0327,Nova Bookshelf 327,Furniture,Bookshelf,Vertex,22303.0,16653.75,Premium,Supplier A,5,14,No,Large,11,Active
+P0328,Orbit Shoes 328,Sports,Shoes,Vertex,28033.15,21735.61,Premium,Supplier D,136,13,Yes,Small,23,Active
+P0329,Pulse Notebook 329,Office Supplies,Notebook,Orbit,36797.65,24242.37,Economy,Supplier D,107,23,Yes,Medium,30,Discontinued
+P0330,Zenith Monitor 330,Electronics,Monitor,Nova,9235.61,7403.07,Standard,Supplier D,208,2,No,Large,32,Active
+P0331,Orbit Mixer 331,Appliances,Mixer,Orbit,17179.85,12095.64,Standard,Supplier A,32,13,Yes,Small,23,Discontinued
+P0332,Apex Pen 332,Office Supplies,Pen,Zenith,26696.12,18001.84,Economy,Supplier D,28,25,No,Small,7,Active
+P0333,Nimbus Kettle 333,Appliances,Kettle,Orbit,25260.16,16375.68,Standard,Supplier C,34,9,Yes,Small,8,Active
+P0334,Vertex Yoga Mat 334,Sports,Yoga Mat,Zenith,22513.12,18635.87,Premium,Supplier D,152,23,Yes,Medium,6,Active
+P0335,Zenith Kettle 335,Appliances,Kettle,Orbit,10720.72,8045.5,Standard,Supplier D,7,17,No,Medium,12,Active
+P0336,Prime Sofa 336,Furniture,Sofa,Zenith,20833.86,17025.12,Economy,Supplier A,158,10,No,Large,10,Active
+P0337,Prime Racket 337,Sports,Racket,Nimbus,19882.17,15806.44,Standard,Supplier C,44,26,Yes,Large,17,Active
+P0338,Zenith Sofa 338,Furniture,Sofa,Nova,23660.52,18206.69,Economy,Supplier D,91,13,No,Medium,28,Discontinued
+P0339,Orbit Keyboard 339,Electronics,Keyboard,Nimbus,23487.53,18190.72,Standard,Supplier B,87,24,Yes,Large,22,Discontinued
+P0340,Prime Cabinet 340,Furniture,Cabinet,Zenith,5254.94,3508.02,Standard,Supplier B,210,23,Yes,Large,3,Active
+P0341,Zenith Shoes 341,Sports,Shoes,Nimbus,27925.28,16983.68,Premium,Supplier B,242,1,Yes,Medium,33,Active
+P0342,Nimbus Laptop 342,Electronics,Laptop,Zenith,36151.24,24508.5,Economy,Supplier D,67,1,Yes,Small,28,Discontinued
+P0343,Nimbus Folder 343,Office Supplies,Folder,Apex,35237.97,23867.52,Premium,Supplier D,75,20,No,Medium,3,Active
+P0344,Orbit Laptop 344,Electronics,Laptop,Nova,4590.83,3121.52,Economy,Supplier D,75,22,Yes,Large,14,Discontinued
+P0345,Vertex Kettle 345,Appliances,Kettle,Apex,9113.08,7515.21,Economy,Supplier B,108,26,Yes,Medium,36,Discontinued
+P0346,Apex Keyboard 346,Electronics,Keyboard,Orbit,29726.45,20941.63,Economy,Supplier A,51,27,Yes,Small,31,Active
+P0347,Zenith Laptop 347,Electronics,Laptop,Apex,4122.86,3290.09,Economy,Supplier C,222,24,Yes,Small,10,Active
+P0348,Nova Folder 348,Office Supplies,Folder,Orbit,7138.1,4356.35,Premium,Supplier A,247,30,No,Large,31,Active
+P0349,Vertex Racket 349,Sports,Racket,Orbit,24559.92,17401.93,Economy,Supplier A,174,26,Yes,Small,5,Active
+P0350,Zenith Bookshelf 350,Furniture,Bookshelf,Orbit,26929.93,21413.64,Economy,Supplier C,76,4,No,Small,19,Active
+P0351,Prime Fan 351,Appliances,Fan,Nimbus,11975.23,10049.48,Economy,Supplier B,142,6,Yes,Large,20,Active
+P0352,Zenith Folder 352,Office Supplies,Folder,Nimbus,25682.36,16460.37,Standard,Supplier C,206,13,No,Small,18,Active
+P0353,Nimbus Notebook 353,Office Supplies,Notebook,Apex,19879.63,13324.24,Premium,Supplier A,97,29,No,Medium,12,Active
+P0354,Orbit Notebook 354,Office Supplies,Notebook,Nimbus,4133.53,2520.84,Standard,Supplier A,49,16,No,Large,34,Active
+P0355,Prime Dumbbell 355,Sports,Dumbbell,Apex,27753.18,17535.35,Standard,Supplier B,86,30,No,Small,25,Discontinued
+P0356,Zenith Vacuum 356,Appliances,Vacuum,Zenith,3763.44,3259.1,Standard,Supplier D,150,23,No,Small,26,Active
+P0357,Vertex Racket 357,Sports,Racket,Pulse,21966.95,17693.13,Economy,Supplier C,75,30,No,Large,17,Active
+P0358,Apex Headphones 358,Electronics,Headphones,Apex,13338.48,10210.35,Standard,Supplier B,246,2,Yes,Large,6,Active
+P0359,Nova Folder 359,Office Supplies,Folder,Nimbus,36127.32,23245.36,Economy,Supplier B,127,15,Yes,Medium,3,Active
+P0360,Orbit Monitor 360,Electronics,Monitor,Nova,26819.68,17588.59,Economy,Supplier D,48,21,Yes,Small,7,Active
+P0361,Pulse Cabinet 361,Furniture,Cabinet,Nimbus,10442.76,8884.03,Standard,Supplier C,33,10,Yes,Large,10,Active
+P0362,Nimbus Stapler 362,Office Supplies,Stapler,Orbit,9292.24,7395.14,Premium,Supplier A,244,14,No,Small,25,Active
+P0363,Nova Racket 363,Sports,Racket,Vertex,10970.54,8267.51,Economy,Supplier B,107,11,Yes,Small,30,Discontinued
+P0364,Nimbus Chair 364,Furniture,Chair,Apex,21214.26,13265.09,Premium,Supplier A,44,24,No,Small,33,Discontinued
+P0365,Prime Paper 365,Office Supplies,Paper,Apex,14625.4,9163.23,Premium,Supplier D,46,4,No,Large,30,Active
+P0366,Zenith Pen 366,Office Supplies,Pen,Nimbus,3667.7,2837.79,Premium,Supplier C,235,1,Yes,Large,15,Discontinued
+P0367,Zenith Notebook 367,Office Supplies,Notebook,Vertex,15068.18,10573.7,Premium,Supplier D,38,3,Yes,Small,11,Active
+P0368,Nova Folder 368,Office Supplies,Folder,Vertex,626.93,420.13,Premium,Supplier A,116,15,No,Medium,34,Active
+P0369,Zenith Fan 369,Appliances,Fan,Orbit,23432.63,15470.92,Premium,Supplier A,226,8,Yes,Large,30,Active
+P0370,Zenith Mixer 370,Appliances,Mixer,Orbit,24594.03,17552.53,Economy,Supplier B,63,3,Yes,Medium,5,Active
+P0371,Apex Desk 371,Furniture,Desk,Nova,15608.16,10703.47,Premium,Supplier D,139,9,Yes,Small,24,Discontinued
+P0372,Prime Mixer 372,Appliances,Mixer,Apex,18819.89,12785.8,Premium,Supplier C,76,30,No,Large,29,Active
+P0373,Vertex Notebook 373,Office Supplies,Notebook,Orbit,5301.87,4609.25,Premium,Supplier D,76,29,Yes,Medium,14,Active
+P0374,Nova Iron 374,Appliances,Iron,Zenith,10140.85,8410.31,Premium,Supplier C,194,25,No,Large,36,Active
+P0375,Apex Bookshelf 375,Furniture,Bookshelf,Zenith,7131.56,5314.03,Economy,Supplier A,15,18,Yes,Small,31,Active
+P0376,Pulse Keyboard 376,Electronics,Keyboard,Orbit,20168.91,15505.74,Economy,Supplier B,16,4,Yes,Medium,19,Active
+P0377,Nimbus Stapler 377,Office Supplies,Stapler,Apex,19068.96,15776.23,Premium,Supplier D,139,29,Yes,Small,20,Active
+P0378,Orbit Notebook 378,Office Supplies,Notebook,Nimbus,28209.84,23898.61,Premium,Supplier A,47,14,No,Large,27,Discontinued
+P0379,Orbit Dumbbell 379,Sports,Dumbbell,Nova,6031.47,5236.56,Economy,Supplier D,133,22,No,Medium,17,Active
+P0380,Orbit Folder 380,Office Supplies,Folder,Prime,3846.54,3048.06,Standard,Supplier B,246,28,No,Small,20,Active
+P0381,Vertex Desk 381,Furniture,Desk,Vertex,15421.81,13402.11,Premium,Supplier A,247,22,No,Large,11,Discontinued
+P0382,Nova Dumbbell 382,Sports,Dumbbell,Vertex,9629.32,8169.91,Standard,Supplier C,50,8,Yes,Large,9,Discontinued
+P0383,Orbit Folder 383,Office Supplies,Folder,Vertex,21518.51,13807.87,Premium,Supplier B,153,20,No,Small,31,Active
+P0384,Pulse Iron 384,Appliances,Iron,Zenith,5247.45,3776.49,Premium,Supplier B,213,27,Yes,Small,34,Active
+P0385,Nimbus Notebook 385,Office Supplies,Notebook,Orbit,12437.12,7809.19,Standard,Supplier B,23,13,Yes,Medium,28,Active
+P0386,Apex Yoga Mat 386,Sports,Yoga Mat,Nimbus,28268.7,18190.97,Premium,Supplier A,33,26,Yes,Large,5,Active
+P0387,Nova Chair 387,Furniture,Chair,Nova,10930.27,6750.0,Standard,Supplier C,223,22,Yes,Small,11,Discontinued
+P0388,Pulse Racket 388,Sports,Racket,Zenith,26597.14,20401.39,Standard,Supplier A,144,22,No,Large,10,Active
+P0389,Nimbus Laptop 389,Electronics,Laptop,Zenith,16400.49,13652.48,Standard,Supplier B,11,7,No,Medium,12,Active
+P0390,Apex Pen 390,Office Supplies,Pen,Pulse,34393.23,23048.54,Standard,Supplier A,62,3,No,Medium,7,Active
+P0391,Nova Headphones 391,Electronics,Headphones,Zenith,37172.02,23089.12,Standard,Supplier D,140,10,Yes,Large,30,Active
+P0392,Apex Folder 392,Office Supplies,Folder,Prime,27084.59,20453.66,Premium,Supplier C,243,8,Yes,Small,12,Active
+P0393,Pulse Pen 393,Office Supplies,Pen,Apex,14825.34,9813.74,Standard,Supplier D,250,23,No,Small,8,Active
+P0394,Pulse Desk 394,Furniture,Desk,Nimbus,25474.3,19206.98,Premium,Supplier D,159,25,No,Small,18,Discontinued
+P0395,Orbit Vacuum 395,Appliances,Vacuum,Nimbus,17665.43,12467.79,Standard,Supplier D,139,18,Yes,Large,8,Active
+P0396,Vertex Notebook 396,Office Supplies,Notebook,Pulse,8106.06,5145.73,Standard,Supplier A,20,29,No,Medium,11,Active
+P0397,Nimbus Fan 397,Appliances,Fan,Orbit,29790.32,20894.49,Standard,Supplier B,19,23,Yes,Small,12,Discontinued
+P0398,Apex Monitor 398,Electronics,Monitor,Pulse,14020.1,9342.37,Economy,Supplier B,12,4,No,Small,8,Active
+P0399,Zenith Laptop 399,Electronics,Laptop,Zenith,22207.05,14264.04,Premium,Supplier B,196,16,No,Medium,29,Active
+P0400,Nova Mixer 400,Appliances,Mixer,Zenith,8873.48,7226.29,Economy,Supplier B,7,12,No,Large,32,Active
+P0401,Zenith Bottle 401,Sports,Bottle,Prime,9738.21,7706.37,Standard,Supplier D,248,4,Yes,Medium,6,Active
+P0402,Apex Fan 402,Appliances,Fan,Pulse,33704.7,20576.82,Premium,Supplier C,172,20,No,Medium,13,Active
+P0403,Apex Stapler 403,Office Supplies,Stapler,Vertex,5939.95,4932.69,Economy,Supplier C,12,7,No,Small,9,Active
+P0404,Orbit Cabinet 404,Furniture,Cabinet,Orbit,567.39,353.55,Economy,Supplier A,66,8,Yes,Large,5,Discontinued
+P0405,Nova Laptop 405,Electronics,Laptop,Vertex,12843.23,7919.34,Premium,Supplier D,133,6,No,Medium,25,Active
+P0406,Apex Headphones 406,Electronics,Headphones,Zenith,15556.38,10229.58,Standard,Supplier D,127,18,Yes,Medium,13,Active
+P0407,Orbit Mixer 407,Appliances,Mixer,Orbit,26492.87,22139.28,Economy,Supplier B,201,22,Yes,Large,36,Active
+P0408,Nimbus Fan 408,Appliances,Fan,Nova,11344.12,8528.4,Economy,Supplier D,66,6,Yes,Small,34,Active
+P0409,Apex Mobile 409,Electronics,Mobile,Pulse,25021.11,19176.63,Standard,Supplier D,85,5,No,Small,7,Active
+P0410,Pulse Dumbbell 410,Sports,Dumbbell,Prime,10534.88,8885.94,Premium,Supplier C,200,28,No,Large,11,Active
+P0411,Nimbus Racket 411,Sports,Racket,Nimbus,1684.78,1066.65,Economy,Supplier B,117,11,No,Medium,8,Discontinued
+P0412,Nova Racket 412,Sports,Racket,Nova,10526.36,6629.66,Economy,Supplier B,184,26,Yes,Small,9,Active
+P0413,Orbit Fan 413,Appliances,Fan,Nimbus,22530.53,14287.73,Premium,Supplier A,94,14,No,Large,32,Active
+P0414,Nimbus Mobile 414,Electronics,Mobile,Nimbus,29465.36,18315.91,Standard,Supplier D,89,2,No,Medium,34,Active
+P0415,Zenith Mixer 415,Appliances,Mixer,Pulse,8203.99,7017.11,Standard,Supplier B,86,18,Yes,Large,27,Active
+P0416,Orbit Stapler 416,Office Supplies,Stapler,Nova,30746.35,24465.74,Economy,Supplier D,74,8,Yes,Small,12,Active
+P0417,Pulse Stapler 417,Office Supplies,Stapler,Nimbus,3358.16,2116.19,Economy,Supplier B,176,28,No,Small,6,Active
+P0418,Orbit Iron 418,Appliances,Iron,Vertex,31275.92,24087.07,Premium,Supplier D,126,17,Yes,Large,30,Active
+P0419,Orbit Racket 419,Sports,Racket,Apex,29452.41,20589.55,Economy,Supplier B,87,21,No,Small,12,Discontinued
+P0420,Nimbus Sofa 420,Furniture,Sofa,Prime,26089.15,21618.39,Economy,Supplier A,120,30,Yes,Large,31,Active
+P0421,Zenith Mobile 421,Electronics,Mobile,Nimbus,23213.61,18663.03,Standard,Supplier C,58,30,Yes,Large,3,Active
+P0422,Apex Notebook 422,Office Supplies,Notebook,Pulse,9912.28,7604.46,Economy,Supplier D,110,13,No,Medium,30,Active
+P0423,Zenith Mobile 423,Electronics,Mobile,Nimbus,15389.0,11513.88,Premium,Supplier C,221,21,No,Large,21,Active
+P0424,Nimbus Laptop 424,Electronics,Laptop,Apex,2679.85,2313.78,Premium,Supplier A,167,14,Yes,Large,21,Discontinued
+P0425,Apex Desk 425,Furniture,Desk,Orbit,27717.23,19439.86,Premium,Supplier A,94,30,No,Medium,28,Active
+P0426,Prime Pen 426,Office Supplies,Pen,Prime,16340.8,12728.42,Premium,Supplier B,6,28,No,Small,3,Active
+P0427,Vertex Bookshelf 427,Furniture,Bookshelf,Vertex,29644.19,21031.98,Standard,Supplier D,66,17,No,Small,28,Active
+P0428,Zenith Racket 428,Sports,Racket,Nimbus,4832.3,3291.45,Premium,Supplier B,116,7,Yes,Large,11,Active
+P0429,Prime Racket 429,Sports,Racket,Zenith,30866.13,21088.33,Premium,Supplier B,28,2,Yes,Medium,3,Active
+P0430,Apex Keyboard 430,Electronics,Keyboard,Nimbus,28522.86,17712.79,Standard,Supplier B,121,20,No,Small,18,Active
+P0431,Nimbus Pen 431,Office Supplies,Pen,Prime,17081.97,13422.6,Economy,Supplier A,75,2,Yes,Large,4,Active
+P0432,Zenith Monitor 432,Electronics,Monitor,Prime,28085.94,23185.8,Premium,Supplier B,28,2,No,Medium,16,Discontinued
+P0433,Pulse Monitor 433,Electronics,Monitor,Apex,27005.02,19902.4,Standard,Supplier D,101,28,No,Large,31,Active
+P0434,Nova Bookshelf 434,Furniture,Bookshelf,Apex,412.33,332.7,Premium,Supplier C,128,19,Yes,Small,36,Active
+P0435,Zenith Mobile 435,Electronics,Mobile,Orbit,21530.96,15184.28,Premium,Supplier A,235,6,Yes,Medium,11,Active
+P0436,Apex Mobile 436,Electronics,Mobile,Vertex,9385.53,6748.36,Economy,Supplier C,124,23,No,Medium,35,Discontinued
+P0437,Prime Bookshelf 437,Furniture,Bookshelf,Nimbus,6556.82,4390.15,Standard,Supplier C,47,25,Yes,Large,34,Discontinued
+P0438,Vertex Kettle 438,Appliances,Kettle,Apex,19211.1,14940.54,Economy,Supplier D,114,6,No,Medium,7,Discontinued
+P0439,Nimbus Chair 439,Furniture,Chair,Prime,30580.33,23955.79,Economy,Supplier C,106,0,Yes,Small,23,Discontinued
+P0440,Vertex Bookshelf 440,Furniture,Bookshelf,Vertex,7788.68,6193.33,Standard,Supplier C,36,0,No,Large,3,Active
+P0441,Orbit Sofa 441,Furniture,Sofa,Apex,18641.04,14221.33,Premium,Supplier C,159,6,Yes,Small,20,Active
+P0442,Vertex Racket 442,Sports,Racket,Orbit,23356.92,17078.73,Standard,Supplier A,210,15,No,Small,20,Discontinued
+P0443,Nimbus Laptop 443,Electronics,Laptop,Orbit,16485.06,11363.4,Economy,Supplier A,77,0,Yes,Medium,21,Active
+P0444,Nova Mixer 444,Appliances,Mixer,Vertex,36048.53,22404.07,Economy,Supplier A,22,15,Yes,Medium,22,Active
+P0445,Vertex Paper 445,Office Supplies,Paper,Pulse,14363.06,10056.58,Economy,Supplier A,105,9,No,Medium,10,Active
+P0446,Nova Shoes 446,Sports,Shoes,Zenith,950.71,809.86,Standard,Supplier C,225,22,No,Small,13,Active
+P0447,Nova Bookshelf 447,Furniture,Bookshelf,Nova,28969.2,20418.4,Premium,Supplier A,33,1,No,Small,19,Active
+P0448,Zenith Racket 448,Sports,Racket,Pulse,8406.82,6806.21,Standard,Supplier B,86,27,Yes,Large,29,Discontinued
+P0449,Pulse Keyboard 449,Electronics,Keyboard,Prime,19033.64,13227.52,Premium,Supplier D,62,2,No,Medium,8,Active
+P0450,Orbit Yoga Mat 450,Sports,Yoga Mat,Apex,25062.6,16514.26,Standard,Supplier D,20,6,Yes,Large,16,Discontinued
+P0451,Vertex Fan 451,Appliances,Fan,Prime,16149.16,12232.13,Economy,Supplier D,172,4,Yes,Small,17,Active
+P0452,Nimbus Kettle 452,Appliances,Kettle,Orbit,30535.99,21707.04,Standard,Supplier C,113,5,No,Large,9,Active
+P0453,Pulse Mixer 453,Appliances,Mixer,Zenith,23685.73,18646.05,Premium,Supplier A,126,21,No,Medium,19,Active
+P0454,Nimbus Shoes 454,Sports,Shoes,Nimbus,11194.17,8912.32,Economy,Supplier C,18,14,No,Medium,9,Active
+P0455,Zenith Kettle 455,Appliances,Kettle,Prime,6115.06,4912.78,Economy,Supplier D,137,13,Yes,Large,6,Active
+P0456,Prime Mobile 456,Electronics,Mobile,Orbit,4713.48,2950.48,Standard,Supplier A,75,7,No,Medium,28,Active
+P0457,Orbit Bookshelf 457,Furniture,Bookshelf,Vertex,15344.7,12419.68,Economy,Supplier C,185,19,No,Large,3,Active
+P0458,Prime Cabinet 458,Furniture,Cabinet,Orbit,33168.88,22701.94,Standard,Supplier C,179,2,Yes,Small,24,Discontinued
+P0459,Nova Chair 459,Furniture,Chair,Zenith,22747.46,16677.5,Premium,Supplier A,48,21,Yes,Large,25,Discontinued
+P0460,Apex Shoes 460,Sports,Shoes,Nova,15601.74,12248.62,Standard,Supplier C,218,7,Yes,Small,9,Active
+P0461,Prime Paper 461,Office Supplies,Paper,Pulse,17236.54,11359.2,Premium,Supplier C,122,0,No,Medium,24,Discontinued
+P0462,Nova Headphones 462,Electronics,Headphones,Zenith,25996.84,17169.74,Premium,Supplier B,173,4,No,Medium,4,Active
+P0463,Orbit Racket 463,Sports,Racket,Nimbus,13755.57,9036.74,Economy,Supplier A,75,28,No,Large,14,Active
+P0464,Prime Paper 464,Office Supplies,Paper,Prime,13347.85,9824.37,Standard,Supplier A,153,16,No,Large,10,Discontinued
+P0465,Prime Vacuum 465,Appliances,Vacuum,Apex,37427.17,24206.37,Standard,Supplier D,242,21,Yes,Medium,12,Active
+P0466,Prime Bottle 466,Sports,Bottle,Apex,21655.64,16634.86,Premium,Supplier A,121,1,Yes,Medium,10,Active
+P0467,Nova Iron 467,Appliances,Iron,Nova,274.31,206.85,Premium,Supplier B,94,28,No,Large,12,Active
+P0468,Apex Pen 468,Office Supplies,Pen,Prime,31081.98,24898.18,Standard,Supplier A,126,29,No,Small,27,Discontinued
+P0469,Prime Mixer 469,Appliances,Mixer,Zenith,35960.55,22334.4,Economy,Supplier D,178,28,No,Large,11,Active
+P0470,Prime Pen 470,Office Supplies,Pen,Apex,13065.63,10454.5,Premium,Supplier D,144,5,No,Medium,9,Active
+P0471,Vertex Racket 471,Sports,Racket,Pulse,24362.07,17377.8,Premium,Supplier D,124,13,No,Medium,4,Active
+P0472,Prime Mixer 472,Appliances,Mixer,Orbit,27571.96,18915.94,Economy,Supplier C,37,19,No,Small,28,Active
+P0473,Pulse Mixer 473,Appliances,Mixer,Nova,17785.54,11613.17,Standard,Supplier A,74,26,Yes,Medium,9,Active
+P0474,Apex Racket 474,Sports,Racket,Nova,27354.83,17289.58,Economy,Supplier B,137,4,No,Small,17,Active
+P0475,Pulse Paper 475,Office Supplies,Paper,Orbit,29130.43,18001.02,Standard,Supplier A,5,4,Yes,Large,9,Active
+P0476,Pulse Chair 476,Furniture,Chair,Nimbus,18617.26,11885.66,Standard,Supplier A,81,12,No,Small,18,Active
+P0477,Nimbus Racket 477,Sports,Racket,Zenith,31350.85,21494.1,Economy,Supplier A,52,4,Yes,Small,35,Active
+P0478,Pulse Kettle 478,Appliances,Kettle,Vertex,10842.93,7307.7,Economy,Supplier C,105,12,Yes,Medium,29,Discontinued
+P0479,Nimbus Chair 479,Furniture,Chair,Nova,8643.34,7142.88,Economy,Supplier C,13,20,No,Small,25,Active
+P0480,Vertex Kettle 480,Appliances,Kettle,Orbit,11454.06,6980.45,Premium,Supplier D,136,2,Yes,Large,12,Active
+P0481,Zenith Dumbbell 481,Sports,Dumbbell,Prime,18210.16,11530.29,Economy,Supplier C,241,12,Yes,Large,33,Discontinued
+P0482,Prime Vacuum 482,Appliances,Vacuum,Zenith,23729.59,16501.58,Economy,Supplier C,155,30,No,Large,28,Active
+P0483,Apex Laptop 483,Electronics,Laptop,Apex,26205.78,21312.62,Premium,Supplier D,87,24,Yes,Large,18,Active
+P0484,Apex Sofa 484,Furniture,Sofa,Nova,25724.77,18914.88,Economy,Supplier C,34,1,Yes,Medium,26,Active
+P0485,Zenith Bookshelf 485,Furniture,Bookshelf,Orbit,3798.32,2762.91,Standard,Supplier C,130,14,No,Small,15,Active
+P0486,Nova Vacuum 486,Appliances,Vacuum,Apex,25212.2,20232.11,Standard,Supplier A,212,4,Yes,Medium,29,Active
+P0487,Pulse Pen 487,Office Supplies,Pen,Orbit,27828.36,17084.44,Standard,Supplier D,133,11,No,Large,11,Active
+P0488,Apex Kettle 488,Appliances,Kettle,Zenith,24862.92,15666.73,Economy,Supplier C,30,3,No,Small,6,Active
+P0489,Prime Mobile 489,Electronics,Mobile,Nimbus,26607.94,20547.49,Economy,Supplier C,22,27,Yes,Medium,7,Active
+P0490,Nova Bottle 490,Sports,Bottle,Apex,16925.69,12541.17,Economy,Supplier D,244,29,No,Large,4,Active
+P0491,Nova Stapler 491,Office Supplies,Stapler,Zenith,8669.17,6581.16,Standard,Supplier C,241,24,Yes,Small,34,Active
+P0492,Nova Bottle 492,Sports,Bottle,Vertex,26978.62,17601.02,Standard,Supplier D,158,23,Yes,Large,33,Active
+P0493,Orbit Notebook 493,Office Supplies,Notebook,Vertex,3737.95,2673.21,Premium,Supplier D,82,25,Yes,Small,6,Active
+P0494,Nova Cabinet 494,Furniture,Cabinet,Pulse,20410.0,15234.82,Standard,Supplier D,201,12,Yes,Medium,30,Active
+P0495,Vertex Monitor 495,Electronics,Monitor,Vertex,4403.18,3020.37,Standard,Supplier C,116,29,Yes,Small,17,Active
+P0496,Nova Shoes 496,Sports,Shoes,Nova,8746.22,5739.98,Economy,Supplier B,213,1,Yes,Small,11,Discontinued
+P0497,Orbit Bookshelf 497,Furniture,Bookshelf,Prime,1549.38,1169.49,Standard,Supplier D,127,21,Yes,Large,7,Active
+P0498,Vertex Folder 498,Office Supplies,Folder,Orbit,7828.78,5210.06,Premium,Supplier C,246,11,No,Large,18,Active
+P0499,Nimbus Folder 499,Office Supplies,Folder,Pulse,14860.62,12625.86,Premium,Supplier A,57,29,Yes,Large,17,Active
+P0500,Zenith Yoga Mat 500,Sports,Yoga Mat,Nova,4747.42,3138.88,Standard,Supplier D,171,24,No,Small,4,Discontinued

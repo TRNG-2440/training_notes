@@ -1,0 +1,501 @@
+﻿CustomerID,CustomerName,Gender,Age,City,State,Region,Country,Segment,SignupDate,LoyaltyTier,PreferredChannel,NewsletterOptIn,PostalCode,CustomerStatus
+C0001,Customer 1,Male,36,Coimbatore,Tamil Nadu,South,India,Consumer,2023-02-21,Gold,Email,Yes,719177,Inactive
+C0002,Customer 2,Female,34,Chennai,Tamil Nadu,South,India,Consumer,2023-03-03,Bronze,Email,Yes,850801,Inactive
+C0003,Customer 3,Male,21,Hyderabad,Telangana,South,India,Consumer,2025-07-08,Bronze,Referral,No,391370,Active
+C0004,Customer 4,Female,26,Hyderabad,Telangana,South,India,Corporate,2024-11-20,Gold,Web,No,733053,Active
+C0005,Customer 5,Female,45,Chennai,Tamil Nadu,South,India,Consumer,2025-07-29,Bronze,Web,No,705398,Active
+C0006,Customer 6,Female,39,Coimbatore,Tamil Nadu,South,India,Consumer,2023-04-04,Gold,Email,No,391477,Inactive
+C0007,Customer 7,Male,43,Pune,Maharashtra,West,India,Consumer,2023-11-30,Bronze,Web,Yes,738721,Active
+C0008,Customer 8,Female,50,Kolkata,West Bengal,East,India,Corporate,2024-05-16,Silver,Phone,No,983795,Active
+C0009,Customer 9,Male,46,Hyderabad,Telangana,South,India,Corporate,2023-03-07,Gold,Phone,No,322956,Inactive
+C0010,Customer 10,Female,37,Delhi,Delhi,North,India,Consumer,2025-07-28,Gold,Web,No,711879,Inactive
+C0011,Customer 11,Female,53,Pune,Maharashtra,West,India,Corporate,2024-03-25,Gold,Email,Yes,260266,Active
+C0012,Customer 12,Male,45,Delhi,Delhi,North,India,Small Business,2023-05-11,Silver,Web,Yes,813329,Active
+C0013,Customer 13,Male,28,Kolkata,West Bengal,East,India,Corporate,2024-06-30,Silver,Phone,No,103403,Active
+C0014,Customer 14,Female,61,Kolkata,West Bengal,East,India,Corporate,2024-01-01,Bronze,Phone,Yes,492078,Active
+C0015,Customer 15,Female,59,Kolkata,West Bengal,East,India,Corporate,2025-12-22,Silver,Email,Yes,480613,Active
+C0016,Customer 16,Female,57,Hyderabad,Telangana,South,India,Consumer,2023-04-29,Gold,Referral,Yes,897550,Active
+C0017,Customer 17,Female,37,Bengaluru,Karnataka,South,India,Small Business,2025-08-31,Bronze,Referral,Yes,665493,Active
+C0018,Customer 18,Male,49,Mumbai,Maharashtra,West,India,Small Business,2025-03-28,Silver,Email,Yes,335613,Active
+C0019,Customer 19,Female,58,Pune,Maharashtra,West,India,Consumer,2023-02-13,Gold,Email,Yes,340063,Active
+C0020,Customer 20,Female,53,Chennai,Tamil Nadu,South,India,Consumer,2024-11-07,Silver,Referral,Yes,665428,Active
+C0021,Customer 21,Male,36,Bhubaneswar,Odisha,East,India,Corporate,2026-03-26,Silver,Phone,Yes,201640,Inactive
+C0022,Customer 22,Male,50,Pune,Maharashtra,West,India,Small Business,2025-05-17,Gold,Email,Yes,522180,Active
+C0023,Customer 23,Female,33,Coimbatore,Tamil Nadu,South,India,Small Business,2024-05-24,Silver,Phone,No,292402,Active
+C0024,Customer 24,Female,49,Jaipur,Rajasthan,North,India,Small Business,2024-05-26,Gold,Email,Yes,197794,Active
+C0025,Customer 25,Male,51,Bengaluru,Karnataka,South,India,Consumer,2025-04-12,Silver,Email,Yes,497383,Active
+C0026,Customer 26,Male,39,Delhi,Delhi,North,India,Corporate,2024-06-27,Bronze,Referral,Yes,299123,Active
+C0027,Customer 27,Female,41,Hyderabad,Telangana,South,India,Consumer,2023-04-30,Gold,Referral,Yes,159643,Active
+C0028,Customer 28,Female,64,Bengaluru,Karnataka,South,India,Consumer,2023-05-21,Silver,Email,Yes,707041,Active
+C0029,Customer 29,Male,63,Bhubaneswar,Odisha,East,India,Small Business,2023-06-17,Bronze,Web,No,314182,Active
+C0030,Customer 30,Male,29,Hyderabad,Telangana,South,India,Small Business,2024-06-27,Bronze,Web,No,431536,Active
+C0031,Customer 31,Female,25,Chennai,Tamil Nadu,South,India,Small Business,2025-07-27,Gold,Web,Yes,465963,Active
+C0032,Customer 32,Male,31,Hyderabad,Telangana,South,India,Corporate,2025-01-26,Bronze,Web,Yes,800306,Active
+C0033,Customer 33,Male,28,Coimbatore,Tamil Nadu,South,India,Consumer,2023-10-03,Bronze,Phone,No,395443,Active
+C0034,Customer 34,Male,53,Pune,Maharashtra,West,India,Corporate,2024-02-21,Silver,Email,Yes,765096,Inactive
+C0035,Customer 35,Female,42,Mumbai,Maharashtra,West,India,Consumer,2023-04-01,Bronze,Web,Yes,877237,Inactive
+C0036,Customer 36,Female,28,Kolkata,West Bengal,East,India,Consumer,2025-05-25,Bronze,Phone,Yes,975137,Active
+C0037,Customer 37,Female,48,Bhubaneswar,Odisha,East,India,Consumer,2026-02-05,Gold,Web,No,934795,Active
+C0038,Customer 38,Female,63,Pune,Maharashtra,West,India,Consumer,2024-03-06,Silver,Referral,Yes,348238,Active
+C0039,Customer 39,Female,32,Bengaluru,Karnataka,South,India,Small Business,2025-04-24,Silver,Referral,Yes,379767,Active
+C0040,Customer 40,Female,51,Coimbatore,Tamil Nadu,South,India,Consumer,2025-02-22,Gold,Referral,No,420016,Active
+C0041,Customer 41,Female,46,Hyderabad,Telangana,South,India,Corporate,2023-02-18,Silver,Email,No,468204,Inactive
+C0042,Customer 42,Female,28,Kolkata,West Bengal,East,India,Corporate,2024-11-09,Gold,Web,Yes,213669,Inactive
+C0043,Customer 43,Male,59,Pune,Maharashtra,West,India,Small Business,2024-10-04,Gold,Referral,Yes,367096,Active
+C0044,Customer 44,Female,44,Delhi,Delhi,North,India,Corporate,2023-01-04,Gold,Web,No,795613,Active
+C0045,Customer 45,Male,63,Mumbai,Maharashtra,West,India,Corporate,2025-11-04,Silver,Referral,No,681344,Active
+C0046,Customer 46,Male,64,Hyderabad,Telangana,South,India,Small Business,2025-05-11,Gold,Web,No,674554,Active
+C0047,Customer 47,Female,48,Mumbai,Maharashtra,West,India,Small Business,2024-08-10,Bronze,Web,No,563247,Inactive
+C0048,Customer 48,Male,31,Hyderabad,Telangana,South,India,Small Business,2025-11-12,Gold,Web,No,197924,Active
+C0049,Customer 49,Female,30,Mumbai,Maharashtra,West,India,Consumer,2024-04-05,Gold,Phone,No,740968,Active
+C0050,Customer 50,Female,65,Jaipur,Rajasthan,North,India,Corporate,2025-04-28,Silver,Referral,Yes,254740,Active
+C0051,Customer 51,Female,32,Coimbatore,Tamil Nadu,South,India,Small Business,2025-05-20,Bronze,Referral,Yes,684483,Active
+C0052,Customer 52,Female,50,Coimbatore,Tamil Nadu,South,India,Small Business,2025-07-23,Bronze,Web,No,742413,Inactive
+C0053,Customer 53,Female,51,Kolkata,West Bengal,East,India,Corporate,2025-07-02,Silver,Phone,No,903014,Inactive
+C0054,Customer 54,Male,25,Hyderabad,Telangana,South,India,Small Business,2024-07-16,Silver,Phone,No,452162,Active
+C0055,Customer 55,Female,30,Kolkata,West Bengal,East,India,Consumer,2023-06-15,Silver,Phone,Yes,167349,Inactive
+C0056,Customer 56,Male,47,Delhi,Delhi,North,India,Consumer,2024-11-08,Gold,Referral,No,907190,Active
+C0057,Customer 57,Male,21,Bhubaneswar,Odisha,East,India,Corporate,2025-02-18,Silver,Referral,No,664366,Active
+C0058,Customer 58,Male,48,Jaipur,Rajasthan,North,India,Corporate,2024-03-25,Gold,Referral,No,801365,Inactive
+C0059,Customer 59,Female,60,Bengaluru,Karnataka,South,India,Small Business,2025-08-15,Gold,Referral,Yes,188026,Inactive
+C0060,Customer 60,Female,24,Bengaluru,Karnataka,South,India,Corporate,2025-08-03,Silver,Web,Yes,576787,Active
+C0061,Customer 61,Male,47,Pune,Maharashtra,West,India,Corporate,2025-02-15,Gold,Referral,Yes,885409,Active
+C0062,Customer 62,Female,62,Pune,Maharashtra,West,India,Consumer,2024-04-04,Gold,Phone,Yes,979996,Active
+C0063,Customer 63,Female,29,Bhubaneswar,Odisha,East,India,Corporate,2023-11-09,Bronze,Email,Yes,587624,Active
+C0064,Customer 64,Female,31,Pune,Maharashtra,West,India,Corporate,2023-12-10,Gold,Email,No,703767,Inactive
+C0065,Customer 65,Female,58,Delhi,Delhi,North,India,Small Business,2024-02-11,Bronze,Phone,Yes,831060,Active
+C0066,Customer 66,Female,43,Bhubaneswar,Odisha,East,India,Small Business,2023-09-05,Silver,Web,Yes,630539,Active
+C0067,Customer 67,Male,27,Chennai,Tamil Nadu,South,India,Corporate,2025-05-10,Silver,Referral,Yes,556642,Active
+C0068,Customer 68,Male,50,Kolkata,West Bengal,East,India,Corporate,2024-07-07,Bronze,Web,No,993086,Active
+C0069,Customer 69,Male,36,Coimbatore,Tamil Nadu,South,India,Corporate,2024-07-25,Bronze,Referral,No,130095,Inactive
+C0070,Customer 70,Male,34,Pune,Maharashtra,West,India,Corporate,2024-01-08,Silver,Web,No,725114,Active
+C0071,Customer 71,Female,26,Kolkata,West Bengal,East,India,Consumer,2023-01-21,Bronze,Referral,No,682145,Active
+C0072,Customer 72,Male,22,Jaipur,Rajasthan,North,India,Consumer,2025-10-02,Silver,Phone,No,825392,Active
+C0073,Customer 73,Male,51,Mumbai,Maharashtra,West,India,Small Business,2026-04-06,Bronze,Web,No,882170,Active
+C0074,Customer 74,Male,40,Pune,Maharashtra,West,India,Corporate,2025-07-18,Gold,Email,Yes,430877,Active
+C0075,Customer 75,Female,34,Kolkata,West Bengal,East,India,Small Business,2024-01-15,Silver,Web,No,205410,Active
+C0076,Customer 76,Male,32,Mumbai,Maharashtra,West,India,Corporate,2024-04-10,Gold,Phone,No,147727,Active
+C0077,Customer 77,Female,61,Kolkata,West Bengal,East,India,Corporate,2024-08-21,Gold,Email,No,592199,Inactive
+C0078,Customer 78,Female,24,Jaipur,Rajasthan,North,India,Corporate,2024-11-28,Silver,Email,Yes,520173,Inactive
+C0079,Customer 79,Female,30,Coimbatore,Tamil Nadu,South,India,Consumer,2026-03-27,Bronze,Web,Yes,360248,Active
+C0080,Customer 80,Female,54,Kolkata,West Bengal,East,India,Corporate,2025-05-02,Silver,Referral,No,717114,Inactive
+C0081,Customer 81,Female,60,Mumbai,Maharashtra,West,India,Small Business,2026-03-10,Gold,Phone,Yes,377502,Active
+C0082,Customer 82,Female,56,Bengaluru,Karnataka,South,India,Consumer,2024-05-06,Gold,Email,No,572388,Inactive
+C0083,Customer 83,Female,39,Mumbai,Maharashtra,West,India,Small Business,2023-03-08,Silver,Referral,Yes,820776,Active
+C0084,Customer 84,Male,28,Mumbai,Maharashtra,West,India,Small Business,2024-02-10,Gold,Phone,No,966786,Active
+C0085,Customer 85,Female,40,Coimbatore,Tamil Nadu,South,India,Small Business,2023-05-03,Bronze,Web,No,230395,Inactive
+C0086,Customer 86,Male,53,Mumbai,Maharashtra,West,India,Small Business,2025-04-04,Silver,Referral,Yes,727087,Active
+C0087,Customer 87,Male,22,Delhi,Delhi,North,India,Consumer,2024-10-22,Gold,Email,No,704239,Active
+C0088,Customer 88,Male,38,Bengaluru,Karnataka,South,India,Consumer,2025-08-21,Bronze,Referral,No,195675,Inactive
+C0089,Customer 89,Male,41,Pune,Maharashtra,West,India,Small Business,2025-04-16,Gold,Phone,No,531642,Inactive
+C0090,Customer 90,Female,50,Mumbai,Maharashtra,West,India,Consumer,2025-03-31,Silver,Web,No,221553,Inactive
+C0091,Customer 91,Male,47,Kolkata,West Bengal,East,India,Consumer,2023-01-03,Gold,Web,No,755789,Inactive
+C0092,Customer 92,Male,56,Chennai,Tamil Nadu,South,India,Consumer,2024-02-21,Silver,Referral,No,227325,Active
+C0093,Customer 93,Female,40,Bhubaneswar,Odisha,East,India,Small Business,2024-05-05,Gold,Referral,Yes,335616,Active
+C0094,Customer 94,Female,52,Jaipur,Rajasthan,North,India,Small Business,2023-08-29,Silver,Web,No,975272,Inactive
+C0095,Customer 95,Male,56,Jaipur,Rajasthan,North,India,Consumer,2024-05-14,Silver,Phone,Yes,173202,Active
+C0096,Customer 96,Male,21,Delhi,Delhi,North,India,Corporate,2024-11-27,Bronze,Web,No,255814,Inactive
+C0097,Customer 97,Male,42,Kolkata,West Bengal,East,India,Small Business,2025-09-18,Bronze,Referral,No,437409,Active
+C0098,Customer 98,Male,35,Hyderabad,Telangana,South,India,Corporate,2026-03-17,Gold,Web,No,839486,Inactive
+C0099,Customer 99,Male,23,Delhi,Delhi,North,India,Consumer,2023-11-08,Bronze,Web,Yes,986089,Inactive
+C0100,Customer 100,Male,21,Coimbatore,Tamil Nadu,South,India,Small Business,2025-12-13,Gold,Referral,Yes,178464,Inactive
+C0101,Customer 101,Male,62,Mumbai,Maharashtra,West,India,Consumer,2024-11-24,Silver,Referral,No,757247,Inactive
+C0102,Customer 102,Female,36,Kolkata,West Bengal,East,India,Small Business,2023-03-15,Bronze,Web,Yes,883042,Active
+C0103,Customer 103,Female,49,Delhi,Delhi,North,India,Consumer,2023-07-21,Bronze,Web,Yes,148226,Active
+C0104,Customer 104,Male,44,Chennai,Tamil Nadu,South,India,Corporate,2024-08-23,Gold,Phone,No,693419,Active
+C0105,Customer 105,Female,60,Bengaluru,Karnataka,South,India,Corporate,2023-12-25,Bronze,Phone,No,711485,Active
+C0106,Customer 106,Male,50,Hyderabad,Telangana,South,India,Corporate,2025-08-02,Bronze,Email,No,401604,Active
+C0107,Customer 107,Male,58,Coimbatore,Tamil Nadu,South,India,Corporate,2025-06-23,Bronze,Referral,No,579028,Active
+C0108,Customer 108,Male,27,Hyderabad,Telangana,South,India,Consumer,2025-02-26,Silver,Web,No,833248,Active
+C0109,Customer 109,Male,21,Chennai,Tamil Nadu,South,India,Small Business,2025-03-21,Bronze,Email,No,973295,Active
+C0110,Customer 110,Female,61,Hyderabad,Telangana,South,India,Consumer,2024-12-22,Bronze,Web,Yes,758766,Active
+C0111,Customer 111,Male,23,Chennai,Tamil Nadu,South,India,Small Business,2024-09-24,Silver,Phone,Yes,409446,Active
+C0112,Customer 112,Female,29,Delhi,Delhi,North,India,Small Business,2023-12-26,Silver,Web,Yes,369453,Inactive
+C0113,Customer 113,Female,50,Mumbai,Maharashtra,West,India,Consumer,2024-11-24,Gold,Phone,No,986828,Active
+C0114,Customer 114,Female,37,Coimbatore,Tamil Nadu,South,India,Small Business,2025-03-19,Gold,Referral,No,805512,Active
+C0115,Customer 115,Male,27,Bhubaneswar,Odisha,East,India,Small Business,2025-02-19,Gold,Referral,Yes,749642,Active
+C0116,Customer 116,Female,61,Bhubaneswar,Odisha,East,India,Corporate,2024-03-29,Bronze,Web,No,222344,Active
+C0117,Customer 117,Male,52,Chennai,Tamil Nadu,South,India,Consumer,2023-03-18,Gold,Phone,Yes,507525,Inactive
+C0118,Customer 118,Male,58,Pune,Maharashtra,West,India,Small Business,2026-01-11,Bronze,Phone,No,786736,Active
+C0119,Customer 119,Male,23,Jaipur,Rajasthan,North,India,Small Business,2025-04-15,Silver,Phone,No,566298,Active
+C0120,Customer 120,Male,55,Pune,Maharashtra,West,India,Small Business,2023-07-23,Silver,Email,No,389283,Active
+C0121,Customer 121,Female,63,Coimbatore,Tamil Nadu,South,India,Consumer,2025-07-20,Bronze,Email,Yes,925014,Active
+C0122,Customer 122,Female,25,Hyderabad,Telangana,South,India,Small Business,2023-09-15,Gold,Phone,Yes,444520,Active
+C0123,Customer 123,Male,30,Bhubaneswar,Odisha,East,India,Consumer,2023-01-06,Bronze,Web,Yes,215267,Active
+C0124,Customer 124,Male,36,Bengaluru,Karnataka,South,India,Small Business,2023-01-31,Silver,Email,Yes,378259,Active
+C0125,Customer 125,Female,25,Bengaluru,Karnataka,South,India,Corporate,2025-05-12,Silver,Web,Yes,573963,Active
+C0126,Customer 126,Male,50,Bhubaneswar,Odisha,East,India,Small Business,2023-03-30,Gold,Email,No,988457,Inactive
+C0127,Customer 127,Male,49,Delhi,Delhi,North,India,Consumer,2023-08-10,Gold,Web,Yes,168873,Active
+C0128,Customer 128,Male,45,Mumbai,Maharashtra,West,India,Small Business,2026-04-13,Bronze,Web,No,630109,Inactive
+C0129,Customer 129,Female,48,Coimbatore,Tamil Nadu,South,India,Corporate,2023-08-23,Gold,Referral,No,967612,Inactive
+C0130,Customer 130,Female,41,Delhi,Delhi,North,India,Corporate,2025-05-01,Silver,Web,No,260054,Inactive
+C0131,Customer 131,Female,26,Coimbatore,Tamil Nadu,South,India,Corporate,2023-07-06,Gold,Web,Yes,683398,Active
+C0132,Customer 132,Male,63,Bhubaneswar,Odisha,East,India,Consumer,2026-02-24,Silver,Web,No,856087,Active
+C0133,Customer 133,Male,27,Mumbai,Maharashtra,West,India,Small Business,2024-10-01,Bronze,Phone,Yes,788638,Inactive
+C0134,Customer 134,Male,56,Hyderabad,Telangana,South,India,Corporate,2023-08-10,Gold,Web,Yes,946433,Inactive
+C0135,Customer 135,Female,59,Kolkata,West Bengal,East,India,Small Business,2026-02-14,Bronze,Web,Yes,289180,Active
+C0136,Customer 136,Male,21,Mumbai,Maharashtra,West,India,Consumer,2024-11-26,Gold,Referral,Yes,248767,Active
+C0137,Customer 137,Female,45,Coimbatore,Tamil Nadu,South,India,Corporate,2025-12-22,Silver,Web,Yes,488029,Active
+C0138,Customer 138,Female,24,Pune,Maharashtra,West,India,Consumer,2026-03-08,Gold,Email,Yes,385321,Inactive
+C0139,Customer 139,Male,47,Delhi,Delhi,North,India,Corporate,2025-09-21,Gold,Email,No,550798,Active
+C0140,Customer 140,Male,23,Mumbai,Maharashtra,West,India,Consumer,2025-09-23,Silver,Email,Yes,314354,Active
+C0141,Customer 141,Male,39,Hyderabad,Telangana,South,India,Corporate,2023-10-09,Gold,Email,No,883302,Inactive
+C0142,Customer 142,Male,55,Bengaluru,Karnataka,South,India,Small Business,2023-09-22,Gold,Web,Yes,516360,Active
+C0143,Customer 143,Male,25,Delhi,Delhi,North,India,Corporate,2023-02-08,Bronze,Referral,No,843964,Inactive
+C0144,Customer 144,Male,22,Mumbai,Maharashtra,West,India,Corporate,2023-08-24,Gold,Referral,No,192411,Inactive
+C0145,Customer 145,Male,58,Coimbatore,Tamil Nadu,South,India,Corporate,2024-05-13,Bronze,Email,No,425347,Active
+C0146,Customer 146,Female,25,Hyderabad,Telangana,South,India,Small Business,2024-11-13,Bronze,Email,Yes,913935,Active
+C0147,Customer 147,Female,27,Pune,Maharashtra,West,India,Consumer,2023-10-30,Silver,Phone,Yes,731662,Active
+C0148,Customer 148,Male,50,Coimbatore,Tamil Nadu,South,India,Small Business,2023-12-29,Bronze,Referral,No,757686,Active
+C0149,Customer 149,Female,51,Bengaluru,Karnataka,South,India,Corporate,2025-06-19,Bronze,Web,No,720149,Active
+C0150,Customer 150,Female,40,Pune,Maharashtra,West,India,Corporate,2025-11-05,Silver,Email,Yes,486650,Active
+C0151,Customer 151,Male,50,Coimbatore,Tamil Nadu,South,India,Small Business,2023-07-04,Bronze,Email,No,949154,Active
+C0152,Customer 152,Female,24,Pune,Maharashtra,West,India,Corporate,2025-09-01,Gold,Web,Yes,629058,Active
+C0153,Customer 153,Male,49,Chennai,Tamil Nadu,South,India,Small Business,2024-05-22,Bronze,Phone,No,490964,Active
+C0154,Customer 154,Male,64,Delhi,Delhi,North,India,Small Business,2025-04-17,Gold,Web,Yes,445706,Active
+C0155,Customer 155,Male,37,Kolkata,West Bengal,East,India,Small Business,2025-03-02,Bronze,Phone,No,185462,Active
+C0156,Customer 156,Male,29,Pune,Maharashtra,West,India,Small Business,2024-09-27,Bronze,Email,No,686073,Inactive
+C0157,Customer 157,Female,62,Pune,Maharashtra,West,India,Small Business,2023-09-19,Silver,Web,Yes,480212,Active
+C0158,Customer 158,Male,52,Bengaluru,Karnataka,South,India,Consumer,2024-03-14,Gold,Phone,Yes,180914,Active
+C0159,Customer 159,Female,63,Coimbatore,Tamil Nadu,South,India,Corporate,2025-11-05,Bronze,Phone,No,261746,Active
+C0160,Customer 160,Male,23,Bengaluru,Karnataka,South,India,Corporate,2023-12-06,Silver,Phone,No,740256,Active
+C0161,Customer 161,Female,40,Jaipur,Rajasthan,North,India,Corporate,2024-04-24,Gold,Web,No,584107,Active
+C0162,Customer 162,Male,31,Delhi,Delhi,North,India,Consumer,2025-10-26,Bronze,Phone,No,154715,Inactive
+C0163,Customer 163,Female,54,Pune,Maharashtra,West,India,Consumer,2026-02-09,Silver,Email,Yes,386043,Inactive
+C0164,Customer 164,Male,26,Kolkata,West Bengal,East,India,Consumer,2023-10-29,Silver,Web,Yes,535051,Active
+C0165,Customer 165,Male,36,Delhi,Delhi,North,India,Corporate,2025-10-25,Gold,Web,Yes,129557,Active
+C0166,Customer 166,Female,29,Coimbatore,Tamil Nadu,South,India,Consumer,2024-11-17,Silver,Referral,Yes,895703,Inactive
+C0167,Customer 167,Female,22,Jaipur,Rajasthan,North,India,Corporate,2023-01-11,Gold,Phone,No,216588,Active
+C0168,Customer 168,Female,24,Hyderabad,Telangana,South,India,Consumer,2024-09-08,Silver,Referral,Yes,216243,Inactive
+C0169,Customer 169,Female,61,Bhubaneswar,Odisha,East,India,Small Business,2026-01-02,Bronze,Phone,Yes,405421,Inactive
+C0170,Customer 170,Female,57,Chennai,Tamil Nadu,South,India,Corporate,2024-12-23,Gold,Email,No,170967,Active
+C0171,Customer 171,Female,61,Delhi,Delhi,North,India,Corporate,2025-08-20,Silver,Web,Yes,474441,Active
+C0172,Customer 172,Female,58,Pune,Maharashtra,West,India,Small Business,2024-05-08,Silver,Phone,Yes,469413,Active
+C0173,Customer 173,Male,61,Bengaluru,Karnataka,South,India,Consumer,2025-08-09,Gold,Email,No,138781,Active
+C0174,Customer 174,Female,23,Hyderabad,Telangana,South,India,Corporate,2023-03-31,Silver,Referral,No,365619,Active
+C0175,Customer 175,Male,24,Hyderabad,Telangana,South,India,Small Business,2024-08-08,Silver,Web,Yes,938172,Active
+C0176,Customer 176,Male,45,Delhi,Delhi,North,India,Corporate,2025-03-30,Gold,Referral,No,485192,Active
+C0177,Customer 177,Female,48,Coimbatore,Tamil Nadu,South,India,Small Business,2025-05-19,Gold,Web,No,207582,Active
+C0178,Customer 178,Male,49,Pune,Maharashtra,West,India,Small Business,2024-08-28,Bronze,Referral,Yes,823271,Inactive
+C0179,Customer 179,Female,43,Pune,Maharashtra,West,India,Small Business,2025-07-04,Silver,Web,Yes,178687,Inactive
+C0180,Customer 180,Female,22,Pune,Maharashtra,West,India,Consumer,2025-11-16,Bronze,Referral,Yes,232362,Active
+C0181,Customer 181,Male,45,Hyderabad,Telangana,South,India,Small Business,2025-01-20,Gold,Phone,No,488985,Active
+C0182,Customer 182,Female,54,Jaipur,Rajasthan,North,India,Corporate,2023-06-07,Silver,Web,No,361737,Active
+C0183,Customer 183,Male,54,Chennai,Tamil Nadu,South,India,Corporate,2024-01-17,Bronze,Email,No,912610,Active
+C0184,Customer 184,Male,65,Jaipur,Rajasthan,North,India,Corporate,2024-03-15,Gold,Email,Yes,994254,Active
+C0185,Customer 185,Male,26,Jaipur,Rajasthan,North,India,Small Business,2023-12-20,Silver,Web,Yes,676714,Active
+C0186,Customer 186,Female,44,Mumbai,Maharashtra,West,India,Small Business,2023-11-19,Gold,Email,Yes,930542,Active
+C0187,Customer 187,Female,44,Hyderabad,Telangana,South,India,Small Business,2025-10-08,Bronze,Web,No,942701,Active
+C0188,Customer 188,Female,40,Bhubaneswar,Odisha,East,India,Corporate,2023-06-26,Bronze,Referral,No,906528,Inactive
+C0189,Customer 189,Female,41,Bhubaneswar,Odisha,East,India,Small Business,2023-06-01,Gold,Referral,No,813146,Active
+C0190,Customer 190,Female,29,Bengaluru,Karnataka,South,India,Corporate,2026-02-03,Bronze,Email,Yes,643270,Active
+C0191,Customer 191,Female,41,Mumbai,Maharashtra,West,India,Small Business,2023-12-04,Gold,Web,No,987026,Active
+C0192,Customer 192,Male,29,Mumbai,Maharashtra,West,India,Small Business,2024-02-07,Silver,Email,Yes,720557,Active
+C0193,Customer 193,Female,22,Bengaluru,Karnataka,South,India,Consumer,2024-11-22,Gold,Web,Yes,904215,Inactive
+C0194,Customer 194,Male,61,Bhubaneswar,Odisha,East,India,Small Business,2023-03-04,Silver,Web,No,356774,Inactive
+C0195,Customer 195,Female,65,Mumbai,Maharashtra,West,India,Consumer,2025-07-17,Gold,Referral,No,607775,Inactive
+C0196,Customer 196,Female,41,Hyderabad,Telangana,South,India,Small Business,2024-11-27,Silver,Web,No,237119,Active
+C0197,Customer 197,Female,41,Kolkata,West Bengal,East,India,Consumer,2026-02-24,Silver,Email,No,571436,Active
+C0198,Customer 198,Female,39,Bengaluru,Karnataka,South,India,Corporate,2023-07-18,Bronze,Referral,Yes,267458,Active
+C0199,Customer 199,Female,31,Bhubaneswar,Odisha,East,India,Corporate,2024-10-02,Bronze,Referral,No,423529,Inactive
+C0200,Customer 200,Male,53,Chennai,Tamil Nadu,South,India,Corporate,2023-07-04,Gold,Phone,No,151022,Active
+C0201,Customer 201,Male,39,Mumbai,Maharashtra,West,India,Small Business,2025-10-10,Gold,Email,No,240441,Active
+C0202,Customer 202,Male,23,Pune,Maharashtra,West,India,Corporate,2025-04-05,Gold,Phone,No,680097,Active
+C0203,Customer 203,Male,56,Coimbatore,Tamil Nadu,South,India,Corporate,2025-03-02,Bronze,Email,Yes,201378,Inactive
+C0204,Customer 204,Male,30,Pune,Maharashtra,West,India,Consumer,2024-11-25,Bronze,Referral,Yes,147505,Active
+C0205,Customer 205,Male,54,Bengaluru,Karnataka,South,India,Corporate,2024-11-13,Gold,Phone,No,742849,Active
+C0206,Customer 206,Male,58,Bengaluru,Karnataka,South,India,Corporate,2025-03-15,Bronze,Referral,No,597961,Active
+C0207,Customer 207,Female,47,Pune,Maharashtra,West,India,Small Business,2024-11-09,Silver,Email,No,378429,Active
+C0208,Customer 208,Male,31,Chennai,Tamil Nadu,South,India,Small Business,2026-04-10,Bronze,Referral,Yes,961575,Active
+C0209,Customer 209,Female,33,Chennai,Tamil Nadu,South,India,Consumer,2026-03-18,Silver,Web,No,258788,Inactive
+C0210,Customer 210,Male,24,Hyderabad,Telangana,South,India,Small Business,2025-04-20,Gold,Phone,No,794396,Inactive
+C0211,Customer 211,Male,32,Kolkata,West Bengal,East,India,Corporate,2025-02-10,Bronze,Web,No,808700,Active
+C0212,Customer 212,Female,36,Bhubaneswar,Odisha,East,India,Corporate,2025-09-18,Bronze,Web,Yes,412072,Active
+C0213,Customer 213,Male,51,Hyderabad,Telangana,South,India,Corporate,2025-09-28,Bronze,Web,No,227795,Inactive
+C0214,Customer 214,Female,39,Delhi,Delhi,North,India,Consumer,2024-12-07,Silver,Email,No,563865,Active
+C0215,Customer 215,Female,55,Jaipur,Rajasthan,North,India,Corporate,2024-03-14,Bronze,Web,Yes,214533,Active
+C0216,Customer 216,Female,61,Hyderabad,Telangana,South,India,Consumer,2023-04-14,Gold,Email,No,446338,Inactive
+C0217,Customer 217,Female,56,Coimbatore,Tamil Nadu,South,India,Consumer,2023-10-09,Silver,Referral,No,782140,Active
+C0218,Customer 218,Male,62,Mumbai,Maharashtra,West,India,Consumer,2024-10-19,Gold,Phone,Yes,283569,Inactive
+C0219,Customer 219,Male,52,Bengaluru,Karnataka,South,India,Consumer,2023-03-16,Bronze,Web,Yes,109718,Active
+C0220,Customer 220,Male,39,Bhubaneswar,Odisha,East,India,Corporate,2023-08-08,Bronze,Referral,Yes,992401,Inactive
+C0221,Customer 221,Female,42,Mumbai,Maharashtra,West,India,Consumer,2024-01-30,Bronze,Referral,No,853505,Active
+C0222,Customer 222,Male,57,Chennai,Tamil Nadu,South,India,Small Business,2024-11-21,Gold,Phone,No,967162,Inactive
+C0223,Customer 223,Female,46,Kolkata,West Bengal,East,India,Small Business,2024-11-02,Gold,Phone,Yes,600647,Active
+C0224,Customer 224,Male,45,Hyderabad,Telangana,South,India,Consumer,2023-01-14,Silver,Web,No,416614,Active
+C0225,Customer 225,Female,24,Mumbai,Maharashtra,West,India,Small Business,2025-01-06,Gold,Referral,No,267476,Inactive
+C0226,Customer 226,Female,61,Kolkata,West Bengal,East,India,Corporate,2024-09-28,Silver,Phone,Yes,240058,Inactive
+C0227,Customer 227,Male,47,Bengaluru,Karnataka,South,India,Small Business,2025-07-20,Bronze,Referral,Yes,898868,Active
+C0228,Customer 228,Male,54,Bhubaneswar,Odisha,East,India,Small Business,2023-06-17,Silver,Email,Yes,164759,Active
+C0229,Customer 229,Female,31,Bhubaneswar,Odisha,East,India,Corporate,2026-01-04,Bronze,Referral,Yes,813342,Active
+C0230,Customer 230,Female,53,Bhubaneswar,Odisha,East,India,Corporate,2025-09-28,Gold,Referral,Yes,638180,Inactive
+C0231,Customer 231,Female,56,Jaipur,Rajasthan,North,India,Corporate,2026-02-28,Bronze,Web,Yes,515183,Active
+C0232,Customer 232,Female,23,Chennai,Tamil Nadu,South,India,Corporate,2024-03-22,Silver,Email,Yes,172372,Inactive
+C0233,Customer 233,Male,32,Chennai,Tamil Nadu,South,India,Consumer,2024-08-10,Bronze,Referral,No,501059,Inactive
+C0234,Customer 234,Female,64,Delhi,Delhi,North,India,Small Business,2025-02-08,Bronze,Phone,No,224396,Active
+C0235,Customer 235,Female,35,Kolkata,West Bengal,East,India,Consumer,2025-03-15,Gold,Web,No,806216,Inactive
+C0236,Customer 236,Female,36,Kolkata,West Bengal,East,India,Corporate,2025-02-15,Silver,Phone,No,297637,Active
+C0237,Customer 237,Female,36,Chennai,Tamil Nadu,South,India,Consumer,2025-05-08,Gold,Email,Yes,568128,Active
+C0238,Customer 238,Male,49,Hyderabad,Telangana,South,India,Consumer,2023-04-01,Bronze,Phone,Yes,246943,Active
+C0239,Customer 239,Male,57,Hyderabad,Telangana,South,India,Small Business,2026-03-25,Bronze,Web,Yes,416423,Active
+C0240,Customer 240,Male,40,Kolkata,West Bengal,East,India,Corporate,2024-03-28,Gold,Phone,No,682852,Inactive
+C0241,Customer 241,Male,54,Chennai,Tamil Nadu,South,India,Corporate,2024-12-06,Bronze,Referral,No,256467,Active
+C0242,Customer 242,Male,36,Delhi,Delhi,North,India,Consumer,2024-01-12,Silver,Phone,No,160424,Inactive
+C0243,Customer 243,Female,45,Delhi,Delhi,North,India,Consumer,2026-02-15,Silver,Phone,No,778121,Active
+C0244,Customer 244,Female,55,Jaipur,Rajasthan,North,India,Small Business,2025-01-29,Gold,Email,No,495490,Active
+C0245,Customer 245,Female,51,Coimbatore,Tamil Nadu,South,India,Consumer,2024-01-21,Silver,Web,Yes,322097,Active
+C0246,Customer 246,Female,65,Coimbatore,Tamil Nadu,South,India,Small Business,2025-09-07,Bronze,Phone,No,350957,Active
+C0247,Customer 247,Male,55,Mumbai,Maharashtra,West,India,Small Business,2025-02-18,Silver,Web,No,477115,Inactive
+C0248,Customer 248,Male,41,Jaipur,Rajasthan,North,India,Consumer,2023-07-21,Silver,Web,No,147937,Active
+C0249,Customer 249,Male,56,Bengaluru,Karnataka,South,India,Small Business,2023-02-03,Bronze,Referral,No,259815,Active
+C0250,Customer 250,Male,57,Pune,Maharashtra,West,India,Consumer,2024-04-16,Silver,Web,No,900442,Inactive
+C0251,Customer 251,Female,43,Jaipur,Rajasthan,North,India,Consumer,2025-08-01,Gold,Referral,Yes,668472,Active
+C0252,Customer 252,Female,63,Kolkata,West Bengal,East,India,Consumer,2023-03-11,Gold,Referral,Yes,983473,Active
+C0253,Customer 253,Female,34,Coimbatore,Tamil Nadu,South,India,Small Business,2023-11-06,Silver,Web,Yes,747848,Inactive
+C0254,Customer 254,Female,55,Jaipur,Rajasthan,North,India,Small Business,2023-02-02,Silver,Email,Yes,655135,Active
+C0255,Customer 255,Female,53,Kolkata,West Bengal,East,India,Small Business,2024-08-10,Bronze,Referral,Yes,212215,Active
+C0256,Customer 256,Female,33,Kolkata,West Bengal,East,India,Small Business,2023-11-01,Bronze,Web,No,380311,Inactive
+C0257,Customer 257,Male,50,Coimbatore,Tamil Nadu,South,India,Small Business,2025-02-03,Gold,Phone,No,817270,Active
+C0258,Customer 258,Male,45,Chennai,Tamil Nadu,South,India,Corporate,2023-07-11,Bronze,Referral,Yes,767679,Active
+C0259,Customer 259,Male,48,Bengaluru,Karnataka,South,India,Small Business,2023-06-19,Silver,Email,Yes,340928,Active
+C0260,Customer 260,Male,23,Bhubaneswar,Odisha,East,India,Consumer,2025-08-31,Bronze,Web,Yes,288067,Active
+C0261,Customer 261,Female,46,Chennai,Tamil Nadu,South,India,Consumer,2024-02-29,Silver,Phone,Yes,694224,Inactive
+C0262,Customer 262,Male,29,Kolkata,West Bengal,East,India,Small Business,2024-11-10,Bronze,Email,No,156305,Active
+C0263,Customer 263,Female,42,Delhi,Delhi,North,India,Small Business,2024-04-20,Bronze,Referral,No,131065,Active
+C0264,Customer 264,Female,43,Jaipur,Rajasthan,North,India,Small Business,2025-10-01,Silver,Referral,Yes,812712,Inactive
+C0265,Customer 265,Female,25,Coimbatore,Tamil Nadu,South,India,Consumer,2024-08-27,Silver,Phone,No,846248,Active
+C0266,Customer 266,Male,27,Delhi,Delhi,North,India,Consumer,2024-10-10,Gold,Web,No,477401,Active
+C0267,Customer 267,Female,32,Coimbatore,Tamil Nadu,South,India,Corporate,2023-09-29,Silver,Referral,Yes,127538,Active
+C0268,Customer 268,Female,59,Pune,Maharashtra,West,India,Small Business,2026-02-09,Silver,Referral,Yes,406025,Inactive
+C0269,Customer 269,Female,57,Delhi,Delhi,North,India,Small Business,2023-06-23,Gold,Referral,Yes,245585,Active
+C0270,Customer 270,Male,30,Mumbai,Maharashtra,West,India,Consumer,2024-07-03,Gold,Referral,No,541558,Active
+C0271,Customer 271,Male,37,Jaipur,Rajasthan,North,India,Consumer,2023-06-07,Bronze,Referral,Yes,580103,Active
+C0272,Customer 272,Female,46,Bengaluru,Karnataka,South,India,Corporate,2024-09-15,Bronze,Referral,No,561608,Active
+C0273,Customer 273,Male,41,Delhi,Delhi,North,India,Small Business,2023-10-06,Bronze,Phone,No,429446,Active
+C0274,Customer 274,Male,65,Delhi,Delhi,North,India,Small Business,2024-10-15,Silver,Phone,No,494323,Active
+C0275,Customer 275,Female,57,Delhi,Delhi,North,India,Consumer,2025-01-17,Bronze,Phone,Yes,862539,Inactive
+C0276,Customer 276,Male,65,Hyderabad,Telangana,South,India,Consumer,2025-06-16,Silver,Referral,Yes,764101,Active
+C0277,Customer 277,Female,48,Hyderabad,Telangana,South,India,Corporate,2024-06-01,Gold,Referral,No,710528,Inactive
+C0278,Customer 278,Male,55,Kolkata,West Bengal,East,India,Consumer,2025-11-03,Silver,Email,Yes,906307,Active
+C0279,Customer 279,Female,57,Pune,Maharashtra,West,India,Small Business,2023-12-07,Bronze,Referral,No,934909,Inactive
+C0280,Customer 280,Female,37,Coimbatore,Tamil Nadu,South,India,Consumer,2023-01-22,Bronze,Phone,No,492293,Inactive
+C0281,Customer 281,Female,43,Jaipur,Rajasthan,North,India,Consumer,2025-10-21,Silver,Email,No,536182,Active
+C0282,Customer 282,Male,40,Coimbatore,Tamil Nadu,South,India,Corporate,2023-10-18,Silver,Phone,No,465220,Inactive
+C0283,Customer 283,Male,41,Coimbatore,Tamil Nadu,South,India,Consumer,2025-06-16,Silver,Email,Yes,123683,Active
+C0284,Customer 284,Female,54,Coimbatore,Tamil Nadu,South,India,Consumer,2023-12-03,Bronze,Phone,No,687045,Inactive
+C0285,Customer 285,Male,61,Jaipur,Rajasthan,North,India,Consumer,2024-04-19,Gold,Referral,No,130611,Active
+C0286,Customer 286,Male,21,Jaipur,Rajasthan,North,India,Small Business,2025-05-29,Gold,Phone,No,888871,Active
+C0287,Customer 287,Female,44,Bhubaneswar,Odisha,East,India,Corporate,2023-07-28,Gold,Referral,Yes,375098,Inactive
+C0288,Customer 288,Male,60,Kolkata,West Bengal,East,India,Corporate,2024-10-03,Bronze,Email,No,469083,Inactive
+C0289,Customer 289,Male,60,Bhubaneswar,Odisha,East,India,Small Business,2023-12-20,Gold,Phone,No,223587,Active
+C0290,Customer 290,Female,44,Mumbai,Maharashtra,West,India,Small Business,2023-08-28,Gold,Referral,No,725398,Active
+C0291,Customer 291,Male,32,Bhubaneswar,Odisha,East,India,Corporate,2025-02-24,Bronze,Phone,Yes,613427,Active
+C0292,Customer 292,Male,49,Bengaluru,Karnataka,South,India,Small Business,2024-01-19,Gold,Web,Yes,608150,Active
+C0293,Customer 293,Male,47,Hyderabad,Telangana,South,India,Small Business,2025-02-25,Silver,Referral,No,612439,Active
+C0294,Customer 294,Female,35,Coimbatore,Tamil Nadu,South,India,Corporate,2026-03-03,Gold,Web,Yes,663724,Active
+C0295,Customer 295,Male,56,Bengaluru,Karnataka,South,India,Small Business,2025-07-25,Gold,Email,No,912765,Active
+C0296,Customer 296,Male,55,Kolkata,West Bengal,East,India,Consumer,2023-03-27,Silver,Email,Yes,412171,Active
+C0297,Customer 297,Male,26,Jaipur,Rajasthan,North,India,Corporate,2024-06-22,Gold,Phone,Yes,950084,Active
+C0298,Customer 298,Female,60,Bhubaneswar,Odisha,East,India,Consumer,2025-05-26,Gold,Phone,Yes,697767,Active
+C0299,Customer 299,Female,41,Kolkata,West Bengal,East,India,Small Business,2024-07-29,Silver,Web,No,999696,Active
+C0300,Customer 300,Female,38,Bengaluru,Karnataka,South,India,Small Business,2025-04-22,Gold,Phone,Yes,253348,Active
+C0301,Customer 301,Male,30,Hyderabad,Telangana,South,India,Small Business,2025-03-15,Bronze,Web,No,493397,Inactive
+C0302,Customer 302,Male,53,Coimbatore,Tamil Nadu,South,India,Small Business,2023-07-10,Silver,Web,No,611752,Active
+C0303,Customer 303,Female,50,Bhubaneswar,Odisha,East,India,Small Business,2023-01-06,Bronze,Web,Yes,934329,Inactive
+C0304,Customer 304,Female,52,Hyderabad,Telangana,South,India,Corporate,2025-05-29,Silver,Web,No,673897,Active
+C0305,Customer 305,Male,64,Bhubaneswar,Odisha,East,India,Consumer,2025-09-20,Gold,Email,No,117073,Active
+C0306,Customer 306,Male,21,Bengaluru,Karnataka,South,India,Corporate,2025-06-22,Gold,Phone,No,266700,Active
+C0307,Customer 307,Male,26,Coimbatore,Tamil Nadu,South,India,Corporate,2025-01-08,Bronze,Phone,Yes,515595,Active
+C0308,Customer 308,Female,27,Hyderabad,Telangana,South,India,Consumer,2025-05-29,Gold,Referral,Yes,239146,Active
+C0309,Customer 309,Female,21,Kolkata,West Bengal,East,India,Small Business,2025-06-30,Silver,Email,No,827745,Active
+C0310,Customer 310,Female,45,Jaipur,Rajasthan,North,India,Consumer,2023-05-26,Bronze,Email,Yes,428573,Active
+C0311,Customer 311,Male,29,Mumbai,Maharashtra,West,India,Small Business,2023-10-08,Bronze,Phone,Yes,656279,Active
+C0312,Customer 312,Male,43,Bhubaneswar,Odisha,East,India,Small Business,2023-12-03,Gold,Phone,No,746003,Inactive
+C0313,Customer 313,Female,29,Hyderabad,Telangana,South,India,Consumer,2023-06-27,Bronze,Referral,No,550247,Active
+C0314,Customer 314,Male,62,Bengaluru,Karnataka,South,India,Consumer,2024-05-22,Gold,Web,Yes,989080,Active
+C0315,Customer 315,Female,46,Hyderabad,Telangana,South,India,Corporate,2025-11-26,Bronze,Email,Yes,618928,Inactive
+C0316,Customer 316,Male,61,Coimbatore,Tamil Nadu,South,India,Small Business,2024-05-08,Gold,Email,No,431846,Active
+C0317,Customer 317,Male,44,Delhi,Delhi,North,India,Small Business,2026-03-10,Bronze,Phone,No,907789,Active
+C0318,Customer 318,Female,37,Chennai,Tamil Nadu,South,India,Consumer,2023-05-19,Gold,Email,No,631220,Active
+C0319,Customer 319,Male,65,Kolkata,West Bengal,East,India,Corporate,2025-04-30,Gold,Phone,No,187658,Active
+C0320,Customer 320,Female,30,Coimbatore,Tamil Nadu,South,India,Small Business,2025-11-13,Silver,Referral,Yes,425237,Inactive
+C0321,Customer 321,Female,26,Hyderabad,Telangana,South,India,Corporate,2023-04-29,Gold,Referral,Yes,424315,Active
+C0322,Customer 322,Female,65,Coimbatore,Tamil Nadu,South,India,Consumer,2023-01-26,Gold,Referral,No,648411,Active
+C0323,Customer 323,Female,38,Bengaluru,Karnataka,South,India,Small Business,2025-01-31,Gold,Email,No,946314,Inactive
+C0324,Customer 324,Female,37,Mumbai,Maharashtra,West,India,Small Business,2025-12-08,Bronze,Email,No,577310,Active
+C0325,Customer 325,Female,44,Chennai,Tamil Nadu,South,India,Consumer,2025-10-20,Silver,Email,Yes,339500,Active
+C0326,Customer 326,Female,23,Chennai,Tamil Nadu,South,India,Corporate,2023-01-26,Silver,Referral,Yes,287655,Active
+C0327,Customer 327,Female,41,Kolkata,West Bengal,East,India,Consumer,2025-05-08,Silver,Web,No,966121,Active
+C0328,Customer 328,Female,53,Bhubaneswar,Odisha,East,India,Small Business,2025-02-02,Gold,Phone,Yes,943410,Active
+C0329,Customer 329,Male,39,Delhi,Delhi,North,India,Corporate,2023-05-22,Silver,Email,No,108357,Active
+C0330,Customer 330,Male,60,Hyderabad,Telangana,South,India,Consumer,2024-08-20,Silver,Web,No,910144,Active
+C0331,Customer 331,Female,21,Kolkata,West Bengal,East,India,Corporate,2024-05-17,Gold,Phone,No,766834,Active
+C0332,Customer 332,Male,40,Pune,Maharashtra,West,India,Consumer,2023-01-03,Gold,Phone,No,615930,Active
+C0333,Customer 333,Female,23,Bengaluru,Karnataka,South,India,Consumer,2024-07-27,Bronze,Referral,No,580729,Active
+C0334,Customer 334,Female,61,Bhubaneswar,Odisha,East,India,Corporate,2023-07-15,Gold,Email,No,794623,Active
+C0335,Customer 335,Male,41,Hyderabad,Telangana,South,India,Corporate,2024-08-20,Bronze,Web,No,574752,Active
+C0336,Customer 336,Female,29,Hyderabad,Telangana,South,India,Small Business,2023-06-02,Gold,Phone,Yes,272360,Inactive
+C0337,Customer 337,Male,28,Jaipur,Rajasthan,North,India,Small Business,2024-10-05,Silver,Phone,No,423285,Inactive
+C0338,Customer 338,Female,31,Mumbai,Maharashtra,West,India,Small Business,2023-09-03,Silver,Email,Yes,976531,Active
+C0339,Customer 339,Female,43,Bengaluru,Karnataka,South,India,Corporate,2023-07-06,Bronze,Email,No,372805,Active
+C0340,Customer 340,Male,56,Chennai,Tamil Nadu,South,India,Small Business,2025-04-08,Bronze,Phone,Yes,584488,Active
+C0341,Customer 341,Female,24,Bengaluru,Karnataka,South,India,Consumer,2023-09-06,Gold,Phone,No,490322,Active
+C0342,Customer 342,Male,25,Bhubaneswar,Odisha,East,India,Consumer,2026-04-15,Gold,Phone,No,948612,Active
+C0343,Customer 343,Female,23,Coimbatore,Tamil Nadu,South,India,Corporate,2024-11-10,Gold,Phone,No,961600,Inactive
+C0344,Customer 344,Male,64,Jaipur,Rajasthan,North,India,Corporate,2023-03-02,Gold,Web,Yes,296243,Active
+C0345,Customer 345,Female,23,Mumbai,Maharashtra,West,India,Small Business,2025-07-02,Bronze,Phone,No,623126,Inactive
+C0346,Customer 346,Female,26,Kolkata,West Bengal,East,India,Corporate,2025-09-08,Silver,Phone,No,309147,Active
+C0347,Customer 347,Male,43,Kolkata,West Bengal,East,India,Corporate,2023-02-09,Bronze,Referral,No,693129,Active
+C0348,Customer 348,Female,22,Delhi,Delhi,North,India,Corporate,2024-07-07,Bronze,Phone,Yes,950070,Active
+C0349,Customer 349,Male,58,Chennai,Tamil Nadu,South,India,Consumer,2025-08-24,Gold,Email,Yes,788773,Active
+C0350,Customer 350,Female,35,Mumbai,Maharashtra,West,India,Small Business,2025-12-28,Silver,Web,Yes,284655,Active
+C0351,Customer 351,Male,58,Bhubaneswar,Odisha,East,India,Consumer,2024-10-13,Bronze,Web,Yes,690463,Active
+C0352,Customer 352,Male,32,Jaipur,Rajasthan,North,India,Corporate,2026-01-15,Gold,Email,Yes,343924,Active
+C0353,Customer 353,Male,21,Chennai,Tamil Nadu,South,India,Corporate,2025-12-14,Bronze,Phone,Yes,457312,Active
+C0354,Customer 354,Female,30,Pune,Maharashtra,West,India,Small Business,2023-05-02,Bronze,Phone,Yes,987600,Active
+C0355,Customer 355,Male,58,Coimbatore,Tamil Nadu,South,India,Consumer,2025-02-04,Silver,Web,No,243080,Active
+C0356,Customer 356,Male,32,Delhi,Delhi,North,India,Small Business,2025-09-24,Bronze,Web,Yes,797861,Active
+C0357,Customer 357,Male,29,Delhi,Delhi,North,India,Consumer,2024-09-20,Bronze,Email,No,992084,Active
+C0358,Customer 358,Female,61,Bengaluru,Karnataka,South,India,Small Business,2024-10-13,Gold,Referral,Yes,447256,Active
+C0359,Customer 359,Male,31,Hyderabad,Telangana,South,India,Small Business,2024-12-11,Gold,Web,No,111950,Active
+C0360,Customer 360,Female,43,Hyderabad,Telangana,South,India,Corporate,2024-05-26,Gold,Email,Yes,504685,Inactive
+C0361,Customer 361,Male,52,Delhi,Delhi,North,India,Corporate,2023-12-07,Silver,Referral,Yes,969068,Inactive
+C0362,Customer 362,Female,49,Bhubaneswar,Odisha,East,India,Consumer,2024-04-06,Gold,Web,Yes,434199,Active
+C0363,Customer 363,Male,31,Coimbatore,Tamil Nadu,South,India,Corporate,2023-06-01,Gold,Email,Yes,454367,Inactive
+C0364,Customer 364,Female,59,Chennai,Tamil Nadu,South,India,Corporate,2025-06-02,Gold,Email,Yes,447178,Active
+C0365,Customer 365,Male,63,Hyderabad,Telangana,South,India,Corporate,2025-04-18,Silver,Phone,Yes,152047,Inactive
+C0366,Customer 366,Male,30,Bhubaneswar,Odisha,East,India,Consumer,2026-01-30,Silver,Email,No,191885,Active
+C0367,Customer 367,Female,27,Bhubaneswar,Odisha,East,India,Consumer,2025-09-10,Gold,Phone,No,185917,Inactive
+C0368,Customer 368,Male,51,Coimbatore,Tamil Nadu,South,India,Corporate,2024-09-23,Bronze,Web,Yes,773046,Inactive
+C0369,Customer 369,Male,44,Bengaluru,Karnataka,South,India,Consumer,2025-01-29,Silver,Email,No,561102,Inactive
+C0370,Customer 370,Male,57,Mumbai,Maharashtra,West,India,Consumer,2024-04-08,Gold,Email,Yes,800597,Active
+C0371,Customer 371,Female,56,Kolkata,West Bengal,East,India,Consumer,2025-04-27,Silver,Referral,No,700535,Active
+C0372,Customer 372,Female,46,Jaipur,Rajasthan,North,India,Small Business,2024-09-04,Gold,Phone,Yes,893970,Inactive
+C0373,Customer 373,Female,33,Bengaluru,Karnataka,South,India,Consumer,2023-12-09,Gold,Referral,Yes,816309,Inactive
+C0374,Customer 374,Male,41,Hyderabad,Telangana,South,India,Small Business,2023-10-30,Gold,Email,No,683391,Inactive
+C0375,Customer 375,Male,54,Kolkata,West Bengal,East,India,Corporate,2024-10-29,Gold,Referral,Yes,534575,Active
+C0376,Customer 376,Female,27,Bengaluru,Karnataka,South,India,Small Business,2026-03-06,Gold,Web,No,530850,Active
+C0377,Customer 377,Male,23,Delhi,Delhi,North,India,Consumer,2025-09-21,Silver,Referral,Yes,748277,Inactive
+C0378,Customer 378,Male,65,Chennai,Tamil Nadu,South,India,Consumer,2025-03-21,Gold,Referral,No,490533,Active
+C0379,Customer 379,Male,38,Pune,Maharashtra,West,India,Corporate,2024-09-12,Bronze,Email,Yes,240914,Active
+C0380,Customer 380,Male,47,Jaipur,Rajasthan,North,India,Small Business,2024-10-19,Bronze,Email,Yes,563174,Active
+C0381,Customer 381,Male,24,Delhi,Delhi,North,India,Small Business,2025-09-19,Gold,Email,No,844038,Inactive
+C0382,Customer 382,Female,32,Bengaluru,Karnataka,South,India,Consumer,2025-12-09,Gold,Email,Yes,134678,Inactive
+C0383,Customer 383,Female,38,Chennai,Tamil Nadu,South,India,Corporate,2025-01-08,Silver,Referral,Yes,814264,Active
+C0384,Customer 384,Male,59,Hyderabad,Telangana,South,India,Corporate,2025-02-01,Gold,Referral,No,460972,Active
+C0385,Customer 385,Male,22,Mumbai,Maharashtra,West,India,Corporate,2023-07-05,Gold,Phone,Yes,998747,Active
+C0386,Customer 386,Male,62,Hyderabad,Telangana,South,India,Corporate,2024-02-28,Bronze,Email,Yes,597127,Active
+C0387,Customer 387,Female,37,Bengaluru,Karnataka,South,India,Small Business,2023-01-18,Silver,Web,No,494764,Active
+C0388,Customer 388,Female,50,Jaipur,Rajasthan,North,India,Corporate,2024-05-31,Bronze,Referral,Yes,107705,Active
+C0389,Customer 389,Male,64,Kolkata,West Bengal,East,India,Consumer,2024-08-01,Silver,Email,No,389914,Active
+C0390,Customer 390,Male,33,Mumbai,Maharashtra,West,India,Consumer,2024-06-18,Bronze,Phone,Yes,944555,Inactive
+C0391,Customer 391,Female,62,Pune,Maharashtra,West,India,Corporate,2023-10-14,Silver,Web,No,524253,Inactive
+C0392,Customer 392,Female,42,Chennai,Tamil Nadu,South,India,Small Business,2026-04-09,Bronze,Phone,No,804506,Active
+C0393,Customer 393,Female,63,Kolkata,West Bengal,East,India,Small Business,2024-09-06,Gold,Web,Yes,593650,Active
+C0394,Customer 394,Female,64,Mumbai,Maharashtra,West,India,Corporate,2026-02-18,Bronze,Email,Yes,472542,Active
+C0395,Customer 395,Male,44,Mumbai,Maharashtra,West,India,Corporate,2025-05-11,Bronze,Web,No,992563,Active
+C0396,Customer 396,Female,51,Jaipur,Rajasthan,North,India,Consumer,2023-04-20,Bronze,Email,No,655576,Active
+C0397,Customer 397,Female,29,Delhi,Delhi,North,India,Consumer,2023-04-21,Silver,Referral,No,250182,Active
+C0398,Customer 398,Male,42,Bengaluru,Karnataka,South,India,Small Business,2023-06-15,Gold,Web,Yes,104943,Inactive
+C0399,Customer 399,Female,57,Mumbai,Maharashtra,West,India,Consumer,2024-03-04,Silver,Email,Yes,744329,Inactive
+C0400,Customer 400,Male,51,Delhi,Delhi,North,India,Corporate,2025-04-06,Gold,Email,Yes,866152,Active
+C0401,Customer 401,Female,22,Chennai,Tamil Nadu,South,India,Small Business,2024-10-21,Gold,Phone,Yes,827214,Active
+C0402,Customer 402,Female,45,Mumbai,Maharashtra,West,India,Small Business,2023-09-22,Bronze,Web,Yes,168459,Active
+C0403,Customer 403,Male,54,Mumbai,Maharashtra,West,India,Small Business,2024-08-18,Bronze,Web,No,820142,Active
+C0404,Customer 404,Male,33,Pune,Maharashtra,West,India,Consumer,2025-09-30,Silver,Email,Yes,335218,Active
+C0405,Customer 405,Female,28,Hyderabad,Telangana,South,India,Corporate,2023-02-14,Bronze,Email,No,771426,Active
+C0406,Customer 406,Female,63,Kolkata,West Bengal,East,India,Consumer,2023-04-10,Bronze,Email,Yes,823256,Active
+C0407,Customer 407,Male,28,Delhi,Delhi,North,India,Small Business,2025-06-28,Silver,Referral,Yes,315478,Active
+C0408,Customer 408,Female,63,Mumbai,Maharashtra,West,India,Small Business,2025-05-11,Silver,Phone,No,971003,Active
+C0409,Customer 409,Male,28,Kolkata,West Bengal,East,India,Consumer,2023-08-30,Silver,Phone,Yes,915750,Active
+C0410,Customer 410,Male,47,Kolkata,West Bengal,East,India,Corporate,2024-02-18,Gold,Email,No,317783,Inactive
+C0411,Customer 411,Female,21,Pune,Maharashtra,West,India,Small Business,2024-04-25,Gold,Email,No,256390,Active
+C0412,Customer 412,Female,37,Kolkata,West Bengal,East,India,Small Business,2023-06-03,Gold,Referral,No,376956,Inactive
+C0413,Customer 413,Female,23,Chennai,Tamil Nadu,South,India,Corporate,2023-07-24,Silver,Web,No,874416,Active
+C0414,Customer 414,Female,29,Coimbatore,Tamil Nadu,South,India,Small Business,2023-04-04,Bronze,Phone,No,474895,Inactive
+C0415,Customer 415,Female,44,Bhubaneswar,Odisha,East,India,Corporate,2024-07-03,Gold,Email,No,519693,Inactive
+C0416,Customer 416,Male,47,Mumbai,Maharashtra,West,India,Small Business,2025-02-28,Gold,Email,Yes,829988,Active
+C0417,Customer 417,Male,58,Bengaluru,Karnataka,South,India,Corporate,2023-08-01,Bronze,Referral,Yes,741019,Inactive
+C0418,Customer 418,Female,51,Pune,Maharashtra,West,India,Corporate,2023-03-01,Gold,Referral,No,148206,Active
+C0419,Customer 419,Female,64,Mumbai,Maharashtra,West,India,Small Business,2024-10-05,Bronze,Phone,No,644316,Active
+C0420,Customer 420,Male,43,Delhi,Delhi,North,India,Small Business,2024-05-24,Bronze,Referral,Yes,979790,Active
+C0421,Customer 421,Male,52,Chennai,Tamil Nadu,South,India,Consumer,2023-11-18,Gold,Referral,No,352594,Active
+C0422,Customer 422,Female,56,Mumbai,Maharashtra,West,India,Small Business,2023-04-14,Silver,Referral,Yes,182660,Inactive
+C0423,Customer 423,Male,26,Jaipur,Rajasthan,North,India,Corporate,2026-03-19,Silver,Web,Yes,621534,Active
+C0424,Customer 424,Male,23,Coimbatore,Tamil Nadu,South,India,Small Business,2025-04-06,Bronze,Email,Yes,930245,Active
+C0425,Customer 425,Female,62,Kolkata,West Bengal,East,India,Small Business,2026-02-25,Silver,Web,No,965402,Active
+C0426,Customer 426,Male,56,Hyderabad,Telangana,South,India,Small Business,2025-07-19,Bronze,Referral,No,850690,Inactive
+C0427,Customer 427,Female,21,Coimbatore,Tamil Nadu,South,India,Corporate,2023-07-19,Silver,Web,No,836202,Active
+C0428,Customer 428,Male,29,Chennai,Tamil Nadu,South,India,Small Business,2023-12-03,Bronze,Referral,Yes,366642,Active
+C0429,Customer 429,Male,34,Hyderabad,Telangana,South,India,Corporate,2023-09-05,Gold,Web,Yes,893929,Inactive
+C0430,Customer 430,Male,50,Chennai,Tamil Nadu,South,India,Small Business,2023-09-10,Bronze,Phone,No,104549,Active
+C0431,Customer 431,Male,53,Kolkata,West Bengal,East,India,Consumer,2025-06-05,Bronze,Phone,Yes,208585,Inactive
+C0432,Customer 432,Male,47,Bhubaneswar,Odisha,East,India,Small Business,2024-10-21,Bronze,Phone,No,517197,Active
+C0433,Customer 433,Female,29,Mumbai,Maharashtra,West,India,Corporate,2025-07-16,Bronze,Web,No,846455,Active
+C0434,Customer 434,Male,64,Hyderabad,Telangana,South,India,Corporate,2024-03-05,Bronze,Phone,Yes,628371,Active
+C0435,Customer 435,Male,58,Coimbatore,Tamil Nadu,South,India,Small Business,2024-12-22,Bronze,Referral,No,988460,Inactive
+C0436,Customer 436,Female,22,Chennai,Tamil Nadu,South,India,Corporate,2025-12-06,Gold,Email,Yes,309613,Active
+C0437,Customer 437,Male,30,Bengaluru,Karnataka,South,India,Consumer,2024-08-09,Bronze,Web,Yes,890201,Active
+C0438,Customer 438,Female,60,Pune,Maharashtra,West,India,Small Business,2025-07-15,Bronze,Phone,No,349137,Active
+C0439,Customer 439,Male,47,Chennai,Tamil Nadu,South,India,Small Business,2025-02-20,Silver,Email,Yes,879795,Active
+C0440,Customer 440,Female,61,Hyderabad,Telangana,South,India,Small Business,2025-06-26,Bronze,Web,Yes,913849,Active
+C0441,Customer 441,Female,64,Mumbai,Maharashtra,West,India,Consumer,2025-07-08,Gold,Phone,Yes,495522,Active
+C0442,Customer 442,Male,29,Delhi,Delhi,North,India,Consumer,2024-07-25,Bronze,Web,Yes,446621,Inactive
+C0443,Customer 443,Female,41,Bengaluru,Karnataka,South,India,Small Business,2023-03-23,Gold,Web,No,928279,Active
+C0444,Customer 444,Female,32,Coimbatore,Tamil Nadu,South,India,Small Business,2024-10-12,Gold,Phone,No,669461,Inactive
+C0445,Customer 445,Female,34,Coimbatore,Tamil Nadu,South,India,Small Business,2024-12-16,Silver,Web,No,407836,Active
+C0446,Customer 446,Male,56,Bhubaneswar,Odisha,East,India,Small Business,2025-12-22,Gold,Email,No,567316,Active
+C0447,Customer 447,Female,64,Bhubaneswar,Odisha,East,India,Corporate,2024-05-14,Silver,Email,No,369055,Active
+C0448,Customer 448,Male,53,Chennai,Tamil Nadu,South,India,Small Business,2025-11-24,Silver,Referral,Yes,410834,Active
+C0449,Customer 449,Female,27,Pune,Maharashtra,West,India,Consumer,2025-11-18,Bronze,Email,Yes,321021,Active
+C0450,Customer 450,Female,55,Delhi,Delhi,North,India,Small Business,2023-08-01,Bronze,Referral,Yes,883172,Active
+C0451,Customer 451,Male,23,Chennai,Tamil Nadu,South,India,Consumer,2025-07-29,Gold,Email,Yes,932795,Active
+C0452,Customer 452,Female,37,Kolkata,West Bengal,East,India,Corporate,2023-05-25,Silver,Referral,No,554060,Active
+C0453,Customer 453,Female,55,Chennai,Tamil Nadu,South,India,Consumer,2025-03-08,Bronze,Email,Yes,834929,Active
+C0454,Customer 454,Female,39,Pune,Maharashtra,West,India,Small Business,2025-10-26,Silver,Email,No,902449,Inactive
+C0455,Customer 455,Female,51,Delhi,Delhi,North,India,Consumer,2025-03-20,Bronze,Phone,Yes,883029,Inactive
+C0456,Customer 456,Female,40,Kolkata,West Bengal,East,India,Small Business,2024-08-27,Bronze,Web,Yes,680413,Active
+C0457,Customer 457,Female,57,Coimbatore,Tamil Nadu,South,India,Small Business,2023-03-27,Silver,Email,No,320257,Active
+C0458,Customer 458,Female,31,Hyderabad,Telangana,South,India,Consumer,2025-04-25,Gold,Web,Yes,220191,Active
+C0459,Customer 459,Male,62,Bhubaneswar,Odisha,East,India,Small Business,2023-04-22,Gold,Web,Yes,362866,Active
+C0460,Customer 460,Male,42,Hyderabad,Telangana,South,India,Corporate,2026-04-04,Gold,Phone,Yes,398988,Active
+C0461,Customer 461,Male,49,Hyderabad,Telangana,South,India,Corporate,2024-10-12,Bronze,Web,Yes,693025,Active
+C0462,Customer 462,Female,21,Pune,Maharashtra,West,India,Corporate,2025-05-27,Gold,Phone,No,390120,Active
+C0463,Customer 463,Male,50,Bengaluru,Karnataka,South,India,Corporate,2024-11-10,Silver,Web,No,678470,Active
+C0464,Customer 464,Male,29,Bengaluru,Karnataka,South,India,Small Business,2023-06-17,Gold,Web,Yes,862761,Active
+C0465,Customer 465,Female,58,Chennai,Tamil Nadu,South,India,Small Business,2025-11-04,Silver,Phone,Yes,678389,Active
+C0466,Customer 466,Male,62,Kolkata,West Bengal,East,India,Consumer,2026-01-10,Silver,Referral,Yes,909653,Active
+C0467,Customer 467,Female,46,Bengaluru,Karnataka,South,India,Corporate,2025-08-09,Bronze,Email,Yes,989174,Active
+C0468,Customer 468,Male,31,Kolkata,West Bengal,East,India,Consumer,2023-10-15,Bronze,Phone,No,476225,Active
+C0469,Customer 469,Female,25,Hyderabad,Telangana,South,India,Corporate,2025-09-25,Silver,Phone,Yes,801063,Active
+C0470,Customer 470,Male,51,Kolkata,West Bengal,East,India,Corporate,2025-01-09,Gold,Email,No,208240,Active
+C0471,Customer 471,Female,45,Mumbai,Maharashtra,West,India,Small Business,2026-03-31,Silver,Web,Yes,641761,Active
+C0472,Customer 472,Male,43,Delhi,Delhi,North,India,Corporate,2024-04-01,Silver,Referral,Yes,626215,Active
+C0473,Customer 473,Female,25,Jaipur,Rajasthan,North,India,Small Business,2023-12-06,Bronze,Web,Yes,257539,Active
+C0474,Customer 474,Female,63,Bengaluru,Karnataka,South,India,Consumer,2025-01-11,Silver,Web,Yes,604907,Inactive
+C0475,Customer 475,Female,62,Jaipur,Rajasthan,North,India,Corporate,2024-03-07,Gold,Phone,Yes,234098,Active
+C0476,Customer 476,Female,57,Bengaluru,Karnataka,South,India,Consumer,2025-11-15,Gold,Phone,No,288784,Inactive
+C0477,Customer 477,Female,63,Bhubaneswar,Odisha,East,India,Corporate,2026-02-28,Gold,Phone,No,735989,Inactive
+C0478,Customer 478,Female,47,Jaipur,Rajasthan,North,India,Small Business,2023-12-16,Gold,Phone,No,275869,Active
+C0479,Customer 479,Female,45,Jaipur,Rajasthan,North,India,Corporate,2023-05-21,Gold,Email,Yes,312178,Inactive
+C0480,Customer 480,Female,51,Bengaluru,Karnataka,South,India,Small Business,2023-07-17,Bronze,Email,Yes,197717,Inactive
+C0481,Customer 481,Female,64,Bengaluru,Karnataka,South,India,Small Business,2026-01-09,Silver,Referral,No,145549,Inactive
+C0482,Customer 482,Male,43,Hyderabad,Telangana,South,India,Small Business,2025-09-14,Bronze,Email,No,240387,Active
+C0483,Customer 483,Female,39,Jaipur,Rajasthan,North,India,Small Business,2024-04-21,Bronze,Referral,No,298203,Active
+C0484,Customer 484,Female,54,Chennai,Tamil Nadu,South,India,Consumer,2026-03-29,Silver,Phone,No,528706,Active
+C0485,Customer 485,Male,62,Coimbatore,Tamil Nadu,South,India,Small Business,2023-11-13,Silver,Web,No,692100,Active
+C0486,Customer 486,Male,34,Bhubaneswar,Odisha,East,India,Corporate,2024-07-18,Bronze,Referral,Yes,488197,Inactive
+C0487,Customer 487,Male,46,Mumbai,Maharashtra,West,India,Small Business,2024-09-20,Gold,Email,Yes,568289,Active
+C0488,Customer 488,Male,42,Coimbatore,Tamil Nadu,South,India,Small Business,2024-03-15,Bronze,Email,Yes,508005,Active
+C0489,Customer 489,Male,59,Coimbatore,Tamil Nadu,South,India,Corporate,2023-10-25,Gold,Email,No,332543,Active
+C0490,Customer 490,Male,46,Coimbatore,Tamil Nadu,South,India,Small Business,2023-03-19,Bronze,Web,Yes,911188,Active
+C0491,Customer 491,Female,33,Jaipur,Rajasthan,North,India,Small Business,2025-06-18,Bronze,Web,Yes,135242,Active
+C0492,Customer 492,Female,44,Bhubaneswar,Odisha,East,India,Consumer,2023-12-14,Bronze,Email,Yes,191062,Active
+C0493,Customer 493,Male,46,Delhi,Delhi,North,India,Small Business,2024-12-24,Gold,Email,Yes,194546,Active
+C0494,Customer 494,Male,43,Kolkata,West Bengal,East,India,Corporate,2026-04-08,Gold,Phone,No,523580,Active
+C0495,Customer 495,Male,53,Mumbai,Maharashtra,West,India,Consumer,2023-12-25,Bronze,Email,No,456481,Active
+C0496,Customer 496,Male,65,Kolkata,West Bengal,East,India,Corporate,2024-06-11,Silver,Referral,Yes,894269,Active
+C0497,Customer 497,Female,51,Jaipur,Rajasthan,North,India,Consumer,2025-08-01,Silver,Email,No,764443,Active
+C0498,Customer 498,Male,43,Hyderabad,Telangana,South,India,Small Business,2024-10-08,Bronze,Email,No,360317,Active
+C0499,Customer 499,Male,25,Coimbatore,Tamil Nadu,South,India,Small Business,2025-03-28,Gold,Referral,No,470712,Active
+C0500,Customer 500,Female,64,Bhubaneswar,Odisha,East,India,Consumer,2024-07-05,Silver,Phone,Yes,871154,Active
