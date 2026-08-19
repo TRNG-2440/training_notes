@@ -1,0 +1,452 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Data Quality Dimensions — GUI Practical Tutorial</title>
+<style>
+:root{
+  --bg:#f5f7fb;--card:#fff;--ink:#172033;--muted:#667085;--line:#dde3ee;
+  --brand:#3857d6;--brand2:#7c4dff;--good:#087f5b;--warn:#b26a00;--bad:#c92a2a;
+  --code:#101827;--codeink:#e9eefc;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.6}
+header{background:linear-gradient(120deg,var(--brand),var(--brand2));color:#fff;padding:42px 24px}
+header .wrap,.wrap{max-width:1180px;margin:auto}
+h1{font-size:clamp(2rem,5vw,3.5rem);line-height:1.05;margin:0 0 12px}
+.subtitle{max-width:900px;font-size:1.08rem;opacity:.94}
+.topchips{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
+.chip{background:#ffffff22;border:1px solid #ffffff44;padding:6px 10px;border-radius:99px}
+.layout{display:grid;grid-template-columns:260px 1fr;gap:22px;max-width:1180px;margin:24px auto;padding:0 16px}
+nav{position:sticky;top:12px;align-self:start;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px;max-height:calc(100vh - 24px);overflow:auto}
+nav a{display:block;text-decoration:none;color:var(--ink);padding:8px 10px;border-radius:9px;font-size:.93rem}
+nav a:hover{background:#eef2ff;color:var(--brand)}
+main{min-width:0}
+section{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:24px;margin-bottom:18px;box-shadow:0 3px 16px #16213e0a}
+h2{margin-top:0;font-size:1.7rem}
+h3{margin-top:24px}
+.kicker{color:var(--brand);font-weight:800;text-transform:uppercase;letter-spacing:.06em;font-size:.76rem}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.card{border:1px solid var(--line);border-radius:14px;padding:16px;background:#fbfcff}
+.metric{font-size:2rem;font-weight:800;color:var(--brand)}
+.good{color:var(--good)} .bad{color:var(--bad)} .warn{color:var(--warn)}
+.callout{padding:14px 16px;border-left:5px solid var(--brand);background:#eef2ff;border-radius:10px;margin:14px 0}
+.teacher{padding:14px 16px;border-left:5px solid #7c4dff;background:#f6f0ff;border-radius:10px;margin:14px 0}
+.danger{padding:14px 16px;border-left:5px solid var(--bad);background:#fff1f1;border-radius:10px;margin:14px 0}
+.success{padding:14px 16px;border-left:5px solid var(--good);background:#edfff8;border-radius:10px;margin:14px 0}
+pre{background:var(--code);color:var(--codeink);padding:16px;border-radius:12px;overflow:auto}
+code{font-family:Consolas,Monaco,monospace}
+table{width:100%;border-collapse:collapse;display:block;overflow:auto}
+th,td{padding:10px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
+th{background:#f0f3fa;position:sticky;top:0}
+.badcell{background:#ffe8e8;color:#a61e1e;font-weight:700}
+.goodcell{background:#e8fff6;color:#087f5b}
+.step{display:grid;grid-template-columns:40px 1fr;gap:12px;margin:14px 0}
+.stepno{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--brand);color:#fff;font-weight:800}
+.mock{border:1px solid #cfd6e6;border-radius:14px;overflow:hidden;background:#fff;margin:14px 0}
+.mockbar{background:#edf1f7;padding:10px 12px;font-weight:700;border-bottom:1px solid #cfd6e6}
+.mockbody{padding:16px}
+.btn{display:inline-block;padding:8px 12px;background:var(--brand);color:white;border-radius:8px;font-weight:700}
+.field{border:1px solid #cfd6e6;padding:9px;border-radius:8px;background:#fff;margin:6px 0}
+.diagram{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;padding:20px 0}
+.node{padding:14px 16px;border:2px solid #b9c6f8;border-radius:12px;background:#f6f8ff;font-weight:700;text-align:center;min-width:155px}
+.arrow{font-size:1.7rem;color:var(--brand)}
+details{border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin:10px 0}
+summary{cursor:pointer;font-weight:700}
+.quizq{padding:14px;border:1px solid var(--line);border-radius:12px;margin:12px 0}
+.quizq label{display:block;padding:4px}
+button{border:0;background:var(--brand);color:#fff;padding:10px 14px;border-radius:9px;font-weight:700;cursor:pointer}
+#score{font-weight:800;margin-left:10px}
+.progressWrap{height:8px;background:#e8ecf4;border-radius:99px;overflow:hidden;margin-top:16px}
+#progress{height:100%;width:0;background:#fff}
+footer{max-width:1180px;margin:20px auto 40px;padding:0 16px;color:var(--muted)}
+@media(max-width:900px){.layout{grid-template-columns:1fr}nav{position:relative;top:0;max-height:none}.grid4,.grid2{grid-template-columns:1fr}}
+@media print{nav,.quiz-controls{display:none}.layout{grid-template-columns:1fr}section{break-inside:avoid}}
+</style>
+</head>
+<body>
+<header>
+<div class="wrap">
+<div class="kicker" style="color:#fff">TUT • Trainer Edition</div>
+<h1>Dimensions of Data Quality</h1>
+<p class="subtitle">Accuracy • Completeness • Timeliness • Consistency — explained using a simple e-commerce story, a small faulty dataset, and a Google Cloud GUI practical with BigQuery + Knowledge Catalog (formerly Dataplex Universal Catalog).</p>
+<div class="topchips"><span class="chip">GUI-first</span><span class="chip">Small practical demo</span><span class="chip">Expected results</span><span class="chip">Trainer script</span><span class="chip">Quiz + Interview Q&A</span></div>
+<div class="progressWrap"><div id="progress"></div></div>
+</div>
+</header>
+
+<div class="layout">
+<nav>
+<a href="#outcomes">1. Learning outcomes</a>
+<a href="#story">2. Small story</a>
+<a href="#dimensions">3. Four dimensions</a>
+<a href="#dataset">4. Demo dataset</a>
+<a href="#architecture">5. Demo architecture</a>
+<a href="#setup">6. GCP setup</a>
+<a href="#accuracy">7. Accuracy demo</a>
+<a href="#completeness">8. Completeness demo</a>
+<a href="#timeliness">9. Timeliness demo</a>
+<a href="#consistency">10. Consistency demo</a>
+<a href="#scan">11. Data Quality Scan</a>
+<a href="#results">12. Read scan results</a>
+<a href="#fix">13. Fix and re-run</a>
+<a href="#trainer">14. Classroom delivery</a>
+<a href="#troubleshoot">15. Troubleshooting</a>
+<a href="#interview">16. Interview Q&A</a>
+<a href="#quiz">17. Quiz</a>
+<a href="#summary">18. Summary</a>
+</nav>
+
+<main>
+<section id="outcomes">
+<div class="kicker">Learning outcomes</div>
+<h2>What trainees will understand</h2>
+<div class="grid4">
+<div class="card"><b>Accuracy</b><p>Is the value factually/business-correct?</p></div>
+<div class="card"><b>Completeness</b><p>Are required values present?</p></div>
+<div class="card"><b>Timeliness</b><p>Did the data arrive within the required time?</p></div>
+<div class="card"><b>Consistency</b><p>Is the same fact represented uniformly across records/systems?</p></div>
+</div>
+<div class="callout"><b>Memory trick:</b> Correct? → Accuracy. Missing? → Completeness. Late? → Timeliness. Different representation? → Consistency.</div>
+</section>
+
+<section id="story">
+<div class="kicker">Concept story</div>
+<h2>FreshCart's morning dashboard problem</h2>
+<p>FreshCart's manager opens the 9 AM order dashboard and sees ₹10 lakh in sales. The report looks professional—but four hidden data-quality problems make it unreliable.</p>
+<div class="grid2">
+<div class="card"><b>Problem A — Wrong amount</b><p>An order is stored as <code>-250</code>, even though business rules say order value must be positive.</p><p><b>Dimension:</b> Accuracy.</p></div>
+<div class="card"><b>Problem B — Missing customer</b><p>One order has no <code>customer_id</code>.</p><p><b>Dimension:</b> Completeness.</p></div>
+<div class="card"><b>Problem C — Data arrived 3 days late</b><p>An order happened on Aug 15 but was loaded on Aug 18.</p><p><b>Dimension:</b> Timeliness.</p></div>
+<div class="card"><b>Problem D — Multiple codes for same meaning</b><p>Country appears as <code>India</code> and <code>IND</code>; status appears as <code>DELIVERED</code> and <code>Delivered</code>.</p><p><b>Dimension:</b> Consistency.</p></div>
+</div>
+<p class="teacher"><b>Trainer question:</b> “If there are no nulls, can the data still be poor quality?” The answer is yes—accuracy, timeliness and consistency can fail even when every column is populated.</p>
+</section>
+
+<section id="dimensions">
+<div class="kicker">Theory</div>
+<h2>The four dimensions in one table</h2>
+<table>
+<thead><tr><th>Dimension</th><th>Core question</th><th>Typical check</th><th>Example failure</th><th>Typical remediation</th></tr></thead>
+<tbody>
+<tr><td><b>Accuracy</b></td><td>Is it correct?</td><td>Range/reference/business rule</td><td>order_amount = -250</td><td>Validate against source/reference; reject or quarantine</td></tr>
+<tr><td><b>Completeness</b></td><td>Is required data present?</td><td>NOT NULL / completeness %</td><td>customer_id is null</td><td>Make field mandatory; backfill</td></tr>
+<tr><td><b>Timeliness</b></td><td>Is it fresh enough?</td><td>arrival delay / latest timestamp</td><td>loaded 3 days after order</td><td>Fix pipeline SLA / alert on delay</td></tr>
+<tr><td><b>Consistency</b></td><td>Is it represented the same way?</td><td>allowed values / cross-field/system match</td><td>India vs IND</td><td>Standardize canonical values</td></tr>
+</tbody>
+</table>
+<h3>Simple formulas</h3>
+<pre><code>Completeness % = (Non-null required values / Total expected values) × 100
+
+Timeliness delay = loaded_at - order_date
+
+Consistency % = (Rows following the standard / Total rows) × 100
+
+Accuracy % = (Rows verified as correct / Rows checked) × 100</code></pre>
+<div class="callout"><b>Important:</b> Accuracy usually needs a trusted reference or business rule. A value can be syntactically valid but still factually wrong.</div>
+</section>
+
+<section id="dataset">
+<div class="kicker">Practical data</div>
+<h2>Dataset used in the demo</h2>
+<p>Download the CSV supplied with this tutorial and load it into BigQuery as <code>dq_demo.customer_orders</code>.</p>
+<table>
+<thead><tr><th>order_id</th><th>customer_id</th><th>country</th><th>amount</th><th>status</th><th>order_date</th><th>loaded_at</th><th>Intentional issue</th></tr></thead>
+<tbody>
+<tr><td>O1001</td><td>C001</td><td>India</td><td>1250</td><td>SHIPPED</td><td>Aug 18 10:00</td><td>10:08</td><td class="goodcell">Good</td></tr>
+<tr><td>O1002</td><td>C002</td><td>India</td><td>850</td><td>DELIVERED</td><td>10:15</td><td>10:20</td><td class="goodcell">Good</td></tr>
+<tr><td>O1003</td><td class="badcell">blank</td><td>India</td><td>600</td><td>SHIPPED</td><td>10:30</td><td>10:35</td><td class="badcell">Completeness</td></tr>
+<tr><td>O1004</td><td>C004</td><td>India</td><td class="badcell">-250</td><td>DELIVERED</td><td>11:00</td><td>11:07</td><td class="badcell">Accuracy</td></tr>
+<tr><td>O1005</td><td>C005</td><td class="badcell">IND</td><td>400</td><td>SHIPPED</td><td>11:15</td><td>11:22</td><td class="badcell">Consistency</td></tr>
+<tr><td>O1006</td><td>C006</td><td>India</td><td>975</td><td>SHIPPED</td><td class="badcell">Aug 15 09:00</td><td class="badcell">Aug 18 11:40</td><td class="badcell">Timeliness</td></tr>
+<tr><td>O1007</td><td>C007</td><td>India</td><td>1100</td><td class="badcell">Delivered</td><td>12:00</td><td>12:06</td><td class="badcell">Consistency</td></tr>
+<tr><td>O1008</td><td>C008</td><td>India</td><td>730</td><td>SHIPPED</td><td>12:30</td><td>12:35</td><td>Optional email completeness issue</td></tr>
+</tbody>
+</table>
+</section>
+
+<section id="architecture">
+<div class="kicker">Architecture</div>
+<h2>What we are demonstrating</h2>
+<div class="diagram">
+<div class="node">CSV file<br><small>8 order rows</small></div><div class="arrow">→</div>
+<div class="node">BigQuery<br><small>dq_demo.customer_orders</small></div><div class="arrow">→</div>
+<div class="node">Knowledge Catalog<br><small>Data Quality Scan</small></div><div class="arrow">→</div>
+<div class="node">GUI Results<br><small>Pass / Fail / Score</small></div>
+</div>
+<p>Students first inspect the table in BigQuery, then create rules in the data-quality GUI, run the scan, and compare failed rules with the exact faulty records.</p>
+</section>
+
+<section id="setup">
+<div class="kicker">GUI practical — setup</div>
+<h2>Part A — Create the BigQuery dataset and table</h2>
+<div class="step"><div class="stepno">1</div><div><b>Open Google Cloud Console → BigQuery.</b><p>Select the project you will use for the lab.</p></div></div>
+<div class="step"><div class="stepno">2</div><div><b>Create a dataset.</b><p>In Explorer, click the three dots beside your project → <b>Create dataset</b>. Dataset ID: <code>dq_demo</code>. Use a region supported by your environment.</p></div></div>
+<div class="step"><div class="stepno">3</div><div><b>Create a table from the CSV.</b><p>Open <code>dq_demo</code> → <b>Create table</b>. Source: Upload. Select <code>customer_orders_dq_demo.csv</code>. Table: <code>customer_orders</code>. File format: CSV. Enable schema auto-detect, or define the schema manually.</p></div></div>
+<div class="mock"><div class="mockbar">BigQuery → Create table</div><div class="mockbody">
+<div class="field"><b>Create table from:</b> Upload</div>
+<div class="field"><b>File:</b> customer_orders_dq_demo.csv</div>
+<div class="field"><b>Dataset:</b> dq_demo</div>
+<div class="field"><b>Table:</b> customer_orders</div>
+<div class="field"><b>Schema:</b> Auto detect ✓</div>
+<span class="btn">CREATE TABLE</span>
+</div></div>
+<div class="step"><div class="stepno">4</div><div><b>Preview the records.</b><p>Open the table → Preview. Ask students to identify the suspicious values before creating any rules.</p></div></div>
+<div class="teacher"><b>Trainer pause:</b> Let students spot <code>blank customer_id</code>, <code>-250</code>, <code>IND</code>, <code>Delivered</code>, and the 3-day delay.</div>
+</section>
+
+<section id="accuracy">
+<div class="kicker">Dimension 1</div>
+<h2>Accuracy — “Is the value correct?”</h2>
+<p>For our business, a completed order must have <code>order_amount &gt; 0</code>. The value <code>-250</code> is therefore inaccurate.</p>
+<h3>GUI rule idea</h3>
+<p>In the Data Quality Scan, add a <b>range/validity rule</b> if the UI offers the needed comparison. Otherwise use a <b>custom SQL expression</b> rule such as:</p>
+<pre><code>order_amount &gt; 0</code></pre>
+<div class="mock"><div class="mockbar">Add data quality rule — Accuracy</div><div class="mockbody">
+<div class="field"><b>Column:</b> order_amount</div>
+<div class="field"><b>Rule type:</b> Range / Custom SQL expression</div>
+<div class="field"><b>Condition:</b> order_amount &gt; 0</div>
+<div class="field"><b>Dimension:</b> Accuracy</div>
+<div class="field"><b>Threshold:</b> 100%</div>
+</div></div>
+<div class="danger"><b>Expected failure:</b> O1004 because <code>order_amount = -250</code>.</div>
+<p><b>Teaching point:</b> Accuracy is contextual. “250” may be a valid numeric value, but if the source says 1250 or the business rule forbids negatives, it is inaccurate.</p>
+</section>
+
+<section id="completeness">
+<div class="kicker">Dimension 2</div>
+<h2>Completeness — “Is required data present?”</h2>
+<p>The business requires every order to be linked to a customer. Therefore <code>customer_id</code> must not be null.</p>
+<h3>GUI rule</h3>
+<p>Add a <b>non-null / completeness rule</b> on <code>customer_id</code> and set the threshold to 100%.</p>
+<div class="mock"><div class="mockbar">Add data quality rule — Completeness</div><div class="mockbody">
+<div class="field"><b>Column:</b> customer_id</div>
+<div class="field"><b>Rule type:</b> Non-null / Completeness</div>
+<div class="field"><b>Threshold:</b> 100%</div>
+<div class="field"><b>Dimension:</b> Completeness</div>
+</div></div>
+<div class="danger"><b>Expected failure:</b> O1003 has a missing customer_id.</div>
+<p>There are 8 rows and 7 populated customer IDs:</p>
+<pre><code>Completeness = 7 / 8 × 100 = 87.5%</code></pre>
+<div class="teacher"><b>Ask students:</b> If the threshold is 95%, does the rule pass? No—87.5% is below 95%.</div>
+</section>
+
+<section id="timeliness">
+<div class="kicker">Dimension 3</div>
+<h2>Timeliness — “Did the data arrive within the SLA?”</h2>
+<p>FreshCart's SLA says an order should be loaded into analytics within <b>60 minutes</b> of the order time.</p>
+<p>O1006 occurred on Aug 15 but was loaded on Aug 18, so it is far outside the SLA.</p>
+<h3>GUI approach</h3>
+<p>Use a custom SQL expression/row condition comparing <code>order_date</code> and <code>loaded_at</code>. A BigQuery-style expression is:</p>
+<pre><code>TIMESTAMP_DIFF(loaded_at, order_date, MINUTE) &lt;= 60</code></pre>
+<div class="mock"><div class="mockbar">Add data quality rule — Timeliness</div><div class="mockbody">
+<div class="field"><b>Rule type:</b> Custom SQL expression</div>
+<div class="field"><b>Expression:</b> TIMESTAMP_DIFF(loaded_at, order_date, MINUTE) &lt;= 60</div>
+<div class="field"><b>Dimension:</b> Timeliness</div>
+<div class="field"><b>Threshold:</b> 100%</div>
+</div></div>
+<div class="danger"><b>Expected failure:</b> O1006. The other sample rows are loaded within minutes.</div>
+<div class="callout"><b>Key distinction:</b> Timeliness is not “does the date exist?” That would be completeness. Timeliness measures whether the data is fresh/available within the required time window.</div>
+</section>
+
+<section id="consistency">
+<div class="kicker">Dimension 4</div>
+<h2>Consistency — “Are values represented uniformly?”</h2>
+<p>Suppose the standard country value is <code>India</code> and allowed statuses are exactly <code>SHIPPED</code> or <code>DELIVERED</code>.</p>
+<h3>Country consistency rule</h3>
+<pre><code>country = 'India'</code></pre>
+<h3>Status consistency rule</h3>
+<pre><code>order_status IN ('SHIPPED','DELIVERED')</code></pre>
+<div class="grid2">
+<div class="danger"><b>Country failure:</b> O1005 contains <code>IND</code>.</div>
+<div class="danger"><b>Status failure:</b> O1007 contains <code>Delivered</code> instead of the agreed canonical value <code>DELIVERED</code>.</div>
+</div>
+<p><b>Why this matters:</b> A dashboard grouping by status can accidentally produce separate categories for <code>DELIVERED</code> and <code>Delivered</code>.</p>
+</section>
+
+<section id="scan">
+<div class="kicker">GUI practical — scan</div>
+<h2>Part B — Create the Data Quality Scan</h2>
+<p>Google's current product documentation uses the name <b>Knowledge Catalog</b>, formerly <b>Dataplex Universal Catalog</b>. Depending on rollout/account navigation, you may still encounter Dataplex-related wording.</p>
+<div class="step"><div class="stepno">1</div><div><b>Open the data-quality area.</b><p>From the Google Cloud console, locate Knowledge Catalog / Dataplex data quality or Data scans.</p></div></div>
+<div class="step"><div class="stepno">2</div><div><b>Create a data quality scan.</b><p>Choose the BigQuery table <code>dq_demo.customer_orders</code> as the source.</p></div></div>
+<div class="step"><div class="stepno">3</div><div><b>Configure scan scope.</b><p>For this small lab, scan the whole table. For production, sampling or incremental scope may reduce processing cost.</p></div></div>
+<div class="step"><div class="stepno">4</div><div><b>Add four rule groups.</b>
+<table><thead><tr><th>Dimension</th><th>Column(s)</th><th>Rule</th><th>Expected</th></tr></thead><tbody>
+<tr><td>Accuracy</td><td>order_amount</td><td>order_amount &gt; 0</td><td>1 bad row</td></tr>
+<tr><td>Completeness</td><td>customer_id</td><td>Not null</td><td>1 bad row</td></tr>
+<tr><td>Timeliness</td><td>order_date, loaded_at</td><td>delay ≤ 60 min</td><td>1 bad row</td></tr>
+<tr><td>Consistency</td><td>country / order_status</td><td>canonical allowed values</td><td>2 bad rows</td></tr>
+</tbody></table>
+</div></div>
+<div class="step"><div class="stepno">5</div><div><b>Save and run the scan.</b><p>Wait for the scan job to finish, then open the latest result.</p></div></div>
+<div class="success"><b>What students should see:</b> a scan-level result plus rule-level pass/fail information. Exact labels can vary as the Google Cloud console evolves.</div>
+</section>
+
+<section id="results">
+<div class="kicker">Observe results</div>
+<h2>How to interpret the GUI results</h2>
+<p>Do not stop at “scan failed.” Drill down rule by rule.</p>
+<table>
+<thead><tr><th>Rule</th><th>Expected score</th><th>Why</th><th>Failed row</th></tr></thead>
+<tbody>
+<tr><td>Accuracy: amount &gt; 0</td><td>87.5%</td><td>7 of 8 rows satisfy</td><td>O1004</td></tr>
+<tr><td>Completeness: customer_id not null</td><td>87.5%</td><td>7 of 8 populated</td><td>O1003</td></tr>
+<tr><td>Timeliness: ≤ 60 min</td><td>87.5%</td><td>O1006 is late</td><td>O1006</td></tr>
+<tr><td>Consistency: country = India</td><td>87.5%</td><td>IND is nonstandard</td><td>O1005</td></tr>
+<tr><td>Consistency: valid status</td><td>87.5%</td><td>Delivered has wrong casing</td><td>O1007</td></tr>
+</tbody>
+</table>
+<div class="teacher"><b>Trainer technique:</b> Before opening results, ask each student to write down which order IDs they predict will fail. Then reveal the scan results.</div>
+</section>
+
+<section id="fix">
+<div class="kicker">Remediation</div>
+<h2>Part C — Fix the records and re-run</h2>
+<p>Use the BigQuery editor to create a corrected copy for demonstration. This keeps the original “bad” table available for comparison.</p>
+<pre><code>CREATE OR REPLACE TABLE `YOUR_PROJECT_ID.dq_demo.customer_orders_clean` AS
+SELECT
+  order_id,
+  COALESCE(customer_id, 'C003') AS customer_id,
+  customer_name,
+  email,
+  CASE WHEN country = 'IND' THEN 'India' ELSE country END AS country,
+  CASE WHEN order_amount &lt;= 0 THEN ABS(order_amount) ELSE order_amount END AS order_amount,
+  UPPER(order_status) AS order_status,
+  order_date,
+  CASE
+    WHEN TIMESTAMP_DIFF(loaded_at, order_date, MINUTE) &gt; 60
+      THEN TIMESTAMP_ADD(order_date, INTERVAL 10 MINUTE)
+    ELSE loaded_at
+  END AS loaded_at
+FROM `YOUR_PROJECT_ID.dq_demo.customer_orders`;</code></pre>
+<div class="danger"><b>Production warning:</b> We are correcting values artificially only for a classroom demo. In a real system, do not invent missing IDs or change amounts without a trusted source/master record.</div>
+<p>Create/repoint a scan to <code>customer_orders_clean</code>, run the same rules, and compare the results. The goal is to show the quality score moving from failure to pass after remediation.</p>
+</section>
+
+<section id="trainer">
+<div class="kicker">Trainer delivery</div>
+<h2>30–45 minute classroom flow</h2>
+<table>
+<thead><tr><th>Time</th><th>Trainer action</th><th>Student observation</th></tr></thead>
+<tbody>
+<tr><td>0–5 min</td><td>Tell FreshCart story</td><td>Data can look valid but still be untrustworthy</td></tr>
+<tr><td>5–12 min</td><td>Explain 4 dimensions</td><td>Correct / Missing / Late / Different</td></tr>
+<tr><td>12–18 min</td><td>Upload CSV to BigQuery</td><td>Identify suspicious records visually</td></tr>
+<tr><td>18–30 min</td><td>Create four data-quality checks</td><td>Map business expectations to rules</td></tr>
+<tr><td>30–35 min</td><td>Run scan and inspect results</td><td>Rule scores and failures</td></tr>
+<tr><td>35–40 min</td><td>Fix / create clean table</td><td>Quality improves</td></tr>
+<tr><td>40–45 min</td><td>Quiz + interview questions</td><td>Reinforce concepts</td></tr>
+</tbody>
+</table>
+<h3>Whiteboard shortcut</h3>
+<pre><code>Accuracy     = CORRECT?
+Completeness = MISSING?
+Timeliness   = LATE?
+Consistency  = SAME STANDARD?</code></pre>
+</section>
+
+<section id="troubleshoot">
+<div class="kicker">Troubleshooting</div>
+<h2>Common practical issues</h2>
+<details><summary>I cannot find “Dataplex” exactly as shown in older tutorials.</summary><p>Google now documents the product as Knowledge Catalog (formerly Dataplex Universal Catalog). Search for data quality, data scans, or Knowledge Catalog in the console.</p></details>
+<details><summary>The timestamp expression errors.</summary><p>Check that <code>order_date</code> and <code>loaded_at</code> were loaded as TIMESTAMP/DATETIME rather than plain STRING. If auto-detect chose STRING, recreate the table with an explicit schema or cast the values.</p></details>
+<details><summary>My non-null test passes unexpectedly.</summary><p>CSV empty strings can sometimes be interpreted differently depending on schema/load settings. Preview the table and confirm whether the missing field is NULL or an empty string. If needed, use a custom condition that rejects both.</p></details>
+<details><summary>I cannot create/run a scan.</summary><p>Check project billing, API enablement, IAM permissions, and supported source/location. Your organization may also restrict data scan creation.</p></details>
+<details><summary>The UI does not show the exact rule name in this tutorial.</summary><p>Use the closest built-in rule (non-null, range, set, regex) or use a custom SQL expression. Console wording can change over time.</p></details>
+</section>
+
+<section id="interview">
+<div class="kicker">Interview perspective</div>
+<h2>Interview questions and model answers</h2>
+<details><summary>1. What is data quality?</summary><p>Data quality is the degree to which data is fit for its intended use. It is commonly evaluated through dimensions such as accuracy, completeness, timeliness, consistency, validity and uniqueness.</p></details>
+<details><summary>2. Difference between accuracy and completeness?</summary><p>Completeness asks whether a required value exists. Accuracy asks whether the value is correct. A phone number may be present (complete) but belong to the wrong person (inaccurate).</p></details>
+<details><summary>3. Give a timeliness example.</summary><p>A fraud dashboard that receives transactions three hours after they occurred may contain correct data but still fail its timeliness SLA.</p></details>
+<details><summary>4. What causes consistency problems?</summary><p>Different naming conventions, casing, units, codes, date formats, duplicate master data and unsynchronized systems commonly cause consistency problems.</p></details>
+<details><summary>5. Can accuracy be checked only with NOT NULL?</summary><p>No. NOT NULL measures presence, not correctness. Accuracy generally requires a trusted reference, valid range, business rule, or reconciliation with a source system.</p></details>
+<details><summary>6. How do thresholds work?</summary><p>A threshold defines the acceptable percentage of records that must satisfy a rule. For critical identifiers you might require 100%; for less critical attributes the business may accept a lower threshold.</p></details>
+<details><summary>7. Why schedule data-quality scans?</summary><p>Scheduled scans detect degradation over time and can support monitoring, alerting and SLAs instead of relying on one-time manual checks.</p></details>
+<details><summary>8. Is “India” vs “IND” always inconsistent?</summary><p>Only if the data contract defines one canonical representation. If both are valid by design, they are not necessarily inconsistent. Quality rules must reflect business semantics.</p></details>
+</section>
+
+<section id="quiz">
+<div class="kicker">Knowledge check</div>
+<h2>Interactive quiz</h2>
+<form id="quizForm">
+<div class="quizq"><b>1. customer_id is NULL. Which dimension?</b>
+<label><input type="radio" name="q1" value="a"> Accuracy</label>
+<label><input type="radio" name="q1" value="b"> Completeness</label>
+<label><input type="radio" name="q1" value="c"> Timeliness</label></div>
+<div class="quizq"><b>2. A transaction arrives two days after its SLA. Which dimension?</b>
+<label><input type="radio" name="q2" value="a"> Timeliness</label>
+<label><input type="radio" name="q2" value="b"> Completeness</label>
+<label><input type="radio" name="q2" value="c"> Accuracy</label></div>
+<div class="quizq"><b>3. Status is stored as DELIVERED and Delivered. Which dimension?</b>
+<label><input type="radio" name="q3" value="a"> Completeness</label>
+<label><input type="radio" name="q3" value="b"> Consistency</label>
+<label><input type="radio" name="q3" value="c"> Timeliness</label></div>
+<div class="quizq"><b>4. Order amount is present but wrong. Which dimension?</b>
+<label><input type="radio" name="q4" value="a"> Accuracy</label>
+<label><input type="radio" name="q4" value="b"> Completeness</label>
+<label><input type="radio" name="q4" value="c"> Consistency</label></div>
+<div class="quiz-controls"><button type="button" onclick="grade()">Check score</button><span id="score"></span></div>
+</form>
+</section>
+
+<section id="summary">
+<div class="kicker">Final summary</div>
+<h2>One-slide recap</h2>
+<div class="grid4">
+<div class="card"><div class="metric">A</div><b>Accuracy</b><p>Correct against truth/business rule.</p><p><code>-250</code> fails.</p></div>
+<div class="card"><div class="metric">C</div><b>Completeness</b><p>Required value is present.</p><p>Blank customer fails.</p></div>
+<div class="card"><div class="metric">T</div><b>Timeliness</b><p>Available within SLA.</p><p>3-day delay fails.</p></div>
+<div class="card"><div class="metric">C</div><b>Consistency</b><p>Uses agreed standard.</p><p>India/IND fails.</p></div>
+</div>
+<div class="callout"><b>Final trainer line:</b> “Good data is not merely data that exists. It must be correct, sufficiently complete, available when needed, and consistently represented.”</div>
+<h3>Official references</h3>
+<ul>
+<li>Google Cloud — Knowledge Catalog documentation</li>
+<li>Google Cloud — Use auto data quality</li>
+<li>Google Cloud — BigQuery data quality scan</li>
+<li>Google Cloud — BigQuery table creation/loading documentation</li>
+</ul>
+</section>
+</main>
+</div>
+
+<footer>
+<b>TUT Trainer Notes:</b> This tutorial intentionally uses a tiny dataset so trainees can manually predict every failure before the GUI reveals the result. Console labels may evolve; the conceptual mapping remains the same.
+</footer>
+
+<script>
+function grade(){
+ const ans={q1:'b',q2:'a',q3:'b',q4:'a'};
+ let s=0;
+ Object.keys(ans).forEach(q=>{
+   const v=document.querySelector(`input[name="${q}"]:checked`);
+   if(v && v.value===ans[q]) s++;
+ });
+ document.getElementById('score').textContent=`Score: ${s}/4`;
+ localStorage.setItem('dqQuizScore',s);
+}
+const saved=localStorage.getItem('dqQuizScore');
+if(saved!==null) document.getElementById('score').textContent=`Previous score: ${saved}/4`;
+
+window.addEventListener('scroll',()=>{
+ const h=document.documentElement;
+ const pct=(h.scrollTop/(h.scrollHeight-h.clientHeight))*100;
+ document.getElementById('progress').style.width=pct+'%';
+});
+document.querySelectorAll('section').forEach(s=>{
+ s.addEventListener('dblclick',()=>{
+   const key='note_'+s.id;
+   const old=localStorage.getItem(key)||'';
+   const note=prompt('Trainer note for this section:',old);
+   if(note!==null) localStorage.setItem(key,note);
+ });
+});
+</script>
+</body>
+</html>

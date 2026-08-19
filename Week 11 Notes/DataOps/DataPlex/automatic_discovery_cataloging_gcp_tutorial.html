@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Automatic Discovery and Cataloging in GCP Dataplex / Knowledge Catalog</title>
+<style>
+:root{
+  --bg:#f6f8fc; --card:#ffffff; --ink:#1f2937; --muted:#64748b;
+  --blue:#2563eb; --cyan:#0891b2; --green:#16a34a; --amber:#d97706;
+  --red:#dc2626; --purple:#7c3aed; --line:#dbe4f0; --nav:#0f172a; --code:#0b1220;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.7}
+header{background:linear-gradient(120deg,#1d4ed8,#0f766e);color:#fff;padding:38px 24px}
+.wrap{max-width:1240px;margin:auto}
+header h1{margin:8px 0;font-size:2.25rem}
+header p{max-width:920px;margin:0;opacity:.96}
+.badge{display:inline-block;padding:4px 10px;border-radius:999px;background:#dbeafe;color:#1e3a8a;font-size:.8rem;font-weight:800;margin:2px}
+.layout{display:grid;grid-template-columns:270px minmax(0,1fr);max-width:1380px;margin:auto}
+nav{background:var(--nav);color:#e2e8f0;padding:20px 14px;position:sticky;top:0;height:100vh;overflow:auto}
+nav h3{margin-top:0;color:white}
+nav a{display:block;color:#cbd5e1;text-decoration:none;padding:8px 10px;margin:2px 0;border-radius:8px;font-size:.9rem}
+nav a:hover{background:#1e293b;color:#fff}
+main{padding:28px;max-width:1040px;width:100%}
+section{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px;margin:0 0 20px;box-shadow:0 4px 14px rgba(15,23,42,.05)}
+h2{margin-top:0;color:#0f3e84;border-bottom:1px solid var(--line);padding-bottom:10px}
+h3{color:#155e75;margin-top:24px}
+h4{color:#334155}
+p{margin:10px 0}
+table{width:100%;border-collapse:collapse;margin:14px 0}
+th,td{border:1px solid var(--line);padding:10px;vertical-align:top;text-align:left}
+th{background:#eff6ff;color:#1e3a8a}
+.note,.tip,.warning,.scenario,.trainer{padding:14px 16px;border-radius:10px;margin:14px 0}
+.note{background:#eff6ff;border-left:5px solid var(--blue)}
+.tip{background:#f0fdf4;border-left:5px solid var(--green)}
+.warning{background:#fff7ed;border-left:5px solid var(--amber)}
+.scenario{background:#ecfeff;border-left:5px solid var(--cyan)}
+.trainer{background:#f5f3ff;border-left:5px solid var(--purple)}
+.diagram{background:#f8fafc;border:1px dashed #94a3b8;border-radius:12px;padding:18px;margin:16px 0;overflow:auto}
+.flow{display:flex;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap}
+.box{min-width:145px;padding:14px;background:#fff;border:2px solid #93c5fd;border-radius:12px;text-align:center;font-weight:700}
+.box.green{border-color:#86efac}.box.amber{border-color:#fdba74}.box.purple{border-color:#c4b5fd}
+.arrow{font-size:1.6rem;color:#64748b}
+pre{background:var(--code);color:#e2e8f0;padding:16px;border-radius:10px;overflow:auto}
+code{font-family:Consolas,Monaco,monospace}
+.steps{counter-reset:step}
+.step{counter-increment:step;position:relative;padding:14px 14px 14px 54px;margin:12px 0;background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px}
+.step:before{content:counter(step);position:absolute;left:14px;top:14px;width:28px;height:28px;border-radius:50%;background:var(--blue);color:white;display:grid;place-items:center;font-weight:800}
+.kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+.kpi div{background:#f8fafc;border:1px solid var(--line);border-radius:12px;padding:16px}
+.kpi strong{font-size:1.3rem;color:#0f3e84}
+.compare-good{background:#f0fdf4}.compare-bad{background:#fff1f2}
+.quiz-q{padding:14px;border:1px solid var(--line);border-radius:10px;margin:12px 0}
+.quiz-q label{display:block;margin:6px 0}
+button{background:var(--blue);color:white;border:0;border-radius:8px;padding:10px 16px;font-weight:800;cursor:pointer}
+button:hover{background:#1d4ed8}
+#score{font-weight:800;margin-left:10px}
+.small{font-size:.9rem;color:var(--muted)}
+details{border:1px solid var(--line);border-radius:10px;padding:10px 14px;margin:10px 0;background:#fff}
+summary{cursor:pointer;font-weight:800;color:#0f3e84}
+footer{max-width:1040px;margin:auto;padding:18px 28px 50px;color:var(--muted)}
+@media(max-width:880px){.layout{display:block}nav{position:relative;height:auto}main{padding:16px}header h1{font-size:1.75rem}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <span class="badge">GCP</span>
+    <span class="badge">Dataplex / Knowledge Catalog</span>
+    <span class="badge">Automatic Discovery</span>
+    <span class="badge">Cataloging</span>
+    <span class="badge">Practical Demo</span>
+    <h1>Automatic Discovery and Cataloging — Story, Theory, Scenario & Hands-on</h1>
+    <p>A trainer-friendly lesson that starts from the old manual approach, explains why it fails at scale, and shows how automated metadata discovery and cataloging make enterprise data easier to find, understand and govern.</p>
+  </div>
+</header>
+
+<div class="layout">
+<nav>
+  <h3>Lesson Menu</h3>
+  <a href="#goal">1. Learning Goal</a>
+  <a href="#story">2. Small Story</a>
+  <a href="#before">3. Previous Approach</a>
+  <a href="#problems">4. Drawbacks</a>
+  <a href="#meaning">5. What It Means</a>
+  <a href="#metadata">6. What Metadata Is Found?</a>
+  <a href="#workflow">7. How It Works</a>
+  <a href="#freshcart">8. FreshCart Scenario</a>
+  <a href="#compare">9. Before vs After</a>
+  <a href="#dataplex">10. Relation to Dataplex</a>
+  <a href="#demo">11. Practical Demo</a>
+  <a href="#verify">12. Verify Discovery</a>
+  <a href="#search">13. Search the Catalog</a>
+  <a href="#changes">14. What If Data Changes?</a>
+  <a href="#quality">15. Discovery vs Quality</a>
+  <a href="#lineage">16. Discovery vs Lineage</a>
+  <a href="#troubleshoot">17. Troubleshooting</a>
+  <a href="#interview">18. Interview Q&A</a>
+  <a href="#quiz">19. Quiz</a>
+  <a href="#recap">20. Trainer Recap</a>
+</nav>
+
+<main>
+
+<section id="goal">
+<h2>1. Learning Goal</h2>
+<p>By the end of this session, a trainee should be able to explain:</p>
+<ul>
+  <li>What <b>automatic discovery</b> means in a data platform.</li>
+  <li>What <b>cataloging</b> means and why it is different from storing data.</li>
+  <li>How the traditional spreadsheet/manual inventory approach works and why it breaks at scale.</li>
+  <li>How GCP Dataplex / Knowledge Catalog discovers and inventories metadata.</li>
+  <li>How BigQuery and Cloud Storage resources become searchable catalog entries.</li>
+  <li>How to perform a small practical demo in Google Cloud Console.</li>
+</ul>
+<div class="trainer"><b>Trainer opening line:</b> “Today we are not learning how to store data. We are learning how to automatically know <i>what data exists, where it exists, and what it means</i>.”</div>
+</section>
+
+<section id="story">
+<h2>2. Small Story — The Supermarket Without Labels</h2>
+<p>Imagine a supermarket called <b>FreshCart Mart</b>. It has 10,000 products in a warehouse.</p>
+<p>Initially, the warehouse manager keeps a notebook:</p>
+<ul>
+  <li>Rack A1 → Rice</li>
+  <li>Rack A2 → Sugar</li>
+  <li>Rack B1 → Soap</li>
+  <li>Rack C5 → Juice</li>
+</ul>
+<p>For 100 products, this is manageable. But when the warehouse grows to 10,000 products:</p>
+<ul>
+  <li>new products arrive every day,</li>
+  <li>some products move to different racks,</li>
+  <li>some are renamed,</li>
+  <li>some are discontinued,</li>
+  <li>different employees maintain different Excel sheets.</li>
+</ul>
+<div class="warning"><b>Problem:</b> The product exists physically, but employees cannot reliably find it because the <b>inventory information is stale or incomplete</b>.</div>
+
+<h3>Now map the story to data</h3>
+<table>
+<tr><th>Warehouse Story</th><th>Data Platform Meaning</th></tr>
+<tr><td>Product</td><td>Table, file, dataset, view, object</td></tr>
+<tr><td>Rack location</td><td>Project, dataset, bucket, path</td></tr>
+<tr><td>Product label</td><td>Metadata</td></tr>
+<tr><td>Inventory register</td><td>Data catalog</td></tr>
+<tr><td>Worker manually updating notebook</td><td>Manual metadata registration</td></tr>
+<tr><td>Barcode scanner continuously updating inventory</td><td>Automatic discovery and cataloging</td></tr>
+</table>
+
+<div class="tip"><b>Memory shortcut:</b> A data catalog is like the searchable inventory system of a huge digital warehouse.</div>
+</section>
+
+<section id="before">
+<h2>3. Previous Approach — Manual Data Inventory</h2>
+<p>Before automated cataloging, many teams maintained metadata manually using spreadsheets, wiki pages, SharePoint, documents, email threads, or tribal knowledge.</p>
+
+<div class="diagram">
+<div class="flow">
+  <div class="box">Data Engineer<br>creates table</div><div class="arrow">→</div>
+  <div class="box amber">Updates Excel<br>inventory</div><div class="arrow">→</div>
+  <div class="box">Emails team</div><div class="arrow">→</div>
+  <div class="box">Analyst searches<br>manually</div>
+</div>
+</div>
+
+<h3>Example manual register</h3>
+<table>
+<tr><th>Table</th><th>Location</th><th>Owner</th><th>Description</th><th>Last Updated</th></tr>
+<tr><td>orders</td><td>sales_prod</td><td>Sales Team</td><td>Customer orders</td><td>01-Aug</td></tr>
+<tr><td>customers</td><td>crm_prod</td><td>CRM Team</td><td>Customer master</td><td>28-Jul</td></tr>
+<tr><td>payments</td><td>finance_prod</td><td>Finance</td><td>Payment status</td><td>25-Jul</td></tr>
+</table>
+
+<div class="note">The spreadsheet itself is not the problem. The problem is that humans must remember to keep it synchronized with rapidly changing data systems.</div>
+</section>
+
+<section id="problems">
+<h2>4. Drawbacks of the Previous Approach</h2>
+<table>
+<tr><th>Problem</th><th>Example</th><th>Business Impact</th></tr>
+<tr><td>Metadata becomes stale</td><td>Table renamed but Excel is not updated</td><td>Analysts use wrong table</td></tr>
+<tr><td>New assets are missed</td><td>Engineer creates 20 tables but documents only 12</td><td>Useful data remains invisible</td></tr>
+<tr><td>Duplicate documentation</td><td>Three teams maintain three inventories</td><td>Conflicting information</td></tr>
+<tr><td>Slow discovery</td><td>Analyst asks 5 people to locate customer data</td><td>Hours/days lost</td></tr>
+<tr><td>No consistent schema inventory</td><td>Column changes are not documented</td><td>Queries break</td></tr>
+<tr><td>Difficult governance</td><td>No reliable list of sensitive datasets</td><td>Audit risk</td></tr>
+<tr><td>Does not scale</td><td>Thousands of objects across projects/buckets</td><td>Manual work becomes impossible</td></tr>
+</table>
+
+<div class="scenario"><b>Scenario:</b> FreshCart creates a new <code>returns_2026</code> table at 10:00 AM. If documentation is manual, an analyst may not know about it until somebody updates a sheet. With automated metadata harvesting/cataloging, the platform can inventory supported resources without waiting for a person to type the details manually.</div>
+</section>
+
+<section id="meaning">
+<h2>5. What Is Automatic Discovery and Cataloging?</h2>
+
+<h3>5.1 Automatic Discovery</h3>
+<p><b>Automatic discovery</b> means the platform scans or harvests metadata from supported data systems to identify data resources and their technical characteristics.</p>
+<p>Think:</p>
+<pre><code>“What data exists?”
+“Where is it?”
+“What type of resource is it?”
+“What is its schema?”
+“What files/tables are present?”</code></pre>
+
+<h3>5.2 Cataloging</h3>
+<p><b>Cataloging</b> means registering that discovered metadata in a searchable metadata repository so users and systems can find and understand data assets.</p>
+
+<div class="diagram">
+<div class="flow">
+  <div class="box">BigQuery / GCS</div><div class="arrow">→</div>
+  <div class="box green">Automatic<br>Discovery</div><div class="arrow">→</div>
+  <div class="box purple">Metadata<br>Catalog</div><div class="arrow">→</div>
+  <div class="box">Search / Govern /<br>Understand</div>
+</div>
+</div>
+
+<div class="tip"><b>One-line answer:</b> Discovery finds the data; cataloging records information about the data so people can search and understand it.</div>
+
+<h3>Important: data is not copied into the catalog</h3>
+<p>The catalog primarily stores and manages <b>metadata/context</b>. Your underlying data can remain in BigQuery, Cloud Storage, or other supported systems.</p>
+</section>
+
+<section id="metadata">
+<h2>6. What Metadata Can Be Discovered?</h2>
+<p>Metadata is “data about data.” Typical technical metadata includes:</p>
+<table>
+<tr><th>Metadata Type</th><th>Example</th></tr>
+<tr><td>Resource name</td><td><code>orders</code></td></tr>
+<tr><td>Resource type</td><td>BigQuery table</td></tr>
+<tr><td>Location</td><td>Project → dataset → table</td></tr>
+<tr><td>Schema</td><td>order_id INT64, customer_id STRING</td></tr>
+<tr><td>Storage format</td><td>CSV / Parquet / BigQuery native table</td></tr>
+<tr><td>Partition information</td><td>Partitioned by order_date</td></tr>
+<tr><td>Creation/update metadata</td><td>Timestamps</td></tr>
+<tr><td>Business enrichment</td><td>Description, glossary term, owner, aspects</td></tr>
+</table>
+
+<div class="note"><b>Trainer distinction:</b> Automatic discovery is strongest for <b>technical metadata</b>. Business meaning such as “this table is the approved revenue source” may still require enrichment, governance rules, glossary terms, or generated context.</div>
+</section>
+
+<section id="workflow">
+<h2>7. How the Concept Works — Step by Step</h2>
+<div class="steps">
+  <div class="step"><b>Source data exists.</b> Example: BigQuery tables and Cloud Storage files.</div>
+  <div class="step"><b>Discovery/harvesting reads metadata.</b> The platform inspects supported resources or scans configured storage.</div>
+  <div class="step"><b>Metadata entries are created/updated.</b> Resource names, schemas and other details become catalog metadata.</div>
+  <div class="step"><b>Metadata is indexed.</b> It becomes searchable.</div>
+  <div class="step"><b>Users search instead of asking people.</b> Analysts can search for “orders”, “customer”, “finance”, etc.</div>
+  <div class="step"><b>Governance enrichment can be added.</b> Descriptions, classifications, aspects, glossary terms and ownership can improve trust.</div>
+</div>
+
+<h3>Conceptual architecture</h3>
+<div class="diagram">
+<pre>
+            DATA SOURCES
+      +----------------------+
+      | BigQuery             |
+      | Cloud Storage        |
+      | Other supported data |
+      +----------+-----------+
+                 |
+                 v
+      +----------------------+
+      | Metadata harvesting  |
+      | / discovery scanning |
+      +----------+-----------+
+                 |
+                 v
+      +----------------------+
+      | Knowledge Catalog    |
+      | metadata inventory   |
+      +----------+-----------+
+                 |
+       +---------+---------+
+       |         |         |
+       v         v         v
+     Search   Governance  AI/Data users
+</pre>
+</div>
+</section>
+
+<section id="freshcart">
+<h2>8. FreshCart Scenario — From Chaos to Searchable Data</h2>
+
+<h3>Environment</h3>
+<table>
+<tr><th>Team</th><th>Resource</th><th>Example</th></tr>
+<tr><td>Sales</td><td>BigQuery</td><td>orders, customers</td></tr>
+<tr><td>Website</td><td>Cloud Storage</td><td>clickstream CSV, JSON logs</td></tr>
+<tr><td>Finance</td><td>BigQuery</td><td>payments, refunds</td></tr>
+<tr><td>Data Science</td><td>BigQuery / storage</td><td>feature tables, training files</td></tr>
+</table>
+
+<h3>Business question</h3>
+<p>A new analyst joins and asks:</p>
+<pre><code>“Where is the official customer order data?”</code></pre>
+
+<h3>Without a catalog</h3>
+<div class="diagram">
+<div class="flow">
+  <div class="box">Ask manager</div><div class="arrow">→</div>
+  <div class="box">Ask data engineer</div><div class="arrow">→</div>
+  <div class="box">Search Wiki</div><div class="arrow">→</div>
+  <div class="box amber">Guess a table</div>
+</div>
+</div>
+
+<h3>With discovery + catalog</h3>
+<div class="diagram">
+<div class="flow">
+  <div class="box">Search “orders”</div><div class="arrow">→</div>
+  <div class="box green">Catalog results</div><div class="arrow">→</div>
+  <div class="box">Open metadata</div><div class="arrow">→</div>
+  <div class="box">Choose trusted asset</div>
+</div>
+</div>
+
+<div class="trainer"><b>Trainer question:</b> “Did automatic discovery make the data clean?” <br><b>Answer:</b> No. Discovery tells us what exists and describes it. Data quality tells us whether the content meets expectations.</div>
+</section>
+
+<section id="compare">
+<h2>9. Previous Approach vs Automatic Discovery</h2>
+<table>
+<tr><th>Area</th><th class="compare-bad">Manual Approach</th><th class="compare-good">Automatic Discovery + Catalog</th></tr>
+<tr><td>Asset identification</td><td>Person updates spreadsheet</td><td>Metadata is harvested/scanned from supported systems</td></tr>
+<tr><td>New resources</td><td>Can be forgotten</td><td>Can be automatically inventoried depending on integration/configuration</td></tr>
+<tr><td>Schema changes</td><td>Must be documented manually</td><td>Catalog metadata can reflect discovered schema</td></tr>
+<tr><td>Search</td><td>Search documents or ask people</td><td>Central metadata search</td></tr>
+<tr><td>Scale</td><td>Poor</td><td>Designed for large data estates</td></tr>
+<tr><td>Governance foundation</td><td>Fragmented</td><td>Central metadata layer supports governance</td></tr>
+<tr><td>Human role</td><td>Maintain everything</td><td>Enrich, govern and validate important context</td></tr>
+</table>
+</section>
+
+<section id="dataplex">
+<h2>10. How This Relates to Dataplex / Knowledge Catalog</h2>
+<p>Your existing Dataplex lesson uses:</p>
+<pre><code>Lake → Zone → Asset</code></pre>
+<p>That is the <b>logical organization</b> view.</p>
+
+<p>Automatic discovery/cataloging adds the <b>metadata inventory and search</b> view:</p>
+<pre><code>Physical data resource
+      ↓
+Metadata discovered / harvested
+      ↓
+Catalog entry / metadata inventory
+      ↓
+Search + governance + understanding</code></pre>
+
+<h3>Easy correlation</h3>
+<table>
+<tr><th>Existing Dataplex Concept</th><th>Automatic Discovery Connection</th></tr>
+<tr><td>Lake</td><td>Organizes a business/domain area</td></tr>
+<tr><td>Zone</td><td>Groups resources by stage or purpose</td></tr>
+<tr><td>Asset</td><td>Registers a physical GCS bucket or BigQuery dataset in logical organization</td></tr>
+<tr><td>Catalog</td><td>Makes metadata searchable and enrichable</td></tr>
+<tr><td>Discovery</td><td>Finds/harvests metadata from supported resources</td></tr>
+<tr><td>Quality</td><td>Checks whether data meets rules</td></tr>
+<tr><td>Lineage</td><td>Shows how data moves and depends on other data</td></tr>
+</table>
+
+<div class="tip"><b>Do not teach Lake/Zone/Asset and cataloging as the same thing.</b> One is logical organization; the other is metadata discovery/search/governance. They complement each other.</div>
+</section>
+
+<section id="demo">
+<h2>11. Practical Demo — BigQuery + Knowledge Catalog</h2>
+
+<div class="scenario">
+<b>Demo use case:</b> FreshCart has an <code>orders</code> table in BigQuery. We will create the table, confirm its technical metadata, then locate it from the catalog/search experience.
+</div>
+
+<h3>Prerequisites</h3>
+<ul>
+  <li>Google Cloud project.</li>
+  <li>Billing/permissions appropriate for your organization.</li>
+  <li>BigQuery access.</li>
+  <li>Knowledge Catalog / Dataplex API enabled where required.</li>
+  <li>Permission to create and inspect metadata resources.</li>
+</ul>
+
+<h3>Part A — Create a BigQuery dataset</h3>
+<div class="steps">
+  <div class="step">Open <b>Google Cloud Console</b>.</div>
+  <div class="step">Search for <b>BigQuery</b> and open BigQuery Studio.</div>
+  <div class="step">In Explorer, choose your project → <b>Create dataset</b>.</div>
+  <div class="step">Dataset ID: <code>freshcart_catalog_demo</code>.</div>
+  <div class="step">Choose a suitable location and create the dataset.</div>
+</div>
+
+<h3>Part B — Create sample tables</h3>
+<p>Open the query editor and replace <code>YOUR_PROJECT_ID</code> below:</p>
+
+<pre><code>CREATE OR REPLACE TABLE
+`YOUR_PROJECT_ID.freshcart_catalog_demo.orders` AS
+SELECT 1001 AS order_id, 'C001' AS customer_id,
+       DATE '2026-08-01' AS order_date,
+       'Laptop' AS product, 65000 AS amount, 'PAID' AS status
+UNION ALL
+SELECT 1002, 'C002', DATE '2026-08-02', 'Mouse', 800, 'PAID'
+UNION ALL
+SELECT 1003, 'C003', DATE '2026-08-03', 'Keyboard', 1500, 'PENDING';
+
+CREATE OR REPLACE TABLE
+`YOUR_PROJECT_ID.freshcart_catalog_demo.customers` AS
+SELECT 'C001' AS customer_id, 'Asha' AS customer_name, 'Coimbatore' AS city
+UNION ALL
+SELECT 'C002', 'Rahul', 'Chennai'
+UNION ALL
+SELECT 'C003', 'Meena', 'Bengaluru';</code></pre>
+
+<h3>Part C — Inspect metadata in BigQuery first</h3>
+<div class="steps">
+  <div class="step">Expand dataset <code>freshcart_catalog_demo</code>.</div>
+  <div class="step">Open <code>orders</code>.</div>
+  <div class="step">Observe the <b>Schema</b>: order_id, customer_id, order_date, product, amount, status.</div>
+  <div class="step">Observe table details such as table ID, location and creation information.</div>
+</div>
+
+<div class="trainer"><b>Trainer message:</b> “This information is metadata. We are not looking at the sales values yet; we are looking at information describing the table.”</div>
+
+<h3>Part D — Open Knowledge Catalog search</h3>
+<div class="steps">
+  <div class="step">In Google Cloud Console search for <b>Knowledge Catalog</b> or the current Dataplex catalog/search experience.</div>
+  <div class="step">Open the <b>Search</b> page.</div>
+  <div class="step">Search for <code>orders</code>.</div>
+  <div class="step">Filter by project/resource type if too many results appear.</div>
+  <div class="step">Open the matching BigQuery table entry.</div>
+  <div class="step">Review the available metadata such as resource type, location, schema and related context.</div>
+</div>
+
+<div class="note"><b>What proves cataloging?</b> You created the table in BigQuery, then found its metadata through the catalog/search experience instead of maintaining a separate manual inventory.</div>
+</section>
+
+<section id="verify">
+<h2>12. Verify the Discovery / Inventory</h2>
+<p>Ask trainees to answer these questions from the catalog entry:</p>
+<ol>
+  <li>What is the table name?</li>
+  <li>Which project contains it?</li>
+  <li>Which dataset contains it?</li>
+  <li>What is the resource type?</li>
+  <li>Which columns exist?</li>
+  <li>What is the data type of <code>amount</code>?</li>
+</ol>
+
+<div class="kpi">
+<div><strong>Find</strong><br>Locate the resource</div>
+<div><strong>Understand</strong><br>Inspect metadata/schema</div>
+<div><strong>Govern</strong><br>Add trusted context</div>
+<div><strong>Reuse</strong><br>Use the correct asset</div>
+</div>
+</section>
+
+<section id="search">
+<h2>13. Search Demo — Show Why a Catalog Matters</h2>
+<p>Try several searches:</p>
+<pre><code>orders
+customer
+freshcart
+BigQuery table</code></pre>
+
+<p>Explain the difference between:</p>
+<table>
+<tr><th>Question</th><th>Tool/Concept</th></tr>
+<tr><td>“Where is the customer table?”</td><td>Catalog search / discovery</td></tr>
+<tr><td>“Does customer_id contain null?”</td><td>Data quality / profiling</td></tr>
+<tr><td>“Which pipeline created this table?”</td><td>Lineage</td></tr>
+<tr><td>“Who should access this table?”</td><td>IAM / governance policy</td></tr>
+<tr><td>“What does active_customer mean?”</td><td>Business glossary / metadata enrichment</td></tr>
+</table>
+</section>
+
+<section id="changes">
+<h2>14. What If the Data Changes?</h2>
+
+<h3>Change the schema</h3>
+<p>Run:</p>
+<pre><code>ALTER TABLE
+`YOUR_PROJECT_ID.freshcart_catalog_demo.orders`
+ADD COLUMN sales_channel STRING;</code></pre>
+
+<p>Then reopen BigQuery schema and later check the catalog metadata after the platform has reflected the change.</p>
+
+<div class="warning"><b>Teaching point:</b> Do not promise that every source change appears instantly in every catalog surface. Refresh/harvesting behavior depends on the source, integration and feature. The important concept is that metadata inventory is platform-managed rather than a human-maintained Excel sheet.</div>
+</section>
+
+<section id="quality">
+<h2>15. Automatic Discovery vs Data Quality</h2>
+<table>
+<tr><th>Automatic Discovery</th><th>Data Quality</th></tr>
+<tr><td>Finds what data exists</td><td>Checks whether data is correct/acceptable</td></tr>
+<tr><td>Captures technical metadata</td><td>Evaluates rules</td></tr>
+<tr><td>Example: column <code>amount</code> exists</td><td>Example: amount must be &gt; 0</td></tr>
+<tr><td>Question: “What do we have?”</td><td>Question: “Can we trust it?”</td></tr>
+</table>
+
+<div class="trainer"><b>Best trainer analogy:</b> Discovery is the hospital patient registry. Data quality is the medical test result. Knowing the patient exists does not mean the patient is healthy.</div>
+</section>
+
+<section id="lineage">
+<h2>16. Automatic Discovery vs Lineage</h2>
+<div class="diagram">
+<div class="flow">
+  <div class="box">CSV</div><div class="arrow">→</div>
+  <div class="box">Dataflow</div><div class="arrow">→</div>
+  <div class="box green">BigQuery Orders</div><div class="arrow">→</div>
+  <div class="box">Dashboard</div>
+</div>
+</div>
+
+<table>
+<tr><th>Catalog / Discovery</th><th>Lineage</th></tr>
+<tr><td>“orders table exists and has these columns.”</td><td>“orders came from this source/pipeline and feeds this report.”</td></tr>
+<tr><td>Inventory + metadata</td><td>Movement + dependency</td></tr>
+</table>
+</section>
+
+<section id="troubleshoot">
+<h2>17. Troubleshooting</h2>
+<table>
+<tr><th>Issue</th><th>Likely Cause</th><th>Check</th></tr>
+<tr><td>Knowledge Catalog page not available</td><td>API/permissions/product navigation</td><td>Enable required APIs and verify IAM</td></tr>
+<tr><td>Table not visible in search</td><td>Wrong project/filter, indexing/harvesting delay, permission</td><td>Project filters, resource type, permissions, retry later</td></tr>
+<tr><td>Cannot see schema</td><td>Insufficient metadata/data permissions</td><td>IAM roles and resource access</td></tr>
+<tr><td>Cloud Storage discovery scan fails</td><td>Location, service account, permissions, unsupported configuration</td><td>Bucket location, scan configuration and IAM</td></tr>
+<tr><td>Users find too many similar tables</td><td>Technical metadata alone is not enough</td><td>Add descriptions, owners, glossary/aspects and governance context</td></tr>
+</table>
+</section>
+
+<section id="interview">
+<h2>18. Interview Questions & Answers</h2>
+
+<details open><summary>1. What is automatic data discovery?</summary>
+<p>It is the automated identification and metadata harvesting/scanning of supported data resources so the platform can understand what data assets exist and their technical characteristics.</p>
+</details>
+
+<details><summary>2. What is data cataloging?</summary>
+<p>Cataloging is storing and organizing metadata about data assets in a searchable repository so users can discover, understand and govern those assets.</p>
+</details>
+
+<details><summary>3. Discovery vs cataloging?</summary>
+<p>Discovery finds or harvests metadata. Cataloging registers/indexes that metadata so it can be searched and managed.</p>
+</details>
+
+<details><summary>4. Does a data catalog store all business data?</summary>
+<p>No. It mainly stores metadata/context about data resources. The underlying data remains in systems such as BigQuery or Cloud Storage.</p>
+</details>
+
+<details><summary>5. Why is manual cataloging difficult?</summary>
+<p>Because people must continuously update documentation when resources, schemas and ownership change. At enterprise scale this becomes stale, incomplete and inconsistent.</p>
+</details>
+
+<details><summary>6. Give a scenario for automatic discovery.</summary>
+<p>A retailer has hundreds of BigQuery datasets and Cloud Storage buckets. Instead of asking engineers to maintain spreadsheets, a catalog automatically inventories supported resources and makes their metadata searchable.</p>
+</details>
+
+<details><summary>7. Is automatic discovery the same as data quality?</summary>
+<p>No. Discovery tells you what exists. Data quality determines whether values meet business rules.</p>
+</details>
+
+<details><summary>8. Is automatic discovery the same as lineage?</summary>
+<p>No. Discovery inventories metadata; lineage shows upstream/downstream data movement and dependencies.</p>
+</details>
+
+<details><summary>9. What is metadata?</summary>
+<p>Metadata is information describing data, such as table name, schema, location, type, descriptions, ownership and other context.</p>
+</details>
+
+<details><summary>10. Why is a catalog useful for AI and analytics?</summary>
+<p>It provides organized enterprise context so analysts, applications and AI systems can locate and reason over governed data assets more reliably.</p>
+</details>
+</section>
+
+<section id="quiz">
+<h2>19. Quick Quiz</h2>
+<form id="quizForm">
+
+<div class="quiz-q">
+<b>1. Automatic discovery primarily answers which question?</b>
+<label><input type="radio" name="q1" value="a"> What data exists?</label>
+<label><input type="radio" name="q1" value="b"> Is profit positive?</label>
+<label><input type="radio" name="q1" value="c"> Which VM size should I use?</label>
+</div>
+
+<div class="quiz-q">
+<b>2. What is stored in a catalog primarily?</b>
+<label><input type="radio" name="q2" value="a"> Metadata</label>
+<label><input type="radio" name="q2" value="b"> Only images</label>
+<label><input type="radio" name="q2" value="c"> CPU cores</label>
+</div>
+
+<div class="quiz-q">
+<b>3. Which is a manual approach?</b>
+<label><input type="radio" name="q3" value="a"> Excel inventory maintained by engineers</label>
+<label><input type="radio" name="q3" value="b"> Automatic metadata harvesting</label>
+</div>
+
+<div class="quiz-q">
+<b>4. Which concept tells us whether amount &gt; 0?</b>
+<label><input type="radio" name="q4" value="a"> Discovery</label>
+<label><input type="radio" name="q4" value="b"> Data Quality</label>
+</div>
+
+<div class="quiz-q">
+<b>5. Which concept tells us where a table came from?</b>
+<label><input type="radio" name="q5" value="a"> Lineage</label>
+<label><input type="radio" name="q5" value="b"> Catalog search only</label>
+</div>
+
+<button type="button" onclick="gradeQuiz()">Check Score</button>
+<span id="score"></span>
+</form>
+</section>
+
+<section id="recap">
+<h2>20. Trainer Recap — 60 Seconds</h2>
+<pre><code>OLD WAY
+-------
+Engineer creates data
+→ manually updates Excel/wiki
+→ documentation becomes stale
+→ users cannot find trusted data
+
+NEW WAY
+-------
+BigQuery / Cloud Storage / supported sources
+→ automatic metadata discovery / harvesting
+→ metadata catalog
+→ search + understand + govern
+
+Discovery = What data exists?
+Catalog  = Where is metadata organized/searchable?
+Quality  = Can I trust the values?
+Lineage  = Where did the data come from?
+
+FreshCart demo:
+Create BigQuery tables
+→ inspect metadata
+→ search them in Knowledge Catalog
+→ explain why no separate Excel inventory is required</code></pre>
+
+<div class="tip"><b>Final memory story:</b> Automatic discovery is the barcode scanner. The catalog is the supermarket inventory system. The actual product remains on the shelf.</div>
+</section>
+
+<section>
+<h2>Reference Notes for Trainers</h2>
+<p>This lesson extends the provided FreshCart Dataplex tutorial, especially its cataloging/metadata pillar and its BigQuery + Dataplex hands-on flow.</p>
+<p>Current Google Cloud terminology uses <b>Knowledge Catalog</b> for the catalog/governance experience formerly associated with Dataplex Universal Catalog. Google documents automatic metadata harvesting across supported Google data systems, automatic cataloging of BigQuery resource metadata, and discovery scans for Cloud Storage.</p>
+<p class="small">Because Google Cloud Console labels evolve, trainees should search the console for “Knowledge Catalog”, “Dataplex”, “Search”, or “Data scans” if a screenshot or menu name differs from older training material.</p>
+</section>
+
+</main>
+</div>
+
+<footer>Automatic Discovery & Cataloging — GCP Dataplex / Knowledge Catalog • Trainer-friendly single-file tutorial</footer>
+
+<script>
+function gradeQuiz(){
+  const answers={q1:'a',q2:'a',q3:'a',q4:'b',q5:'a'};
+  let score=0;
+  for(const q in answers){
+    const el=document.querySelector('input[name="'+q+'"]:checked');
+    if(el && el.value===answers[q]) score++;
+  }
+  document.getElementById('score').textContent='Score: '+score+'/5';
+  localStorage.setItem('autoDiscoveryQuizScore',score);
+}
+window.addEventListener('load',()=>{
+  const old=localStorage.getItem('autoDiscoveryQuizScore');
+  if(old!==null) document.getElementById('score').textContent='Previous score: '+old+'/5';
+});
+</script>
+</body>
+</html>

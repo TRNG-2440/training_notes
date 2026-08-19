@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GCP Monitoring, Logging, Log-based Metrics & Alerting — Dataflow + Managed Airflow/Composer</title>
+<style>
+:root{
+  --bg:#f7f9fc; --card:#ffffff; --text:#172033; --muted:#5c667a; --line:#dfe5ef;
+  --blue:#1a73e8; --blue2:#eaf2ff; --green:#188038; --green2:#e6f4ea;
+  --red:#d93025; --red2:#fce8e6; --amber:#b06000; --amber2:#fef7e0;
+  --purple:#7b1fa2; --purple2:#f3e8fd; --code:#111827; --codeText:#e5edf7;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+header{background:linear-gradient(135deg,#0b57d0,#1a73e8);color:#fff;padding:34px 24px}
+header .wrap{max-width:1200px;margin:auto}
+h1{font-size:2.25rem;line-height:1.15;margin:0 0 10px}
+.subtitle{font-size:1.05rem;opacity:.95;max-width:950px}
+.badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.badge{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.3);padding:6px 10px;border-radius:999px;font-size:.86rem}
+.layout{max-width:1400px;margin:0 auto;display:grid;grid-template-columns:280px minmax(0,1fr);gap:22px;padding:24px}
+nav{position:sticky;top:16px;align-self:start;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;max-height:calc(100vh - 32px);overflow:auto}
+nav h3{margin:0 0 12px;font-size:1rem}
+nav a{display:block;color:#334155;text-decoration:none;padding:7px 8px;border-radius:8px;font-size:.9rem}
+nav a:hover{background:var(--blue2);color:var(--blue)}
+main{min-width:0}
+section{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px;margin-bottom:20px;box-shadow:0 2px 8px rgba(15,23,42,.035)}
+h2{font-size:1.55rem;margin:0 0 12px;color:#0f3d79}
+h3{margin-top:24px;color:#153b67}
+h4{color:#304861}
+p{margin:8px 0 12px}
+.callout{border-left:5px solid var(--blue);background:var(--blue2);padding:14px 16px;border-radius:10px;margin:14px 0}
+.callout.good{border-color:var(--green);background:var(--green2)}
+.callout.warn{border-color:#f9ab00;background:var(--amber2)}
+.callout.bad{border-color:var(--red);background:var(--red2)}
+.callout.purple{border-color:var(--purple);background:var(--purple2)}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.card{border:1px solid var(--line);border-radius:12px;padding:15px;background:#fff}
+.card h4{margin:0 0 6px}
+table{border-collapse:collapse;width:100%;margin:12px 0;font-size:.94rem}
+th,td{border:1px solid var(--line);padding:10px;text-align:left;vertical-align:top}
+th{background:#f3f6fb}
+code{background:#eef2f7;padding:2px 5px;border-radius:5px}
+pre{background:var(--code);color:var(--codeText);padding:16px;border-radius:12px;overflow:auto;white-space:pre-wrap;word-break:break-word}
+.diagram{background:#0f172a;color:#e2e8f0;border-radius:14px;padding:18px;overflow:auto;font-family:Consolas,monospace;line-height:1.45}
+.step{display:grid;grid-template-columns:42px 1fr;gap:12px;margin:16px 0}
+.stepnum{width:36px;height:36px;border-radius:50%;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700}
+.path{font-family:Consolas,monospace;background:#f1f5f9;padding:8px 10px;border-radius:8px;display:inline-block}
+.kpi{font-size:1.55rem;font-weight:700}
+.small{font-size:.88rem;color:var(--muted)}
+.check{padding:10px 12px;border:1px dashed #b8c3d6;border-radius:10px;margin:8px 0}
+input[type=checkbox]{transform:scale(1.12);margin-right:8px}
+.progressWrap{background:#e9eef6;border-radius:999px;height:12px;overflow:hidden;margin:10px 0}
+.progressBar{height:100%;background:#1a73e8;width:0%}
+.quiz q{font-weight:600}
+.quiz button,.btn{border:0;background:#1a73e8;color:#fff;padding:9px 13px;border-radius:8px;cursor:pointer}
+.answer{display:none;margin-top:8px;padding:10px;background:#f8fafc;border-left:4px solid #1a73e8;border-radius:6px}
+.source{font-size:.87rem;color:#526079}
+.footer{max-width:1200px;margin:0 auto;padding:10px 24px 34px;color:#667085}
+@media(max-width:1000px){.layout{grid-template-columns:1fr}nav{position:relative;top:auto;max-height:none}.grid2,.grid3{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header>
+ <div class="wrap">
+  <h1>GCP Monitoring & Logging for Dataflow + Managed Airflow (Composer)</h1>
+  <div class="subtitle">Detailed tutorial + classroom GUI lab: Cloud Monitoring, Cloud Logging, Logs Explorer, log-based metrics, Alerting Policies, incidents, root-cause analysis, and email alert notifications.</div>
+  <div class="badges">
+   <span class="badge">Google Cloud Console GUI</span>
+   <span class="badge">Dataflow</span>
+   <span class="badge">Managed Airflow / Cloud Composer</span>
+   <span class="badge">Cloud Logging</span>
+   <span class="badge">Cloud Monitoring</span>
+   <span class="badge">Email Alerts</span>
+  </div>
+ </div>
+</header>
+
+<div class="layout">
+<nav>
+ <h3>Contents</h3>
+ <a href="#goal">1. Goal & architecture</a>
+ <a href="#concepts">2. Monitoring vs Logging</a>
+ <a href="#dataflow">3. Dataflow monitoring</a>
+ <a href="#composer">4. Composer / Managed Airflow</a>
+ <a href="#logging">5. Cloud Logging</a>
+ <a href="#lbm">6. Log-based metrics</a>
+ <a href="#alerts">7. Alerting Policies — deep dive</a>
+ <a href="#scenario">8. Real-world scenario</a>
+ <a href="#prereq">9. Demo prerequisites</a>
+ <a href="#demo1">10. Demo 1 — monitor success</a>
+ <a href="#demo2">11. Demo 2 — Composer failure</a>
+ <a href="#metric">12. Create log-based metric</a>
+ <a href="#email">13. Configure email channel</a>
+ <a href="#policy">14. Create metric alert policy</a>
+ <a href="#test">15. Test end-to-end alert</a>
+ <a href="#dataflowalert">16. Native Dataflow failure alert</a>
+ <a href="#incident">17. Incident response</a>
+ <a href="#advanced">18. Real-world alert patterns</a>
+ <a href="#trouble">19. Troubleshooting</a>
+ <a href="#trainer">20. Classroom delivery plan</a>
+ <a href="#quiz">21. Quiz</a>
+ <h3 style="margin-top:18px">Lab progress</h3>
+ <div class="progressWrap"><div class="progressBar" id="progressBar"></div></div>
+ <div id="progressText" class="small">0% complete</div>
+ <button class="btn" onclick="resetProgress()" style="margin-top:8px">Reset progress</button>
+</nav>
+
+<main>
+<section id="goal">
+<h2>1. What are we trying to build?</h2>
+<p>Assume a retail company loads daily sales. Cloud Composer / Managed Airflow orchestrates the workflow, Dataflow transforms records, BigQuery stores the cleaned result, and the operations team needs to know immediately when something fails.</p>
+<div class="diagram">
+Cloud Storage (sales.csv)
+        │
+        ▼
+Managed Airflow / Cloud Composer
+        │  orchestrates
+        ▼
+Dataflow / Apache Beam
+        │  transforms
+        ▼
+BigQuery (retail.sales_clean)
+
+        OBSERVABILITY LAYER
+        ──────────────────
+Dataflow + Airflow logs
+        │
+        ▼
+Cloud Logging / Logs Explorer
+        │
+        ├───────────────┐
+        ▼               ▼
+Log-based metric     Direct log alert
+failure_count
+        │
+        ▼
+Cloud Monitoring
+        │
+        ▼
+Alerting Policy
+        │ threshold > 0
+        ▼
+Incident
+        │
+        ▼
+Email notification
+        │
+        ▼
+Engineer → Logs → Root cause → Fix → Rerun
+</div>
+<div class="callout good"><b>Teaching objective:</b> students should understand the difference between observing health, investigating detail, turning business-specific log events into metrics, and notifying an engineer when a threshold is crossed.</div>
+</section>
+
+<section id="concepts">
+<h2>2. Monitoring vs Logging — the most important foundation</h2>
+<div class="grid2">
+ <div class="card">
+  <h4>Monitoring</h4>
+  <p>Monitoring answers: <b>“Is the system healthy?”</b></p>
+  <p>It deals mainly with measurable values called <b>metrics</b>.</p>
+  <ul>
+   <li>Job state</li><li>CPU utilization</li><li>worker count</li>
+   <li>records processed</li><li>system lag</li><li>DAG/task failures</li>
+  </ul>
+ </div>
+ <div class="card">
+  <h4>Logging</h4>
+  <p>Logging answers: <b>“What exactly happened, and why?”</b></p>
+  <p>It stores timestamped execution events.</p>
+  <ul>
+   <li>Python exceptions</li><li>permission denied</li><li>table not found</li>
+   <li>worker messages</li><li>Airflow task traceback</li>
+  </ul>
+ </div>
+</div>
+<table>
+<tr><th>Question</th><th>Monitoring</th><th>Logging</th></tr>
+<tr><td>Purpose</td><td>Detect abnormal health or performance</td><td>Investigate detailed execution events</td></tr>
+<tr><td>Typical data</td><td>Numbers/time series</td><td>Text/structured log entries</td></tr>
+<tr><td>Example</td><td>Failed jobs = 1</td><td>BigQuery table not found</td></tr>
+<tr><td>Used for</td><td>Dashboards, SLOs, alerts</td><td>Troubleshooting, audit, root cause</td></tr>
+</table>
+<div class="callout"><b>Simple analogy:</b> the warning light on a car dashboard is monitoring. The diagnostic code explaining the engine fault is logging.</div>
+</section>
+
+<section id="dataflow">
+<h2>3. Monitoring and Logging for Dataflow</h2>
+<p>Dataflow is Google Cloud's managed service for executing Apache Beam batch and streaming pipelines. For operations, there are two main places you should teach:</p>
+<div class="grid2">
+ <div class="card"><h4>Dataflow Job details</h4><p>Best for one specific pipeline/job: job state, graph, stages, throughput, worker/resource metrics, I/O and execution progress.</p></div>
+ <div class="card"><h4>Cloud Monitoring</h4><p>Best for cross-service metrics, dashboards, historical charts, alert conditions, incidents and notification channels.</p></div>
+</div>
+<h3>Important Dataflow signals</h3>
+<table>
+<tr><th>Signal</th><th>What it tells you</th><th>Real-world concern</th></tr>
+<tr><td>Job status / Failed</td><td>Whether a batch/streaming job failed</td><td>Daily load missing</td></tr>
+<tr><td>Element count / throughput</td><td>How much data is flowing</td><td>Zero or unexpectedly low volume</td></tr>
+<tr><td>CPU / worker utilization</td><td>Resource pressure</td><td>Pipeline slower than expected</td></tr>
+<tr><td>System lag</td><td>How far streaming processing is behind</td><td>SLA breach in near-real-time use cases</td></tr>
+<tr><td>Worker count / autoscaling</td><td>Scale behavior</td><td>Cost or insufficient parallelism</td></tr>
+</table>
+<h3>GUI path</h3>
+<p><span class="path">Google Cloud Console → Dataflow → Jobs → select job</span></p>
+<p>Show trainees: <b>Job info → Execution details / pipeline graph → Job metrics → Logs</b>. The exact tab names can vary slightly as the console evolves, but the job details page remains the operational home for a single Dataflow job.</p>
+</section>
+
+<section id="composer">
+<h2>4. Monitoring and Logging for Cloud Composer / Managed Airflow</h2>
+<p>Google now presents the newer Composer experience as <b>Managed Airflow</b> in parts of the console and documentation. The core operational concepts are still Apache Airflow DAGs, runs, tasks, scheduler, workers and logs.</p>
+<h3>What should you monitor?</h3>
+<div class="grid3">
+ <div class="card"><h4>DAG runs</h4><p>Success/failure, duration, schedule adherence.</p></div>
+ <div class="card"><h4>Task instances</h4><p>Failed tasks, retries, long-running tasks, queueing.</p></div>
+ <div class="card"><h4>Environment health</h4><p>Scheduler/workers and managed environment health/performance.</p></div>
+</div>
+<h3>Two useful interfaces</h3>
+<table>
+<tr><th>Interface</th><th>Use</th></tr>
+<tr><td>Managed Airflow environment monitoring</td><td>Environment/DAG-level metrics and managed-service health</td></tr>
+<tr><td>Apache Airflow UI</td><td>Grid/Graph views, task instance details, run history, task logs</td></tr>
+<tr><td>Cloud Logging</td><td>Centralized searching across workers, scheduler, DAGs and tasks</td></tr>
+</table>
+</section>
+
+<section id="logging">
+<h2>5. Cloud Logging and Logs Explorer</h2>
+<p>Cloud Logging centralizes logs produced by Google Cloud services and your applications. Logs Explorer is the GUI used to search and inspect them.</p>
+<h3>GUI path</h3>
+<p><span class="path">Navigation menu → Observability → Logging → Logs Explorer</span></p>
+<h3>Starter queries</h3>
+<pre>severity&gt;=ERROR</pre>
+<p>Search a custom application failure signature:</p>
+<pre>"SALES_PIPELINE_FAILED"</pre>
+<p>You can combine filters as your production setup matures, for example by resource type, region, environment, job, DAG or task labels.</p>
+<div class="callout warn"><b>Trainer rule:</b> always confirm that the Logs Explorer query returns the exact failure log <em>before</em> using that query to create a log-based metric or alert. Otherwise you can create a metric that never increments.</div>
+</section>
+
+<section id="lbm">
+<h2>6. What is a Log-based Metric?</h2>
+<p>A log-based metric converts matching log entries into time-series metric data that Cloud Monitoring can chart and alert on.</p>
+<div class="diagram">
+Logs Explorer
+   "SALES_PIPELINE_FAILED"
+            │
+            ▼
+Counter log-based metric
+sales_pipeline_failure_count
+            │
+            ▼
+0, 1, 2, 3 ... failures over time
+            │
+            ├── chart in Metrics Explorer
+            └── alert when count > 0
+</div>
+<h3>Types</h3>
+<table>
+<tr><th>Type</th><th>Use</th><th>Example</th></tr>
+<tr><td>Counter</td><td>Count matching events</td><td>Number of failed tasks</td></tr>
+<tr><td>Distribution</td><td>Extract numeric values and analyze their distribution</td><td>Processing time / latency</td></tr>
+<tr><td>Boolean</td><td>Record whether matching log events occurred</td><td>Specific error condition occurred</td></tr>
+</table>
+<div class="callout good"><b>For this lab use Counter.</b> It is the easiest way to demonstrate “one matching failure log = one increment”.</div>
+</section>
+
+<section id="alerts">
+<h2>7. Alerting Policies — detailed explanation</h2>
+<p>An <b>Alerting Policy</b> is the operational rule that tells Cloud Monitoring when a metric or log condition is serious enough to create an incident and notify people.</p>
+<div class="diagram">
+RESOURCE / PIPELINE
+       │
+       ▼
+METRIC
+failure_count
+       │
+       ▼
+CONDITION
+"above threshold"
+       │
+       ▼
+THRESHOLD
+> 0
+       │
+       ▼
+RETEST WINDOW / EVALUATION
+condition must be true for chosen period
+       │
+       ▼
+INCIDENT
+       │
+       ▼
+NOTIFICATION CHANNEL
+Email / Slack / PagerDuty / Pub/Sub / etc.
+       │
+       ▼
+RUNBOOK / DOCUMENTATION
+What should the engineer do?
+</div>
+
+<h3>7.1 Parts of an alert policy</h3>
+<table>
+<tr><th>Part</th><th>Meaning</th><th>Retail example</th></tr>
+<tr><td>Metric</td><td>The signal being watched</td><td>sales_pipeline_failure_count</td></tr>
+<tr><td>Filter/resource</td><td>Which environment/job/metric series</td><td>Retail Composer failures only</td></tr>
+<tr><td>Condition</td><td>Comparison rule</td><td>Above threshold</td></tr>
+<tr><td>Threshold</td><td>Boundary separating normal from abnormal</td><td>&gt; 0</td></tr>
+<tr><td>Aggregation</td><td>How points are combined</td><td>Count/sum over a short window</td></tr>
+<tr><td>Retest window</td><td>How long the condition must remain true</td><td>0–1 min for classroom; longer for noisy production signals</td></tr>
+<tr><td>Notification channel</td><td>Who/where is notified</td><td>Data engineering support email</td></tr>
+<tr><td>Documentation</td><td>Runbook details in incident/notification</td><td>Open DAG → failed task → logs → fix → rerun</td></tr>
+</table>
+
+<h3>7.2 Why threshold design matters</h3>
+<div class="grid2">
+ <div class="card"><h4>Too sensitive</h4><p>Every tiny transient issue pages the team. Result: <b>alert fatigue</b>.</p></div>
+ <div class="card"><h4>Too weak</h4><p>Real failures are ignored until users report missing data. Result: <b>late incident detection</b>.</p></div>
+</div>
+<h3>7.3 Real-world design examples</h3>
+<table>
+<tr><th>Scenario</th><th>Better condition</th><th>Why</th></tr>
+<tr><td>Daily batch pipeline</td><td>Failed = 1</td><td>A single failure is important</td></tr>
+<tr><td>Streaming lag</td><td>lag &gt; 5 min for 10 min</td><td>Avoid alerting on momentary spikes</td></tr>
+<tr><td>Bad records</td><td>error_count &gt; 100 in 5 min</td><td>Some bad rows may be acceptable</td></tr>
+<tr><td>Airflow task failure</td><td>failure_count &gt; 0</td><td>Critical orchestration task should succeed</td></tr>
+<tr><td>Pipeline SLA</td><td>runtime beyond SLA</td><td>Job can be “running” yet still be operationally bad</td></tr>
+</table>
+
+<h3>7.4 Incident lifecycle</h3>
+<p>When the condition is met, Cloud Monitoring opens an <b>incident</b>. The incident records which policy fired, which time series violated the condition, and timing/details useful for investigation. When the condition clears, the incident can close based on policy behavior.</p>
+
+<h3>7.5 Notification channel</h3>
+<p>A notification channel controls how people are contacted. In this tutorial we use <b>Email</b>. Production teams often also use Slack, PagerDuty, Webhooks, Pub/Sub or other integrations.</p>
+
+<div class="callout purple"><b>Best practice:</b> put a short runbook directly in the alert policy documentation. An engineer receiving the notification should immediately know: what failed, where to open the service, which logs to inspect, and what validation to perform after the fix.</div>
+</section>
+
+<section id="scenario">
+<h2>8. Real-world scenario used for the demo</h2>
+<p><b>Company:</b> ShopSphere Retail</p>
+<p><b>Business process:</b> Each night stores upload <code>sales.csv</code>. Airflow orchestrates the load, Dataflow transforms it, and BigQuery receives cleaned sales.</p>
+<h3>Business requirement</h3>
+<div class="callout bad">“If the daily sales pipeline fails, email the Data Engineering support team immediately. The engineer must identify the failed task, inspect logs, fix the problem, rerun the DAG, and validate the BigQuery table.”</div>
+<h3>Failure signature for the lab</h3>
+<pre>SALES_PIPELINE_FAILED</pre>
+<p>This custom string is deliberately easy for trainees to search, convert into a counter metric, and alert on.</p>
+</section>
+
+<section id="prereq">
+<h2>9. Demo prerequisites</h2>
+<div class="check"><label><input class="labcheck" type="checkbox">GCP project selected</label></div>
+<div class="check"><label><input class="labcheck" type="checkbox">Billing enabled where required</label></div>
+<div class="check"><label><input class="labcheck" type="checkbox">Cloud Storage bucket created</label></div>
+<div class="check"><label><input class="labcheck" type="checkbox">BigQuery dataset/table created</label></div>
+<div class="check"><label><input class="labcheck" type="checkbox">A Dataflow job can be run</label></div>
+<div class="check"><label><input class="labcheck" type="checkbox">Managed Airflow / Composer environment created</label></div>
+<div class="check"><label><input class="labcheck" type="checkbox">Cloud Logging and Cloud Monitoring APIs available</label></div>
+<p class="small">For the monitoring lesson, you can simplify the Airflow DAG to three PythonOperator tasks. The purpose is observability, not infrastructure complexity.</p>
+</section>
+
+<section id="demo1">
+<h2>10. Demo 1 — first show a successful pipeline</h2>
+<div class="step"><div class="stepnum">1</div><div><b>Open Dataflow.</b><br><span class="path">Console → Dataflow → Jobs</span></div></div>
+<div class="step"><div class="stepnum">2</div><div>Select your successful retail Dataflow job.</div></div>
+<div class="step"><div class="stepnum">3</div><div>Show <b>job state = Succeeded/Done</b>, then the pipeline graph.</div></div>
+<div class="step"><div class="stepnum">4</div><div>Open the metrics area and point out throughput/element count, resource metrics and other charts exposed for the job.</div></div>
+<div class="step"><div class="stepnum">5</div><div>Open the job logs. Explain that metrics summarize health, while logs provide detailed execution messages.</div></div>
+<div class="callout good"><b>Why start with success?</b> Students need a baseline. They should see what “normal” looks like before you deliberately break the workflow.</div>
+</section>
+
+<section id="demo2">
+<h2>11. Demo 2 — deliberately fail a Composer / Managed Airflow task</h2>
+<p>Use a very simple DAG so that the failure is obvious.</p>
+<pre>from airflow import DAG
+from airflow.operators.python import PythonOperator
+from datetime import datetime
+
+def extract_sales():
+    print("SALES_EXTRACT_STARTED")
+    print("SALES_EXTRACT_COMPLETED")
+
+def transform_sales():
+    print("SALES_TRANSFORMATION_STARTED")
+    raise Exception("SALES_PIPELINE_FAILED: Invalid sales transformation")
+
+def load_sales():
+    print("SALES_LOAD_STARTED")
+    print("SALES_LOAD_COMPLETED")
+
+with DAG(
+    dag_id="retail_sales_monitoring",
+    start_date=datetime(2026, 1, 1),
+    schedule="@daily",
+    catchup=False
+) as dag:
+
+    extract = PythonOperator(
+        task_id="extract_sales",
+        python_callable=extract_sales
+    )
+
+    transform = PythonOperator(
+        task_id="transform_sales",
+        python_callable=transform_sales
+    )
+
+    load = PythonOperator(
+        task_id="load_sales",
+        python_callable=load_sales
+    )
+
+    extract >> transform >> load</pre>
+
+<h3>Run it in the GUI</h3>
+<div class="step"><div class="stepnum">1</div><div><span class="path">Managed Airflow / Composer → Environments → your environment → DAGs</span></div></div>
+<div class="step"><div class="stepnum">2</div><div>Open <code>retail_sales_monitoring</code>.</div></div>
+<div class="step"><div class="stepnum">3</div><div>Trigger the DAG manually.</div></div>
+<div class="step"><div class="stepnum">4</div><div>Expected state:<pre>extract_sales     SUCCESS
+transform_sales   FAILED
+load_sales        NOT EXECUTED / upstream failed</pre></div></div>
+<div class="step"><div class="stepnum">5</div><div>Open the failed <code>transform_sales</code> task → <b>Logs</b>. Find <code>SALES_PIPELINE_FAILED</code>.</div></div>
+<div class="step"><div class="stepnum">6</div><div>Now open <span class="path">Logging → Logs Explorer</span> and search:</div></div>
+<pre>"SALES_PIPELINE_FAILED"</pre>
+<div class="callout good">At this point the class has seen the same failure in two views: Airflow task logs for the specific task, and centralized Cloud Logging for cross-environment investigation.</div>
+</section>
+
+<section id="metric">
+<h2>12. Create a log-based counter metric — GUI steps</h2>
+<div class="step"><div class="stepnum">1</div><div><b>Confirm the log first.</b><br><span class="path">Logging → Logs Explorer</span><br>Run:<pre>"SALES_PIPELINE_FAILED"</pre></div></div>
+<div class="step"><div class="stepnum">2</div><div>Go to <span class="path">Logging → Log-based Metrics</span>.</div></div>
+<div class="step"><div class="stepnum">3</div><div>Click <b>Create metric</b>.</div></div>
+<div class="step"><div class="stepnum">4</div><div>Select metric type <b>Counter</b>.</div></div>
+<div class="step"><div class="stepnum">5</div><div>Enter:<table>
+<tr><th>Field</th><th>Value</th></tr>
+<tr><td>Name</td><td><code>sales_pipeline_failure_count</code></td></tr>
+<tr><td>Description</td><td>Counts retail sales pipeline failures</td></tr>
+<tr><td>Filter</td><td><code>"SALES_PIPELINE_FAILED"</code></td></tr>
+</table></div></div>
+<div class="step"><div class="stepnum">6</div><div>Use <b>Preview logs</b> (if shown) and verify the failed task entries appear.</div></div>
+<div class="step"><div class="stepnum">7</div><div>Click <b>Create metric</b>.</div></div>
+<h3>What happened?</h3>
+<pre>Matching log entry #1  → counter +1
+Matching log entry #2  → counter +1
+Matching log entry #3  → counter +1</pre>
+<h3>View it</h3>
+<p><span class="path">Monitoring → Metrics Explorer → Select a metric</span></p>
+<p>Look for the user-defined Logging metric <code>sales_pipeline_failure_count</code>. Metric visibility can take a short time after creation/new log ingestion.</p>
+</section>
+
+<section id="email">
+<h2>13. Configure an Email Notification Channel — GUI steps</h2>
+<div class="step"><div class="stepnum">1</div><div>Open <span class="path">Monitoring → Alerting</span>.</div></div>
+<div class="step"><div class="stepnum">2</div><div>Open <b>Edit notification channels</b> / <b>Manage notification channels</b> (wording may vary).</div></div>
+<div class="step"><div class="stepnum">3</div><div>Find the <b>Email</b> section.</div></div>
+<div class="step"><div class="stepnum">4</div><div>Click <b>Add new</b>.</div></div>
+<div class="step"><div class="stepnum">5</div><div>Enter the support email address and a descriptive display name such as <code>Retail Data Engineering Support</code>.</div></div>
+<div class="step"><div class="stepnum">6</div><div>Save. If Google requests verification or the email receives a confirmation step, complete it.</div></div>
+<div class="callout warn"><b>Production tip:</b> use a team/group mailbox rather than only one person's address. This prevents alerts from depending on a single engineer.</div>
+</section>
+
+<section id="policy">
+<h2>14. Create the Alerting Policy from the log-based metric</h2>
+<h3>Recommended path for this class</h3>
+<p><span class="path">Logging → Log-based Metrics → sales_pipeline_failure_count → More (⋮) → Create alert from metric</span></p>
+<p>You can also start from <span class="path">Monitoring → Alerting → Create policy</span> and select the metric manually.</p>
+
+<div class="step"><div class="stepnum">1</div><div><b>Select metric.</b> Use <code>sales_pipeline_failure_count</code>.</div></div>
+<div class="step"><div class="stepnum">2</div><div><b>Condition type:</b> metric threshold / above threshold.</div></div>
+<div class="step"><div class="stepnum">3</div><div><b>Threshold:</b> <code>0</code>. Meaning: any value greater than zero represents at least one failure.</div></div>
+<div class="step"><div class="stepnum">4</div><div><b>Retest/evaluation window:</b> for a classroom lab, use the shortest sensible option available so the alert is easy to demonstrate. In production, choose a window based on how noisy the signal is.</div></div>
+<div class="step"><div class="stepnum">5</div><div><b>Notification channel:</b> select the email channel created earlier.</div></div>
+<div class="step"><div class="stepnum">6</div><div><b>Policy name:</b><pre>Retail Composer Pipeline Failure</pre></div></div>
+<div class="step"><div class="stepnum">7</div><div><b>Add documentation/runbook:</b></div></div>
+<pre>Retail sales pipeline failure detected.
+
+Investigation steps:
+1. Open Managed Airflow / Cloud Composer.
+2. Open DAG: retail_sales_monitoring.
+3. Find the failed task.
+4. Open task logs.
+5. Search for SALES_PIPELINE_FAILED.
+6. Identify root cause and correct the code/configuration.
+7. Rerun the DAG.
+8. Validate the BigQuery output.</pre>
+<div class="step"><div class="stepnum">8</div><div>Review the policy and click <b>Create policy</b>.</div></div>
+
+<div class="callout good"><b>Explain this sentence to trainees:</b> “The log-based metric turns a failure log into a number; the alerting policy watches that number and decides when humans must be notified.”</div>
+</section>
+
+<section id="test">
+<h2>15. Test the complete end-to-end email alert</h2>
+<div class="diagram">
+Trigger DAG
+   │
+   ▼
+transform_sales fails
+   │
+   ▼
+Airflow emits:
+SALES_PIPELINE_FAILED
+   │
+   ▼
+Cloud Logging receives the entry
+   │
+   ▼
+sales_pipeline_failure_count increments
+   │
+   ▼
+Cloud Monitoring evaluates condition
+failure_count > 0
+   │
+   ▼
+Incident created
+   │
+   ▼
+Email notification sent
+</div>
+
+<div class="step"><div class="stepnum">1</div><div>Keep the intentional exception in <code>transform_sales()</code>.</div></div>
+<div class="step"><div class="stepnum">2</div><div>Trigger the DAG again.</div></div>
+<div class="step"><div class="stepnum">3</div><div>Verify task failure in Airflow.</div></div>
+<div class="step"><div class="stepnum">4</div><div>Verify the matching log in Logs Explorer.</div></div>
+<div class="step"><div class="stepnum">5</div><div>Open Metrics Explorer and verify the custom counter has data.</div></div>
+<div class="step"><div class="stepnum">6</div><div>Open <span class="path">Monitoring → Alerting → Incidents</span> and look for <b>Retail Composer Pipeline Failure</b>.</div></div>
+<div class="step"><div class="stepnum">7</div><div>Check the configured email inbox.</div></div>
+<div class="callout warn"><b>Important:</b> alert evaluation and email delivery are not instantaneous. For classroom use, generate a fresh matching failure after the metric and policy already exist, and keep the evaluation window short.</div>
+</section>
+
+<section id="dataflowalert">
+<h2>16. Optional second demo — native Dataflow failure alert</h2>
+<p>Dataflow exposes a <b>Failed</b> metric suitable for alerting when a job exits with failure. This is useful to contrast a service-provided metric with a custom log-based metric.</p>
+<h3>GUI path</h3>
+<p><span class="path">Monitoring → Alerting → Create policy → Select metric → search Dataflow</span></p>
+<h3>Condition</h3>
+<table>
+<tr><th>Setting</th><th>Example</th></tr>
+<tr><td>Resource/service</td><td>Dataflow</td></tr>
+<tr><td>Metric</td><td>Failed</td></tr>
+<tr><td>Threshold</td><td>&gt; 0 / value = 1</td></tr>
+<tr><td>Notification</td><td>Retail Data Engineering Support email</td></tr>
+<tr><td>Policy name</td><td>Dataflow Sales Pipeline Failure</td></tr>
+</table>
+<h3>How to deliberately break it</h3>
+<p>If your Beam code uses <code>CREATE_NEVER</code> for BigQuery output, submit a job with a nonexistent destination such as:</p>
+<pre>retail.sales_clean_wrong</pre>
+<p>Expected: Dataflow job goes to <b>FAILED</b>. Then open the failed job logs and Logs Explorer to identify the root cause.</p>
+<div class="callout"><b>Teaching comparison:</b><br>
+Native Dataflow alert = service already exposes the failure metric.<br>
+Composer business failure alert = you created your own metric from a custom log signature.</div>
+</section>
+
+<section id="incident">
+<h2>17. Incident response — what the on-call engineer actually does</h2>
+<h3>Step 1 — Open the incident</h3>
+<p><span class="path">Monitoring → Alerting → Incidents</span></p>
+<p>Check: policy, condition, metric, resource labels and timestamps.</p>
+<h3>Step 2 — Open the orchestrator</h3>
+<p><span class="path">Managed Airflow / Composer → DAG → latest failed run</span></p>
+<h3>Step 3 — Identify the failed task</h3>
+<pre>extract_sales     ✓
+       │
+       ▼
+transform_sales   ✗
+       │
+       ▼
+load_sales        skipped / not executed</pre>
+<h3>Step 4 — Read task logs</h3>
+<p>Find:</p>
+<pre>SALES_PIPELINE_FAILED: Invalid sales transformation</pre>
+<h3>Step 5 — Search centralized logging</h3>
+<pre>"SALES_PIPELINE_FAILED"</pre>
+<h3>Step 6 — Correct the problem</h3>
+<p>Remove the deliberate exception and restore a successful transformation.</p>
+<h3>Step 7 — Rerun</h3>
+<p>Trigger the DAG again.</p>
+<h3>Step 8 — Validate data</h3>
+<pre>SELECT *
+FROM `YOUR_PROJECT_ID.retail.sales_clean`
+ORDER BY order_id;</pre>
+<div class="callout good"><b>Operational lesson:</b> pipeline development is only half the job. Production ownership continues through monitoring, incident detection, root-cause analysis, recovery and validation.</div>
+</section>
+
+<section id="advanced">
+<h2>18. Real-world alert patterns for Data Engineering</h2>
+<table>
+<tr><th>What to monitor</th><th>Example alert</th><th>Business impact</th></tr>
+<tr><td>Dataflow batch job</td><td>Failed = 1</td><td>Daily reporting data missing</td></tr>
+<tr><td>Streaming pipeline</td><td>System lag &gt; 5 min for 10 min</td><td>Dashboards are stale</td></tr>
+<tr><td>Worker resources</td><td>CPU sustained high</td><td>Slow processing / SLA risk</td></tr>
+<tr><td>Airflow DAG</td><td>DAG failed</td><td>Entire workflow incomplete</td></tr>
+<tr><td>Critical Airflow task</td><td>Task failure count &gt; 0</td><td>Downstream tasks blocked</td></tr>
+<tr><td>Business records</td><td>0 records processed</td><td>Silent data outage</td></tr>
+<tr><td>Data quality</td><td>Invalid rows &gt; 1%</td><td>Incorrect reports/models</td></tr>
+<tr><td>Pipeline duration</td><td>Runtime &gt; SLA</td><td>Business data arrives late</td></tr>
+</table>
+
+<h3>SLA example</h3>
+<p>Pipeline starts at 2:00 AM and must finish before 6:00 AM. At 5:30 AM it is still running. Nothing has “failed,” but the business SLA is in danger. This is why mature monitoring covers <b>failure, latency, lag, throughput, volume, duration and data quality</b>.</p>
+
+<h3>Alert severity strategy</h3>
+<table>
+<tr><th>Severity</th><th>Example</th><th>Notification</th></tr>
+<tr><td>P1 Critical</td><td>Production sales pipeline completely failed</td><td>Pager/on-call + email</td></tr>
+<tr><td>P2 High</td><td>Critical task retrying / streaming lag severe</td><td>On-call channel + email</td></tr>
+<tr><td>P3 Warning</td><td>Runtime trending slower, error rate elevated</td><td>Team channel/email</td></tr>
+</table>
+</section>
+
+<section id="trouble">
+<h2>19. Troubleshooting the demo</h2>
+<table>
+<tr><th>Problem</th><th>Check</th><th>Fix</th></tr>
+<tr><td>Logs Explorer shows nothing</td><td>Did the DAG/task really fail? Correct project/time range?</td><td>Trigger a fresh failure and broaden time range.</td></tr>
+<tr><td>Custom metric has no data</td><td>Does the metric filter match the log exactly?</td><td>Verify filter in Logs Explorer, then generate a new matching log.</td></tr>
+<tr><td>Metric not visible in Monitoring</td><td>New metric ingestion delay</td><td>Generate fresh events and wait briefly, then refresh Metrics Explorer.</td></tr>
+<tr><td>Alert does not fire</td><td>Threshold/retest window/aggregation</td><td>Use a short test window and a fresh failure after policy creation.</td></tr>
+<tr><td>Email not received</td><td>Notification channel configured/verified? Spam?</td><td>Check channel status and incident notification settings.</td></tr>
+<tr><td>Too many alerts</td><td>Threshold too sensitive</td><td>Add retest duration, higher threshold, or more precise filters.</td></tr>
+<tr><td>Wrong environment logs matched</td><td>Filter too broad</td><td>Add resource/environment/DAG/task labels.</td></tr>
+</table>
+</section>
+
+<section id="trainer">
+<h2>20. Recommended classroom demo order</h2>
+<ol>
+<li>Draw the pipeline: GCS → Composer → Dataflow → BigQuery.</li>
+<li>Run one successful Dataflow job.</li>
+<li>Show Dataflow job status, graph and metrics.</li>
+<li>Show Dataflow logs.</li>
+<li>Run the simple Airflow DAG successfully once.</li>
+<li>Introduce the deliberate <code>SALES_PIPELINE_FAILED</code> error.</li>
+<li>Show failed task in Airflow.</li>
+<li>Find the same failure in Logs Explorer.</li>
+<li>Create <code>sales_pipeline_failure_count</code>.</li>
+<li>Show it in Metrics Explorer.</li>
+<li>Create an email notification channel.</li>
+<li>Create alerting policy: failure count &gt; 0.</li>
+<li>Trigger another failure.</li>
+<li>Open the incident.</li>
+<li>Show the received email alert.</li>
+<li>Investigate logs.</li>
+<li>Fix the DAG.</li>
+<li>Rerun and show success.</li>
+</ol>
+<div class="callout good"><b>The final story students should remember:</b><br>
+Failure → Log → Metric → Alert Policy → Incident → Email → Engineer → Logs → Root cause → Fix → Rerun → Success.</div>
+</section>
+
+<section id="quiz" class="quiz">
+<h2>21. Quick knowledge check</h2>
+<div class="card">
+<q>1. What is the main difference between monitoring and logging?</q><br>
+<button onclick="toggleAns('a1')">Show answer</button>
+<div class="answer" id="a1">Monitoring summarizes system health/performance using metrics. Logging stores detailed events used to understand what happened and why.</div>
+</div><br>
+<div class="card">
+<q>2. Why create a log-based metric?</q><br>
+<button onclick="toggleAns('a2')">Show answer</button>
+<div class="answer" id="a2">To convert selected log events, including application-specific failure messages, into time-series metrics that can be charted and used in alert conditions.</div>
+</div><br>
+<div class="card">
+<q>3. What does threshold &gt; 0 mean for sales_pipeline_failure_count?</q><br>
+<button onclick="toggleAns('a3')">Show answer</button>
+<div class="answer" id="a3">Zero is normal. One or more matching failures makes the condition abnormal and can create an incident.</div>
+</div><br>
+<div class="card">
+<q>4. What is the role of a notification channel?</q><br>
+<button onclick="toggleAns('a4')">Show answer</button>
+<div class="answer" id="a4">It defines how people or systems receive notifications when an alerting policy creates an incident, for example by email.</div>
+</div><br>
+<div class="card">
+<q>5. Why include runbook documentation in an alert policy?</q><br>
+<button onclick="toggleAns('a5')">Show answer</button>
+<div class="answer" id="a5">So the on-call engineer receives immediate investigation and recovery instructions instead of wasting time figuring out where to start.</div>
+</div>
+</section>
+
+<section>
+<h2>Reference notes used for this tutorial</h2>
+<p class="source"><b>Attached lab:</b> the source document provided in this chat defines the same end-to-end teaching architecture, including Composer/Dataflow logging, a <code>SALES_PIPELINE_FAILED</code> signature, <code>sales_pipeline_failure_count</code>, alert threshold &gt; 0, incident investigation, fix and rerun.</p>
+<p class="source"><b>Current Google Cloud guidance verified:</b> official Google Cloud documentation for Dataflow monitoring, Managed Airflow/Composer monitoring, Cloud Logging log-based metrics, metric-threshold alerting policies, and notification channels. Console labels can change slightly over time, but the concepts and official workflows used here match current documentation.</p>
+</section>
+</main>
+</div>
+
+<div class="footer">
+Created as a single-file classroom tutorial. Progress checkboxes are saved locally in the browser using localStorage.
+</div>
+
+<script>
+function toggleAns(id){
+ const e=document.getElementById(id);
+ e.style.display=(e.style.display==='block')?'none':'block';
+}
+const checks=[...document.querySelectorAll('.labcheck')];
+function loadProgress(){
+ const saved=JSON.parse(localStorage.getItem('gcpObsProgress')||'[]');
+ checks.forEach((c,i)=>c.checked=!!saved[i]);
+ updateProgress();
+}
+function updateProgress(){
+ const done=checks.filter(c=>c.checked).length;
+ const pct=checks.length?Math.round(done/checks.length*100):0;
+ document.getElementById('progressBar').style.width=pct+'%';
+ document.getElementById('progressText').textContent=pct+'% complete ('+done+'/'+checks.length+')';
+ localStorage.setItem('gcpObsProgress',JSON.stringify(checks.map(c=>c.checked)));
+}
+function resetProgress(){
+ checks.forEach(c=>c.checked=false);
+ updateProgress();
+}
+checks.forEach(c=>c.addEventListener('change',updateProgress));
+loadProgress();
+</script>
+</body>
+</html>

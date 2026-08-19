@@ -1,0 +1,1167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DataOps for Modern Data Engineering — Trainer Tutorial</title>
+<style>
+:root{
+  --bg:#07111f;--panel:#0d1b2a;--panel2:#11263b;--text:#eaf2f8;--muted:#a9bfd1;
+  --accent:#44d7b6;--accent2:#7aa7ff;--warn:#ffd166;--bad:#ff6b6b;--good:#64e572;
+  --border:#24435d;--code:#050a12;--shadow:0 12px 30px rgba(0,0,0,.25)
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:linear-gradient(135deg,#06101c,#0a1626 45%,#07111f);color:var(--text);
+font-family:Inter,Segoe UI,Arial,sans-serif;line-height:1.65}
+header{position:sticky;top:0;z-index:100;background:rgba(7,17,31,.95);backdrop-filter:blur(10px);
+border-bottom:1px solid var(--border);padding:12px 22px;display:flex;gap:15px;align-items:center}
+header h1{font-size:18px;margin:0;white-space:nowrap}
+.search{flex:1;max-width:640px;background:#091624;border:1px solid var(--border);border-radius:10px;color:white;padding:10px 12px}
+.badge{display:inline-block;border:1px solid var(--border);background:#10273a;border-radius:999px;padding:4px 9px;color:#bde6db;font-size:12px}
+.layout{display:grid;grid-template-columns:290px 1fr;max-width:1600px;margin:auto}
+aside{height:calc(100vh - 58px);position:sticky;top:58px;overflow:auto;border-right:1px solid var(--border);padding:18px;background:rgba(7,17,31,.72)}
+aside a{display:block;color:#bad2e4;text-decoration:none;padding:7px 9px;border-radius:7px;font-size:14px}
+aside a:hover{background:#10243a;color:white}
+main{padding:28px;max-width:1180px}
+.hero{padding:34px;border:1px solid var(--border);background:linear-gradient(145deg,#0d2135,#0d1a2a);border-radius:18px;box-shadow:var(--shadow)}
+.hero h2{font-size:34px;line-height:1.15;margin:10px 0}
+.hero p{max-width:880px;color:#c3d5e3}
+section{margin:28px 0;padding:25px;background:rgba(13,27,42,.88);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow)}
+h2{color:#f7fbff} h3{color:#8eeed8;margin-top:26px} h4{color:#a9c6ff}
+p,li{color:#d6e2eb}
+.callout{border-left:4px solid var(--accent);background:#0a2231;padding:14px 16px;border-radius:8px;margin:15px 0}
+.warn{border-left-color:var(--warn);background:#2b2310}
+.danger{border-left-color:var(--bad);background:#2b1518}
+.good{border-left-color:var(--good);background:#102819}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.card{background:#0b1725;border:1px solid var(--border);border-radius:12px;padding:16px}
+.card strong{color:#aaf3df}
+table{width:100%;border-collapse:collapse;margin:16px 0;font-size:14px}
+th,td{border:1px solid #29455c;padding:10px;text-align:left;vertical-align:top}
+th{background:#102b42;color:#dff8f1}
+code{font-family:Consolas,monospace}
+pre{background:var(--code);border:1px solid #243c51;border-radius:11px;padding:15px;overflow:auto;color:#d9f6ed}
+.diagram{background:#07131f;border:1px solid var(--border);border-radius:14px;padding:18px;overflow:auto}
+.flow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center}
+.node{min-width:125px;text-align:center;background:#10273b;border:1px solid #356080;border-radius:10px;padding:11px}
+.arrow{font-size:24px;color:#75d5bf}
+.kpi{font-size:26px;font-weight:700;color:#8eeed8}
+.tabs button,.quiz button,.btn{border:1px solid #3c6a85;background:#0c2436;color:white;padding:9px 12px;border-radius:8px;cursor:pointer}
+.btn:hover,.quiz button:hover{background:#153952}
+.checklist label{display:block;padding:7px 0}
+textarea.notes{width:100%;min-height:110px;background:#06111d;color:#e9f3f9;border:1px solid var(--border);border-radius:9px;padding:10px}
+.question{margin:18px 0;padding:14px;border:1px solid #28465c;border-radius:10px}
+.question label{display:block;margin:7px 0}
+.answer{display:none;margin-top:10px;padding:10px;background:#0a2a23;border-radius:7px}
+details{border:1px solid #28465c;border-radius:9px;padding:10px 12px;margin:9px 0;background:#0a1723}
+summary{cursor:pointer;color:#a8e6d7;font-weight:600}
+.small{font-size:13px;color:var(--muted)}
+footer{text-align:center;color:#849bac;padding:30px}
+mark{background:#fff3a0;color:#111}
+@media(max-width:900px){.layout{grid-template-columns:1fr}aside{display:none}main{padding:15px}.hero h2{font-size:27px}}
+</style>
+</head>
+<body>
+<header>
+  <h1>DataOps Trainer Tutorial</h1>
+  <input id="search" class="search" placeholder="Search this tutorial..." oninput="searchPage()">
+  <span class="badge">PySpark • Snowflake • Dataflow • dbt • Airflow • Power BI</span>
+</header>
+<div class="layout">
+<aside>
+  <b>Contents</b>
+  <a href="#outcomes">1. Learning outcomes</a>
+  <a href="#bigpicture">2. Big picture</a>
+  <a href="#usecase">3. Real use case</a>
+  <a href="#lifecycle">4. DataOps lifecycle</a>
+  <a href="#practices">5. Collaboration / Automation / Monitoring</a>
+  <a href="#git">6. Git workflow</a>
+  <a href="#dbt-cicd">7. CI/CD for dbt</a>
+  <a href="#airflow-cicd">8. CI/CD for Airflow</a>
+  <a href="#testing">9. Automated testing</a>
+  <a href="#monitoring">10. Monitoring & observability</a>
+  <a href="#failure">11. Failure scenarios</a>
+  <a href="#lab">12. Hands-on lab</a>
+  <a href="#pipeline">13. End-to-end pipeline</a>
+  <a href="#best">14. Best practices</a>
+  <a href="#interview">15. Interview Q&A</a>
+  <a href="#quiz">16. Quiz</a>
+  <a href="#trainer">17. Trainer delivery plan</a>
+  <a href="#sources">18. References</a>
+</aside>
+
+<main id="content">
+<div class="hero">
+  <span class="badge">TUT FORMAT</span>
+  <h2>DataOps Lifecycle, CI/CD for dbt & Airflow, and Automated Testing</h2>
+  <p>A detailed, practical tutorial designed for trainees who already know PySpark, Spark SQL, Snowflake,
+  GCP Dataflow, dbt, Apache Airflow / managed Airflow, and Power BI. The goal is to connect those skills into
+  a production engineering operating model.</p>
+  <div class="grid">
+    <div class="card"><div class="kpi">1</div><b>Business use case</b><br>Retail daily sales analytics</div>
+    <div class="card"><div class="kpi">3</div><b>Core DataOps practices</b><br>Collaborate, automate, monitor</div>
+    <div class="card"><div class="kpi">4</div><b>Test layers</b><br>Code, data, orchestration, integration</div>
+    <div class="card"><div class="kpi">2</div><b>CI/CD pipelines</b><br>dbt + Airflow</div>
+  </div>
+</div>
+
+<section id="outcomes">
+<h2>1. Learning Outcomes</h2>
+<p>After this session, trainees should be able to explain and demonstrate:</p>
+<ul>
+<li>Why DataOps is needed even when individual ETL/ELT tools already work.</li>
+<li>How collaboration, automation, quality gates, observability, version control and continuous improvement form one lifecycle.</li>
+<li>How a dbt change moves safely from developer laptop → pull request → CI → test schema → production.</li>
+<li>How an Airflow DAG moves from Git → syntax/import tests → unit tests → deployment to a managed Airflow environment.</li>
+<li>How automated tests stop bad data before it reaches Snowflake Gold tables and Power BI dashboards.</li>
+<li>How to decide whether a failure is a code issue, infrastructure issue, data quality issue, SLA issue or downstream BI issue.</li>
+</ul>
+<div class="callout"><b>Trainer sentence:</b> “Data engineering builds the pipeline. DataOps builds the safe, repeatable way in which the team changes, tests, deploys and operates that pipeline.”</div>
+</section>
+
+<section id="bigpicture">
+<h2>2. The Big Picture — From Data Engineering to DataOps</h2>
+<div class="diagram">
+<div class="flow">
+<div class="node">Developer<br><small>PySpark/dbt/DAG</small></div><div class="arrow">→</div>
+<div class="node">Git / PR</div><div class="arrow">→</div>
+<div class="node">CI<br><small>lint + tests</small></div><div class="arrow">→</div>
+<div class="node">Deploy</div><div class="arrow">→</div>
+<div class="node">Run<br><small>Airflow</small></div><div class="arrow">→</div>
+<div class="node">Observe</div><div class="arrow">→</div>
+<div class="node">Improve</div>
+</div>
+</div>
+
+<h3>Traditional approach</h3>
+<p>A developer writes an ETL job, manually copies the code to production, runs it, and checks the result.
+This may work with one developer and one pipeline, but it becomes dangerous when many engineers, datasets and business reports depend on each other.</p>
+
+<h3>DataOps approach</h3>
+<p>Every change is versioned, reviewed, tested automatically, deployed consistently, monitored after release and improved based on operational feedback.</p>
+
+<table>
+<tr><th>Question</th><th>Traditional data engineering</th><th>DataOps-oriented engineering</th></tr>
+<tr><td>Where is code?</td><td>Laptop/server folders</td><td>Git repository</td></tr>
+<tr><td>How is it reviewed?</td><td>Manual or ad hoc</td><td>Pull request + reviewers</td></tr>
+<tr><td>How is it tested?</td><td>Developer runs queries</td><td>Automated quality gates</td></tr>
+<tr><td>How is it deployed?</td><td>Copy/upload manually</td><td>CI/CD pipeline</td></tr>
+<tr><td>How are failures found?</td><td>User reports dashboard issue</td><td>Monitoring + alerting + SLAs</td></tr>
+<tr><td>How do we recover?</td><td>Fix directly in prod</td><td>Rollback/redeploy/reprocess</td></tr>
+</table>
+</section>
+
+<section id="usecase">
+<h2>3. Real Use Case — Retail Daily Sales Analytics Platform</h2>
+
+<h3>Business problem</h3>
+<p>A retail company receives online and store transactions. Management wants a Power BI dashboard showing
+daily sales, category revenue, order count, returns and region performance. The dashboard must be refreshed every morning by 7:00 AM.</p>
+
+<h3>Technology mapping</h3>
+<table>
+<tr><th>Layer</th><th>Technology</th><th>Purpose</th></tr>
+<tr><td>Ingestion</td><td>GCP Dataflow</td><td>Read raw transaction events/files, validate format, land normalized records.</td></tr>
+<tr><td>Heavy processing</td><td>PySpark / Spark SQL</td><td>Large-scale cleaning, deduplication, enrichment or batch reconciliation.</td></tr>
+<tr><td>Warehouse</td><td>Snowflake</td><td>Store RAW, STAGING and ANALYTICS data.</td></tr>
+<tr><td>Transformation</td><td>dbt</td><td>Build modular SQL models, tests, documentation and lineage.</td></tr>
+<tr><td>Orchestration</td><td>Apache Airflow / Managed Airflow</td><td>Schedule and coordinate ingestion → transformation → validation → publish.</td></tr>
+<tr><td>Visualization</td><td>Power BI</td><td>Consume trusted Gold marts.</td></tr>
+<tr><td>Engineering workflow</td><td>Git + GitHub Actions</td><td>Review, test and deploy changes.</td></tr>
+</table>
+
+<h3>Target architecture</h3>
+<div class="diagram">
+<div class="flow">
+<div class="node">POS / Ecommerce</div><div class="arrow">→</div>
+<div class="node">GCS / Events</div><div class="arrow">→</div>
+<div class="node">Dataflow</div><div class="arrow">→</div>
+<div class="node">Snowflake RAW</div><div class="arrow">→</div>
+<div class="node">dbt STAGING</div><div class="arrow">→</div>
+<div class="node">dbt MART</div><div class="arrow">→</div>
+<div class="node">Power BI</div>
+</div>
+<br>
+<div class="flow">
+<div class="node">GitHub</div><div class="arrow">→</div>
+<div class="node">CI Tests</div><div class="arrow">→</div>
+<div class="node">Managed Airflow</div><div class="arrow">→</div>
+<div class="node">Monitoring</div>
+</div>
+</div>
+
+<h3>Example requirement</h3>
+<ul>
+<li>Dashboard refresh SLA: <b>7:00 AM</b>.</li>
+<li>Duplicate orders allowed: <b>0</b>.</li>
+<li>Null order_id allowed: <b>0</b>.</li>
+<li>Daily revenue variance against source: maximum <b>0.5%</b>.</li>
+<li>Pipeline should retry temporary failures but should not silently accept bad business data.</li>
+</ul>
+</section>
+
+<section id="lifecycle">
+<h2>4. DataOps Lifecycle</h2>
+<div class="diagram">
+<div class="flow">
+<div class="node">1. Plan</div><div class="arrow">→</div>
+<div class="node">2. Develop</div><div class="arrow">→</div>
+<div class="node">3. Version</div><div class="arrow">→</div>
+<div class="node">4. Test</div><div class="arrow">→</div>
+<div class="node">5. Release</div><div class="arrow">→</div>
+<div class="node">6. Operate</div><div class="arrow">→</div>
+<div class="node">7. Monitor</div><div class="arrow">→</div>
+<div class="node">8. Improve</div>
+</div>
+</div>
+
+<h3>Step 1 — Plan</h3>
+<p>Convert the business requirement into measurable engineering expectations.</p>
+<pre>Business: "Sales dashboard must be ready every morning."
+Engineering:
+- Airflow pipeline starts 05:30
+- dbt transformations complete by 06:30
+- validation completes by 06:40
+- Power BI refresh starts after successful validation
+- SLA breach alert if pipeline is still incomplete at 06:45</pre>
+
+<h3>Step 2 — Develop</h3>
+<p>Develop in isolated branches and non-production schemas. Example:</p>
+<pre>feature/add-return-rate
+  ├── models/staging/stg_orders.sql
+  ├── models/marts/fct_sales.sql
+  ├── models/schema.yml
+  └── tests/assert_revenue_non_negative.sql</pre>
+
+<h3>Step 3 — Version</h3>
+<p>Git provides an auditable history. Every dbt model, Airflow DAG, Python script, test and configuration should be version-controlled unless it contains secrets.</p>
+
+<h3>Step 4 — Test</h3>
+<p>Run inexpensive tests early. Run integration tests before deployment. Run production data-quality checks after deployment.</p>
+
+<h3>Step 5 — Release</h3>
+<p>Approved changes are merged and deployed through controlled automation rather than laptop-to-production copying.</p>
+
+<h3>Step 6 — Operate</h3>
+<p>Airflow schedules jobs, handles dependencies and retries, while warehouse and processing systems execute the work.</p>
+
+<h3>Step 7 — Monitor</h3>
+<p>Observe availability, freshness, task duration, data volume, quality, cost and SLA.</p>
+
+<h3>Step 8 — Improve</h3>
+<p>Use incidents and trend data to improve tests, retry policies, alert thresholds, model design and capacity.</p>
+</section>
+
+<section id="practices">
+<h2>5. Key Practices: Collaboration, Automation and Monitoring</h2>
+
+<h3>A. Collaboration</h3>
+<div class="grid">
+<div class="card"><strong>Git branches</strong><br>Isolate changes so multiple developers can work safely.</div>
+<div class="card"><strong>Pull requests</strong><br>Create a formal point for review, test evidence and discussion.</div>
+<div class="card"><strong>Code ownership</strong><br>Define which team reviews finance, customer, inventory and platform code.</div>
+<div class="card"><strong>Documentation</strong><br>Keep model descriptions, lineage and runbooks close to the code.</div>
+</div>
+
+<h4>Example team interaction</h4>
+<pre>Data Analyst:
+"We need return_rate in Power BI."
+
+Analytics Engineer:
+- creates dbt model change
+- adds test: accepted range 0..1
+- opens PR
+
+Data Engineer:
+- reviews upstream source logic
+
+Platform Engineer:
+- CI validates dbt + DAG compatibility
+
+Reviewer:
+- approves
+
+Pipeline:
+- deploys safely</pre>
+
+<h3>B. Automation</h3>
+<p>Automation does not only mean scheduling an ETL job. In DataOps, automation covers:</p>
+<ul>
+<li>environment setup, dependency installation and validation;</li>
+<li>linting and static checks;</li>
+<li>dbt parsing/build/test;</li>
+<li>Airflow DAG import tests;</li>
+<li>deployment;</li>
+<li>quality validation;</li>
+<li>alerting and incident creation;</li>
+<li>rollback or controlled reprocessing.</li>
+</ul>
+
+<h3>C. Monitoring</h3>
+<table>
+<tr><th>Monitoring type</th><th>Question</th><th>Example</th></tr>
+<tr><td>Infrastructure</td><td>Is the platform healthy?</td><td>Worker failures, CPU, memory, scheduler health.</td></tr>
+<tr><td>Pipeline</td><td>Did the workflow complete?</td><td>DAG success/failure, retries, duration.</td></tr>
+<tr><td>Data quality</td><td>Is the output trustworthy?</td><td>Duplicates, nulls, accepted values.</td></tr>
+<tr><td>Freshness</td><td>Is the data current?</td><td>Latest order timestamp &lt; expected threshold.</td></tr>
+<tr><td>Volume</td><td>Did expected data arrive?</td><td>Today 2.2M rows vs typical 2.0–2.4M.</td></tr>
+<tr><td>Business reconciliation</td><td>Does output agree with source?</td><td>Source revenue vs warehouse revenue.</td></tr>
+<tr><td>BI</td><td>Can users consume it?</td><td>Power BI refresh status / stale dataset.</td></tr>
+</table>
+</section>
+
+<section id="git">
+<h2>6. Suggested Git Repository Structure</h2>
+<pre>retail-data-platform/
+│
+├── airflow/
+│   ├── dags/
+│   │   └── retail_daily_pipeline.py
+│   └── tests/
+│       └── test_retail_dag.py
+│
+├── dbt/
+│   ├── dbt_project.yml
+│   ├── models/
+│   │   ├── staging/
+│   │   └── marts/
+│   └── tests/
+│
+├── spark/
+│   ├── jobs/
+│   └── tests/
+│
+├── dataflow/
+│   ├── pipelines/
+│   └── tests/
+│
+├── .github/
+│   └── workflows/
+│       ├── dbt-ci.yml
+│       └── airflow-ci.yml
+│
+├── requirements.txt
+└── README.md</pre>
+
+<h3>Recommended branch flow</h3>
+<div class="diagram">
+<div class="flow">
+<div class="node">feature branch</div><div class="arrow">→</div>
+<div class="node">Pull Request</div><div class="arrow">→</div>
+<div class="node">CI checks</div><div class="arrow">→</div>
+<div class="node">Review</div><div class="arrow">→</div>
+<div class="node">main</div><div class="arrow">→</div>
+<div class="node">CD deploy</div>
+</div>
+</div>
+</section>
+
+<section id="dbt-cicd">
+<h2>7. CI/CD Pipeline for dbt</h2>
+<p>The objective is simple: a developer should not be able to merge a dbt model that cannot compile or that breaks required data tests.</p>
+
+<h3>CI flow</h3>
+<div class="diagram">
+<div class="flow">
+<div class="node">Change SQL</div><div class="arrow">→</div>
+<div class="node">PR</div><div class="arrow">→</div>
+<div class="node">dbt deps</div><div class="arrow">→</div>
+<div class="node">dbt parse</div><div class="arrow">→</div>
+<div class="node">dbt build</div><div class="arrow">→</div>
+<div class="node">Review</div>
+</div>
+</div>
+
+<h3>Important dbt commands</h3>
+<pre># Install project packages
+dbt deps
+
+# Validate project structure / parsing
+dbt parse
+
+# Execute models and tests in dependency order
+dbt build
+
+# Run only tests
+dbt test
+
+# Generate documentation artifacts
+dbt docs generate</pre>
+
+<h3>Example dbt model</h3>
+<pre>-- models/marts/fct_sales.sql
+select
+    order_id,
+    order_date,
+    customer_id,
+    product_id,
+    quantity,
+    unit_price,
+    quantity * unit_price as gross_sales
+from {{ ref('stg_orders') }}
+where order_status != 'CANCELLED'</pre>
+
+<h3>Generic dbt tests</h3>
+<pre># models/schema.yml
+version: 2
+
+models:
+  - name: fct_sales
+    columns:
+      - name: order_id
+        tests:
+          - not_null
+          - unique
+
+      - name: customer_id
+        tests:
+          - not_null
+
+      - name: gross_sales
+        tests:
+          - not_null</pre>
+
+<h3>Singular business test</h3>
+<pre>-- tests/assert_sales_not_negative.sql
+select *
+from {{ ref('fct_sales') }}
+where gross_sales &lt; 0</pre>
+<p>dbt singular tests are designed so that <b>zero returned rows means the test passes</b>.</p>
+
+<h3>GitHub Actions — dbt CI example</h3>
+<pre>name: dbt-ci
+
+on:
+  pull_request:
+    paths:
+      - "dbt/**"
+
+jobs:
+  dbt-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dbt
+        run: |
+          pip install dbt-core dbt-snowflake
+
+      - name: Install dbt packages
+        working-directory: dbt
+        run: dbt deps
+
+      - name: Parse project
+        working-directory: dbt
+        run: dbt parse
+
+      - name: Build and test
+        working-directory: dbt
+        env:
+          SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+          SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER }}
+          SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD }}
+        run: dbt build --target ci</pre>
+
+<div class="callout warn"><b>Trainer note:</b> Never put Snowflake passwords, private keys, GCP service-account keys or tokens directly in YAML committed to Git. Use your CI platform’s secret mechanism or workload identity.</div>
+
+<h3>Separate CI schema</h3>
+<p>Do not let pull-request builds overwrite production models.</p>
+<pre>Production:
+ANALYTICS.FCT_SALES
+
+CI for PR 184:
+CI_PR_184.FCT_SALES</pre>
+
+<h3>dbt CD flow</h3>
+<div class="diagram">
+<div class="flow">
+<div class="node">Merge to main</div><div class="arrow">→</div>
+<div class="node">Production job</div><div class="arrow">→</div>
+<div class="node">dbt build</div><div class="arrow">→</div>
+<div class="node">Quality gates</div><div class="arrow">→</div>
+<div class="node">Publish</div>
+</div>
+</div>
+
+<h3>What should fail a dbt PR?</h3>
+<ul>
+<li>SQL cannot compile.</li>
+<li>Referenced model does not exist.</li>
+<li>Required uniqueness/not-null test fails.</li>
+<li>Business rule test fails.</li>
+<li>Linting/formatting policy fails, if enforced.</li>
+<li>Model unexpectedly modifies protected production objects.</li>
+</ul>
+</section>
+
+<section id="airflow-cicd">
+<h2>8. CI/CD Pipeline for Apache Airflow / Managed Airflow</h2>
+<p>Airflow code is production application code. A DAG should be tested before it reaches the scheduler.</p>
+
+<h3>CI flow for DAGs</h3>
+<div class="diagram">
+<div class="flow">
+<div class="node">Edit DAG</div><div class="arrow">→</div>
+<div class="node">PR</div><div class="arrow">→</div>
+<div class="node">Python lint</div><div class="arrow">→</div>
+<div class="node">Import test</div><div class="arrow">→</div>
+<div class="node">DAG tests</div><div class="arrow">→</div>
+<div class="node">Deploy</div>
+</div>
+</div>
+
+<h3>Sample Airflow DAG</h3>
+<pre>from datetime import datetime
+from airflow import DAG
+from airflow.operators.python import PythonOperator
+
+def validate_source():
+    print("Source validation passed")
+
+def run_dbt():
+    print("Trigger dbt build")
+
+with DAG(
+    dag_id="retail_daily_pipeline",
+    start_date=datetime(2026, 1, 1),
+    schedule="30 5 * * *",
+    catchup=False,
+    tags=["retail", "dataops"]
+) as dag:
+
+    validate = PythonOperator(
+        task_id="validate_source",
+        python_callable=validate_source
+    )
+
+    transform = PythonOperator(
+        task_id="run_dbt",
+        python_callable=run_dbt
+    )
+
+    validate >> transform</pre>
+
+<h3>Very basic DAG import test</h3>
+<pre># airflow/tests/test_retail_dag.py
+from airflow.models import DagBag
+
+def test_no_import_errors():
+    dag_bag = DagBag(dag_folder="airflow/dags", include_examples=False)
+    assert len(dag_bag.import_errors) == 0, dag_bag.import_errors
+
+def test_expected_dag_exists():
+    dag_bag = DagBag(dag_folder="airflow/dags", include_examples=False)
+    assert "retail_daily_pipeline" in dag_bag.dags</pre>
+
+<h3>Dependency test</h3>
+<pre>def test_retail_dependencies():
+    dag_bag = DagBag(dag_folder="airflow/dags", include_examples=False)
+    dag = dag_bag.get_dag("retail_daily_pipeline")
+
+    validate = dag.get_task("validate_source")
+    transform = dag.get_task("run_dbt")
+
+    assert "run_dbt" in validate.downstream_task_ids
+    assert "validate_source" in transform.upstream_task_ids</pre>
+
+<h3>GitHub Actions — Airflow CI example</h3>
+<pre>name: airflow-ci
+
+on:
+  pull_request:
+    paths:
+      - "airflow/**"
+
+jobs:
+  airflow-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Compile Python
+        run: python -m compileall airflow/dags
+
+      - name: Run tests
+        run: pytest airflow/tests -v</pre>
+
+<h3>CD to managed Airflow</h3>
+<p>Conceptually:</p>
+<pre>Git main
+   ↓
+CI validates DAGs
+   ↓
+Approved merge
+   ↓
+CD authenticates to cloud
+   ↓
+Synchronize/copy DAGs to managed Airflow DAG location
+   ↓
+Airflow scheduler loads DAG
+   ↓
+Post-deployment smoke test</pre>
+
+<div class="callout">
+Google Cloud's current managed Airflow documentation includes a GitHub-based pattern to test, synchronize and deploy DAGs to its managed Airflow service. In a real class, use the exact deployment mechanism that matches the managed Airflow generation/environment used by the client.
+</div>
+
+<h3>Post-deployment smoke tests</h3>
+<ul>
+<li>DAG appears in Airflow UI.</li>
+<li>No import errors.</li>
+<li>Expected schedule is visible.</li>
+<li>Expected tasks exist.</li>
+<li>Connections/variables resolve.</li>
+<li>A small test run completes.</li>
+</ul>
+</section>
+
+<section id="testing">
+<h2>9. Automated Testing in Data Workflows</h2>
+
+<h3>The testing pyramid for data pipelines</h3>
+<div class="diagram">
+<div style="text-align:center">
+<div class="node" style="margin:auto;width:230px">End-to-End Tests<br><small>few, expensive</small></div>
+<div class="node" style="margin:8px auto;width:360px">Integration Tests</div>
+<div class="node" style="margin:8px auto;width:500px">Data Contract & Data Quality Tests</div>
+<div class="node" style="margin:8px auto;width:650px">Unit / Logic / Static Tests<br><small>many, fast</small></div>
+</div>
+</div>
+
+<h3>1. Code/static tests</h3>
+<p>Purpose: catch errors without processing production data.</p>
+<ul>
+<li>Python syntax compilation.</li>
+<li>PySpark helper function unit tests.</li>
+<li>Airflow DAG import tests.</li>
+<li>SQL linting.</li>
+<li>dbt parse/compile.</li>
+</ul>
+
+<h3>2. Schema tests</h3>
+<pre>Expected order schema:
+order_id       STRING   NOT NULL
+order_ts       TIMESTAMP
+customer_id    STRING
+product_id     STRING
+quantity       INTEGER
+unit_price     NUMBER
+status         STRING</pre>
+<p>If Dataflow suddenly receives <code>quantity="ABC"</code>, the record should be rejected/quarantined or fail a contract depending on the design.</p>
+
+<h3>3. Data quality tests</h3>
+<table>
+<tr><th>Dimension</th><th>Meaning</th><th>Retail example</th></tr>
+<tr><td>Completeness</td><td>Required values exist.</td><td>order_id must not be null.</td></tr>
+<tr><td>Uniqueness</td><td>Keys are not duplicated.</td><td>One row per order item key.</td></tr>
+<tr><td>Validity</td><td>Values follow allowed rules.</td><td>status ∈ COMPLETED, RETURNED, CANCELLED.</td></tr>
+<tr><td>Consistency</td><td>Related values agree.</td><td>gross_sales = quantity × unit_price.</td></tr>
+<tr><td>Freshness</td><td>Data arrives on time.</td><td>Latest transaction must be within SLA.</td></tr>
+<tr><td>Accuracy/reconciliation</td><td>Output agrees with trusted reference/source.</td><td>Warehouse revenue matches source within tolerance.</td></tr>
+</table>
+
+<h3>4. PySpark unit test example</h3>
+<pre>from pyspark.sql import SparkSession
+from pyspark.sql.functions import col
+
+def add_gross_sales(df):
+    return df.withColumn("gross_sales", col("quantity") * col("unit_price"))
+
+def test_add_gross_sales():
+    spark = SparkSession.builder.master("local[1]").getOrCreate()
+
+    df = spark.createDataFrame(
+        [(1, 2, 50.0)],
+        ["order_id", "quantity", "unit_price"]
+    )
+
+    actual = add_gross_sales(df).collect()[0]["gross_sales"]
+
+    assert actual == 100.0</pre>
+
+<h3>5. Spark SQL reconciliation</h3>
+<pre>SELECT
+    SUM(quantity * unit_price) AS raw_revenue
+FROM raw_orders;
+
+SELECT
+    SUM(gross_sales) AS curated_revenue
+FROM fct_sales;</pre>
+<p>If the values differ beyond the approved tolerance, the publication step should stop.</p>
+
+<h3>6. Dataflow testing concept</h3>
+<p>Separate transformation logic from I/O. Test transforms with a small deterministic input, then test the deployed pipeline with a small integration dataset.</p>
+<pre>Input:
+A100, product=P1, qty=2, price=50
+
+Expected:
+order_id=A100
+gross_sales=100</pre>
+
+<h3>7. Snowflake assertions</h3>
+<pre>-- Duplicate order check
+select order_id, count(*) as cnt
+from analytics.fct_sales
+group by order_id
+having count(*) > 1;
+
+-- Invalid revenue
+select *
+from analytics.fct_sales
+where gross_sales < 0;</pre>
+
+<h3>8. End-to-end test</h3>
+<pre>Inject known test order:
+TEST-9001, 2 units × 250 = 500
+
+Validate:
+1. Dataflow accepted record
+2. RAW contains TEST-9001
+3. dbt model created gross_sales = 500
+4. quality tests passed
+5. Airflow DAG completed
+6. BI-facing table exposes TEST-9001
+7. test record is removed or isolated after validation</pre>
+
+<h3>Where should tests run?</h3>
+<table>
+<tr><th>Stage</th><th>Tests</th></tr>
+<tr><td>Developer machine</td><td>Unit tests, dbt parse, small Spark tests.</td></tr>
+<tr><td>Pull request CI</td><td>Lint, import, dbt build in CI schema, DAG tests.</td></tr>
+<tr><td>Pre-production</td><td>Integration and end-to-end tests.</td></tr>
+<tr><td>Production runtime</td><td>Freshness, volume, business reconciliation, SLA monitoring.</td></tr>
+</table>
+</section>
+
+<section id="monitoring">
+<h2>10. Monitoring and Observability</h2>
+<p>Monitoring asks whether known conditions are healthy. Observability helps engineers investigate why the system behaves unexpectedly.</p>
+
+<h3>Minimum dashboard for the retail pipeline</h3>
+<div class="grid">
+<div class="card"><strong>Pipeline success rate</strong><br>Successful DAG runs / total runs</div>
+<div class="card"><strong>Freshness</strong><br>Time since latest source transaction</div>
+<div class="card"><strong>Runtime</strong><br>Current duration vs 7-day baseline</div>
+<div class="card"><strong>Row count</strong><br>Today vs expected range</div>
+<div class="card"><strong>DQ failures</strong><br>Number of failed tests</div>
+<div class="card"><strong>SLA status</strong><br>Will dashboard be ready by 7 AM?</div>
+</div>
+
+<h3>Useful alert rules</h3>
+<pre>CRITICAL:
+- DAG failed after retries
+- dbt critical test failed
+- no source data received
+- dashboard publication SLA breached
+
+WARNING:
+- row count changed > 30%
+- runtime > 150% of rolling baseline
+- retry count increased
+- warehouse cost unusually high</pre>
+
+<div class="callout warn"><b>Avoid alert fatigue:</b> If every retry sends a critical page, engineers will learn to ignore alerts. Alert on actionable conditions and separate warning signals from business-impacting incidents.</div>
+</section>
+
+<section id="failure">
+<h2>11. Failure Scenarios — Teach Trainees How to Think</h2>
+
+<h3>Scenario 1 — Airflow task is green, Power BI numbers are wrong</h3>
+<p><b>Why?</b> Orchestration success only means the task completed. It does not guarantee business correctness.</p>
+<p><b>Fix:</b> Add reconciliation/data tests before the publish/refresh step.</p>
+
+<h3>Scenario 2 — dbt model compiles but duplicates appear</h3>
+<p><b>Why?</b> Compilation validates SQL structure, not uniqueness.</p>
+<p><b>Fix:</b> Add <code>unique</code> test on the business key and investigate join grain.</p>
+
+<h3>Scenario 3 — PR works, production fails</h3>
+<p>Possible causes: missing production permissions, environment-specific variable, missing connection, larger data volume, different warehouse role or package mismatch.</p>
+<p><b>Fix:</b> Environment parity, deployment validation, least-privilege service identities, pre-prod testing.</p>
+
+<h3>Scenario 4 — Dataflow receives malformed records</h3>
+<p><b>Bad design:</b> silently discard them.</p>
+<p><b>Better design:</b> validate → send invalid records to dead-letter/quarantine → count failures → alert if threshold exceeded.</p>
+
+<h3>Scenario 5 — Pipeline retries 5 times for a data-quality failure</h3>
+<p>Retries help transient infrastructure/network issues. They usually do not repair a deterministic bad-data condition.</p>
+<div class="callout danger"><b>Rule:</b> Do not treat every failure as retryable. Classify errors.</div>
+
+<h3>Scenario 6 — A developer changes a column name used by Power BI</h3>
+<p>This is a data-contract breaking change. Detect it before production using schema/contract tests and dependency review.</p>
+</section>
+
+<section id="lab">
+<h2>12. Hands-On Lab — Build a Small DataOps Workflow</h2>
+
+<h3>Lab goal</h3>
+<p>Create a mini pipeline where a dbt model and an Airflow DAG cannot be merged unless automated checks pass.</p>
+
+<h3>Prerequisites</h3>
+<ul>
+<li>Git</li>
+<li>Python 3.11+</li>
+<li>dbt Core + adapter appropriate for the lab</li>
+<li>Apache Airflow compatible test environment</li>
+<li>pytest</li>
+<li>GitHub repository</li>
+</ul>
+
+<h3>Step 1 — Create folders</h3>
+<pre>mkdir retail-dataops
+cd retail-dataops
+mkdir dbt airflow .github</pre>
+
+<h3>Step 2 — Create feature branch</h3>
+<pre>git checkout -b feature/add-gross-sales</pre>
+
+<h3>Step 3 — Add transformation</h3>
+<pre>select
+  order_id,
+  quantity,
+  unit_price,
+  quantity * unit_price as gross_sales
+from {{ ref('stg_orders') }}</pre>
+
+<h3>Step 4 — Add quality tests</h3>
+<pre>models:
+  - name: fct_sales
+    columns:
+      - name: order_id
+        tests:
+          - not_null
+          - unique</pre>
+
+<h3>Step 5 — Add DAG test</h3>
+<pre>def test_no_import_errors():
+    from airflow.models import DagBag
+    bag = DagBag(dag_folder="airflow/dags", include_examples=False)
+    assert bag.import_errors == {}</pre>
+
+<h3>Step 6 — Run locally</h3>
+<pre>pytest airflow/tests -v
+cd dbt
+dbt parse
+dbt build --target dev</pre>
+
+<h3>Step 7 — Commit and push</h3>
+<pre>git add .
+git commit -m "Add gross sales model and tests"
+git push origin feature/add-gross-sales</pre>
+
+<h3>Step 8 — Open pull request</h3>
+<p>CI should automatically run. Intentionally break a test first so trainees see a red pipeline.</p>
+
+<h3>Step 9 — Intentional failure</h3>
+<p>Insert duplicate <code>order_id</code> values. The uniqueness test should fail. Explain:</p>
+<pre>Code is syntactically valid ✅
+Pipeline can execute ✅
+Business quality is invalid ❌
+Therefore deployment must stop.</pre>
+
+<h3>Step 10 — Fix, push, observe green CI</h3>
+<p>Once tests pass and review is approved, merge to main.</p>
+
+<h3>Step 11 — CD</h3>
+<p>The production workflow deploys the dbt project/DAG according to your environment-specific release design.</p>
+</section>
+
+<section id="pipeline">
+<h2>13. Full End-to-End DataOps Pipeline</h2>
+<div class="diagram">
+<pre style="margin:0;background:transparent;border:0">
+BUSINESS CHANGE
+"Add Return Rate to the Power BI dashboard"
+        │
+        ▼
+FEATURE BRANCH
+dbt SQL + Airflow dependency + tests
+        │
+        ▼
+PULL REQUEST
+code review + ownership check
+        │
+        ▼
+CI
+├── Python compile/lint
+├── Airflow DAG import tests
+├── dbt parse
+├── dbt build in isolated schema
+└── automated data tests
+        │
+   FAIL ├──────────────► Developer fixes code
+        │
+       PASS
+        ▼
+MERGE TO MAIN
+        │
+        ▼
+CD / DEPLOYMENT
+├── deploy/synchronize Airflow DAG
+└── publish approved dbt code
+        │
+        ▼
+PRODUCTION ORCHESTRATION
+Dataflow → RAW → Spark/dbt → Snowflake mart
+        │
+        ▼
+PRODUCTION QUALITY GATE
+freshness + count + duplicates + reconciliation
+        │
+   FAIL ├──────────────► stop publish + alert
+        │
+       PASS
+        ▼
+POWER BI REFRESH
+        │
+        ▼
+MONITOR
+SLA + runtime + volume + quality + cost
+        │
+        ▼
+IMPROVE
+incident review → new automated test
+</pre>
+</div>
+
+<h3>The most important DataOps feedback loop</h3>
+<div class="callout good">
+Production incident → identify missing control → create automated test/monitor → commit to Git → CI enforces it forever.
+</div>
+</section>
+
+<section id="best">
+<h2>14. Best Practices Checklist</h2>
+<div class="checklist" id="checks">
+<label><input type="checkbox"> Store dbt, DAGs, tests and pipeline code in Git.</label>
+<label><input type="checkbox"> Require pull requests for production branches.</label>
+<label><input type="checkbox"> Run CI automatically for every relevant PR.</label>
+<label><input type="checkbox"> Use isolated schemas/environments for CI.</label>
+<label><input type="checkbox"> Never commit secrets.</label>
+<label><input type="checkbox"> Add data-quality tests for critical business keys and measures.</label>
+<label><input type="checkbox"> Test Airflow DAG importability before deployment.</label>
+<label><input type="checkbox"> Separate transient failures from deterministic data failures.</label>
+<label><input type="checkbox"> Add freshness and volume checks.</label>
+<label><input type="checkbox"> Add source-to-target reconciliation for critical financial metrics.</label>
+<label><input type="checkbox"> Monitor pipeline runtime and SLA, not only task success.</label>
+<label><input type="checkbox"> Make BI publication dependent on quality gates.</label>
+<label><input type="checkbox"> Document rollback/reprocessing procedures.</label>
+<label><input type="checkbox"> Convert incidents into preventive tests.</label>
+</div>
+<p class="small">Your checklist state is saved in this browser using localStorage.</p>
+
+<h3>Trainer notes</h3>
+<textarea id="notes" class="notes" placeholder="Double-click concepts during class and write trainer notes here..."></textarea>
+<button class="btn" onclick="saveNotes()">Save Notes</button>
+<span id="saveMsg" class="small"></span>
+</section>
+
+<section id="interview">
+<h2>15. Interview Questions and Answers</h2>
+
+<details><summary>1. What is DataOps?</summary>
+<p>DataOps is an engineering and operating approach that applies collaboration, automation, testing, version control, continuous delivery, monitoring and continuous improvement to data pipelines and data products.</p></details>
+
+<details><summary>2. How is DataOps different from DevOps?</summary>
+<p>They share software-engineering practices, but DataOps adds strong emphasis on data quality, freshness, lineage, schema changes, reconciliation and trustworthy downstream analytical outputs.</p></details>
+
+<details><summary>3. Why is CI important for dbt?</summary>
+<p>It validates model changes before merge by parsing/building the changed project and executing tests in a safe environment.</p></details>
+
+<details><summary>4. What is the difference between dbt run, dbt test and dbt build?</summary>
+<p><code>dbt run</code> primarily executes models; <code>dbt test</code> executes tests; <code>dbt build</code> runs selected resources such as models and tests in dependency-aware order and is often convenient for CI validation.</p></details>
+
+<details><summary>5. What is an Airflow DAG import test?</summary>
+<p>It loads DAG files through Airflow's DAG loading mechanism and verifies that they can be parsed/imported without errors before deployment.</p></details>
+
+<details><summary>6. Is a successful Airflow DAG enough to guarantee correct data?</summary>
+<p>No. A task can succeed technically while producing incorrect business data. Data-quality and reconciliation checks are required.</p></details>
+
+<details><summary>7. What is a data-quality gate?</summary>
+<p>A mandatory validation stage that must pass before data is promoted or published to consumers.</p></details>
+
+<details><summary>8. Give examples of automated data tests.</summary>
+<p>Not-null, uniqueness, referential integrity, accepted values, freshness, row-count thresholds, reconciliation and schema-contract validation.</p></details>
+
+<details><summary>9. Why use a separate schema for CI?</summary>
+<p>To avoid PR tests modifying shared production tables and to enable parallel developer validation.</p></details>
+
+<details><summary>10. What should be stored in Git?</summary>
+<p>Pipeline code, DAGs, dbt models, tests, configuration templates, documentation and deployment workflow definitions. Secrets should not be committed.</p></details>
+
+<details><summary>11. Retry or fail immediately for duplicate business keys?</summary>
+<p>Usually fail the quality gate; retrying will not repair deterministic bad data unless the source itself is expected to self-correct.</p></details>
+
+<details><summary>12. What is data freshness?</summary>
+<p>The measure of how recent the available data is relative to an expected arrival or business SLA.</p></details>
+
+<details><summary>13. Why do we monitor row counts?</summary>
+<p>Unexpected drops or spikes may indicate missing source partitions, duplication, upstream failures or logic changes.</p></details>
+
+<details><summary>14. What is reconciliation?</summary>
+<p>Comparing source and target business totals/counts to confirm that processing has not lost, duplicated or distorted data beyond an accepted tolerance.</p></details>
+
+<details><summary>15. What is continuous delivery versus continuous deployment?</summary>
+<p>Continuous delivery keeps changes deployable and may require approval before production; continuous deployment automatically releases changes after required gates pass.</p></details>
+
+<details><summary>16. Why test DAG dependencies?</summary>
+<p>A DAG may import correctly but still have incorrect task ordering. Dependency tests validate intended orchestration logic.</p></details>
+
+<details><summary>17. What should happen if a critical dbt test fails in production?</summary>
+<p>Stop dependent publish steps, preserve diagnostic evidence, alert the responsible team and follow the recovery/reprocessing runbook.</p></details>
+
+<details><summary>18. How does Power BI fit into DataOps?</summary>
+<p>Power BI is a downstream consumer. Its refresh should be driven by trusted, validated data rather than fixed timing that ignores upstream pipeline state.</p></details>
+
+<details><summary>19. Why are managed Airflow services useful?</summary>
+<p>They reduce infrastructure-management burden while preserving Airflow's orchestration model, allowing teams to focus more on DAGs, dependencies and operations.</p></details>
+
+<details><summary>20. Give one example of continuous improvement in DataOps.</summary>
+<p>After an incident caused by duplicate orders, add a uniqueness test in CI and production so the same class of defect is automatically detected in future.</p></details>
+</section>
+
+<section id="quiz" class="quiz">
+<h2>16. Knowledge Check</h2>
+<form id="quizForm">
+
+<div class="question">
+<b>1. Which is the best reason to use a CI schema for dbt?</b>
+<label><input type="radio" name="q1" value="a"> Increase Power BI performance</label>
+<label><input type="radio" name="q1" value="b"> Prevent PR builds from modifying production data</label>
+<label><input type="radio" name="q1" value="c"> Replace Git</label>
+</div>
+
+<div class="question">
+<b>2. A DAG is successful, but revenue is doubled. What is missing?</b>
+<label><input type="radio" name="q2" value="a"> More retries</label>
+<label><input type="radio" name="q2" value="b"> Data quality/reconciliation tests</label>
+<label><input type="radio" name="q2" value="c"> A larger scheduler</label>
+</div>
+
+<div class="question">
+<b>3. What should normally happen when a critical dbt uniqueness test fails?</b>
+<label><input type="radio" name="q3" value="a"> Publish anyway</label>
+<label><input type="radio" name="q3" value="b"> Stop the quality gate and investigate</label>
+<label><input type="radio" name="q3" value="c"> Delete the test</label>
+</div>
+
+<div class="question">
+<b>4. Where should Snowflake credentials be stored for GitHub CI?</b>
+<label><input type="radio" name="q4" value="a"> In the repository README</label>
+<label><input type="radio" name="q4" value="b"> In source SQL</label>
+<label><input type="radio" name="q4" value="c"> In protected secrets / secure identity mechanism</label>
+</div>
+
+<div class="question">
+<b>5. Which test catches broken Airflow Python/DAG loading before deployment?</b>
+<label><input type="radio" name="q5" value="a"> DAG import test</label>
+<label><input type="radio" name="q5" value="b"> Power BI visual test only</label>
+<label><input type="radio" name="q5" value="c"> Snowflake warehouse resize</label>
+</div>
+
+<button type="button" onclick="gradeQuiz()">Submit Quiz</button>
+<div id="score" class="callout" style="display:none"></div>
+</form>
+</section>
+
+<section id="trainer">
+<h2>17. Suggested Trainer Delivery Plan</h2>
+<table>
+<tr><th>Time</th><th>Topic</th><th>Trainer activity</th></tr>
+<tr><td>0–20 min</td><td>DataOps concept</td><td>Start with “pipeline succeeded but dashboard is wrong” scenario.</td></tr>
+<tr><td>20–45 min</td><td>Lifecycle</td><td>Walk through plan → develop → test → release → monitor.</td></tr>
+<tr><td>45–75 min</td><td>dbt CI/CD</td><td>Show branch, PR, dbt parse/build/test, CI schema.</td></tr>
+<tr><td>75–105 min</td><td>Airflow CI/CD</td><td>Show DAG import test, dependency test and managed deployment flow.</td></tr>
+<tr><td>105–135 min</td><td>Automated testing</td><td>Demonstrate duplicate and negative-sales failures.</td></tr>
+<tr><td>135–155 min</td><td>Monitoring</td><td>Classify alerts: pipeline, quality, freshness, SLA.</td></tr>
+<tr><td>155–180 min</td><td>Hands-on + quiz</td><td>Break a test, fix it, re-run CI, complete knowledge check.</td></tr>
+</table>
+
+<h3>Whiteboard questions for trainees</h3>
+<ol>
+<li>If Dataflow finishes successfully but row count drops by 80%, should Power BI refresh?</li>
+<li>What is the difference between “technical success” and “business success”?</li>
+<li>Which failures should retry automatically?</li>
+<li>Where would you add a check that source and Snowflake revenue match?</li>
+<li>What happens if a dbt model changes a column consumed by Power BI?</li>
+</ol>
+
+<h3>Mini assignment</h3>
+<p>Ask trainees to extend the use case with an <b>Inventory Availability</b> mart. They must submit:</p>
+<ul>
+<li>one dbt model;</li>
+<li>three dbt tests;</li>
+<li>one Airflow DAG or TaskGroup change;</li>
+<li>one CI workflow change;</li>
+<li>two production monitoring rules;</li>
+<li>one rollback/recovery plan.</li>
+</ul>
+</section>
+
+<section id="sources">
+<h2>18. Current Official References</h2>
+<p class="small">The tutorial concepts are vendor-neutral where possible. These references are useful when performing the actual implementation because command details and managed-service deployment patterns can change.</p>
+<ul>
+<li>dbt Developer Hub — Continuous integration / CI jobs.</li>
+<li>Apache Airflow Documentation — Best Practices and DAG testing.</li>
+<li>Google Cloud documentation — Managed Service for Apache Airflow / DAG CI/CD with GitHub.</li>
+<li>GitHub Docs — GitHub Actions and building/testing Python.</li>
+</ul>
+<div class="callout">
+<b>Current naming note:</b> Google Cloud documentation now presents the service as <b>Managed Service for Apache Airflow</b> and notes its prior Cloud Composer naming. In existing environments and older training material, you may still encounter the Cloud Composer name.
+</div>
+</section>
+
+<footer>Trainer-ready DataOps tutorial • Progress and notes are stored locally in your browser.</footer>
+</main>
+</div>
+
+<script>
+function searchPage(){
+  const q=document.getElementById('search').value.toLowerCase().trim();
+  const sections=document.querySelectorAll('section');
+  sections.forEach(s=>{
+    if(!q){s.style.display='block';return;}
+    s.style.display=s.innerText.toLowerCase().includes(q)?'block':'none';
+  });
+}
+function gradeQuiz(){
+  const answers={q1:'b',q2:'b',q3:'b',q4:'c',q5:'a'};
+  let score=0;
+  Object.keys(answers).forEach(q=>{
+    const chosen=document.querySelector('input[name="'+q+'"]:checked');
+    if(chosen && chosen.value===answers[q]) score++;
+  });
+  const el=document.getElementById('score');
+  el.style.display='block';
+  el.innerHTML='<b>Score: '+score+'/5</b><br>' +
+    (score===5?'Excellent — ready for the hands-on CI/CD lab.':
+     score>=3?'Good. Review the failed concepts and try again.':
+     'Revisit DataOps lifecycle, CI schemas, quality gates and DAG tests.');
+  localStorage.setItem('dataopsQuizScore',score);
+}
+document.querySelectorAll('#checks input').forEach((cb,i)=>{
+  cb.checked=localStorage.getItem('dataopsCheck'+i)==='1';
+  cb.addEventListener('change',()=>localStorage.setItem('dataopsCheck'+i,cb.checked?'1':'0'));
+});
+function saveNotes(){
+  localStorage.setItem('dataopsTrainerNotes',document.getElementById('notes').value);
+  document.getElementById('saveMsg').textContent=' Saved.';
+}
+document.getElementById('notes').value=localStorage.getItem('dataopsTrainerNotes')||'';
+</script>
+</body>
+</html>

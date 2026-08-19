@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GCP Dataplex / Knowledge Catalog - Fresher Tutorial</title>
+<style>
+:root{
+  --bg:#f5f7fb; --card:#ffffff; --text:#1f2937; --muted:#64748b;
+  --primary:#2563eb; --primary2:#0ea5e9; --green:#16a34a; --amber:#d97706;
+  --red:#dc2626; --line:#dbe4f0; --code:#0f172a; --nav:#0b1220;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.65}
+header{background:linear-gradient(120deg,#1d4ed8,#0891b2);color:white;padding:36px 24px}
+header .wrap{max-width:1180px;margin:auto}
+header h1{margin:0 0 8px;font-size:2.25rem}
+header p{max-width:850px;margin:0;opacity:.95}
+.badge{display:inline-block;background:#dbeafe;color:#1e40af;border-radius:999px;padding:4px 10px;font-size:.82rem;font-weight:700;margin:4px 4px 4px 0}
+.layout{display:grid;grid-template-columns:260px minmax(0,1fr);max-width:1300px;margin:auto}
+nav{background:var(--nav);color:#e5e7eb;min-height:100vh;padding:20px 14px;position:sticky;top:0;height:100vh;overflow:auto}
+nav h3{color:#fff;margin-top:0}
+nav a{display:block;color:#cbd5e1;text-decoration:none;padding:8px 10px;border-radius:8px;margin:2px 0;font-size:.92rem}
+nav a:hover{background:#1e293b;color:white}
+main{padding:28px;max-width:1000px;width:100%}
+section{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px;margin:0 0 20px;box-shadow:0 3px 12px rgba(15,23,42,.04)}
+h2{margin-top:0;color:#0f3e84;border-bottom:1px solid var(--line);padding-bottom:10px}
+h3{color:#155e75}
+.note,.tip,.warning,.demo{padding:14px 16px;border-radius:10px;margin:14px 0}
+.note{background:#eff6ff;border-left:5px solid var(--primary)}
+.tip{background:#f0fdf4;border-left:5px solid var(--green)}
+.warning{background:#fff7ed;border-left:5px solid var(--amber)}
+.demo{background:#ecfeff;border-left:5px solid #0891b2}
+pre{background:var(--code);color:#e2e8f0;border-radius:10px;padding:16px;overflow:auto}
+code{font-family:Consolas,Monaco,monospace}
+table{width:100%;border-collapse:collapse;margin:14px 0}
+th,td{border:1px solid var(--line);padding:10px;text-align:left;vertical-align:top}
+th{background:#eff6ff;color:#1e3a8a}
+.diagram{background:#f8fafc;border:1px dashed #94a3b8;border-radius:12px;padding:18px;overflow:auto;text-align:center}
+.flow{display:flex;gap:10px;justify-content:center;align-items:center;flex-wrap:wrap}
+.box{padding:12px 16px;background:white;border:2px solid #93c5fd;border-radius:10px;min-width:130px;font-weight:700}
+.arrow{font-size:1.5rem;color:#64748b}
+.steps{counter-reset:step}
+.step{position:relative;margin:14px 0;padding:14px 14px 14px 52px;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0}
+.step:before{counter-increment:step;content:counter(step);position:absolute;left:14px;top:14px;width:27px;height:27px;background:#2563eb;color:white;border-radius:50%;display:grid;place-items:center;font-weight:700}
+.quiz-q{padding:14px;border:1px solid var(--line);border-radius:10px;margin:12px 0}
+.quiz-q label{display:block;margin:5px 0}
+button{background:#2563eb;color:white;border:0;border-radius:8px;padding:10px 16px;cursor:pointer;font-weight:700}
+button:hover{background:#1d4ed8}
+#score{font-weight:700;margin-left:10px}
+.small{font-size:.9rem;color:var(--muted)}
+.checklist li{margin:6px 0}
+footer{max-width:1000px;margin:0 auto;padding:20px 28px 50px;color:#64748b}
+@media(max-width:850px){.layout{display:block}nav{position:relative;height:auto;min-height:auto}main{padding:16px}header h1{font-size:1.8rem}}
+</style>
+</head>
+<body>
+
+<header>
+<div class="wrap">
+  <div class="badge">GCP</div><div class="badge">Dataplex</div><div class="badge">Knowledge Catalog</div><div class="badge">Hands-on Demo</div>
+  <h1>Dataplex in GCP — Simple Fresher Tutorial</h1>
+  <p>Understand why Dataplex is used, its Lake → Zone → Asset model, cataloging, governance, data quality and lineage, then perform a small BigQuery + Dataplex demo.</p>
+</div>
+</header>
+
+<div class="layout">
+<nav>
+  <h3>Topics</h3>
+  <a href="#goal">1. Learning Goal</a>
+  <a href="#story">2. Real-World Story</a>
+  <a href="#what">3. What is Dataplex?</a>
+  <a href="#why">4. Why Dataplex?</a>
+  <a href="#architecture">5. Architecture</a>
+  <a href="#pillars">6. Core Pillars</a>
+  <a href="#terms">7. Lake, Zone, Asset</a>
+  <a href="#demo">8. Small Hands-on Demo</a>
+  <a href="#quality">9. Data Quality Demo</a>
+  <a href="#lineage">10. Lineage</a>
+  <a href="#compare">11. Comparison</a>
+  <a href="#troubleshoot">12. Troubleshooting</a>
+  <a href="#interview">13. Interview Q&A</a>
+  <a href="#quiz">14. Quiz</a>
+  <a href="#cleanup">15. Cleanup</a>
+</nav>
+
+<main>
+
+<section id="goal">
+<h2>1. Learning Goal</h2>
+<p>By the end of this lesson, a trainee should be able to explain:</p>
+<ul class="checklist">
+<li>What Dataplex does in Google Cloud.</li>
+<li>Why data can remain in Cloud Storage or BigQuery while Dataplex manages it logically.</li>
+<li>The meaning of <b>Lake</b>, <b>Zone</b>, and <b>Asset</b>.</li>
+<li>How Dataplex helps with cataloging, governance, quality and lineage.</li>
+<li>How to create a tiny practical example using BigQuery and Dataplex/Knowledge Catalog.</li>
+</ul>
+</section>
+
+<section id="story">
+<h2>2. Start with a Simple Real-World Story</h2>
+<p>Imagine a retail company called <b>FreshCart</b>.</p>
+<table>
+<tr><th>Team</th><th>Where Data Exists</th><th>Example</th></tr>
+<tr><td>Sales</td><td>BigQuery</td><td>orders, customers</td></tr>
+<tr><td>Website</td><td>Cloud Storage</td><td>CSV files, logs</td></tr>
+<tr><td>Finance</td><td>BigQuery</td><td>payments</td></tr>
+<tr><td>Data Science</td><td>Different datasets</td><td>ML features</td></tr>
+</table>
+<p>Without a common management layer, users may ask: <i>Where is the correct customer table? Who owns it? Is the data good? Where did it come from?</i></p>
+<div class="tip"><b>Dataplex idea:</b> Keep the actual data in its existing storage, but provide a common layer to organize, discover, govern, monitor and understand it.</div>
+</section>
+
+<section id="what">
+<h2>3. What is Dataplex?</h2>
+<p><b>Dataplex</b> is a Google Cloud data management and governance service. It can manage data that remains distributed across services such as <b>Cloud Storage</b> and <b>BigQuery</b>.</p>
+<div class="diagram">
+<div class="flow">
+<div class="box">Cloud Storage</div><div class="arrow">↘</div>
+<div class="box" style="border-color:#22c55e">Dataplex<br><span class="small">Management Layer</span></div>
+<div class="arrow">↙</div><div class="box">BigQuery</div>
+</div>
+<p class="small">The data does not have to be copied into Dataplex.</p>
+</div>
+<div class="note"><b>Current Google naming:</b> Google documentation now refers to <b>Dataplex Universal Catalog as Knowledge Catalog</b>. During training, treat this as the evolution of the Dataplex catalog/governance experience.</div>
+</section>
+
+<section id="why">
+<h2>4. Why Do Companies Use Dataplex?</h2>
+<table>
+<tr><th>Problem</th><th>How Dataplex Helps</th></tr>
+<tr><td>Data is spread across many places</td><td>Provides a unified organizational and metadata layer.</td></tr>
+<tr><td>Users cannot find trusted data</td><td>Catalog/search helps discovery.</td></tr>
+<tr><td>Poor-quality data reaches reports</td><td>Data profiling and quality scans can identify problems.</td></tr>
+<tr><td>Difficult to understand data flow</td><td>Lineage can help trace upstream/downstream dependencies.</td></tr>
+<tr><td>Different teams need governance</td><td>Centralized metadata, IAM-aligned control and governance features.</td></tr>
+</table>
+</section>
+
+<section id="architecture">
+<h2>5. Dataplex Architecture — Easy View</h2>
+<div class="diagram">
+<pre style="text-align:left;display:inline-block">
+                  DATAPLEX / KNOWLEDGE CATALOG
+                            |
+        +-------------------+-------------------+
+        |                   |                   |
+      LAKE                Catalog            Data Scan
+   (business area)        Metadata         Quality / Profile
+        |
+   +----+-----+
+   |          |
+ RAW ZONE   CURATED ZONE
+   |          |
+ Asset      Asset
+   |          |
+GCS Bucket  BigQuery Dataset
+</pre>
+</div>
+<p><b>Remember:</b> Lake, Zone and Asset are logical management concepts. The physical data can remain in GCS or BigQuery.</p>
+</section>
+
+<section id="pillars">
+<h2>6. Four Core Pillars</h2>
+<div class="diagram">
+<div class="flow">
+<div class="box">Governance<br>& Security</div>
+<div class="box">Data Quality<br>& Profiling</div>
+<div class="box">Cataloging<br>& Metadata</div>
+<div class="box">Lineage<br>& Observation</div>
+</div>
+</div>
+<h3>6.1 Governance</h3>
+<p>Control who can access data and provide consistent governance around distributed assets.</p>
+<h3>6.2 Cataloging</h3>
+<p>Collect metadata so users can search, understand and discover datasets/tables.</p>
+<h3>6.3 Data Quality</h3>
+<p>Check whether data meets expectations such as completeness, validity and consistency.</p>
+<h3>6.4 Lineage</h3>
+<p>Understand how information flows from source to target and how transformations affect downstream consumers.</p>
+</section>
+
+<section id="terms">
+<h2>7. Lake → Zone → Asset</h2>
+<table>
+<tr><th>Concept</th><th>Simple Meaning</th><th>FreshCart Example</th></tr>
+<tr><td><b>Lake</b></td><td>Logical container for a domain/business area.</td><td>Retail Lake</td></tr>
+<tr><td><b>Zone</b></td><td>Logical grouping inside a lake.</td><td>Raw Zone, Curated Zone</td></tr>
+<tr><td><b>Asset</b></td><td>A physical storage resource registered in a zone.</td><td>GCS bucket or BigQuery dataset</td></tr>
+</table>
+<div class="tip"><b>Memory shortcut:</b> Company area = Lake → data stage = Zone → actual GCP resource = Asset.</div>
+</section>
+
+<section id="demo">
+<h2>8. Small Hands-on Demo — BigQuery + Dataplex</h2>
+<div class="demo">
+<b>Use case:</b> FreshCart receives customer order data. We create a BigQuery dataset/table and then organize the dataset as a Dataplex asset.
+</div>
+
+<h3>Prerequisites</h3>
+<ul>
+<li>A Google Cloud project with billing/permissions appropriate for your organization.</li>
+<li>BigQuery API and Dataplex/Knowledge Catalog API available.</li>
+<li>Permission to create a BigQuery dataset/table and Dataplex resources.</li>
+</ul>
+
+<h3>Part A — Create sample data in BigQuery</h3>
+<div class="steps">
+<div class="step"><b>Open Google Cloud Console → BigQuery.</b></div>
+<div class="step"><b>Create dataset</b> named <code>freshcart_demo</code>. Use a region you can also use for your Dataplex resources.</div>
+<div class="step">Open the BigQuery query editor and run:</div>
+</div>
+<pre><code>CREATE OR REPLACE TABLE `YOUR_PROJECT_ID.freshcart_demo.orders` AS
+SELECT 1001 AS order_id, 'C001' AS customer_id, 'Laptop' AS product, 65000 AS amount, 'PAID' AS status
+UNION ALL
+SELECT 1002, 'C002', 'Mouse', 800, 'PAID'
+UNION ALL
+SELECT 1003, 'C003', 'Keyboard', 1500, 'PENDING'
+UNION ALL
+SELECT 1004, NULL, 'Monitor', 12000, 'PAID'
+UNION ALL
+SELECT 1005, 'C005', 'Laptop', -5000, 'PAID';</code></pre>
+
+<p>Replace <code>YOUR_PROJECT_ID</code> with your project ID.</p>
+
+<div class="warning">
+We intentionally included two suspicious records: one row has a missing <code>customer_id</code>, and another has a negative <code>amount</code>. We will use them to explain data quality.
+</div>
+
+<h3>Part B — Create a Lake</h3>
+<div class="steps">
+<div class="step">In Google Cloud Console search for <b>Dataplex</b> or <b>Knowledge Catalog</b>.</div>
+<div class="step">Open the page for <b>Lakes</b>.</div>
+<div class="step">Choose <b>Create lake</b>.</div>
+<div class="step">Display name: <code>FreshCart Retail Lake</code>.</div>
+<div class="step">Lake ID: <code>freshcart-retail-lake</code>.</div>
+<div class="step">Choose the same compatible region as the dataset and create the lake.</div>
+</div>
+
+<h3>Part C — Create zones</h3>
+<div class="steps">
+<div class="step">Open the newly created lake.</div>
+<div class="step">Create a zone named <code>raw-zone</code>.</div>
+<div class="step">Create another zone named <code>curated-zone</code>.</div>
+</div>
+
+<h3>Part D — Attach the BigQuery dataset as an Asset</h3>
+<div class="steps">
+<div class="step">Open <b>curated-zone</b>.</div>
+<div class="step">Choose <b>Add asset</b> / <b>Create asset</b>.</div>
+<div class="step">Select <b>BigQuery dataset</b> as the resource type.</div>
+<div class="step">Choose <code>freshcart_demo</code>.</div>
+<div class="step">Asset ID: <code>freshcart-bq-asset</code>.</div>
+<div class="step">Create the asset.</div>
+</div>
+
+<div class="tip"><b>What happened?</b> We did not copy the BigQuery data. We registered/organized that resource inside the Dataplex logical hierarchy.</div>
+</section>
+
+<section id="quality">
+<h2>9. Small Data Quality Demo</h2>
+<p>Our business expects:</p>
+<ul>
+<li><code>customer_id</code> must not be null.</li>
+<li><code>amount</code> must be greater than 0.</li>
+</ul>
+
+<h3>Option 1 — Explain the idea first with SQL</h3>
+<pre><code>SELECT *
+FROM `YOUR_PROJECT_ID.freshcart_demo.orders`
+WHERE customer_id IS NULL
+   OR amount &lt;= 0;</code></pre>
+<p>This should return the intentionally bad records. This is the easiest way to explain <b>what a quality rule means</b> before opening the scan UI.</p>
+
+<h3>Option 2 — Create a Dataplex/Knowledge Catalog Data Quality Scan</h3>
+<div class="steps">
+<div class="step">Open the <b>Data profiling & quality</b> or <b>Data scans</b> area in the current Dataplex/Knowledge Catalog experience.</div>
+<div class="step">Choose <b>Create data quality scan</b>.</div>
+<div class="step">Select the BigQuery table <code>freshcart_demo.orders</code>.</div>
+<div class="step">Add a completeness rule for <code>customer_id</code> so null values fail.</div>
+<div class="step">Add a validity/range or custom rule requiring <code>amount &gt; 0</code>.</div>
+<div class="step">Run the scan and review passing/failing results.</div>
+</div>
+
+<div class="note"><b>Trainer explanation:</b> SQL finds bad rows manually. A data quality scan turns those expectations into managed, repeatable checks that can be rerun and monitored.</div>
+</section>
+
+<section id="lineage">
+<h2>10. Data Lineage — Simple Explanation</h2>
+<div class="diagram">
+<div class="flow">
+<div class="box">Source CSV</div><div class="arrow">→</div>
+<div class="box">Dataflow</div><div class="arrow">→</div>
+<div class="box">BigQuery</div><div class="arrow">→</div>
+<div class="box">Dashboard</div>
+</div>
+</div>
+<p>If the dashboard shows incorrect sales, lineage helps an engineer ask:</p>
+<ul>
+<li>Which BigQuery table feeds this report?</li>
+<li>Which pipeline wrote to that table?</li>
+<li>Which source supplied the original data?</li>
+</ul>
+<div class="tip">Think of lineage as a <b>family tree for data</b>.</div>
+</section>
+
+<section id="compare">
+<h2>11. Dataplex vs BigQuery vs Cloud Storage</h2>
+<table>
+<tr><th>Service</th><th>Main Job</th><th>Stores Data?</th></tr>
+<tr><td>Cloud Storage</td><td>Object/file storage</td><td>Yes</td></tr>
+<tr><td>BigQuery</td><td>Data warehouse and analytics</td><td>Yes</td></tr>
+<tr><td>Dataplex / Knowledge Catalog</td><td>Organize, govern, catalog, understand and assess distributed data</td><td>Primarily manages metadata/governance rather than replacing GCS/BQ storage</td></tr>
+</table>
+</section>
+
+<section id="troubleshoot">
+<h2>12. Common Troubleshooting</h2>
+<table>
+<tr><th>Issue</th><th>Likely Reason</th><th>What to Check</th></tr>
+<tr><td>Cannot create lake</td><td>Missing IAM permission/API</td><td>Project permissions and Dataplex API.</td></tr>
+<tr><td>Dataset not visible while adding asset</td><td>Region or permission mismatch</td><td>Dataset location, resource location and IAM.</td></tr>
+<tr><td>Data quality scan fails</td><td>Insufficient BigQuery/Dataplex roles</td><td>BigQuery Job User/Data Viewer plus required catalog permissions.</td></tr>
+<tr><td>Console name looks different</td><td>Google renamed Dataplex Universal Catalog</td><td>Look for Knowledge Catalog / BigQuery metadata curation experiences.</td></tr>
+<tr><td>Unexpected cost</td><td>Scan or underlying job executes compute</td><td>Review scan frequency and BigQuery/Spark/Dataflow usage.</td></tr>
+</table>
+</section>
+
+<section id="interview">
+<h2>13. Interview Questions & Answers</h2>
+<h3>1. What is Dataplex?</h3>
+<p>Dataplex is a Google Cloud service used to organize, govern, catalog and monitor distributed data resources such as BigQuery datasets and Cloud Storage.</p>
+
+<h3>2. Does Dataplex require moving all data into one storage location?</h3>
+<p>No. A key idea is that data can remain in its underlying systems while Dataplex provides centralized management and metadata capabilities.</p>
+
+<h3>3. What is a Lake?</h3>
+<p>A logical top-level container, usually aligned to a business domain or data area.</p>
+
+<h3>4. What is a Zone?</h3>
+<p>A logical subdivision of a lake used to group related data, for example raw and curated data.</p>
+
+<h3>5. What is an Asset?</h3>
+<p>A registered cloud resource inside a zone, such as a BigQuery dataset or Cloud Storage bucket.</p>
+
+<h3>6. What is data profiling?</h3>
+<p>Analyzing data characteristics such as nulls, distributions, types and other statistics so teams understand the dataset.</p>
+
+<h3>7. What is a data quality scan?</h3>
+<p>A managed check that evaluates data against rules such as completeness, validity and consistency.</p>
+
+<h3>8. What is lineage?</h3>
+<p>Lineage shows how data moves and transforms between sources, processing systems and targets.</p>
+
+<h3>9. Dataplex vs BigQuery?</h3>
+<p>BigQuery is an analytics/data warehouse service. Dataplex focuses on management, governance, metadata, quality and organization across data resources.</p>
+
+<h3>10. Why is Knowledge Catalog mentioned when learning Dataplex?</h3>
+<p>Google renamed Dataplex Universal Catalog to Knowledge Catalog, so current documentation and console experiences may use the new name.</p>
+</section>
+
+<section id="quiz">
+<h2>14. Quick Quiz</h2>
+<form id="quizForm">
+<div class="quiz-q">
+<b>1. Which Dataplex concept represents the physical BigQuery dataset or GCS bucket?</b>
+<label><input type="radio" name="q1" value="a"> Lake</label>
+<label><input type="radio" name="q1" value="b"> Zone</label>
+<label><input type="radio" name="q1" value="c"> Asset</label>
+</div>
+<div class="quiz-q">
+<b>2. Which feature checks rules like “customer_id must not be null”?</b>
+<label><input type="radio" name="q2" value="a"> Data Quality</label>
+<label><input type="radio" name="q2" value="b"> Cloud Shell</label>
+<label><input type="radio" name="q2" value="c"> VPC</label>
+</div>
+<div class="quiz-q">
+<b>3. Does Dataplex require copying all BigQuery data into Dataplex?</b>
+<label><input type="radio" name="q3" value="a"> Yes</label>
+<label><input type="radio" name="q3" value="b"> No</label>
+</div>
+<div class="quiz-q">
+<b>4. What is the easiest memory order?</b>
+<label><input type="radio" name="q4" value="a"> Asset → Lake → Zone</label>
+<label><input type="radio" name="q4" value="b"> Lake → Zone → Asset</label>
+</div>
+<div class="quiz-q">
+<b>5. What is lineage mainly used for?</b>
+<label><input type="radio" name="q5" value="a"> Tracking data movement and dependencies</label>
+<label><input type="radio" name="q5" value="b"> Increasing CPU</label>
+<label><input type="radio" name="q5" value="c"> Creating VMs</label>
+</div>
+<button type="button" onclick="gradeQuiz()">Check Score</button>
+<span id="score"></span>
+</form>
+</section>
+
+<section id="cleanup">
+<h2>15. Cleanup After the Demo</h2>
+<ol>
+<li>Remove/delete the Dataplex asset if you no longer need it.</li>
+<li>Delete the demo zones and lake if they are not required.</li>
+<li>Delete the BigQuery dataset <code>freshcart_demo</code>.</li>
+<li>Review Billing to ensure no demo resources continue consuming chargeable services.</li>
+</ol>
+<div class="warning">Be careful with deletion options. Confirm whether you are only detaching a managed resource or deleting the underlying data resource.</div>
+</section>
+
+<section>
+<h2>Trainer Recap — 60 Seconds</h2>
+<pre><code>Dataplex = unified management/governance layer for distributed data.
+
+Lake  = business/domain container
+Zone  = group/stage inside the lake
+Asset = actual GCS bucket or BigQuery dataset
+
+Main ideas:
+1. Governance
+2. Catalog / Metadata
+3. Data Quality / Profiling
+4. Lineage / Observation
+
+Demo:
+BigQuery dataset → Lake → Zone → Asset → Data Quality Scan
+</code></pre>
+</section>
+
+<section>
+<h2>References Used for This Tutorial</h2>
+<p class="small">
+Primary basis: the user-provided Dataplex reference notes. Current terminology and console guidance were cross-checked against Google Cloud documentation, including Knowledge Catalog overview, lake/zone/asset documentation, data quality scans, locations and pricing documentation.
+</p>
+</section>
+
+</main>
+</div>
+
+<footer>
+GCP Dataplex / Knowledge Catalog — Fresher Training Notes • Single-file HTML tutorial
+</footer>
+
+<script>
+function gradeQuiz(){
+  const answers={q1:'c',q2:'a',q3:'b',q4:'b',q5:'a'};
+  let s=0;
+  for(const q in answers){
+    const el=document.querySelector('input[name="'+q+'"]:checked');
+    if(el && el.value===answers[q]) s++;
+  }
+  document.getElementById('score').textContent='Score: '+s+'/5';
+  localStorage.setItem('dataplexQuizScore',s);
+}
+window.addEventListener('load',()=>{
+  const s=localStorage.getItem('dataplexQuizScore');
+  if(s!==null) document.getElementById('score').textContent='Previous score: '+s+'/5';
+});
+</script>
+</body>
+</html>

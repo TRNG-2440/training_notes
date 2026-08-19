@@ -1,0 +1,11 @@
+order_id,customer_id,product,category,quantity,price
+1001,C001,Laptop,Electronics,1,900
+1002,C002,Mouse,Electronics,2,25
+1003,C003,Chair,Furniture,1,150
+1004,C004,Keyboard,Electronics,1,70
+1005,C005,Desk,Furniture,1,300
+1006,C006,Monitor,Electronics,2,220
+1007,C007,Notebook,Stationery,5,4
+1008,C008,Pen,Stationery,10,2
+1009,C009,Headphones,Electronics,1,80
+1010,C010,Printer,Electronics,1,240

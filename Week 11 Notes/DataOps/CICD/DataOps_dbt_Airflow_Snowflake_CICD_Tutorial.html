@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DataOps + dbt + Airflow + Snowflake CI/CD — Trainer Tutorial</title>
+<style>
+:root{
+  --bg:#0b1020; --panel:#111936; --panel2:#182246; --text:#eef3ff; --muted:#aebbd9;
+  --accent:#72e1d1; --accent2:#8ea7ff; --good:#6ee7a8; --warn:#ffd166; --bad:#ff7b8a;
+  --border:#2a3767; --code:#070b17;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.65}
+a{color:var(--accent)}
+.layout{display:grid;grid-template-columns:280px 1fr;min-height:100vh}
+aside{position:sticky;top:0;height:100vh;overflow:auto;padding:22px 16px;background:#080d1b;border-right:1px solid var(--border)}
+.brand{font-weight:800;font-size:19px;margin-bottom:4px}.tag{color:var(--muted);font-size:12px;margin-bottom:16px}
+nav a{display:block;text-decoration:none;color:#ccd6f5;padding:8px 10px;border-radius:8px;margin:2px 0;font-size:13px}
+nav a:hover{background:var(--panel2);color:#fff}
+main{max-width:1120px;width:100%;padding:38px 44px 80px}
+.hero{padding:34px;border:1px solid var(--border);border-radius:18px;background:linear-gradient(135deg,#141d40,#0d1430)}
+.hero h1{font-size:38px;line-height:1.15;margin:0 0 12px}.hero p{color:var(--muted);font-size:18px}
+.badge{display:inline-block;border:1px solid #3d4f91;border-radius:999px;padding:5px 10px;margin:4px;font-size:12px;background:#121a39}
+section{margin-top:42px}.section-title{font-size:29px;margin-bottom:8px}.lead{color:var(--muted)}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:20px;margin:16px 0}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.callout{border-left:4px solid var(--accent);padding:14px 16px;background:#101936;border-radius:8px;margin:16px 0}
+.warning{border-left-color:var(--warn)}.danger{border-left-color:var(--bad)}.success{border-left-color:var(--good)}
+pre{background:var(--code);border:1px solid #263056;border-radius:10px;padding:16px;overflow:auto;position:relative}
+code{font-family:Consolas,Monaco,monospace;font-size:13px}
+.copy{position:absolute;right:8px;top:8px;border:0;border-radius:6px;padding:6px 9px;background:#202c56;color:#fff;cursor:pointer}
+table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14px}
+th,td{border:1px solid var(--border);padding:10px;vertical-align:top}th{background:#172047}
+.diagram{background:#080d1c;border:1px dashed #3d4c7e;border-radius:14px;padding:20px;overflow:auto}
+.diagram pre{border:0;background:transparent;font-size:14px;line-height:1.45;margin:0}
+.step{display:grid;grid-template-columns:42px 1fr;gap:12px;margin:15px 0}
+.num{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#223160;font-weight:800;color:#fff}
+details{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin:9px 0}
+summary{cursor:pointer;font-weight:700}
+kbd{background:#222c4e;border:1px solid #43517c;border-bottom-width:2px;border-radius:5px;padding:2px 5px}
+.quiz-q{margin:18px 0;padding:16px;border:1px solid var(--border);border-radius:10px;background:var(--panel)}
+.quiz-q label{display:block;margin:6px 0}
+button.primary{background:var(--accent2);border:0;border-radius:8px;padding:10px 15px;font-weight:700;cursor:pointer}
+#score{font-weight:800;margin-left:10px}
+.small{font-size:12px;color:var(--muted)} .green{color:var(--good)} .yellow{color:var(--warn)} .red{color:var(--bad)}
+.checklist li{margin:6px 0}
+hr{border:0;border-top:1px solid var(--border);margin:32px 0}
+@media(max-width:900px){.layout{display:block}aside{position:relative;height:auto}.grid2,.grid3{grid-template-columns:1fr}main{padding:25px 18px}.hero h1{font-size:31px}}
+</style>
+</head>
+<body>
+<div class="layout">
+<aside>
+  <div class="brand">DataOps Trainer Tutorial</div>
+  <div class="tag">Snowflake + dbt + Airflow + GitHub Actions</div>
+  <nav>
+    <a href="#outcomes">1. Learning outcomes</a>
+    <a href="#story">2. Business story</a>
+    <a href="#dataops">3. DataOps lifecycle</a>
+    <a href="#practices">4. Key practices</a>
+    <a href="#cicd">5. CI/CD explained</a>
+    <a href="#architecture">6. Demo architecture</a>
+    <a href="#prereq">7. Prerequisites</a>
+    <a href="#snowflake">8. Snowflake setup</a>
+    <a href="#dbt">9. dbt project</a>
+    <a href="#testing">10. Automated tests</a>
+    <a href="#airflow">11. Airflow orchestration</a>
+    <a href="#git">12. Git collaboration</a>
+    <a href="#githubactions">13. GitHub Actions CI</a>
+    <a href="#cd">14. CD workflow</a>
+    <a href="#classdemo">15. Classroom showcase</a>
+    <a href="#failure">16. Failure demo</a>
+    <a href="#monitoring">17. Monitoring</a>
+    <a href="#troubleshoot">18. Troubleshooting</a>
+    <a href="#interview">19. Interview Q&A</a>
+    <a href="#quiz">20. Quiz</a>
+    <a href="#exercises">21. Exercises</a>
+    <a href="#references">22. References</a>
+  </nav>
+</aside>
+
+<main>
+<div class="hero">
+  <div>
+    <span class="badge">DataOps</span><span class="badge">CI/CD</span><span class="badge">dbt</span>
+    <span class="badge">Airflow</span><span class="badge">Snowflake</span><span class="badge">GitHub Actions</span>
+  </div>
+  <h1>End-to-End DataOps & CI/CD Tutorial</h1>
+  <p>A trainer-ready tutorial that starts with the problem, introduces DataOps practices, and finishes with a practical Snowflake + dbt + Airflow pipeline where GitHub Actions automatically tests pull requests before deployment.</p>
+</div>
+
+<section id="outcomes">
+<h2 class="section-title">1. Learning Outcomes</h2>
+<div class="grid2">
+<div class="card"><b>Understand</b><ul><li>DataOps lifecycle</li><li>Collaboration, automation, monitoring</li><li>CI vs CD</li><li>Why data testing is different from application testing</li></ul></div>
+<div class="card"><b>Perform</b><ul><li>Create a Snowflake demo database</li><li>Build dbt staging + mart models</li><li>Add automated data tests</li><li>Trigger dbt from Airflow</li><li>Validate code with GitHub Actions</li><li>Demonstrate failed and passed PRs</li></ul></div>
+</div>
+</section>
+
+<section id="story">
+<h2 class="section-title">2. Story: Why DataOps?</h2>
+<div class="card">
+<h3>FreshCart Sales Analytics</h3>
+<p>FreshCart receives sales transactions every day. Analysts need a clean <b>daily sales summary</b> in Snowflake. Three people work on the pipeline:</p>
+<ul>
+<li><b>Data Engineer:</b> loads raw sales data.</li>
+<li><b>Analytics Engineer:</b> creates dbt transformations.</li>
+<li><b>Platform Engineer:</b> schedules jobs in Airflow.</li>
+</ul>
+<p>Without DataOps, one engineer edits SQL directly in production, another changes the Airflow DAG independently, and nobody knows whether a broken transformation was tested before release. A small SQL typo or null key can break dashboards.</p>
+</div>
+<div class="diagram"><pre>
+BEFORE DATAOPS
+Developer laptop ──manual SQL──► Production Snowflake
+                         │
+                    "It worked for me"
+                         │
+             Manual Airflow DAG copy
+                         │
+                   Dashboard failure
+
+AFTER DATAOPS
+Feature Branch
+     │
+     ▼
+Pull Request ──► Automated CI ──► dbt parse/build/test + DAG checks
+     │                                  │
+     │                                  ├── FAIL → fix code
+     │                                  │
+     └──────────── approved + green ─────┘
+                         │
+                         ▼
+                       main
+                         │
+                         ▼
+                  CD / Deployment
+                         │
+          Snowflake models + Airflow DAG
+                         │
+                         ▼
+                  Monitoring & alerts
+</pre></div>
+</section>
+
+<section id="dataops">
+<h2 class="section-title">3. DataOps Lifecycle</h2>
+<p class="lead">DataOps applies DevOps-style collaboration, automation, quality control, observability, and continuous improvement to data pipelines.</p>
+<table>
+<tr><th>Stage</th><th>FreshCart example</th><th>Tools in this lab</th></tr>
+<tr><td>1. Plan</td><td>Define “daily sales by customer” requirement</td><td>GitHub issue / README</td></tr>
+<tr><td>2. Develop</td><td>Create dbt SQL model and Airflow DAG</td><td>VS Code, dbt, Airflow</td></tr>
+<tr><td>3. Version</td><td>Commit work in a feature branch</td><td>Git + GitHub</td></tr>
+<tr><td>4. Test</td><td>Check unique/not-null keys and valid sales values</td><td>dbt tests + Python DAG tests</td></tr>
+<tr><td>5. Integrate</td><td>PR triggers automated checks</td><td>GitHub Actions</td></tr>
+<tr><td>6. Deploy</td><td>Approved code moves to production target</td><td>GitHub Actions / deployment job</td></tr>
+<tr><td>7. Orchestrate</td><td>Run dbt in the correct order</td><td>Apache Airflow</td></tr>
+<tr><td>8. Monitor</td><td>Observe task failures and test results</td><td>Airflow logs + dbt artifacts</td></tr>
+<tr><td>9. Improve</td><td>Add a test after a production defect is discovered</td><td>Team review + next PR</td></tr>
+</table>
+</section>
+
+<section id="practices">
+<h2 class="section-title">4. DataOps Key Practices</h2>
+<div class="grid3">
+<div class="card"><h3>Collaboration</h3><p>Use Git branches, pull requests, reviews, naming conventions, ownership, and shared documentation.</p><p><b>Goal:</b> no silent direct changes to production.</p></div>
+<div class="card"><h3>Automation</h3><p>Automate model builds, tests, DAG validation, and deployment.</p><p><b>Goal:</b> repeatable execution rather than manual copying.</p></div>
+<div class="card"><h3>Monitoring</h3><p>Track task state, logs, data tests, runtime, freshness, and failures.</p><p><b>Goal:</b> detect problems before business users do.</p></div>
+</div>
+<div class="callout"><b>Trainer phrase:</b> “DataOps is not one tool. It is a working model: people + process + automation + quality + observability.”</div>
+</section>
+
+<section id="cicd">
+<h2 class="section-title">5. CI/CD for Data Engineering</h2>
+<table>
+<tr><th>Term</th><th>Meaning</th><th>Example in this lab</th></tr>
+<tr><td><b>CI – Continuous Integration</b></td><td>Automatically validate a proposed code change before it is merged.</td><td>PR runs dbt compile/build/test and DAG import tests.</td></tr>
+<tr><td><b>CD – Continuous Delivery/Deployment</b></td><td>Move validated code into a higher environment after merge or approval.</td><td>Merge to <code>main</code> runs dbt against PROD target and publishes the Airflow DAG.</td></tr>
+</table>
+<div class="diagram"><pre>
+Developer
+   │ git checkout -b feature/customer-sales
+   ▼
+Change dbt SQL + tests
+   │
+   ▼
+git push
+   │
+   ▼
+GitHub Pull Request
+   │
+   ├── CI: install dependencies
+   ├── CI: dbt deps
+   ├── CI: dbt parse / compile
+   ├── CI: dbt build --target ci
+   └── CI: Airflow DAG validation
+             │
+     ┌───────┴────────┐
+     ▼                ▼
+   FAIL              PASS
+ fix & push       review/merge
+                       │
+                       ▼
+                     main
+                       │
+                    CD job
+                       │
+             ┌─────────┴─────────┐
+             ▼                   ▼
+     Snowflake PROD         Airflow DAGs
+</pre></div>
+</section>
+
+<section id="architecture">
+<h2 class="section-title">6. End-to-End Demo Architecture</h2>
+<div class="diagram"><pre>
+                    ┌──────────────────────┐
+                    │      GitHub Repo     │
+                    │ dbt + dags + tests  │
+                    └─────────┬────────────┘
+                              │ PR / merge
+                              ▼
+                    ┌──────────────────────┐
+                    │   GitHub Actions     │
+                    │   CI validation      │
+                    └─────────┬────────────┘
+                              │
+                  ┌───────────┴───────────┐
+                  ▼                       ▼
+          ┌───────────────┐       ┌───────────────┐
+          │      dbt      │       │    Airflow    │
+          │ transformations│      │ orchestration │
+          └───────┬───────┘       └───────┬───────┘
+                  │                       │ triggers dbt
+                  └──────────┬────────────┘
+                             ▼
+                  ┌──────────────────────┐
+                  │      Snowflake       │
+                  │ RAW → STG → MART     │
+                  └─────────┬────────────┘
+                            ▼
+                   Analytics / Power BI
+</pre></div>
+</section>
+
+<section id="prereq">
+<h2 class="section-title">7. Prerequisites</h2>
+<ul class="checklist">
+<li>Snowflake account (trial is sufficient for a classroom demo).</li>
+<li>GitHub account and a repository.</li>
+<li>VS Code.</li>
+<li>Python 3.11 recommended for a straightforward local demo.</li>
+<li>Git installed.</li>
+<li>dbt Core + Snowflake adapter: <code>dbt-snowflake</code>.</li>
+<li>Apache Airflow for the optional local orchestration stage.</li>
+</ul>
+<div class="callout warning"><b>Cost control:</b> use an X-Small Snowflake warehouse and enable auto-suspend. Stop the warehouse after the lab.</div>
+<h3>Recommended project folder</h3>
+<pre><code>freshcart-dataops/
+├── .github/
+│   └── workflows/
+│       ├── ci.yml
+│       └── deploy.yml
+├── airflow/
+│   ├── dags/
+│   │   └── freshcart_dbt_pipeline.py
+│   └── tests/
+│       └── test_dag_import.py
+├── dbt_freshcart/
+│   ├── models/
+│   │   ├── staging/
+│   │   │   ├── stg_sales.sql
+│   │   │   └── schema.yml
+│   │   └── marts/
+│   │       ├── customer_sales.sql
+│   │       └── schema.yml
+│   ├── tests/
+│   ├── dbt_project.yml
+│   └── profiles.yml.example
+├── sql/
+│   └── 01_snowflake_setup.sql
+├── requirements.txt
+└── README.md</code></pre>
+</section>
+
+<section id="snowflake">
+<h2 class="section-title">8. Step 1 — Snowflake Setup</h2>
+<p>Open a Snowflake worksheet and execute:</p>
+<pre><code>CREATE OR REPLACE WAREHOUSE DATAOPS_WH
+  WAREHOUSE_SIZE = 'XSMALL'
+  AUTO_SUSPEND = 60
+  AUTO_RESUME = TRUE;
+
+CREATE OR REPLACE DATABASE FRESHCART;
+CREATE OR REPLACE SCHEMA FRESHCART.RAW;
+CREATE OR REPLACE SCHEMA FRESHCART.DEV;
+CREATE OR REPLACE SCHEMA FRESHCART.PROD;
+
+CREATE OR REPLACE TABLE FRESHCART.RAW.SALES (
+    ORDER_ID      NUMBER,
+    CUSTOMER_ID   NUMBER,
+    PRODUCT       VARCHAR,
+    AMOUNT        NUMBER(10,2),
+    ORDER_DATE    DATE
+);
+
+INSERT INTO FRESHCART.RAW.SALES VALUES
+(1,101,'Laptop',75000,'2026-08-01'),
+(2,101,'Mouse',1200,'2026-08-01'),
+(3,102,'Keyboard',2500,'2026-08-02'),
+(4,103,'Monitor',18000,'2026-08-02'),
+(5,103,'USB Cable',500,'2026-08-03');
+
+SELECT * FROM FRESHCART.RAW.SALES;</code></pre>
+
+<div class="callout success"><b>Expected result:</b> 5 raw rows. Tell students that <code>RAW</code> is source-like data, while <code>DEV</code> and <code>PROD</code> isolate transformation environments.</div>
+</section>
+
+<section id="dbt">
+<h2 class="section-title">9. Step 2 — Create the dbt Project</h2>
+
+<div class="step"><div class="num">1</div><div><b>Create virtual environment</b>
+<pre><code>python -m venv .venv
+.venv\Scripts\activate
+python -m pip install --upgrade pip
+pip install dbt-snowflake</code></pre></div></div>
+
+<div class="step"><div class="num">2</div><div><b>Initialize project</b>
+<pre><code>dbt init dbt_freshcart
+cd dbt_freshcart</code></pre></div></div>
+
+<div class="step"><div class="num">3</div><div><b>Configure profile</b>
+<p>Create <code>%USERPROFILE%\.dbt\profiles.yml</code>. Do not commit passwords.</p>
+<pre><code>dbt_freshcart:
+  target: dev
+  outputs:
+    dev:
+      type: snowflake
+      account: YOUR_ACCOUNT_IDENTIFIER
+      user: YOUR_USER
+      password: "{{ env_var('SNOWFLAKE_PASSWORD') }}"
+      role: YOUR_ROLE
+      database: FRESHCART
+      warehouse: DATAOPS_WH
+      schema: DEV
+      threads: 2
+
+    ci:
+      type: snowflake
+      account: YOUR_ACCOUNT_IDENTIFIER
+      user: YOUR_USER
+      password: "{{ env_var('SNOWFLAKE_PASSWORD') }}"
+      role: YOUR_ROLE
+      database: FRESHCART
+      warehouse: DATAOPS_WH
+      schema: CI
+      threads: 2
+
+    prod:
+      type: snowflake
+      account: YOUR_ACCOUNT_IDENTIFIER
+      user: YOUR_USER
+      password: "{{ env_var('SNOWFLAKE_PASSWORD') }}"
+      role: YOUR_ROLE
+      database: FRESHCART
+      warehouse: DATAOPS_WH
+      schema: PROD
+      threads: 2</code></pre>
+<pre><code>set SNOWFLAKE_PASSWORD=YourPassword
+dbt debug</code></pre></div></div>
+
+<div class="step"><div class="num">4</div><div><b>Define source</b>
+<pre><code># models/staging/schema.yml
+version: 2
+
+sources:
+  - name: raw
+    database: FRESHCART
+    schema: RAW
+    tables:
+      - name: sales</code></pre></div></div>
+
+<div class="step"><div class="num">5</div><div><b>Create staging model</b>
+<pre><code>-- models/staging/stg_sales.sql
+select
+    order_id,
+    customer_id,
+    trim(product) as product,
+    amount,
+    order_date
+from {{ source('raw', 'sales') }}</code></pre></div></div>
+
+<div class="step"><div class="num">6</div><div><b>Create mart</b>
+<pre><code>-- models/marts/customer_sales.sql
+select
+    customer_id,
+    count(*) as order_count,
+    sum(amount) as total_sales,
+    min(order_date) as first_order_date,
+    max(order_date) as latest_order_date
+from {{ ref('stg_sales') }}
+group by customer_id</code></pre></div></div>
+
+<div class="step"><div class="num">7</div><div><b>Run locally</b>
+<pre><code>dbt build --target dev</code></pre>
+<p>Then verify in Snowflake:</p>
+<pre><code>SELECT * FROM FRESHCART.DEV.CUSTOMER_SALES ORDER BY CUSTOMER_ID;</code></pre></div></div>
+</section>
+
+<section id="testing">
+<h2 class="section-title">10. Automated Testing in Data Workflows</h2>
+<p>Automated testing protects both <b>code behavior</b> and <b>data expectations</b>.</p>
+<table>
+<tr><th>Test type</th><th>What it catches</th><th>Example</th></tr>
+<tr><td>Syntax / parse</td><td>Invalid dbt/Jinja/YAML</td><td><code>dbt parse</code></td></tr>
+<tr><td>Schema / generic data tests</td><td>Nulls, duplicates, invalid values, broken relationships</td><td><code>not_null</code>, <code>unique</code></td></tr>
+<tr><td>Singular SQL test</td><td>Custom business rule violation</td><td>amount must be &gt; 0</td></tr>
+<tr><td>DAG import test</td><td>Airflow DAG cannot load</td><td>pytest imports DAG bag</td></tr>
+<tr><td>Integration test</td><td>Real dbt execution against isolated schema</td><td><code>dbt build --target ci</code></td></tr>
+</table>
+
+<h3>dbt model tests</h3>
+<pre><code># models/staging/schema.yml
+version: 2
+
+sources:
+  - name: raw
+    database: FRESHCART
+    schema: RAW
+    tables:
+      - name: sales
+
+models:
+  - name: stg_sales
+    columns:
+      - name: order_id
+        data_tests:
+          - not_null
+          - unique
+      - name: customer_id
+        data_tests:
+          - not_null
+      - name: amount
+        data_tests:
+          - not_null</code></pre>
+
+<h3>Custom business-rule test</h3>
+<p>Create <code>tests/assert_positive_amount.sql</code>:</p>
+<pre><code>select *
+from {{ ref('stg_sales') }}
+where amount &lt;= 0</code></pre>
+<p>dbt singular tests pass when the query returns <b>zero rows</b>.</p>
+
+<h3>Mart tests</h3>
+<pre><code># models/marts/schema.yml
+version: 2
+
+models:
+  - name: customer_sales
+    columns:
+      - name: customer_id
+        data_tests:
+          - not_null
+          - unique
+      - name: total_sales
+        data_tests:
+          - not_null</code></pre>
+
+<h3>Run all automated dbt checks</h3>
+<pre><code>dbt parse
+dbt build --target dev</code></pre>
+<div class="callout"><b>Why <code>dbt build</code>?</b> It can build resources and run tests in dependency-aware order, making it useful for an end-to-end validation step.</div>
+</section>
+
+<section id="airflow">
+<h2 class="section-title">11. Step 3 — Airflow Orchestration</h2>
+<p>Airflow controls <b>when</b> the workflow runs and <b>in what order</b>. dbt controls transformation logic inside Snowflake.</p>
+
+<h3>Simple DAG using BashOperator</h3>
+<pre><code># airflow/dags/freshcart_dbt_pipeline.py
+from datetime import datetime
+from airflow import DAG
+from airflow.providers.standard.operators.bash import BashOperator
+
+DBT_DIR = "/opt/airflow/dbt_freshcart"
+
+with DAG(
+    dag_id="freshcart_dbt_pipeline",
+    start_date=datetime(2026, 1, 1),
+    schedule="@daily",
+    catchup=False,
+    tags=["dataops", "dbt", "snowflake"],
+) as dag:
+
+    dbt_debug = BashOperator(
+        task_id="dbt_debug",
+        bash_command=f"cd {DBT_DIR} && dbt debug --target prod",
+    )
+
+    dbt_build = BashOperator(
+        task_id="dbt_build",
+        bash_command=f"cd {DBT_DIR} && dbt build --target prod",
+    )
+
+    dbt_debug >> dbt_build</code></pre>
+
+<div class="callout warning"><b>Airflow version note:</b> operator import paths vary by Airflow/provider version. For older Airflow 2.x installs you may see <code>from airflow.operators.bash import BashOperator</code>. Use the import matching your installed version.</div>
+
+<h3>What to show students in Airflow UI</h3>
+<ol>
+<li>DAG list → locate <b>freshcart_dbt_pipeline</b>.</li>
+<li>Open Graph view.</li>
+<li>Explain dependency: <b>dbt_debug → dbt_build</b>.</li>
+<li>Trigger DAG manually.</li>
+<li>Open each task → Logs.</li>
+<li>Show dbt test results inside the Airflow task log.</li>
+</ol>
+</section>
+
+<section id="git">
+<h2 class="section-title">12. Step 4 — Git Collaboration Workflow</h2>
+<p>This is the collaboration part of DataOps.</p>
+<pre><code>git init
+git add .
+git commit -m "Initial FreshCart DataOps project"
+git branch -M main
+git remote add origin https://github.com/YOUR_USER/freshcart-dataops.git
+git push -u origin main</code></pre>
+
+<h3>Developer makes a change</h3>
+<pre><code>git checkout -b feature/add-average-order-value</code></pre>
+<p>Edit <code>models/marts/customer_sales.sql</code>:</p>
+<pre><code>select
+    customer_id,
+    count(*) as order_count,
+    sum(amount) as total_sales,
+    avg(amount) as avg_order_value,
+    min(order_date) as first_order_date,
+    max(order_date) as latest_order_date
+from {{ ref('stg_sales') }}
+group by customer_id</code></pre>
+<pre><code>git add .
+git commit -m "Add average order value metric"
+git push -u origin feature/add-average-order-value</code></pre>
+
+<div class="callout"><b>In GitHub:</b> create a Pull Request from <code>feature/add-average-order-value</code> into <code>main</code>. The PR is the collaboration checkpoint: review + automated validation.</div>
+</section>
+
+<section id="githubactions">
+<h2 class="section-title">13. Step 5 — GitHub Actions CI Pipeline</h2>
+<p>GitHub Actions can run automated checks whenever a pull request targets <code>main</code>.</p>
+
+<h3>Add GitHub repository secrets</h3>
+<p>GitHub → Repository → Settings → Secrets and variables → Actions → New repository secret.</p>
+<table>
+<tr><th>Secret</th><th>Value</th></tr>
+<tr><td>SNOWFLAKE_ACCOUNT</td><td>Your account identifier</td></tr>
+<tr><td>SNOWFLAKE_USER</td><td>CI service user</td></tr>
+<tr><td>SNOWFLAKE_PASSWORD</td><td>Password for the training demo</td></tr>
+<tr><td>SNOWFLAKE_ROLE</td><td>Role with limited CI privileges</td></tr>
+</table>
+<div class="callout warning"><b>Production practice:</b> prefer short-lived/key-pair/OIDC-style authentication where supported instead of long-lived passwords. Snowflake’s current CI/CD guidance includes secure CI/CD options such as OIDC for supported workflows.</div>
+
+<h3>Create <code>.github/workflows/ci.yml</code></h3>
+<pre><code>name: FreshCart CI
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  dbt-ci:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install dbt-snowflake pytest
+
+      - name: Create dbt profile
+        run: |
+          mkdir -p ~/.dbt
+          cat > ~/.dbt/profiles.yml &lt;&lt;'EOF'
+          dbt_freshcart:
+            target: ci
+            outputs:
+              ci:
+                type: snowflake
+                account: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+                user: ${{ secrets.SNOWFLAKE_USER }}
+                password: ${{ secrets.SNOWFLAKE_PASSWORD }}
+                role: ${{ secrets.SNOWFLAKE_ROLE }}
+                database: FRESHCART
+                warehouse: DATAOPS_WH
+                schema: CI
+                threads: 2
+          EOF
+
+      - name: dbt debug
+        working-directory: dbt_freshcart
+        run: dbt debug --target ci
+
+      - name: dbt parse
+        working-directory: dbt_freshcart
+        run: dbt parse
+
+      - name: dbt build
+        working-directory: dbt_freshcart
+        run: dbt build --target ci
+
+      - name: Python tests
+        run: pytest -q</code></pre>
+
+<h3>What happens now?</h3>
+<div class="diagram"><pre>
+PR opened
+   │
+   ▼
+GitHub runner starts
+   │
+   ├─ checkout source
+   ├─ install Python/dbt/pytest
+   ├─ create runtime-only profile
+   ├─ dbt debug
+   ├─ dbt parse
+   ├─ dbt build --target ci
+   └─ pytest
+        │
+        ├── any failure → red X → DO NOT MERGE
+        └── all pass    → green ✓ → review + merge
+</pre></div>
+
+<h3>Optional Airflow DAG import test</h3>
+<pre><code># airflow/tests/test_dag_import.py
+from airflow.models import DagBag
+
+def test_dags_have_no_import_errors():
+    dag_bag = DagBag(dag_folder="airflow/dags", include_examples=False)
+    assert dag_bag.import_errors == {}
+
+def test_expected_dag_exists():
+    dag_bag = DagBag(dag_folder="airflow/dags", include_examples=False)
+    assert "freshcart_dbt_pipeline" in dag_bag.dags</code></pre>
+<p>If CI installs Airflow and the required provider, this test catches broken DAG imports before deployment.</p>
+</section>
+
+<section id="cd">
+<h2 class="section-title">14. Step 6 — Simple CD Pipeline</h2>
+<p>For teaching, deploy the dbt project after a merge to <code>main</code>. In a production environment, add approvals and stronger authentication.</p>
+
+<h3><code>.github/workflows/deploy.yml</code></h3>
+<pre><code>name: FreshCart Deploy
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy-dbt:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dbt
+        run: pip install dbt-snowflake
+
+      - name: Create production dbt profile
+        run: |
+          mkdir -p ~/.dbt
+          cat > ~/.dbt/profiles.yml &lt;&lt;'EOF'
+          dbt_freshcart:
+            target: prod
+            outputs:
+              prod:
+                type: snowflake
+                account: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+                user: ${{ secrets.SNOWFLAKE_USER }}
+                password: ${{ secrets.SNOWFLAKE_PASSWORD }}
+                role: ${{ secrets.SNOWFLAKE_ROLE }}
+                database: FRESHCART
+                warehouse: DATAOPS_WH
+                schema: PROD
+                threads: 2
+          EOF
+
+      - name: Deploy transformations
+        working-directory: dbt_freshcart
+        run: dbt build --target prod</code></pre>
+
+<div class="callout warning">
+<b>Trainer distinction:</b> Running <code>dbt build --target prod</code> after merge is a basic classroom CD pattern. In enterprise projects, “deployment” may instead publish a dbt project/job definition, promote artifacts, use a managed dbt platform, use Snowflake dbt project objects, or trigger a separate orchestrator.
+</div>
+</section>
+
+<section id="classdemo">
+<h2 class="section-title">15. Complete Classroom Showcase</h2>
+<p>Use this sequence live. It demonstrates collaboration, automation, testing, deployment, and monitoring in one story.</p>
+
+<table>
+<tr><th>Demo moment</th><th>Trainer action</th><th>What students learn</th></tr>
+<tr><td>1</td><td>Query <code>RAW.SALES</code> in Snowflake</td><td>Raw source exists independently of dbt</td></tr>
+<tr><td>2</td><td>Run <code>dbt build --target dev</code></td><td>Transformations + tests work locally</td></tr>
+<tr><td>3</td><td>Show <code>DEV.CUSTOMER_SALES</code></td><td>dbt created an analytics model</td></tr>
+<tr><td>4</td><td>Create feature branch and add <code>avg_order_value</code></td><td>Developer does not edit main directly</td></tr>
+<tr><td>5</td><td>Push branch and open PR</td><td>Collaboration workflow</td></tr>
+<tr><td>6</td><td>Open Actions tab</td><td>CI starts automatically</td></tr>
+<tr><td>7</td><td>Show green checks</td><td>Automated quality gate</td></tr>
+<tr><td>8</td><td>Merge PR</td><td>Only reviewed/tested code is promoted</td></tr>
+<tr><td>9</td><td>Show deploy workflow</td><td>CD runs after merge</td></tr>
+<tr><td>10</td><td>Query <code>PROD.CUSTOMER_SALES</code></td><td>Production target now includes change</td></tr>
+<tr><td>11</td><td>Trigger Airflow DAG</td><td>Operational scheduler can run dbt repeatedly</td></tr>
+<tr><td>12</td><td>Open Airflow logs</td><td>Monitoring and troubleshooting</td></tr>
+</table>
+</section>
+
+<section id="failure">
+<h2 class="section-title">16. The Most Important Demo — Make CI Fail</h2>
+<p>Students understand CI/CD much faster when they see a pull request get blocked.</p>
+
+<h3>Introduce bad source data</h3>
+<pre><code>INSERT INTO FRESHCART.RAW.SALES
+VALUES (6,104,'Headset',-2500,'2026-08-04');</code></pre>
+
+<p>The custom test:</p>
+<pre><code>select *
+from {{ ref('stg_sales') }}
+where amount &lt;= 0</code></pre>
+
+<p>Now rerun:</p>
+<pre><code>dbt test --target ci</code></pre>
+
+<div class="callout danger">
+<b>Expected:</b> <code>assert_positive_amount</code> fails because the negative amount appears in the result set.
+</div>
+
+<h3>Explain the DataOps value</h3>
+<div class="diagram"><pre>
+Bad data enters RAW
+      │
+      ▼
+dbt transformation
+      │
+      ▼
+Automated test detects amount <= 0
+      │
+      ▼
+CI returns FAILURE
+      │
+      ▼
+PR stays unmergeable (when branch protection requires the check)
+      │
+      ▼
+Engineer fixes data logic / source issue
+      │
+      ▼
+Push new commit → CI reruns → PASS
+</pre></div>
+
+<h3>Fix for the demo</h3>
+<pre><code>DELETE FROM FRESHCART.RAW.SALES WHERE ORDER_ID = 6;</code></pre>
+<p>Push another commit or rerun the workflow and show the green result.</p>
+</section>
+
+<section id="monitoring">
+<h2 class="section-title">17. Monitoring & Observability</h2>
+<table>
+<tr><th>Layer</th><th>Observe</th><th>Demo</th></tr>
+<tr><td>GitHub Actions</td><td>CI status, failed command, logs</td><td>Open workflow run → failed step</td></tr>
+<tr><td>dbt</td><td>Model/test pass-fail, execution artifacts</td><td><code>target/run_results.json</code>, console output</td></tr>
+<tr><td>Airflow</td><td>DAG run, task duration, retry, logs</td><td>Grid/Graph → task → Logs</td></tr>
+<tr><td>Snowflake</td><td>Queries, warehouse usage, target data</td><td>Query History + target tables</td></tr>
+<tr><td>Business</td><td>Freshness, row counts, KPI reasonableness</td><td>Add tests / alerts based on SLA</td></tr>
+</table>
+
+<div class="callout"><b>DataOps principle:</b> a pipeline that runs successfully is not necessarily a healthy pipeline. A technically successful job can still produce incorrect or stale data, so monitoring must include data quality as well as job health.</div>
+</section>
+
+<section id="troubleshoot">
+<h2 class="section-title">18. Troubleshooting</h2>
+<details><summary>dbt says profile not found</summary>
+<p>Verify <code>%USERPROFILE%\.dbt\profiles.yml</code> on Windows or <code>~/.dbt/profiles.yml</code> on Linux. Ensure the top-level profile name matches <code>profile:</code> in <code>dbt_project.yml</code>.</p></details>
+
+<details><summary>Snowflake authentication fails in GitHub Actions</summary>
+<p>Check repository secrets, account identifier format, role, warehouse/database privileges, and whether the CI user is allowed to authenticate from the runner.</p></details>
+
+<details><summary>dbt test fails unexpectedly</summary>
+<p>Run the generated failing SQL or inspect the test result. Remember: a singular dbt data test generally fails when it returns rows.</p></details>
+
+<details><summary>Airflow DAG does not appear</summary>
+<p>Check DAG import errors, the DAG folder, Python syntax, provider imports, and scheduler health. DAG import tests in CI help catch this earlier.</p></details>
+
+<details><summary>GitHub Actions is not running</summary>
+<p>Verify that the workflow YAML is under <code>.github/workflows/</code> and that the trigger matches the PR target branch or push branch.</p></details>
+
+<details><summary>CI and PROD overwrite each other</summary>
+<p>Never point both targets at the same schema. Use an isolated CI schema (or per-PR schemas in a more advanced design) and a separate PROD schema.</p></details>
+</section>
+
+<section id="interview">
+<h2 class="section-title">19. Interview Questions & Answers</h2>
+<details><summary>1. What is DataOps?</summary><p>DataOps is a set of collaborative and automated practices for developing, testing, deploying, orchestrating, and monitoring reliable data products and pipelines.</p></details>
+<details><summary>2. Is DataOps a tool?</summary><p>No. It is an operating practice supported by tools such as Git, CI/CD systems, dbt, Airflow, cloud warehouses, tests, and observability platforms.</p></details>
+<details><summary>3. What is CI in a dbt project?</summary><p>CI automatically validates proposed transformation changes, typically on a pull request, using commands such as parsing, compiling, building, and testing against an isolated environment.</p></details>
+<details><summary>4. What is CD?</summary><p>CD promotes validated changes to higher environments after integration, either automatically or after approval.</p></details>
+<details><summary>5. Why use separate DEV, CI, and PROD schemas?</summary><p>They isolate developer experimentation, automated PR validation, and production data so changes do not overwrite one another.</p></details>
+<details><summary>6. Why is dbt useful in DataOps?</summary><p>dbt brings modular SQL, dependency management, tests, documentation, lineage concepts, and repeatable execution into analytics engineering workflows.</p></details>
+<details><summary>7. What does Airflow add if dbt can run models?</summary><p>dbt handles transformation logic and dependencies among dbt resources. Airflow orchestrates broader workflows, schedules, retries, upstream/downstream systems, and operational execution.</p></details>
+<details><summary>8. What is a pull request quality gate?</summary><p>A required automated check that must pass before a branch can be merged, often combined with human code review.</p></details>
+<details><summary>9. What does a dbt not_null test validate?</summary><p>It verifies that the tested column contains no null values in the model output.</p></details>
+<details><summary>10. What does a dbt unique test validate?</summary><p>It checks that values in the selected column are unique.</p></details>
+<details><summary>11. What is a singular dbt test?</summary><p>A custom SQL query written so that rows returned represent failures. Zero returned rows means the rule passed.</p></details>
+<details><summary>12. What is an Airflow DAG import test?</summary><p>A test that loads DAG definitions and verifies there are no Python/import errors and expected DAG IDs exist.</p></details>
+<details><summary>13. Why should secrets not be stored in Git?</summary><p>Git history is durable and often shared. Credentials should be stored in secret managers or CI secret stores and injected at runtime.</p></details>
+<details><summary>14. What is the benefit of branch protection?</summary><p>It can prevent direct pushes or merges until required reviews and CI checks pass.</p></details>
+<details><summary>15. What should we monitor besides pipeline task success?</summary><p>Data freshness, volume, nulls, uniqueness, business-rule validity, runtime trends, warehouse consumption, retries, and SLA violations.</p></details>
+<details><summary>16. What is idempotency in a data pipeline?</summary><p>Running the same operation repeatedly should not unintentionally duplicate or corrupt results. Idempotent tasks are safer to retry.</p></details>
+<details><summary>17. Why automate tests in CI instead of relying on local tests?</summary><p>CI provides a consistent, repeatable validation environment and makes the result visible to the whole team before merge.</p></details>
+<details><summary>18. CI passed, but production failed. What could cause this?</summary><p>Environment differences, permissions, larger data volumes, missing secrets, different configurations, runtime dependencies, or tests that did not cover the production scenario.</p></details>
+<details><summary>19. How can a team improve this demo for enterprise use?</summary><p>Add isolated per-PR schemas, least-privilege service identities, OIDC/key-pair authentication, environment approvals, artifact promotion, alerting, data contracts, freshness checks, and rollback procedures.</p></details>
+<details><summary>20. What is the difference between orchestration and transformation?</summary><p>Orchestration controls workflow scheduling and task dependencies across systems. Transformation changes data from one representation to another, such as raw sales to aggregated customer metrics.</p></details>
+</section>
+
+<section id="quiz">
+<h2 class="section-title">20. Quick MCQ Quiz</h2>
+<form id="quizForm">
+<div class="quiz-q"><b>1. Which stage should normally validate a pull request before merge?</b>
+<label><input type="radio" name="q1" value="a"> CD only</label>
+<label><input type="radio" name="q1" value="b"> CI</label>
+<label><input type="radio" name="q1" value="c"> Snowflake warehouse resize</label></div>
+
+<div class="quiz-q"><b>2. Which tool primarily orchestrates scheduled workflow tasks in this lab?</b>
+<label><input type="radio" name="q2" value="a"> Airflow</label>
+<label><input type="radio" name="q2" value="b"> Git</label>
+<label><input type="radio" name="q2" value="c"> Power BI</label></div>
+
+<div class="quiz-q"><b>3. A dbt singular data test normally passes when its SQL returns:</b>
+<label><input type="radio" name="q3" value="a"> Zero rows</label>
+<label><input type="radio" name="q3" value="b"> One row</label>
+<label><input type="radio" name="q3" value="c"> Every source row</label></div>
+
+<div class="quiz-q"><b>4. Why use a separate CI schema?</b>
+<label><input type="radio" name="q4" value="a"> To isolate test builds</label>
+<label><input type="radio" name="q4" value="b"> To make passwords public</label>
+<label><input type="radio" name="q4" value="c"> To avoid Git</label></div>
+
+<div class="quiz-q"><b>5. Which is a collaboration practice?</b>
+<label><input type="radio" name="q5" value="a"> Pull request review</label>
+<label><input type="radio" name="q5" value="b"> Hardcoding a password</label>
+<label><input type="radio" name="q5" value="c"> Editing production manually</label></div>
+
+<button class="primary" type="button" onclick="gradeQuiz()">Submit Quiz</button>
+<span id="score"></span>
+</form>
+</section>
+
+<section id="exercises">
+<h2 class="section-title">21. Hands-On Exercises</h2>
+<div class="card">
+<h3>Exercise A — Add accepted-value validation</h3>
+<p>Add a <code>PAYMENT_STATUS</code> column and validate that only <code>PAID</code>, <code>PENDING</code>, and <code>REFUNDED</code> are accepted.</p>
+</div>
+<div class="card">
+<h3>Exercise B — Introduce a duplicate</h3>
+<p>Insert a duplicate <code>ORDER_ID</code>, run CI, identify the failed unique test, fix the data, and rerun.</p>
+</div>
+<div class="card">
+<h3>Exercise C — Break the Airflow DAG</h3>
+<p>Add an invalid import. Show that a DAG import test can fail before deployment.</p>
+</div>
+<div class="card">
+<h3>Exercise D — Add a second environment</h3>
+<p>Create a <code>QA</code> Snowflake schema and add a manually approved GitHub Actions deployment between CI and PROD.</p>
+</div>
+<div class="card">
+<h3>Mini Project</h3>
+<p>Extend FreshCart with <code>PRODUCTS</code> and <code>CUSTOMERS</code> source tables. Build a gold model with customer name, product category, order count, total sales, and average order value. Add relationship and not-null tests and schedule it through Airflow.</p>
+</div>
+</section>
+
+<section>
+<h2 class="section-title">Trainer Summary Board</h2>
+<div class="diagram"><pre>
+DATAOPS = Collaboration + Automation + Testing + Orchestration + Monitoring
+
+Collaboration  → Git branches + Pull Requests + Reviews
+Automation     → GitHub Actions
+Testing        → dbt tests + pytest / DAG import tests
+Transformation → dbt
+Warehouse      → Snowflake
+Orchestration  → Airflow
+Monitoring     → CI logs + dbt results + Airflow logs + Snowflake history
+
+THE KEY DEMO:
+Change → PR → CI test → Failure → Fix → Pass → Merge → Deploy → Airflow run → Monitor
+</pre></div>
+</section>
+
+<section id="references">
+<h2 class="section-title">22. Current Official References</h2>
+<p class="small">Use these official documentation topics to update the lab when tool versions change.</p>
+<ul>
+<li>dbt Developer Hub — Continuous Integration and CI jobs.</li>
+<li>Apache Airflow documentation — Best Practices and DAG concepts.</li>
+<li>Snowflake documentation — CI/CD integrations for dbt Projects on Snowflake and Snowflake DevOps guidance.</li>
+<li>GitHub documentation — Pull Requests and workflow trigger events.</li>
+</ul>
+<div class="callout">
+<b>Current product direction:</b> Snowflake documents CI/CD patterns for dbt Projects on Snowflake, including automated testing on pull requests and deployment after merges. dbt’s own platform documentation likewise treats pull-request-triggered CI jobs as the standard pattern for validating changes before production.
+</div>
+</section>
+
+<hr>
+<p class="small">Trainer file: DataOps + dbt + Airflow + Snowflake CI/CD. Generated as a self-contained HTML tutorial; code blocks include copy buttons and quiz scoring works locally in the browser.</p>
+
+</main>
+</div>
+
+<script>
+document.querySelectorAll('pre').forEach(pre=>{
+  const btn=document.createElement('button');
+  btn.className='copy'; btn.textContent='Copy';
+  btn.onclick=()=>{navigator.clipboard.writeText(pre.innerText.replace(/^Copy/,'').trim());btn.textContent='Copied';setTimeout(()=>btn.textContent='Copy',1000)};
+  pre.appendChild(btn);
+});
+
+function gradeQuiz(){
+ const ans={q1:'b',q2:'a',q3:'a',q4:'a',q5:'a'}; let score=0;
+ for(const [q,a] of Object.entries(ans)){
+   const x=document.querySelector('input[name="'+q+'"]:checked');
+   if(x && x.value===a) score++;
+ }
+ const el=document.getElementById('score');
+ el.textContent='Score: '+score+'/5';
+ localStorage.setItem('dataops_quiz_score',score);
+}
+const saved=localStorage.getItem('dataops_quiz_score');
+if(saved!==null) document.getElementById('score').textContent='Previous score: '+saved+'/5';
+</script>
+</body>
+</html>
