@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="480">
+<defs><marker id="a3" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#5F6368"/></marker></defs>
+<rect width="1500" height="480" rx="24" fill="#F8FAFD"/><text x="750" y="55" text-anchor="middle" font-family="Arial" font-size="34" font-weight="700" fill="#202124">Managed Airflow Task Failure → Email</text>
+<g font-family="Arial" text-anchor="middle"><rect x="60" y="150" width="210" height="110" rx="18" fill="#FCE8E6" stroke="#EA4335" stroke-width="3"/><text x="165" y="188" font-size="22" font-weight="700" fill="#A50E0E">Task Failed</text><text x="165" y="225" font-size="18" fill="#A50E0E">transform_sales</text>
+<rect x="320" y="150" width="240" height="110" rx="18" fill="#FEF7E0" stroke="#FBBC05" stroke-width="3"/><text x="440" y="188" font-size="22" font-weight="700" fill="#B06000">Failure Callback</text><text x="440" y="225" font-size="18" fill="#B06000">AIRFLOW_TASK_FAILURE</text>
+<rect x="610" y="150" width="230" height="110" rx="18" fill="#E8F0FE" stroke="#4285F4" stroke-width="3"/><text x="725" y="188" font-size="22" font-weight="700" fill="#174EA6">Cloud Logging</text><text x="725" y="225" font-size="18" fill="#174EA6">Matching log entry</text>
+<rect x="890" y="150" width="230" height="110" rx="18" fill="#E6F4EA" stroke="#34A853" stroke-width="3"/><text x="1005" y="188" font-size="22" font-weight="700" fill="#137333">Alert Policy</text><text x="1005" y="225" font-size="18" fill="#137333">Incident created</text>
+<rect x="1170" y="150" width="250" height="110" rx="18" fill="#F3E8FD" stroke="#A142F4" stroke-width="3"/><text x="1295" y="188" font-size="22" font-weight="700" fill="#681DA8">Email Notification</text><text x="1295" y="225" font-size="18" fill="#681DA8">Monitoring channel</text></g>
+<g stroke="#5F6368" stroke-width="4" fill="none" marker-end="url(#a3)"><line x1="270" y1="205" x2="310" y2="205"/><line x1="560" y1="205" x2="600" y2="205"/><line x1="840" y1="205" x2="880" y2="205"/><line x1="1120" y1="205" x2="1160" y2="205"/></g>
+<text x="750" y="355" text-anchor="middle" font-family="Arial" font-size="23" fill="#3C4043">No Gmail password, app password, or SMTP secret is required for this Cloud Monitoring notification path.</text>
+</svg>

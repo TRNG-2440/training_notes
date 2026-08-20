@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="500">
+<defs><marker id="a2" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#5F6368"/></marker></defs>
+<rect width="1500" height="500" rx="24" fill="#F8FAFD"/><text x="750" y="55" text-anchor="middle" font-family="Arial" font-size="34" font-weight="700" fill="#202124">Why Cloud Shell + Cloud Shell Editor?</text>
+<g font-family="Arial" text-anchor="middle"><rect x="100" y="150" width="280" height="120" rx="18" fill="#E8F0FE" stroke="#4285F4" stroke-width="3"/><text x="240" y="190" font-size="24" font-weight="700" fill="#174EA6">Google Cloud Console</text><text x="240" y="230" font-size="19" fill="#174EA6">Browser-based access</text>
+<rect x="470" y="150" width="280" height="120" rx="18" fill="#E6F4EA" stroke="#34A853" stroke-width="3"/><text x="610" y="190" font-size="24" font-weight="700" fill="#137333">Cloud Shell</text><text x="610" y="230" font-size="19" fill="#137333">gcloud • Python • Linux</text>
+<rect x="840" y="150" width="280" height="120" rx="18" fill="#FEF7E0" stroke="#FBBC05" stroke-width="3"/><text x="980" y="190" font-size="24" font-weight="700" fill="#B06000">Cloud Shell Editor</text><text x="980" y="230" font-size="19" fill="#B06000">Create / edit / save code</text>
+<rect x="1210" y="150" width="220" height="120" rx="18" fill="#F3E8FD" stroke="#A142F4" stroke-width="3"/><text x="1320" y="190" font-size="24" font-weight="700" fill="#681DA8">GCP Services</text><text x="1320" y="230" font-size="19" fill="#681DA8">Dataflow / Composer</text></g>
+<g stroke="#5F6368" stroke-width="4" fill="none" marker-end="url(#a2)"><line x1="380" y1="210" x2="460" y2="210"/><line x1="750" y1="210" x2="830" y2="210"/><line x1="1120" y1="210" x2="1200" y2="210"/></g>
+<text x="750" y="360" text-anchor="middle" font-family="Arial" font-size="23" fill="#3C4043">No local Python, gcloud CLI, Beam installation, or Windows PATH setup is required for the basic workflow.</text>
+</svg>

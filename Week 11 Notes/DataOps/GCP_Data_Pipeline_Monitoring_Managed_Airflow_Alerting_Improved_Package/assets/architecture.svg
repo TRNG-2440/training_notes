@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="520">
+<defs><marker id="a" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#5F6368"/></marker></defs>
+<rect width="1600" height="520" rx="24" fill="#F8FAFD"/><text x="800" y="55" text-anchor="middle" font-family="Arial" font-size="34" font-weight="700" fill="#202124">Complete Data &amp; Observability Architecture</text>
+<g font-family="Arial" text-anchor="middle">
+<rect x="60" y="150" width="220" height="110" rx="18" fill="#E8F0FE" stroke="#4285F4" stroke-width="3"/><text x="170" y="190" font-size="23" font-weight="700" fill="#174EA6">Cloud Storage</text><text x="170" y="225" font-size="19" fill="#174EA6">sales.csv</text>
+<rect x="335" y="150" width="220" height="110" rx="18" fill="#E6F4EA" stroke="#34A853" stroke-width="3"/><text x="445" y="190" font-size="23" font-weight="700" fill="#137333">Dataflow</text><text x="445" y="225" font-size="19" fill="#137333">Apache Beam ETL</text>
+<rect x="610" y="150" width="220" height="110" rx="18" fill="#FEF7E0" stroke="#FBBC05" stroke-width="3"/><text x="720" y="190" font-size="23" font-weight="700" fill="#B06000">BigQuery</text><text x="720" y="225" font-size="19" fill="#B06000">retail.sales_clean</text>
+<rect x="885" y="150" width="240" height="110" rx="18" fill="#F3E8FD" stroke="#A142F4" stroke-width="3"/><text x="1005" y="190" font-size="23" font-weight="700" fill="#681DA8">Managed Airflow</text><text x="1005" y="225" font-size="19" fill="#681DA8">Orchestration</text>
+<rect x="1180" y="150" width="170" height="110" rx="18" fill="#E8F0FE" stroke="#4285F4" stroke-width="3"/><text x="1265" y="190" font-size="23" font-weight="700" fill="#174EA6">Logging</text><text x="1265" y="225" font-size="19" fill="#174EA6">Logs Explorer</text>
+<rect x="1400" y="150" width="150" height="110" rx="18" fill="#FCE8E6" stroke="#EA4335" stroke-width="3"/><text x="1475" y="190" font-size="21" font-weight="700" fill="#A50E0E">Monitoring</text><text x="1475" y="225" font-size="18" fill="#A50E0E">Alert → Email</text>
+</g>
+<g stroke="#5F6368" stroke-width="4" fill="none" marker-end="url(#a)"><line x1="280" y1="205" x2="325" y2="205"/><line x1="555" y1="205" x2="600" y2="205"/><line x1="830" y1="205" x2="875" y2="205"/><line x1="1125" y1="205" x2="1170" y2="205"/><line x1="1350" y1="205" x2="1390" y2="205"/></g>
+<text x="800" y="350" text-anchor="middle" font-family="Arial" font-size="25" font-weight="700" fill="#3C4043">Operational lifecycle</text><text x="800" y="395" text-anchor="middle" font-family="Arial" font-size="22" fill="#3C4043">Build → Run → Monitor → Detect Failure → Alert → Investigate → Fix → Rerun → Validate</text>
+</svg>
